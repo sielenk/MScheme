@@ -58,6 +58,10 @@ public class StaticEnvironment
         }
     }
 
+    StaticEnvironment(StaticEnvironment parent, Symbol symbol)
+        throws CompileError
+    { this(parent); define(symbol); }
+
     // *** instance access ***************************************************
 
     int getLevel () { return _level; }
@@ -73,6 +77,10 @@ public class StaticEnvironment
     public StaticEnvironment newChild(List symbols)
         throws CompileError, TypeError
     { return new StaticEnvironment(this, symbols); }
+    
+    public StaticEnvironment newChild(Symbol symbol)
+        throws CompileError
+    { return new StaticEnvironment(this, symbol); }
     
     // *** instance access ***************************************************
 

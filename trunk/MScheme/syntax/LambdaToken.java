@@ -71,7 +71,7 @@ final class LambdaToken
         return new CompiledLambda(
             arity,
             newEnvironment,
-            body.getCodeList(newEnvironment)
+            body
         );
     }
 }

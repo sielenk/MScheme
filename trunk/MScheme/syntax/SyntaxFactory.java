@@ -21,6 +21,9 @@ public abstract class SyntaxFactory
     public static Syntax getLetToken()
     { return LetToken.INSTANCE; }
     
+    public static Syntax getLetStarToken()
+    { return LetStarToken.INSTANCE; }
+    
     public static Syntax getLetrecToken()
     { return LetrecToken.INSTANCE; }
     
