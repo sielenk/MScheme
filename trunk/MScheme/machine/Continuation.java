@@ -5,25 +5,25 @@ import MScheme.exceptions.SException;
 import MScheme.environment.Environment;
 import MScheme.expressions.functions.Function;
 
-class Context 
+class Context
 {
     private Continuation _continuation;
     private Environment  _environment;
-    
+
 
     protected Context(
         ContinuationStack stack,
-	Environment       environment
+        Environment       environment
     ) {
         _continuation = stack.getTop();
-	_environment  = environment;
+        _environment  = environment;
     }
-    
+
     public Continuation getContinuation()
     {
         return _continuation;
     }
-    
+
     public Environment getEnvironment()
     {
         return _environment;
@@ -31,22 +31,22 @@ class Context
 }
 
 
-class Continuation extends Context 
+class Continuation extends Context
 {
     private Function _function;
 
-    /** push a new continuation on the given machine 
+    /** push a new continuation on the given machine
      */
     Continuation(
-	ContinuationStack stack,
-	Environment       environment,
-	Function          function
+        ContinuationStack stack,
+        Environment       environment,
+        Function          function
     ) {
         super(stack, environment);
-    	stack.setTop(this);
-	_function = function;
+        stack.setTop(this);
+        _function = function;
     }
-    
+
 
     /** pop the current continuation and call its associated function */
     SExpr invoke(ContinuationStack stack, SExpr sexpr)
@@ -54,10 +54,10 @@ class Continuation extends Context
     {
         stack.setTop(getContinuation());
 
-    	return _function.call(
-	    stack,
-	    getEnvironment(),
-	    sexpr
-	);
+        return _function.call(
+            stack,
+            getEnvironment(),
+            sexpr
+        );
     }
 }

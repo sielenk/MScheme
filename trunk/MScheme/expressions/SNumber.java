@@ -1,6 +1,5 @@
 package MScheme.expressions;
 
-public class SNumber extends SExpr 
-{ 
+public class SNumber extends SExpr
+{
 }
-
