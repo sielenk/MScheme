@@ -49,6 +49,10 @@ public class InputPort
         );
     }
 
+    public static InputPort create(SchemeString filename)
+        throws OpenException
+    { return create(filename.getJavaString()); }
+
     public static InputPort create(String filename)
         throws OpenException
     {
