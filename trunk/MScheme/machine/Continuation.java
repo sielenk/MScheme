@@ -12,14 +12,15 @@ import MScheme.exceptions.SchemeException;
  * The base class for all continuations.
  */
 public abstract class Continuation
+    extends    Registers
+    implements Cloneable
 {
     /** The CVS id of the file containing this class. */
     public final static String id
     = "$Id$";
 
 
-    private final int       _level;
-    private final Registers _capturedState;
+    private       int       _level;
 
 
     /**
@@ -31,13 +32,51 @@ public abstract class Continuation
      */
     protected Continuation(Registers state)
     {
-        _capturedState = new Registers(state);
-        _level =
-            (getParent() != null)
-            ? getParent()._level + 1
-            : 0;
+        super(state);
+        _level = getLevel(getParent()) + 1;
 
         state.setContinuation(this);
+    }
+
+
+    Continuation cloneContinuation()
+    {
+        try {
+            return (Continuation)clone();
+        }
+        catch (CloneNotSupportedException e)
+        {
+            throw new RuntimeException(
+                "unexpected CloneNotSupportedException"
+            );
+        }
+    }
+
+    static Continuation copyAndPrependSubcontinuation(
+        Continuation oldRootsParent,
+        Continuation oldLeaf,
+        Continuation newRootsParent
+    )
+    {
+        if (oldLeaf == oldRootsParent)
+        {
+            return newRootsParent;
+        }
+
+        Continuation newLeaf = oldLeaf.cloneContinuation();
+
+        newLeaf._level -= getLevel(oldRootsParent);
+        newLeaf._level += getLevel(newRootsParent);
+
+        newLeaf.setContinuation(
+            copyAndPrependSubcontinuation(
+                oldRootsParent,
+                oldLeaf.getParent(),
+                newRootsParent
+            )
+        );
+
+        return newLeaf;
     }
 
 
@@ -46,15 +85,15 @@ public abstract class Continuation
      */
     final Continuation getParent()
     {
-        return _capturedState.getContinuation();
+        return getContinuation();
     }
 
     /**
      * Returns the depth of a continuation in the stack.
      */
-    final int getLevel()
+    final static int getLevel(Continuation c)
     {
-        return _level;
+        return (c == null) ? -1 : c._level;
     }
 
     /**
@@ -83,7 +122,7 @@ public abstract class Continuation
     final Code invoke(Registers state, Value result)
     throws SchemeException
     {
-        state.assign(_capturedState);
+        state.assign(this);
         return execute(state, result);
     }
 
@@ -106,6 +145,8 @@ public abstract class Continuation
             current = current.getParent()
         )
         {
+            buffer.append(getLevel(current));
+            buffer.append(" : ");
             buffer.append(current.debugString());
             buffer.append('\n');
         }
