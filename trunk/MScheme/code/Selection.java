@@ -77,7 +77,7 @@ public final class Selection
 
             protected String debugString()
             {
-                return "select[" + _onTrue + ", " + _onFalse + "]";
+                return "select:<" + _onTrue + ", " + _onFalse + ">";
             }
         };
 
@@ -87,6 +87,6 @@ public final class Selection
 
     public String toString()
     {
-        return "IF[" + _test + ' ' + _onTrue + ' ' + _onFalse + ']';
+        return "sel:<" + _test + ", " + _onTrue + ", " + _onFalse + '>';
     }
 }
