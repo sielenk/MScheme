@@ -49,7 +49,7 @@ public final class EvalFunction
         Environment newEnv  = snd.toEnvironment();
         Code        newCode = Machine.compile(newEnv.getStatic(), fst);
 
-        state.setEnvironment(newEnv);
+        state.setEnvironment(newEnv.getDynamic());
         return newCode;
     }
 }
