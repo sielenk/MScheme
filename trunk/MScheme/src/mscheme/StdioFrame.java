@@ -35,7 +35,7 @@ public class StdioFrame
     extends Frame
     implements ActionListener, WindowListener, Runnable
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

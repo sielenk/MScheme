@@ -24,7 +24,7 @@ package mscheme.exceptions;
 public final class NumberExpected
     extends TypeError
 {
-    public final static String id
+    public final static String  CVS_ID
         = "$Id$";
 
     public NumberExpected(Object cause)

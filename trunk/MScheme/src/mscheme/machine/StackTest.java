@@ -16,7 +16,7 @@ import junit.framework.TestCase;
  */
 public abstract class StackTest extends TestCase
 {
-	public final static String id
+	public final static String CVS_ID
 	   = "$Id$";
 
 	private Stack _stack;

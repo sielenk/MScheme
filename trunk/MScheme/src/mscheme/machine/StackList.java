@@ -97,7 +97,7 @@ class StackList implements Stack
 
 	private static class Entry
 	{
-		public final static String id
+		public final static String CVS_ID
 		   = "$Id$";
 
 		Entry            _next;

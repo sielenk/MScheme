@@ -26,7 +26,7 @@ import mscheme.Value;
 public class CompileError
     extends SchemeException
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
     public CompileError(Value cause, String message)

@@ -25,7 +25,7 @@ import java.applet.Applet;
 public final class AppletMain
     extends Applet
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

@@ -35,7 +35,7 @@ import mscheme.values.List;
 public interface Syntax
 {
     /** The CVS id of the file containing this class. */
-    String id
+    String CVS_ID
         = "$Id$";
 
 

@@ -23,7 +23,7 @@ package mscheme.syntax;
 
 public interface SequenceTags
 {
-    String id
+    String CVS_ID
         = "$Id$";
 
     int TAG_BEGIN = 0;

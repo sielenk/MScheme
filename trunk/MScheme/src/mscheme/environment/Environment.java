@@ -38,7 +38,7 @@ import mscheme.values.functions.BuiltinTable;
 public final class Environment
     extends ValueDefaultImplementations
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

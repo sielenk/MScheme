@@ -26,7 +26,7 @@ import mscheme.Value;
 public final class CantCompileException
     extends CompileError
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
     public CantCompileException(Value cause)

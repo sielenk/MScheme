@@ -27,7 +27,7 @@ import mscheme.values.ValueTraits;
 public final class MemvFunction
 	extends MemberBase
 {
-    public final static String id
+    public final static String  CVS_ID
     	= "$Id$";
 
 

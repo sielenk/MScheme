@@ -17,7 +17,7 @@ import mscheme.machine.Registers;
  */
 public interface Reduceable
 {
-	public final static String id
+	public final static String CVS_ID
 		= "$Id$";
 
 	Object reduce(Registers state) throws SchemeException;

@@ -26,7 +26,7 @@ import mscheme.values.ScmVector;
 public class VectorException
     extends RuntimeError
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
     private final int _index;

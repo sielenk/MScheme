@@ -29,7 +29,7 @@ import mscheme.values.ValueTraits;
 abstract class MemberBase
 	extends BinaryValueFunction
 {
-    public final static String id
+    public final static String  CVS_ID
     	= "$Id$";
 
 

@@ -16,7 +16,7 @@ import mscheme.exceptions.RuntimeError;
 public class Registers
 {
 	/** The CVS id of the file containing this class. */
-	public final static String id
+	public final static String CVS_ID
 		= "$Id$";
 
 

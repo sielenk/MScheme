@@ -24,7 +24,7 @@ package mscheme.exceptions;
 public final class EnvironmentExpected
     extends TypeError
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
     public EnvironmentExpected(Object cause)

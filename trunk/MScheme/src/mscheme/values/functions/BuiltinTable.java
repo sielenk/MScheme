@@ -18,7 +18,7 @@ class BuiltinRaw
     extends    Function
     implements BuiltinTable
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -47,34 +47,34 @@ class BuiltinRaw
         case 2: // list
             return Builtins.list(args);
 
-        case 7: // vector
+        case 6: // vector
             return Builtins.vector(args);
 
-        case 20: // <
+        case 19: // <
             return Builtins._3C(args);
 
-        case 21: // <=
+        case 20: // <=
             return Builtins._3C_3D(args);
 
-        case 22: // =
+        case 21: // =
             return Builtins._3D(args);
 
-        case 23: // >=
+        case 22: // >=
             return Builtins._3E_3D(args);
 
-        case 24: // >
+        case 23: // >
             return Builtins._3E(args);
 
-        case 26: // +
+        case 25: // +
             return Builtins._2B(args);
 
-        case 27: // -
+        case 26: // -
             return Builtins._2D(args);
 
-        case 28: // *
+        case 27: // *
             return Builtins._2A(args);
 
-        case 29: // /
+        case 28: // /
             return Builtins._2F(args);
 
         case 55: // string-append
@@ -97,7 +97,7 @@ class BuiltinThunks
     extends    ValueThunk
     implements BuiltinTable
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -136,7 +136,7 @@ class BuiltinUnary
     extends    UnaryValueFunction
     implements BuiltinTable
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -174,38 +174,38 @@ class BuiltinUnary
         case 8: // not
             return Builtins.not(fst);
 
-        case 9: // car
-            return Builtins.car(fst);
-
-        case 13: // number?
+        case 12: // number?
             return Builtins.number_3F(fst);
 
-        case 14: // complex?
+        case 13: // complex?
             return Builtins.complex_3F(fst);
 
-        case 15: // real?
+        case 14: // real?
             return Builtins.real_3F(fst);
 
-        case 16: // rational?
+        case 15: // rational?
             return Builtins.rational_3F(fst);
 
-        case 17: // integer?
+        case 16: // integer?
             return Builtins.integer_3F(fst);
 
-        case 18: // exact?
+        case 17: // exact?
             return Builtins.exact_3F(fst);
 
-        case 19: // inexact?
+        case 18: // inexact?
             return Builtins.inexact_3F(fst);
 
-        case 25: // zero?
+        case 24: // zero?
             return Builtins.zero_3F(fst);
 
-        case 30: // boolean?
+        case 29: // boolean?
             return Builtins.boolean_3F(fst);
 
-        case 31: // pair?
+        case 30: // pair?
             return Builtins.pair_3F(fst);
+
+        case 31: // car
+            return Builtins.car(fst);
 
         case 32: // cdr
             return Builtins.cdr(fst);
@@ -322,7 +322,7 @@ class BuiltinBinary
     extends    BinaryValueFunction
     implements BuiltinTable
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -354,16 +354,16 @@ class BuiltinBinary
         case 4: // cons
             return Builtins.cons(fst, snd);
 
-        case 6: // display
+        case 7: // display
             return Builtins.display(fst, snd);
 
-        case 10: // eq?
+        case 9: // eq?
             return Builtins.eq_3F(fst, snd);
 
-        case 11: // eqv?
+        case 10: // eqv?
             return Builtins.eqv_3F(fst, snd);
 
-        case 12: // equal?
+        case 11: // equal?
             return Builtins.equal_3F(fst, snd);
 
         case 33: // set-car!
@@ -412,7 +412,7 @@ class BuiltinTernary
     extends    TernaryValueFunction
     implements BuiltinTable
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -496,32 +496,32 @@ public interface BuiltinTable
         new BuiltinUnary(3, "reverse"),
         new BuiltinBinary(4, "cons"),
         new BuiltinUnary(5, "read"),
-        new BuiltinBinary(6, "display"),
-        new BuiltinRaw(7, "vector"),
+        new BuiltinRaw(6, "vector"),
+        new BuiltinBinary(7, "display"),
         new BuiltinUnary(8, "not"),
-        new BuiltinUnary(9, "car"),
-        new BuiltinBinary(10, "eq?"),
-        new BuiltinBinary(11, "eqv?"),
-        new BuiltinBinary(12, "equal?"),
-        new BuiltinUnary(13, "number?"),
-        new BuiltinUnary(14, "complex?"),
-        new BuiltinUnary(15, "real?"),
-        new BuiltinUnary(16, "rational?"),
-        new BuiltinUnary(17, "integer?"),
-        new BuiltinUnary(18, "exact?"),
-        new BuiltinUnary(19, "inexact?"),
-        new BuiltinRaw(20, "<"),
-        new BuiltinRaw(21, "<="),
-        new BuiltinRaw(22, "="),
-        new BuiltinRaw(23, ">="),
-        new BuiltinRaw(24, ">"),
-        new BuiltinUnary(25, "zero?"),
-        new BuiltinRaw(26, "+"),
-        new BuiltinRaw(27, "-"),
-        new BuiltinRaw(28, "*"),
-        new BuiltinRaw(29, "/"),
-        new BuiltinUnary(30, "boolean?"),
-        new BuiltinUnary(31, "pair?"),
+        new BuiltinBinary(9, "eq?"),
+        new BuiltinBinary(10, "eqv?"),
+        new BuiltinBinary(11, "equal?"),
+        new BuiltinUnary(12, "number?"),
+        new BuiltinUnary(13, "complex?"),
+        new BuiltinUnary(14, "real?"),
+        new BuiltinUnary(15, "rational?"),
+        new BuiltinUnary(16, "integer?"),
+        new BuiltinUnary(17, "exact?"),
+        new BuiltinUnary(18, "inexact?"),
+        new BuiltinRaw(19, "<"),
+        new BuiltinRaw(20, "<="),
+        new BuiltinRaw(21, "="),
+        new BuiltinRaw(22, ">="),
+        new BuiltinRaw(23, ">"),
+        new BuiltinUnary(24, "zero?"),
+        new BuiltinRaw(25, "+"),
+        new BuiltinRaw(26, "-"),
+        new BuiltinRaw(27, "*"),
+        new BuiltinRaw(28, "/"),
+        new BuiltinUnary(29, "boolean?"),
+        new BuiltinUnary(30, "pair?"),
+        new BuiltinUnary(31, "car"),
         new BuiltinUnary(32, "cdr"),
         new BuiltinBinary(33, "set-car!"),
         new BuiltinBinary(34, "set-cdr!"),

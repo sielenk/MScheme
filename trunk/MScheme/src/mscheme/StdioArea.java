@@ -41,7 +41,7 @@ import java.io.Writer;
 
 class StdioReader extends Reader
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -145,7 +145,7 @@ class StdioReader extends Reader
 
 class StdioWriter extends Writer
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -209,7 +209,7 @@ public class StdioArea
     extends    TextArea
     implements FocusListener, KeyListener, MouseListener, TextListener
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

@@ -38,16 +38,16 @@ import mscheme.values.functions.ApplyFunction;
 final class Macro
     implements Syntax
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
-    final static Machine machine = 
+    final static Machine MACHINE = 
         new Machine(
             Environment.getSchemeReportEnvironment()
         );
 
-    private final static Object _apply
+    private final static Object APPLY
         = ApplyFunction.INSTANCE;
 
     private final Object            _transformer;
@@ -66,11 +66,11 @@ final class Macro
     {
         // (apply tranformer def_env use_env args)
 
-        Pair result = (Pair)machine.execute(
+        Pair result = (Pair)MACHINE.execute(
             Application.create(
                 new Object[]
                 {
-                    _apply,
+                    APPLY,
                     _transformer,
                     _definitionEnv,
                           usageEnv,
@@ -88,7 +88,7 @@ final class Macro
 final class DefineSyntax
     extends CheckedSyntax
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -108,12 +108,12 @@ final class DefineSyntax
         Object value  = arguments.getTail().getHead();
 
         Macro macro = new Macro(
-           	Macro.machine.evaluate(value),
+           	Macro.MACHINE.evaluate(value),
             compilationEnv);
 
         compilationEnv.defineSyntax(symbol, macro);
         Macro
-            .machine
+            .MACHINE
             .getEnvironment()
             .getStatic()
             .defineSyntax(symbol, macro);

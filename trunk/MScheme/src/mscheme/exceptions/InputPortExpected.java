@@ -24,7 +24,7 @@ package mscheme.exceptions;
 public final class InputPortExpected
     extends PortExpected
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
     public InputPortExpected(Object cause)

@@ -28,7 +28,7 @@ import mscheme.values.List;
 public final class SyntaxArityError
     extends CompileError
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
     public SyntaxArityError(List arguments, Arity expected)

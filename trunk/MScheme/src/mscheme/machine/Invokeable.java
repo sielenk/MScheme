@@ -16,7 +16,7 @@ import mscheme.exceptions.SchemeException;
  */
 public interface Invokeable
 {
-	public final static String id
+	public final static String CVS_ID
 		= "$Id$";
 
 

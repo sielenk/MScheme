@@ -32,7 +32,7 @@ public interface List
     extends Value
 {
     /** The CVS id of the file containing this class. */
-    String id
+    String CVS_ID
         = "$Id$";
 
 

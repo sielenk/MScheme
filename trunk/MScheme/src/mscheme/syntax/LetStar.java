@@ -42,7 +42,7 @@ import mscheme.values.ValueTraits;
 final class LetStar
     extends CheckedSyntax
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -91,7 +91,7 @@ final class LetStar
 
 final class LetStarHelper
 {
-    public final static String id
+    public final static String CVS_ID
     = "$Id$";
 
 

@@ -34,7 +34,7 @@ import mscheme.values.List;
 
 public class ParseBuiltins
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -70,7 +70,7 @@ public class ParseBuiltins
         .append("    extends    ").append(baseClassName).append("\n")
         .append("    implements BuiltinTable\n")
         .append("{\n")
-        .append("    public final static String id\n")
+        .append("    public final static String CVS_ID\n")
         .append("        = \"$Id$\";\n")
         .append("\n")
         .append("\n")

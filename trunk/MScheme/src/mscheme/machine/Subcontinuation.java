@@ -19,7 +19,7 @@ import mscheme.values.functions.UnaryFunction;
 public class Subcontinuation
 	extends UnaryFunction
 {
-	public final static String id
+	public final static String CVS_ID
 		= "$Id$";
 
 

@@ -42,7 +42,7 @@ import mscheme.values.ValueTraits;
 final class Letrec
     extends LetBase
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

@@ -27,7 +27,7 @@ import mscheme.exceptions.SchemeException;
 public class TestBugs
     extends TestSchemeBase
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
     public TestBugs(String name)

@@ -25,7 +25,7 @@ import mscheme.machine.Machine;
 
 public class Main
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

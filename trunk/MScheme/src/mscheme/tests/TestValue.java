@@ -42,7 +42,7 @@ import mscheme.values.functions.CallCCFunction;
 public class TestValue
             extends junit.framework.TestCase
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -63,17 +63,17 @@ public class TestValue
     {
         int count = 0;
 
-        if (ValueTraits.isList      (v)) ++count;
+        if (ValueTraits.isList      (v)) { ++count; }
 
-        if (ValueTraits.isScmBoolean(v)) ++count;
-        if (ValueTraits.isPair      (v)) ++count;
-        if (ValueTraits.isSymbol    (v)) ++count;
-        if (ValueTraits.isScmNumber (v)) ++count;
-        if (ValueTraits.isScmChar   (v)) ++count;
-        if (ValueTraits.isScmString (v)) ++count;
-        if (ValueTraits.isScmVector (v)) ++count;
-        if (ValueTraits.isPort      (v)) ++count;
-        if (ValueTraits.isFunction  (v)) ++count;
+        if (ValueTraits.isScmBoolean(v)) { ++count; }
+        if (ValueTraits.isPair      (v)) { ++count; }
+        if (ValueTraits.isSymbol    (v)) { ++count; }
+        if (ValueTraits.isScmNumber (v)) { ++count; }
+        if (ValueTraits.isScmChar   (v)) { ++count; }
+        if (ValueTraits.isScmString (v)) { ++count; }
+        if (ValueTraits.isScmVector (v)) { ++count; }
+        if (ValueTraits.isPort      (v)) { ++count; }
+        if (ValueTraits.isFunction  (v)) { ++count; }
 
         return count;
     }

@@ -16,7 +16,7 @@ import mscheme.environment.DynamicEnvironment;
  */
 class StackFrame
 {
-	public final static String id
+	public final static String CVS_ID
 	    = "$Id$";
 
 	final DynamicEnvironment environment;

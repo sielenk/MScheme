@@ -32,7 +32,7 @@ import mscheme.values.List;
 public abstract class CheckedFunction
     extends Function
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

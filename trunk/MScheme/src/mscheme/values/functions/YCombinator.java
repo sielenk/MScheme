@@ -33,7 +33,7 @@ import mscheme.values.ValueTraits;
 class YWrappedFunction
             extends Function
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -60,7 +60,7 @@ class YWrappedFunction
 public final class YCombinator
 	extends UnaryValueFunction
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

@@ -27,13 +27,13 @@ import mscheme.values.functions.AppendFunction;
 public class MachineTest
 	extends TestCase
 {
-	public final static String id
+	public final static String  CVS_ID
 		= "$Id$";
 
 
-	private final static Object _o1 = new Object();
-	private final static Object _o2 = new Object();
-	private final static Object _o3 = new Object();
+	private final static Object O1 = new Object();
+	private final static Object O2 = new Object();
+	private final static Object O3 = new Object();
 
 	private Environment _environment;
 	private Reference   _key;
@@ -56,7 +56,7 @@ public class MachineTest
 		super.setUp();
 
 		_environment = Environment.getNullEnvironment();
-		_key         = _environment.define(Symbol.createUnique(), _o1);
+		_key         = _environment.define(Symbol.createUnique(), O1);
 		_machine     = new Machine(_environment);
 	}
 
@@ -75,21 +75,21 @@ public class MachineTest
 	final public void testObjects() throws SchemeException
 	{
 		assertSame(null, null);
-		assertSame(_o1, _o1);
-		assertSame(_o2, _o2);
-		assertSame(_o3, _o3);
+		assertSame(O1, O1);
+		assertSame(O2, O2);
+		assertSame(O3, O3);
 
-		assertNotNull(_o1);
-		assertNotNull(_o2);
-		assertNotNull(_o3);
+		assertNotNull(O1);
+		assertNotNull(O2);
+		assertNotNull(O3);
 
-		assertNotSame(_o1, _o2);
-		assertNotSame(_o1, _o3);
-		assertNotSame(_o2, _o3);
+		assertNotSame(O1, O2);
+		assertNotSame(O1, O3);
+		assertNotSame(O2, O3);
 
-		assertSame(_o1, _machine.execute(_o1));
-		assertSame(_o2, _machine.execute(_o2));
-		assertSame(_o3, _machine.execute(_o3));
+		assertSame(O1, _machine.execute(O1));
+		assertSame(O2, _machine.execute(O2));
+		assertSame(O3, _machine.execute(O3));
 	}
 
 	final private Object execSelection(
@@ -103,12 +103,12 @@ public class MachineTest
 
 	final public void testSelection() throws Exception
 	{
-		assertSame(_o1, execSelection(Boolean.TRUE,  _o1, _o2));
-		assertSame(_o2, execSelection(Boolean.FALSE, _o1, _o2));
+		assertSame(O1, execSelection(Boolean.TRUE,  O1, O2));
+		assertSame(O2, execSelection(Boolean.FALSE, O1, O2));
 
-		assertSame(_o1, execSelection(_o1, _o1, _o2));
-		assertSame(_o1, execSelection(_o2, _o1, _o2));
-		assertSame(_o1, execSelection(_o3, _o1, _o2));
+		assertSame(O1, execSelection(O1, O1, O2));
+		assertSame(O1, execSelection(O2, O1, O2));
+		assertSame(O1, execSelection(O3, O1, O2));
 	}
 
 	final private Object execAssign(
@@ -122,43 +122,43 @@ public class MachineTest
 
 	final public void testAssign() throws Exception
 	{
-		assertSame(_o2, execAssign(_o2));
-		assertSame(_o3, execAssign(_o3));
+		assertSame(O2, execAssign(O2));
+		assertSame(O3, execAssign(O3));
 	}
 
 	final public void testSequence() throws Exception
 	{
-		Object[]  sequence = { new Assignment(_key, _o3), _o2 };
+		Object[]  sequence = { new Assignment(_key, O3), O2 };
 		
-		assertSame(_o1, _environment.lookup(_key));
-		assertSame(_o2, _machine.execute((Object)Sequence.create(sequence)));
-		assertSame(_o3, _environment.lookup(_key));
+		assertSame(O1, _environment.lookup(_key));
+		assertSame(O2, _machine.execute((Object)Sequence.create(sequence)));
+		assertSame(O3, _environment.lookup(_key));
 	}
 
 	final public void testConj() throws Exception
 	{
-		Object    assignment = new Assignment(_key, _o2);
+		Object    assignment = new Assignment(_key, O2);
 		Object[]  sequence1  = { Boolean.FALSE, assignment };
 		Object[]  sequence2  = { Boolean.TRUE,  assignment };
 
-		assertSame(_o1, _environment.lookup(_key));
+		assertSame(O1, _environment.lookup(_key));
 		_machine.execute((Object)Sequence.createConj(sequence1));
-		assertSame(_o1, _environment.lookup(_key));
+		assertSame(O1, _environment.lookup(_key));
 		_machine.execute((Object)Sequence.createConj(sequence2));
-		assertSame(_o2, _environment.lookup(_key));
+		assertSame(O2, _environment.lookup(_key));
 	}
 
 	final public void testDisj() throws Exception
 	{
-		Object    assignment = new Assignment(_key, _o2);
+		Object    assignment = new Assignment(_key, O2);
 		Object[]  sequence1  = { Boolean.TRUE,  assignment };
 		Object[]  sequence2  = { Boolean.FALSE, assignment };
 
-		assertSame(_o1, _environment.lookup(_key));
+		assertSame(O1, _environment.lookup(_key));
 		_machine.execute((Object)Sequence.createDisj(sequence1));
-		assertSame(_o1, _environment.lookup(_key));
+		assertSame(O1, _environment.lookup(_key));
 		_machine.execute((Object)Sequence.createDisj(sequence2));
-		assertSame(_o2, _environment.lookup(_key));
+		assertSame(O2, _environment.lookup(_key));
 	}
 
 	final public void testApplication() throws Exception

@@ -25,7 +25,7 @@ import junit.framework.TestSuite;
 
 public class TestMScheme
 {
-    public final static String id
+    public final static String CVS_ID
        = "$Id$";
 
 

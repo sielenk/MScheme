@@ -31,7 +31,7 @@ public final class ScmString
     extends Compound
     implements Outputable
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

@@ -11,10 +11,10 @@ package mscheme.machine;
  */
 class StackPlain implements Stack
 {
-	public final static String id
+	public final static String CVS_ID
 	    = "$Id$";
 
-	private static int INITIAL_STACK_SIZE = 0;
+	private final static int INITIAL_STACK_SIZE = 0;
 
 	private StackFrame _stack[];
 	private int        _sp;

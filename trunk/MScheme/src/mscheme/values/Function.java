@@ -29,7 +29,7 @@ import mscheme.util.Arity;
 
 public abstract class Function
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

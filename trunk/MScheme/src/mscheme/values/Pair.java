@@ -27,7 +27,7 @@ import mscheme.exceptions.ImmutableException;
 public interface Pair
     extends Value
 {
-    String id
+    String CVS_ID
         = "$Id$";
 
 

@@ -43,7 +43,7 @@ import mscheme.values.ValueTraits;
 public class StaticEnvironment
     extends ValueDefaultImplementations
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -207,7 +207,7 @@ public class StaticEnvironment
         }
     }
 
-    public Reference define(Symbol symbol)
+    public final Reference define(Symbol symbol)
         throws CompileError
     {
         if (_state != OPEN)

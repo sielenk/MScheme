@@ -43,7 +43,7 @@ import mscheme.values.functions.YCombinator;
 final class Let
     extends LetBase
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

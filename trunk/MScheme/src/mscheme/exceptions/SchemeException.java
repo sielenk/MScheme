@@ -27,7 +27,7 @@ import mscheme.values.ScmString;
 public abstract class SchemeException
 	extends Exception
 {
-    public final static String id
+    public final static String CVS_ID
     = "$Id$";
 
     private final Object _cause;

@@ -25,7 +25,7 @@ import mscheme.Syntax;
 
 public abstract class SyntaxFactory
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
