@@ -43,7 +43,7 @@ sub createConstant
     print("    String $name = \"$buffer\";\n");
 }
 
-print("package MScheme;\n\npublic interface Init\n{\n");
+print("package mscheme;\n\npublic interface Init\n{\n");
 
 foreach $file (@ARGV)
 {
