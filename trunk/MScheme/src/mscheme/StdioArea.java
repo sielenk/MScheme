@@ -35,6 +35,7 @@ import java.awt.event.TextEvent;
 import java.awt.event.TextListener;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.io.Reader;
 import java.io.Writer;
 
@@ -72,7 +73,10 @@ class StdioReader extends Reader
                 {
                     lock.wait();
                 }
-                catch (Exception exception) { }
+                catch (InterruptedException e)
+                {
+                    throw new InterruptedIOException(e.getMessage());
+                }
             }
 
             int     indexOfEot  = _buffer.indexOf('\004');
