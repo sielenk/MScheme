@@ -43,13 +43,13 @@ public class StaticEnvironment
             extends ValueDefaultImplementations
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     // ***********************************************************************
 
     public void write(Writer destination)
-    throws IOException
+        throws IOException
     {
         destination.write("#[static environment]");
     }
@@ -83,7 +83,7 @@ public class StaticEnvironment
 
 
     StaticEnvironment(StaticEnvironment parent, List symbols)
-    throws CompileError, TypeError
+        throws CompileError, TypeError
     {
         this(parent);
 
@@ -105,7 +105,7 @@ public class StaticEnvironment
     }
 
     StaticEnvironment(StaticEnvironment parent, Symbol symbol)
-    throws CompileError
+        throws CompileError
     {
         this(parent);
         define(symbol);
@@ -117,6 +117,7 @@ public class StaticEnvironment
     {
         return _level;
     }
+
     int getSize  ()
     {
         return _numberOfReferences;
@@ -162,7 +163,7 @@ public class StaticEnvironment
             // a lookup.
             if (ref == null)
             {
-                ref = new Reference(
+                ref = Reference.create(
                           symbol,
                           getLevel(),
                           getSize()
@@ -217,6 +218,18 @@ public class StaticEnvironment
         return null;
     }
 
+    private Object delayedLookup(Symbol key)
+    {
+        Object result = lookupNoThrow(key);
+
+        if (result == null)
+        {
+            return Reference.create(key, this);
+        }
+
+        return result;
+    }
+
     private Object lookup(Symbol key)
         throws SymbolNotFoundException
     {
@@ -226,8 +239,19 @@ public class StaticEnvironment
         {
             throw new SymbolNotFoundException(key);
         }
-        
+
         return result;
+    }
+
+    public Syntax getDelayedSyntaxFor(Symbol key)
+        throws SymbolNotFoundException
+    {
+        Object result = delayedLookup(key);
+
+        return 
+            (result instanceof Reference)
+            ? ProcedureCall.create((Reference)result)
+            : (Syntax)result;
     }
 
     public Syntax getSyntaxFor(Symbol key)
@@ -239,6 +263,19 @@ public class StaticEnvironment
             (result instanceof Reference)
             ? ProcedureCall.create((Reference)result)
             : (Syntax)result;
+    }
+
+    public Reference getDelayedReferenceFor(Symbol key)
+        throws UnexpectedSyntax
+    {
+        try
+        {
+            return (Reference)delayedLookup(key);
+        }
+        catch (ClassCastException e)
+        {
+            throw new UnexpectedSyntax(key);
+        }
     }
 
     public Reference getReferenceFor(Symbol key)
