@@ -14,31 +14,38 @@ import MScheme.exceptions.*;
 
 
 public abstract class Function
-    extends ValueDefaultImplementations
+            extends ValueDefaultImplementations
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     // specialisation of Value
 
     public final boolean isFunction()
-    { return true; }
-    
+    {
+        return true;
+    }
+
     public final Function toFunction()
-    { return this; }
-    
+    {
+        return this;
+    }
+
     public void write(Writer destination)
-        throws IOException
-    { destination.write("[procedure]"); }
+    throws IOException
+    {
+        destination.write("[procedure]");
+    }
 
 
     public final static int checkArguments(Arity arity, List arguments)
-        throws SchemeException
+    throws SchemeException
     {
         int len = arguments.getLength();
 
-        if (!arity.isValid(len)) {
+        if (!arity.isValid(len))
+        {
             throw new RuntimeArityError(arguments, arity);
         }
 
@@ -47,7 +54,7 @@ public abstract class Function
 
 
     // abstract function interface
-    
+
     public abstract Code call(Registers state, List arguments)
-        throws SchemeException;
+    throws SchemeException;
 }

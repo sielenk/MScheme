@@ -4,14 +4,16 @@ import MScheme.values.ScmVector;
 
 
 public final class UninitializedVectorException
-    extends VectorException
+            extends VectorException
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
     public UninitializedVectorException(
         ScmVector vector,
         int       index
     )
-    { super(vector, index); }
+    {
+        super(vector, index);
+    }
 }

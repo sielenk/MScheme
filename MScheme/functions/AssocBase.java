@@ -10,10 +10,10 @@ import MScheme.exceptions.PairExpected;
 
 
 abstract class AssocBase
-    extends BinaryValueFunction
+            extends BinaryValueFunction
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     protected abstract boolean equal(Value fst, Value snd);
@@ -27,10 +27,12 @@ abstract class AssocBase
             List tail = values.toList();
             !tail.isEmpty();
             tail = tail.getTail()
-        ) {
+        )
+        {
             Pair pair = tail.getHead().toPair();
 
-            if (equal(key, pair.getFirst())) {
+            if (equal(key, pair.getFirst()))
+            {
                 return pair;
             }
         }

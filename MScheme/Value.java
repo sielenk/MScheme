@@ -16,7 +16,7 @@ public interface Value
 {
     /** The CVS id of the file containing this class. */
     String id
-        = "$Id$";
+    = "$Id$";
 
     /**
      * Returns an immutable version of <code>this</code>.
@@ -36,7 +36,7 @@ public interface Value
      */
     boolean isList();
 
-    
+
     // disjoint types (as in R5RS, 3.2)
 
     /**
@@ -95,7 +95,7 @@ public interface Value
 
 
     // type casts (to get SchemeExceptions instead of ClassCastExceptions)
-    
+
     /**
      * Casts a reference to {@link Value} to a reference to {@link List}.
      */
@@ -167,7 +167,7 @@ public interface Value
      * @param other the value with which to compare.
      */
     boolean eq(Value other);
-    
+
     /**
      * Compares two values for Scheme's <code>eqv</code>-equality.
      * This equality is supposed to compare characters and numbers
@@ -177,7 +177,7 @@ public interface Value
      * @param other the value with which to compare.
      */
     boolean eqv(Value other);
-    
+
     /**
      * Compares two values for Scheme's <code>equal</code>-equality.
      * This equality compares compound values recursively, primitive
@@ -187,7 +187,7 @@ public interface Value
      */
     boolean equal(Value other);
 
-    
+
     // the java equivalence predicate
 
     /**
@@ -196,12 +196,12 @@ public interface Value
      * <p>
      * @param other the object with which to compare.
      * @return <code>(other instanceof Value) && equal((Value)other)</code>
-     */    
+     */
     boolean equals(Object other);
 
 
     // scheme io functions
-    
+
     /**
      * Part of Scheme's <code>write</code> function implementation.
      * <p>
@@ -239,7 +239,7 @@ public interface Value
      * Compiles a value as normal code.
      */
     Code getCode(StaticEnvironment compilationEnv)
-        throws SchemeException;
+    throws SchemeException;
 
     /**
      * Compiles a value as list head.
@@ -247,5 +247,5 @@ public interface Value
      * keyword which needs special treatment.
      */
     Translator getTranslator(StaticEnvironment compilationEnv)
-        throws SchemeException;
+    throws SchemeException;
 }

@@ -18,23 +18,26 @@ import MScheme.exceptions.*;
 
 
 final class Define
-    extends Syntax
+            extends Syntax
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     final static Syntax INSTANCE = new Define();
 
     private Define()
-    { super(Arity.atLeast(2)); }
+    {
+        super(Arity.atLeast(2));
+    }
 
     protected Code checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws SchemeException
     {
-        if (arguments.getHead().isPair()) {
+        if (arguments.getHead().isPair())
+        {
             //    (define (f x y) (+ x y))
             // -> (define f (lambda (x y) (+ x y)))
             Symbol symbol  = arguments.getHead().toPair().getFirst ().toSymbol();
@@ -42,24 +45,26 @@ final class Define
             List   body    = arguments.getTail();
 
             return Set.translate(
-                compilationEnv.define(symbol),
-                Lambda.INSTANCE.translate(
-                    compilationEnv,
-                    ListFactory.prepend(
-                        formals,
-                        body
-                    )
-                )
-            );
-        } else {
+                       compilationEnv.define(symbol),
+                       Lambda.INSTANCE.translate(
+                           compilationEnv,
+                           ListFactory.prepend(
+                               formals,
+                               body
+                           )
+                       )
+                   );
+        }
+        else
+        {
             compilationEnv.define(arguments.getHead().toSymbol());
-            
-            // call the translate instead of checkedTranslate 
+
+            // call the translate instead of checkedTranslate
             // to let Set check the argument count again
             return Set.INSTANCE.translate(
-                compilationEnv,
-                arguments
-            );
+                       compilationEnv,
+                       arguments
+                   );
         }
     }
 }

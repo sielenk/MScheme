@@ -27,49 +27,49 @@ import MScheme.exceptions.*;
 
 
 final class Macro
-    extends Syntax
+            extends Syntax
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final static Code
-        _apply = ApplyFunction.INSTANCE.getLiteral();
+    _apply = ApplyFunction.INSTANCE.getLiteral();
 
     private final Code              _transformer;
     private final StaticEnvironment _definitionEnv;
-    
+
     Macro(Code transformer, StaticEnvironment definitionEnv)
     {
         super(Arity.atLeast(0));
         _transformer   = transformer;
         _definitionEnv = definitionEnv;
     }
-    
+
     protected Code checkedTranslate(
         StaticEnvironment usageEnv,
         List              arguments
     ) throws SchemeException
     {
         // (apply tranformer def_env use_env args)
-    
+
         Pair result = new Machine(
-            Environment.getImplementationEnvironment()
-        ).execute(
-            Application.create(
-                CodeList.prepend(
-                    _apply,
-                    CodeList.prepend(
-                        _transformer,
-                        CodeList.create(
-                            _definitionEnv.getLiteral(),
-                            usageEnv.getLiteral(),
-                            arguments.getLiteral()
-                        )
-                    )
-                )
-            )
-        ).toPair();
+                          Environment.getImplementationEnvironment()
+                      ).execute(
+                          Application.create(
+                              CodeList.prepend(
+                                  _apply,
+                                  CodeList.prepend(
+                                      _transformer,
+                                      CodeList.create(
+                                          _definitionEnv.getLiteral(),
+                                          usageEnv.getLiteral(),
+                                          arguments.getLiteral()
+                                      )
+                                  )
+                              )
+                          )
+                      ).toPair();
 
         return
             result
@@ -83,16 +83,18 @@ final class Macro
 }
 
 final class DefineSyntax
-    extends Syntax
+            extends Syntax
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     final static Syntax INSTANCE = new DefineSyntax();
 
     private DefineSyntax()
-    { super(Arity.exactly(2)); }
+    {
+        super(Arity.exactly(2));
+    }
 
     protected Code checkedTranslate(
         StaticEnvironment compilationEnv,
@@ -103,18 +105,18 @@ final class DefineSyntax
         Value  value  = arguments.getTail().getHead();
 
         Macro macro = new Macro(
-            new Machine(Environment.getImplementationEnvironment())
-                .evaluate(value)
-                .toFunction()
-                .getLiteral(),
-            compilationEnv
-        );
+                          new Machine(Environment.getImplementationEnvironment())
+                          .evaluate(value)
+                          .toFunction()
+                          .getLiteral(),
+                          compilationEnv
+                      );
 
         compilationEnv.defineSyntax(symbol, macro);
         Environment
-            .getImplementationEnvironment()
-            .getStatic()
-            .defineSyntax(symbol, macro);
+        .getImplementationEnvironment()
+        .getStatic()
+        .defineSyntax(symbol, macro);
 
         return Empty.create().getLiteral();
     }

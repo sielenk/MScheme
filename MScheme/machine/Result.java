@@ -12,11 +12,11 @@ import MScheme.exceptions.RuntimeError;
  * of the scheme machine.
  */
 public abstract class Result
-    extends Code
+            extends Code
 {
     /** The CVS id of the file containing this class. */
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     /** The default constructor. */
@@ -30,7 +30,7 @@ public abstract class Result
      * @param  state  the current state of the scheme machine.
      */
     protected abstract Value getValue(Registers state)
-        throws RuntimeError;
+    throws RuntimeError;
 
 
     /**
@@ -41,11 +41,11 @@ public abstract class Result
      *         {@link Continuation#invoke(Registers, Value)}.
      */
     public final Code executionStep(Registers state)
-        throws SchemeException
+    throws SchemeException
     {
         return state.getContinuation().invoke(
-            state,
-            getValue(state)
-        );
+                   state,
+                   getValue(state)
+               );
     }
 }

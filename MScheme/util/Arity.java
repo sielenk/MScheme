@@ -6,7 +6,7 @@ import MScheme.exceptions.RuntimeArityError;
 public class Arity
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final int _minArity;
@@ -20,30 +20,41 @@ public class Arity
 
 
     public static Arity exactly(int arity)
-    { return new Arity(arity, arity); }
+    {
+        return new Arity(arity, arity);
+    }
 
     public static Arity atLeast(int arity)
-    { return new Arity(arity, -1); }
+    {
+        return new Arity(arity, -1);
+    }
 
     public static Arity inRange(int lo, int hi)
-    { return new Arity(lo, hi); }
+    {
+        return new Arity(lo, hi);
+    }
 
 
     public Arity getOneLess()
-        throws RuntimeArityError
+    throws RuntimeArityError
     {
         int newMin = getMin() - 1;
 
-        if (newMin < 0) {
+        if (newMin < 0)
+        {
             newMin = 0;
         }
 
-        if (allowMore()) {
+        if (allowMore())
+        {
             return atLeast(newMin);
-        } else {
+        }
+        else
+        {
             int newMax = getMax() - 1;
 
-            if (newMax < 0) {
+            if (newMax < 0)
+            {
                 throw new RuntimeArityError(null, this);
             }
 
@@ -53,13 +64,19 @@ public class Arity
 
 
     public int getMin()
-    { return _minArity; }
+    {
+        return _minArity;
+    }
 
     public int getMax()
-    { return _maxArity; }
+    {
+        return _maxArity;
+    }
 
     public boolean allowMore()
-    { return (_maxArity == -1); }
+    {
+        return (_maxArity == -1);
+    }
 
 
     public boolean isValid(int arity)
@@ -76,9 +93,12 @@ public class Arity
     {
         String result = "" + getMin();
 
-        if (allowMore()) {
+        if (allowMore())
+        {
             result += " or more";
-        } else if (getMin() != getMax()) {
+        }
+        else if (getMin() != getMax())
+        {
             result += " to " + getMax();
         }
 

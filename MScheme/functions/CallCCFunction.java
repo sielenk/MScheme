@@ -12,10 +12,10 @@ import MScheme.exceptions.*;
 
 
 public final class CallCCFunction
-    extends UnaryFunction
+            extends UnaryFunction
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     public final static CallCCFunction INSTANCE = new CallCCFunction();
@@ -24,13 +24,13 @@ public final class CallCCFunction
     { }
 
     protected Code checkedCall(Registers state, Value argument)
-        throws SchemeException
+    throws SchemeException
     {
         return argument.toFunction().call(
-            state,
-            ListFactory.create(
-                state.getCurrentContinuation()
-            )
-        );
+                   state,
+                   ListFactory.create(
+                       state.getCurrentContinuation()
+                   )
+               );
     }
 }

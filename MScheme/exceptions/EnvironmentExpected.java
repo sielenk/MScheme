@@ -4,11 +4,13 @@ import MScheme.Value;
 
 
 public final class EnvironmentExpected
-    extends TypeError
+            extends TypeError
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
     public EnvironmentExpected(Value cause)
-    { super(cause, "environment"); }
+    {
+        super(cause, "environment");
+    }
 }

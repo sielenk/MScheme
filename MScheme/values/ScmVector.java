@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import MScheme.Value;
 import MScheme.List;
-import MScheme.Code; 
+import MScheme.Code;
 
 import MScheme.environment.StaticEnvironment;
 import MScheme.code.*;
@@ -13,23 +13,25 @@ import MScheme.exceptions.*;
 
 
 public final class ScmVector
-    extends Compound
+            extends Compound
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final static ScmVector _empty = new ScmVector(false, 0, null);
 
     private final Value[] _data;
-    
+
     private ScmVector(boolean isConst, Value[] data)
     {
         super(isConst);
         _data = data;
 
-        if (isConst) {
-            for (int i = 0; i < _data.length; ++i) {
+        if (isConst)
+        {
+            for (int i = 0; i < _data.length; ++i)
+            {
                 _data[i] = _data[i].getConst();
             }
         }
@@ -40,84 +42,108 @@ public final class ScmVector
         super(isConst);
         _data = new Value[size];
 
-        if (isConst) {
+        if (isConst)
+        {
             fill = fill.getConst();
         }
 
-        for (int i = 0; i < _data.length; ++i) {
+        for (int i = 0; i < _data.length; ++i)
+        {
             _data[i] = fill;
         }
     }
 
 
     public static ScmVector create()
-    { return _empty; }
+    {
+        return _empty;
+    }
 
     public static ScmVector create(Value[] data)
-    { return new ScmVector(false, data); }
+    {
+        return new ScmVector(false, data);
+    }
 
     public static ScmVector createConst(Value[] data)
-    { return new ScmVector(true, data); }
+    {
+        return new ScmVector(true, data);
+    }
 
     public static ScmVector create(int size, Value fill)
-    { return (size == 0) ? _empty : new ScmVector(false, size, fill); }
+    {
+        return (size == 0) ? _empty : new ScmVector(false, size, fill);
+    }
 
     public static ScmVector create(List list)
-    { return createHelper(list, 0); }
+    {
+        return createHelper(list, 0);
+    }
 
     private static ScmVector createHelper(List list, int index)
     {
-        if (list.isEmpty()) {
+        if (list.isEmpty())
+        {
             return create(index, null);
-        } else {
-            try {
+        }
+        else
+        {
+            try
+            {
                 ScmVector result = createHelper(
-                    list.getTail(),
-                    index + 1
-                );
+                                       list.getTail(),
+                                       index + 1
+                                   );
 
                 result._data[index] = list.getHead();
 
                 return result;
             }
-            catch (PairExpected e) {
+            catch (PairExpected e)
+            {
                 throw new RuntimeException(
-                    "unexpected PairExpected"
-                );
+                          "unexpected PairExpected"
+                      );
             }
-            catch (ListExpected e) {
+            catch (ListExpected e)
+            {
                 throw new RuntimeException(
-                    "unexpected ListExpected"
-                );
+                          "unexpected ListExpected"
+                      );
             }
         }
     }
 
 
     public int getLength()
-    { return _data.length; }
+    {
+        return _data.length;
+    }
 
 
     public Value get(int index)
-        throws VectorException
+    throws VectorException
     {
-        try {
+        try
+        {
             return _data[index];
         }
-        catch (ArrayIndexOutOfBoundsException e) {
+        catch (ArrayIndexOutOfBoundsException e)
+        {
             throw new InvalidVectorIndexException(this, index);
         }
     }
 
     public void set(int index, Value value)
-        throws InvalidVectorIndexException, ImmutableException
+    throws InvalidVectorIndexException, ImmutableException
     {
         modify();
 
-        try {
+        try
+        {
             _data[index] = value;
         }
-        catch (ArrayIndexOutOfBoundsException e) {
+        catch (ArrayIndexOutOfBoundsException e)
+        {
             throw new InvalidVectorIndexException(this, index);
         }
     }
@@ -126,22 +152,32 @@ public final class ScmVector
     // specialisation of Value
 
     public boolean isScmVector()
-    { return true; }
+    {
+        return true;
+    }
 
     public ScmVector toScmVector()
-    { return this; }
+    {
+        return this;
+    }
 
     protected Value getConstCopy()
-    { return createConst((Value[])_data.clone()); }
+    {
+        return createConst((Value[])_data.clone());
+    }
 
     public boolean equal(Value other)
     {
-        try {
+        try
+        {
             ScmVector otherVector = (ScmVector)other;
 
-            if (_data.length == otherVector._data.length) {
-                for (int i = 0; i < _data.length; i++) {
-                    if (!_data[i].equal(otherVector._data[i])) {
+            if (_data.length == otherVector._data.length)
+            {
+                for (int i = 0; i < _data.length; i++)
+                {
+                    if (!_data[i].equal(otherVector._data[i]))
+                    {
                         return false;
                     }
                 }
@@ -149,22 +185,28 @@ public final class ScmVector
                 return true;
             }
         }
-        catch (ClassCastException e) { }
+        catch (ClassCastException e)
+        { }
 
         return false;
     }
 
     private void put(Writer destination, boolean doDisplay)
-        throws IOException
+    throws IOException
     {
         destination.write("#(");
-        for (int i = 0; i < getLength(); i++) {
-            if (i > 0) {
+        for (int i = 0; i < getLength(); i++)
+        {
+            if (i > 0)
+            {
                 destination.write(' ');
             }
-            if (doDisplay) {
+            if (doDisplay)
+            {
                 _data[i].display(destination);
-            } else {
+            }
+            else
+            {
                 _data[i].write(destination);
             }
         }
@@ -172,22 +214,29 @@ public final class ScmVector
     }
 
     public void write(Writer destination)
-        throws IOException
-    { put(destination, false); }
+    throws IOException
+    {
+        put(destination, false);
+    }
 
     public void display(Writer destination)
-        throws IOException
-    { put(destination, true); }
+    throws IOException
+    {
+        put(destination, true);
+    }
 
 
     public Code getCode(StaticEnvironment e)
-        throws CantCompileException
-    { throw new CantCompileException(this); }
+    throws CantCompileException
+    {
+        throw new CantCompileException(this);
+    }
 
     public List getList()
     {
         List result = Empty.create();
-        for (int i = getLength() - 1; i >= 0; i--) {
+        for (int i = getLength() - 1; i >= 0; i--)
+        {
             result = ListFactory.prepend(_data[i], result);
         }
         return result;

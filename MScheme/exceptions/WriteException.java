@@ -4,12 +4,14 @@ import MScheme.Value;
 
 
 public final class WriteException
-    extends SchemeIOException
+            extends SchemeIOException
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
     public WriteException(Value cause)
-    { super(cause); }
+    {
+        super(cause);
+    }
 }
 

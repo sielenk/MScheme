@@ -11,10 +11,10 @@ import MScheme.exceptions.*;
 
 
 public abstract class CheckedFunction
-    extends Function
+            extends Function
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     protected abstract Arity getArity();
@@ -29,12 +29,12 @@ public abstract class CheckedFunction
     // implementation of Function
 
     public final Code call(Registers state, List arguments)
-        throws SchemeException
+    throws SchemeException
     {
         return checkedCall(
-            state,
-            checkArguments(getArity(), arguments),
-            arguments
-        );
+                   state,
+                   checkArguments(getArity(), arguments),
+                   arguments
+               );
     }
 }

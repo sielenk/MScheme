@@ -13,105 +13,131 @@ import MScheme.exceptions.CloseException;
 
 
 public class OutputPort
-    extends ValueDefaultImplementations
+            extends ValueDefaultImplementations
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final Writer _writer;
 
     private OutputPort(Writer writer)
-    { _writer = writer; }
+    {
+        _writer = writer;
+    }
 
 
     public static OutputPort create(Writer writer)
-    { return new OutputPort(writer); }
+    {
+        return new OutputPort(writer);
+    }
 
     public static OutputPort create(ScmString filename)
-        throws OpenException
-    { return create(filename.getJavaString()); }
+    throws OpenException
+    {
+        return create(filename.getJavaString());
+    }
 
     public static OutputPort create(String filename)
-        throws OpenException
+    throws OpenException
     {
-        try {
+        try
+        {
             return create(new FileWriter(filename));
         }
-        catch (IOException e) {
+        catch (IOException e)
+        {
             throw new OpenException(
-                ScmString.create(filename)
-            );
+                      ScmString.create(filename)
+                  );
         }
     }
 
     public static OutputPort create()
-    { return create(new OutputStreamWriter(System.out)); }
-    
+    {
+        return create(new OutputStreamWriter(System.out));
+    }
+
 
     // specialisation of Port
-    
+
     public void write(Writer destination)
-        throws IOException
-    { destination.write("[output port]"); }
-        
-    public boolean isPort()
-    { return true; }
-    
-    public OutputPort toOutputPort()
-    { return this; }
-    
-    
-    public void close()
-        throws CloseException
+    throws IOException
     {
-        try {
+        destination.write("[output port]");
+    }
+
+    public boolean isPort()
+    {
+        return true;
+    }
+
+    public OutputPort toOutputPort()
+    {
+        return this;
+    }
+
+
+    public void close()
+    throws CloseException
+    {
+        try
+        {
             _writer.close();
         }
-        catch (IOException e) {
+        catch (IOException e)
+        {
             throw new CloseException(this);
         }
     }
 
 
     // output port
-    
+
     public void writeChar(char c)
-        throws WriteException
+    throws WriteException
     {
-        try {
+        try
+        {
             _writer.write(c);
             _writer.flush();
         }
-        catch (IOException e) {
+        catch (IOException e)
+        {
             throw new WriteException(this);
         }
     }
-    
+
     public void writeScmChar(ScmChar c)
-        throws WriteException
-    { writeChar(c.getJavaChar()); }
-    
-    public void write(Value datum)
-        throws WriteException
+    throws WriteException
     {
-        try {
+        writeChar(c.getJavaChar());
+    }
+
+    public void write(Value datum)
+    throws WriteException
+    {
+        try
+        {
             datum.write(_writer);
             _writer.flush();
         }
-        catch (IOException e) {
+        catch (IOException e)
+        {
             throw new WriteException(this);
         }
     }
 
     public void display(Value datum)
-        throws WriteException
+    throws WriteException
     {
-        try {
+        try
+        {
             datum.display(_writer);
             _writer.flush();
         }
-        catch (IOException e) {
+        catch (IOException e)
+        {
             throw new WriteException(this);
         }
     }

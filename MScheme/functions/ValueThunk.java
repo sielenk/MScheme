@@ -8,17 +8,19 @@ import MScheme.exceptions.SchemeException;
 
 
 public abstract class ValueThunk
-    extends Thunk
+            extends Thunk
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     protected final Code checkedCall(
         Registers state
     ) throws SchemeException
-    { return checkedCall().getLiteral(); }
+    {
+        return checkedCall().getLiteral();
+    }
 
     protected abstract Value checkedCall()
-        throws SchemeException;
+    throws SchemeException;
 }

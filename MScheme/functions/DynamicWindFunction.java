@@ -12,14 +12,14 @@ import MScheme.exceptions.*;
 
 
 public class DynamicWindFunction
-    extends TernaryFunction
+            extends TernaryFunction
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     public final static DynamicWindFunction INSTANCE
-        = new DynamicWindFunction();
+    = new DynamicWindFunction();
 
 
     protected Code checkedCall(
@@ -35,14 +35,14 @@ public class DynamicWindFunction
 
         return WindContinuation.create(state, before, thunk, after);
     }
-    
+
     private static Code createCall(Value v)
-        throws FunctionExpected
+    throws FunctionExpected
     {
         return Application.create(
-	        CodeList.create(
-		        v.toFunction().getLiteral()
-			)
-	    );
+                   CodeList.create(
+                       v.toFunction().getLiteral()
+                   )
+               );
     }
 }

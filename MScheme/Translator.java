@@ -14,7 +14,7 @@ public interface Translator
 {
     /** The CVS id of the file containing this class. */
     String id
-        = "$Id$";
+    = "$Id$";
 
     Code translate(
         StaticEnvironment compilationEnv,

@@ -4,14 +4,18 @@ import MScheme.Value;
 
 
 public class RuntimeError
-    extends SchemeException
+            extends SchemeException
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
     public RuntimeError(Value cause, String message)
-    { super(cause, message); }
+    {
+        super(cause, message);
+    }
 
     public RuntimeError(Value cause)
-    { this(cause, ""); }
+    {
+        this(cause, "");
+    }
 }

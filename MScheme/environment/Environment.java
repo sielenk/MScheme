@@ -28,20 +28,24 @@ import MScheme.exceptions.*;
 
 
 public final class Environment
-    extends ValueDefaultImplementations
+            extends ValueDefaultImplementations
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     // *******************************************************************
 
     public void write(Writer destination)
-        throws IOException
-    { destination.write("[environment]"); }
+    throws IOException
+    {
+        destination.write("[environment]");
+    }
 
     public Environment toEnvironment()
-    { return this; }
+    {
+        return this;
+    }
 
     // *******************************************************************
 
@@ -54,10 +58,15 @@ public final class Environment
         StaticEnvironment bindings,
         Vector[]          data
     )
-    { _bindings = bindings; _data = data; }
+    {
+        _bindings = bindings;
+        _data = data;
+    }
 
     Environment()
-    { this(new StaticEnvironment(), (Environment)null); }
+    {
+        this(new StaticEnvironment(), (Environment)null);
+    }
 
     Environment(
         StaticEnvironment bindings,
@@ -65,17 +74,19 @@ public final class Environment
     )
     {
         int level = bindings.getLevel();
-    
+
         _bindings = bindings;
         _data     = new Vector[level + 1];
 
-        if (level > 0) {
-            if (parent._bindings != bindings.getParent()) {
+        if (level > 0)
+        {
+            if (parent._bindings != bindings.getParent())
+            {
                 throw new RuntimeException(
-                    "consistency failure: StaticEnvironment parent"
-                );
+                          "consistency failure: StaticEnvironment parent"
+                      );
             }
-            
+
             System.arraycopy(
                 parent._data, 0,
                 _data, 0,
@@ -106,11 +117,12 @@ public final class Environment
                 tail.getHead(),
                 i
             );
-            
+
             tail = tail.getTail();
         }
 
-        if (arity.allowMore()) {
+        if (arity.allowMore())
+        {
             data.setElementAt(
                 tail,
                 arity.getMin()
@@ -120,10 +132,12 @@ public final class Environment
 
 
     private static Environment
-        _implementationEnvironment = getSchemeReportEnvironment();
+    _implementationEnvironment = getSchemeReportEnvironment();
 
     public static Environment getImplementationEnvironment()
-    { return _implementationEnvironment; }
+    {
+        return _implementationEnvironment;
+    }
 
 
     private static Value   _nullEnvironmentHook         = null;
@@ -131,41 +145,51 @@ public final class Environment
 
     private static void initHooks()
     {
-        if (_implementationEnvironment == null) {
+        if (_implementationEnvironment == null)
+        {
             return;
         }
-        if (_nullEnvironmentHook != null) {
+        if (_nullEnvironmentHook != null)
+        {
             return;
         }
 
-        try {
+        try
+        {
             _implementationEnvironment.define(
                 Symbol.create("unique-id"),
-                new ValueThunk() {
+                new ValueThunk()
+                {
                     public final static String id
-                        = "$Id$";
+                    = "$Id$";
 
                     protected Value checkedCall()
-                    { return Symbol.createUnique(); }
+                    {
+                        return Symbol.createUnique();
+                    }
                 }
             );
 
             _implementationEnvironment.define(
                 Symbol.create("current-environment"),
-                new Thunk() {
+                new Thunk()
+                {
                     public final static String id
-                        = "$Id$";
+                    = "$Id$";
 
                     protected Code checkedCall(Registers state)
-                    { return state.getEnvironment().getLiteral(); }
+                    {
+                        return state.getEnvironment().getLiteral();
+                    }
                 }
             );
 
             _implementationEnvironment.define(
                 Symbol.create("extended-eval"),
-                new TernaryValueFunction() {
+                new TernaryValueFunction()
+                {
                     public final static String id
-                        = "$Id$";
+                    = "$Id$";
 
                     protected Value checkedCall(
                         Value fst,
@@ -174,11 +198,11 @@ public final class Environment
                     ) throws SchemeException
                     {
                         return new Machine(
-                            snd.toEnvironment()
-                        ).evaluate(
-                            fst,
-                            trd.toFunction()
-                        );
+                                   snd.toEnvironment()
+                               ).evaluate(
+                                   fst,
+                                   trd.toFunction()
+                               );
                     }
                 }
             );
@@ -198,41 +222,47 @@ public final class Environment
                     InputPort.create("bootstrap_sre.scm").read()
                 );
         }
-        catch (SchemeException e) {
+        catch (SchemeException e)
+        {
             throw new RuntimeException(
-                "unexpected SchemeError:\n"
-                + e.toString()
-            );
+                      "unexpected SchemeError:\n"
+                      + e.toString()
+                  );
         }
     }
 
     private static void callHook(Environment env, Value hook)
     {
-        if (hook != null) {
+        if (hook != null)
+        {
             Value null_buffer = _nullEnvironmentHook;
             Value  sre_buffer = _schemeReportEnvironmentHook;
-            
-            try {
-                synchronized (Environment.class) {
+
+            try
+            {
+                synchronized (Environment.class)
+                {
                     _nullEnvironmentHook         = null;
                     _schemeReportEnvironmentHook = null;
 
                     new Machine(env).evaluate(hook);
                 }
             }
-            catch (SchemeException e) {
+            catch (SchemeException e)
+            {
                 throw new RuntimeException(
-                    "nullEnvironmentHook caused an exception:\n"
-                    + e.toString()
-                );
+                          "nullEnvironmentHook caused an exception:\n"
+                          + e.toString()
+                      );
             }
-            finally {
+            finally
+            {
                 _nullEnvironmentHook         = null_buffer;
                 _schemeReportEnvironmentHook =  sre_buffer;
             }
         }
     }
-    
+
     public static Environment getEmpty()
     {
         initHooks();
@@ -243,7 +273,8 @@ public final class Environment
     {
         Environment result = getEmpty();
 
-        try {
+        try
+        {
             StaticEnvironment staticBindings = result.getStatic();
 
             staticBindings.defineSyntax(
@@ -287,10 +318,11 @@ public final class Environment
                 SyntaxFactory.getDefineSyntaxToken()
             );
         }
-        catch (AlreadyBound e) {
+        catch (AlreadyBound e)
+        {
             throw new RuntimeException(
-                "unexpected AlreadyBound in getNullEnvironment()"
-            );
+                      "unexpected AlreadyBound in getNullEnvironment()"
+                  );
         }
 
         callHook(result, _nullEnvironmentHook);
@@ -302,18 +334,21 @@ public final class Environment
     {
         Environment result = getNullEnvironment();
 
-        try {
-            for (int i = 0; i < BuiltinTable.builtins.length; i++) {
+        try
+        {
+            for (int i = 0; i < BuiltinTable.builtins.length; i++)
+            {
                 result.define(
                     Symbol.create(BuiltinTable.builtins[i].getName()),
                     BuiltinTable.builtins[i].getFunc()
                 );
             }
         }
-        catch (CompileError e) {
+        catch (CompileError e)
+        {
             throw new RuntimeException(
-                "unexpected CompileError"
-            );
+                      "unexpected CompileError"
+                  );
         }
 
         callHook(result, _schemeReportEnvironmentHook);
@@ -323,32 +358,42 @@ public final class Environment
 
 
     public StaticEnvironment getStatic()
-    { return _bindings; }
+    {
+        return _bindings;
+    }
 
     public Environment getParent()
-    { return new Environment(_bindings.getParent(), _data); }
+    {
+        return new Environment(_bindings.getParent(), _data);
+    }
 
     public Environment newChild()
-    { return newChild(_bindings.newChild()); }
+    {
+        return newChild(_bindings.newChild());
+    }
 
     public Environment newChild(
         StaticEnvironment newFrame
     )
-    { return new Environment(newFrame, this); }
-    
+    {
+        return new Environment(newFrame, this);
+    }
+
     public Environment newChild(
         StaticEnvironment newFrame,
         Arity             arity,
         List              values
     ) throws ListExpected, PairExpected
-    { return new Environment(newFrame, this, arity, values); }
+    {
+        return new Environment(newFrame, this, arity, values);
+    }
 
     // *** Envrionment access ************************************************
 
     // *** code access (compiletime) ***
-        
+
     public Reference define(Symbol key, Value value)
-        throws CompileError
+    throws CompileError
     {
         Reference newReference = _bindings.define(key);
         assign(newReference, value);
@@ -361,49 +406,58 @@ public final class Environment
     {
         Vector data  = _data[key.getLevel()];
         int    index = key.getIndex();
-    
-        try {
+
+        try
+        {
             data.setElementAt(value, index);
         }
-        catch (ArrayIndexOutOfBoundsException e) {
+        catch (ArrayIndexOutOfBoundsException e)
+        {
             data.setSize(index + 1);
             data.setElementAt(value, index);
         }
     }
 
     public void assign(Symbol key, Value value)
-        throws SymbolNotFoundException, UnexpectedSyntax
-    { assign(_bindings.getReferenceFor(key), value); }
+    throws SymbolNotFoundException, UnexpectedSyntax
+    {
+        assign(_bindings.getReferenceFor(key), value);
+    }
 
 
     public Value lookup(Reference ref)
-        throws UninitializedSymbolException
+    throws UninitializedSymbolException
     {
         Value result;
-        
-        try {
+
+        try
+        {
             result = (Value)_data[
-                ref.getLevel()
-            ].get(
-                ref.getIndex()
-            );
+                         ref.getLevel()
+                     ].get(
+                         ref.getIndex()
+                     );
         }
-        catch (ArrayIndexOutOfBoundsException e) {
+        catch (ArrayIndexOutOfBoundsException e)
+        {
             result = null;
         }
-    
-        if (result == null) {
+
+        if (result == null)
+        {
             throw new UninitializedSymbolException(ref.getSymbol());
         }
-        
+
         return result;
     }
 
     public Value lookup(Symbol key)
-        throws SymbolNotFoundException, 
-               UnexpectedSyntax,
-               UninitializedSymbolException
-    { return lookup(_bindings.getReferenceFor(key)); }
+    throws SymbolNotFoundException,
+                UnexpectedSyntax,
+                UninitializedSymbolException
+    {
+        return lookup(_bindings.getReferenceFor(key));
+    }
 
     // ***********************************************************************
 }

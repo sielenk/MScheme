@@ -22,16 +22,18 @@ import MScheme.values.*;
 // *** letrec ***
 
 final class Letrec
-    extends Syntax
+            extends Syntax
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     final static Syntax INSTANCE = new Letrec();
-    
+
     private Letrec()
-    { super(Arity.atLeast(2)); }
+    {
+        super(Arity.atLeast(2));
+    }
 
 
     protected Code checkedTranslate(
@@ -48,7 +50,8 @@ final class Letrec
         List inits   = Empty.create();
 
         // split the bindings
-        while (!bindings.isEmpty()) {
+        while (!bindings.isEmpty())
+        {
             List  binding = bindings.getHead().toList();
 
             Value formal  = binding.getHead();
@@ -61,36 +64,37 @@ final class Letrec
         }
 
         StaticEnvironment
-            bodyCompilationEnv = compilationEnv.newChild(formals);
+        bodyCompilationEnv = compilationEnv.newChild(formals);
 
         CodeList
-            compiledBody = body.getCodeList(bodyCompilationEnv);
+        compiledBody = body.getCodeList(bodyCompilationEnv);
 
         // prepend the initialisations to the body
-        while (!formals.isEmpty()) {
+        while (!formals.isEmpty())
+        {
             Symbol formal = formals.getHead().toSymbol();
             Value  init   = inits  .getHead();
 
             compiledBody = CodeList.prepend(
-                Set.translate(
-                    formal.getReference(bodyCompilationEnv),
-                    init  .getCode     (bodyCompilationEnv)
-                ),
-                compiledBody
-            );
+                               Set.translate(
+                                   formal.getReference(bodyCompilationEnv),
+                                   init  .getCode     (bodyCompilationEnv)
+                               ),
+                               compiledBody
+                           );
 
             formals = formals.getTail();
             inits   = inits  .getTail();
         }
 
         return Application.create(
-            CodeList.create(
-                new CompiledLambda(
-                    Arity.exactly(0),
-                    bodyCompilationEnv,
-                    compiledBody
-                )
-            )
-        );
+                   CodeList.create(
+                       new CompiledLambda(
+                           Arity.exactly(0),
+                           bodyCompilationEnv,
+                           compiledBody
+                       )
+                   )
+               );
     }
 }

@@ -10,10 +10,10 @@ import MScheme.exceptions.RuntimeError;
 
 
 public final class Reference
-    extends Result
+            extends Result
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final Symbol _symbol;
@@ -27,17 +27,30 @@ public final class Reference
         _index  = index;
     }
 
-    public Symbol getSymbol() { return _symbol; }
+    public Symbol getSymbol()
+    {
+        return _symbol;
+    }
 
-    int getLevel () { return _level;  }
-    int getIndex () { return _index;  }
+    int getLevel ()
+    {
+        return _level;
+    }
+    int getIndex ()
+    {
+        return _index;
+    }
 
 
     protected Value getValue(Registers state)
-        throws RuntimeError
-    { return state.getEnvironment().lookup(this); }
+    throws RuntimeError
+    {
+        return state.getEnvironment().lookup(this);
+    }
 
 
     public String toString()
-    { return "[" + _symbol.toString() + "]@" + _level + '.' + _index; }
+    {
+        return "[" + _symbol.toString() + "]@" + _level + '.' + _index;
+    }
 }

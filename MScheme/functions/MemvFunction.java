@@ -4,15 +4,17 @@ import MScheme.Value;
 
 
 public final class MemvFunction
-    extends MemberBase
+            extends MemberBase
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     public final static MemvFunction INSTANCE
-        = new MemvFunction();
+    = new MemvFunction();
 
     protected boolean equal(Value fst, Value snd)
-    { return fst.eqv(snd); }
+    {
+        return fst.eqv(snd);
+    }
 }

@@ -4,15 +4,17 @@ import MScheme.Value;
 
 
 public final class AssvFunction
-    extends AssocBase
+            extends AssocBase
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     public final static AssvFunction INSTANCE
-        = new AssvFunction();
+    = new AssvFunction();
 
     protected boolean equal(Value fst, Value snd)
-    { return fst.eqv(snd); }
+    {
+        return fst.eqv(snd);
+    }
 }

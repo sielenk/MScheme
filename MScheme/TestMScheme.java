@@ -4,15 +4,15 @@ import junit.framework.*;
 
 
 public class TestMScheme
-    extends TestSuite
+            extends TestSuite
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
     public TestMScheme(String name)
     {
         super(name);
-    
+
         addTestSuite(MScheme.util.TestArity.class);
 
         addTestSuite(MScheme.values.TestList.class);
@@ -22,7 +22,7 @@ public class TestMScheme
 
         addTestSuite(TestR5RS.class);
         addTestSuite(TestMachine.class);
-        
+
         addTestSuite(MScheme.tests.TestValue.class);
     }
 

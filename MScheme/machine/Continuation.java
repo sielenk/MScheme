@@ -15,7 +15,7 @@ public abstract class Continuation
 {
     /** The CVS id of the file containing this class. */
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final int       _level;
@@ -45,25 +45,33 @@ public abstract class Continuation
      * Returns the content of the captured continuation register.
      */
     final Continuation getParent()
-    { return _capturedState.getContinuation(); }
+    {
+        return _capturedState.getContinuation();
+    }
 
     /**
      * Returns the depth of a continuation in the stack.
      */
     final int getLevel()
-    { return _level; }
+    {
+        return _level;
+    }
 
     /**
      *
      */
     CodeList dynamicWindLeave(CodeList sequence)
-    { return sequence; }
+    {
+        return sequence;
+    }
 
     /**
      *
      */
     CodeList dynamicWindEnter(CodeList sequence)
-    { return sequence; }
+    {
+        return sequence;
+    }
 
 
     /**
@@ -73,7 +81,7 @@ public abstract class Continuation
      * @return  the result of the call to {@link #execute}.
      */
     final Code invoke(Registers state, Value result)
-        throws SchemeException
+    throws SchemeException
     {
         state.assign(_capturedState);
         return execute(state, result);
@@ -83,7 +91,7 @@ public abstract class Continuation
      * Implements the concrete behaviour of the continuation.
      */
     protected abstract Code execute(Registers state, Value result)
-        throws SchemeException;
+    throws SchemeException;
 
 
     protected abstract String debugString();
@@ -96,11 +104,12 @@ public abstract class Continuation
             Continuation current = this;
             current != null;
             current = current.getParent()
-        ) {
+        )
+        {
             buffer.append(current.debugString());
             buffer.append('\n');
         }
-        
+
         return buffer.toString();
     }
 }

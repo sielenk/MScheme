@@ -17,16 +17,18 @@ import MScheme.exceptions.SchemeException;
 
 
 final class Lambda
-    extends Syntax
+            extends Syntax
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     final static Syntax INSTANCE = new Lambda();
-    
+
     private Lambda()
-    { super(Arity.atLeast(2)); }
+    {
+        super(Arity.atLeast(2));
+    }
 
 
     protected Code checkedTranslate(
@@ -39,11 +41,14 @@ final class Lambda
 
         final List  formals;
         final Arity arity;
-        
-        if (rawFormals.isList()) {
+
+        if (rawFormals.isList())
+        {
             formals = rawFormals.toList();
             arity   = Arity.exactly(formals.getLength());
-        } else {
+        }
+        else
+        {
             // rawFormals is an improper list.
             // This happens for lambda expressions
             // with optional parameters like
@@ -59,7 +64,8 @@ final class Lambda
             int  minArity = 0;
             List  result  = Empty.create();
 
-            while (current.isPair()) {
+            while (current.isPair())
+            {
                 Pair currentPair = current.toPair();
 
                 ++minArity;
@@ -74,12 +80,12 @@ final class Lambda
         }
 
         StaticEnvironment
-            bodyCompilationEnv = compilationEnv.newChild(formals);
+        bodyCompilationEnv = compilationEnv.newChild(formals);
 
         return new CompiledLambda(
-            arity,
-            bodyCompilationEnv,
-            body
-        );
+                   arity,
+                   bodyCompilationEnv,
+                   body
+               );
     }
 }

@@ -4,15 +4,17 @@ import MScheme.values.ScmVector;
 
 
 public class InvalidVectorIndexException
-    extends VectorException
+            extends VectorException
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
     public InvalidVectorIndexException(
         ScmVector vector,
         int       index
     )
-    { super(vector, index); }
+    {
+        super(vector, index);
+    }
 }
 

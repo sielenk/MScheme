@@ -8,10 +8,10 @@ import MScheme.exceptions.SchemeException;
 
 
 public abstract class BinaryValueFunction
-    extends BinaryFunction
+            extends BinaryFunction
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     protected final Code checkedCall(
@@ -19,8 +19,10 @@ public abstract class BinaryValueFunction
         Value     fst,
         Value     snd
     ) throws SchemeException
-    { return checkedCall(fst, snd).getLiteral(); }
+    {
+        return checkedCall(fst, snd).getLiteral();
+    }
 
     protected abstract Value checkedCall(Value fst, Value snd)
-        throws SchemeException;
+    throws SchemeException;
 }

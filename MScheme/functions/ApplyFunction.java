@@ -13,17 +13,19 @@ import MScheme.exceptions.SchemeException;
 
 
 public class ApplyFunction
-    extends CheckedFunction
+            extends CheckedFunction
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     public final static ApplyFunction INSTANCE = new ApplyFunction();
 
 
     protected Arity getArity()
-    { return Arity.atLeast(2); }
+    {
+        return Arity.atLeast(2);
+    }
 
     protected Code checkedCall(
         Registers state,
@@ -40,7 +42,8 @@ public class ApplyFunction
         // (f 1 (2 3)) is changed to (f 1 2 3)
 
         Pair toBeModified = arguments.toPair();
-        for (int i = length - 2; i > 0; i--) {
+        for (int i = length - 2; i > 0; i--)
+        {
             toBeModified = toBeModified.getSecond().toPair();
         }
 

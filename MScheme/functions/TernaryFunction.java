@@ -11,14 +11,16 @@ import MScheme.exceptions.SchemeException;
 
 
 public abstract class TernaryFunction
-    extends CheckedFunction
+            extends CheckedFunction
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     protected final Arity getArity()
-    { return Arity.exactly(3); }
+    {
+        return Arity.exactly(3);
+    }
 
     protected final Code checkedCall(
         Registers state,
@@ -27,11 +29,11 @@ public abstract class TernaryFunction
     ) throws SchemeException
     {
         return checkedCall(
-            state,
-            arguments.getHead(),
-            arguments.getTail().getHead(),
-            arguments.getTail().getTail().getHead()
-        );
+                   state,
+                   arguments.getHead(),
+                   arguments.getTail().getHead(),
+                   arguments.getTail().getTail().getHead()
+               );
     }
 
     protected abstract Code checkedCall(

@@ -19,20 +19,24 @@ import MScheme.exceptions.*;
 
 
 public class StaticEnvironment
-    extends ValueDefaultImplementations
+            extends ValueDefaultImplementations
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     // ***********************************************************************
 
     public void write(Writer destination)
-        throws IOException
-    { destination.write("[static environment]"); }
-    
+    throws IOException
+    {
+        destination.write("[static environment]");
+    }
+
     public StaticEnvironment toStaticEnvironment()
-    { return this; }
+    {
+        return this;
+    }
 
     // ***********************************************************************
 
@@ -44,8 +48,10 @@ public class StaticEnvironment
     // *** constructors ******************************************************
 
     StaticEnvironment()
-    { this(null); }
-    
+    {
+        this(null);
+    }
+
     StaticEnvironment(StaticEnvironment parent)
     {
         _bindings = new Hashtable();
@@ -56,7 +62,7 @@ public class StaticEnvironment
 
 
     StaticEnvironment(StaticEnvironment parent, List symbols)
-        throws CompileError, TypeError
+    throws CompileError, TypeError
     {
         this(parent);
 
@@ -78,35 +84,54 @@ public class StaticEnvironment
     }
 
     StaticEnvironment(StaticEnvironment parent, Symbol symbol)
-        throws CompileError
-    { this(parent); define(symbol); }
+    throws CompileError
+    {
+        this(parent);
+        define(symbol);
+    }
 
     // *** instance access ***************************************************
 
-    int getLevel () { return _level; }
-    int getSize  () { return _numberOfReferences; }
+    int getLevel ()
+    {
+        return _level;
+    }
+    int getSize  ()
+    {
+        return _numberOfReferences;
+    }
 
     // *** implementation of StaticEnvironment *******************************
-    
-    public StaticEnvironment getParent() { return _parent; }
+
+    public StaticEnvironment getParent()
+    {
+        return _parent;
+    }
 
     public StaticEnvironment newChild()
-    { return new StaticEnvironment(this); }
-    
+    {
+        return new StaticEnvironment(this);
+    }
+
     public StaticEnvironment newChild(List symbols)
-        throws CompileError, TypeError
-    { return new StaticEnvironment(this, symbols); }
-    
+    throws CompileError, TypeError
+    {
+        return new StaticEnvironment(this, symbols);
+    }
+
     public StaticEnvironment newChild(Symbol symbol)
-        throws CompileError
-    { return new StaticEnvironment(this, symbol); }
-    
+    throws CompileError
+    {
+        return new StaticEnvironment(this, symbol);
+    }
+
     // *** instance access ***************************************************
 
     public Reference define(Symbol symbol)
-        throws AlreadyBound
+    throws AlreadyBound
     {
-        try {
+        try
+        {
             String    key = symbol.getJavaString();
             Reference ref = (Reference)_bindings.get(key);
 
@@ -114,12 +139,13 @@ public class StaticEnvironment
             // the symbol is already bound in the
             // current frame. This define is in fact
             // a lookup.
-            if (ref == null) {
+            if (ref == null)
+            {
                 ref = new Reference(
-                    symbol,
-                    getLevel(),
-                    getSize()
-                );
+                          symbol,
+                          getLevel(),
+                          getSize()
+                      );
 
                 _bindings.put(key, ref);
                 _numberOfReferences++;
@@ -127,23 +153,25 @@ public class StaticEnvironment
 
             return ref;
         }
-        catch (ClassCastException e) {
+        catch (ClassCastException e)
+        {
             throw new AlreadyBound(symbol);
         }
     }
 
 
     public void defineSyntax(Symbol symbol, Syntax value)
-        throws AlreadyBound
+    throws AlreadyBound
     {
         String  key = symbol.getJavaString();
 
         {
             Object o = _bindings.get(key);
-            if ((o != null) && !(o instanceof Syntax)) {
+            if ((o != null) && !(o instanceof Syntax))
+            {
                 throw new AlreadyBound(symbol);
             }
-	    }
+        }
 
         _bindings.put(key, value);
     }
@@ -155,11 +183,13 @@ public class StaticEnvironment
             StaticEnvironment current = this;
             current != null;
             current = current._parent
-        ) {
+        )
+        {
             Translator result
-                = (Translator)current._bindings.get(key.getJavaString());
+            = (Translator)current._bindings.get(key.getJavaString());
 
-            if (result != null) {
+            if (result != null)
+            {
                 return result;
             }
         }
@@ -168,30 +198,37 @@ public class StaticEnvironment
     }
 
     public Translator getTranslatorFor(Symbol key)
-        throws SymbolNotFoundException
+    throws SymbolNotFoundException
     {
         Translator result = safeGetTranslatorFor(key);
 
-        if (result != null) {
+        if (result != null)
+        {
             return result;
-        } else {
+        }
+        else
+        {
             throw new SymbolNotFoundException(key);
         }
     }
 
     public Reference getReferenceFor(Symbol key)
-        throws SymbolNotFoundException, UnexpectedSyntax
+    throws SymbolNotFoundException, UnexpectedSyntax
     {
-        try {
+        try
+        {
             return (Reference)getTranslatorFor(key);
         }
-        catch (ClassCastException e) {
+        catch (ClassCastException e)
+        {
             throw new UnexpectedSyntax(key);
         }
     }
 
     public boolean isBound(Symbol key)
-    { return safeGetTranslatorFor(key) != null; }
+    {
+        return safeGetTranslatorFor(key) != null;
+    }
 
     // ***********************************************************************
 }

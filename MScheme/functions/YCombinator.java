@@ -15,40 +15,44 @@ import MScheme.exceptions.*;
 
 
 class YWrappedFunction
-    extends Function
+            extends Function
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final Function _f;
 
     YWrappedFunction(Function f)
-    { _f = f; }
+    {
+        _f = f;
+    }
 
     public Code call(Registers state, List arguments)
-        throws SchemeException
+    throws SchemeException
     {
         return _f.call(
-            state,
-            ListFactory.prepend(
-                this,
-                arguments
-            )
-        );
+                   state,
+                   ListFactory.prepend(
+                       this,
+                       arguments
+                   )
+               );
     }
 }
 
 public final class YCombinator
-    extends UnaryValueFunction
+            extends UnaryValueFunction
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     public final static YCombinator INSTANCE = new YCombinator();
 
     protected Value checkedCall(Value fst)
-        throws TypeError
-    { return new YWrappedFunction(fst.toFunction()); }
+    throws TypeError
+    {
+        return new YWrappedFunction(fst.toFunction());
+    }
 }
