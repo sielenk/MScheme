@@ -34,4 +34,3 @@ abstract class MemberBase
         return ScmBoolean.createFalse();
     }
 }
-

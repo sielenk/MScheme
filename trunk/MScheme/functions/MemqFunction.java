@@ -3,7 +3,7 @@ package MScheme.functions;
 import MScheme.Value;
 
 
-public class MemqFunction
+public final class MemqFunction
     extends MemberBase
 {
     public final static String id

@@ -3,7 +3,7 @@ package MScheme.functions;
 import MScheme.Value;
 
 
-public class AssocFunction
+public final class AssocFunction
     extends AssocBase
 {
     public final static String id
@@ -16,4 +16,3 @@ public class AssocFunction
     protected boolean equal(Value fst, Value snd)
     { return fst.equal(snd); }
 }
-
