@@ -16,16 +16,21 @@ public abstract class Compound
         = "$Id$";
 
 
-    private boolean _isMutable = true;
+    private final boolean _isConst;
 
-    public void setConst()
-    { _isMutable = false; }
+    protected Compound(boolean isConst)
+    { _isConst = isConst; }
 
-    protected void modify()
+    protected final boolean isConst()
+    { return _isConst; }
+
+    protected final void modify()
         throws ImmutableException
     {
-        if (!_isMutable) {
+        if (_isConst) {
             throw new ImmutableException(this);
-        }                                    
+        }
     }
+
+    public abstract Value getConst();
 }
