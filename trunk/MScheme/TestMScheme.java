@@ -20,8 +20,8 @@ public class TestMScheme
 
         addTestSuite(MScheme.environment.TestEnvironment.class);
 
-        addTestSuite(TestR5RS.class);
-        addTestSuite(TestMachine.class);
+        addTestSuite(MScheme.tests.TestR5RS.class);
+        addTestSuite(MScheme.tests.TestMachine.class);
 
         addTestSuite(MScheme.tests.TestValue.class);
     }
