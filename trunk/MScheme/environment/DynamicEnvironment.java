@@ -61,7 +61,7 @@ public final class DynamicEnvironment
     )
     {
         Value[][] oldFrames = parent._frames;
-        int       newIndex  = (oldFrames == null) ? 0 : oldFrames.length;
+        int       newIndex  = oldFrames.length;
         Value[][] newFrames = new Value[newIndex + 1][];
 
         if (newIndex > 0)
@@ -115,7 +115,7 @@ public final class DynamicEnvironment
     {
         return new DynamicEnvironment(
             new Vector(),
-            null
+            new Value[0][]
         );
     }
 
