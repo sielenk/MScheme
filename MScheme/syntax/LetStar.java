@@ -31,7 +31,7 @@ final class LetStar
 
 
     protected Code checkedTranslate(
-        StaticEnvironment environment,
+        StaticEnvironment compilationEnv,
         List              arguments
     ) throws CompileError, TypeError
     {
@@ -41,20 +41,22 @@ final class LetStar
         List body     = arguments.getTail();
 
         if (bindings.isEmpty()) {
-            // special handling because the helper wouldn't
+            // special handling because the helper won't
             // create a new environment in this case
 
             return Application.create(
                 CodeList.create(
                     new CompiledLambda(
                         Arity.exactly(0),
-                        environment.newChild(),
+                        compilationEnv.newChild(),
                         body
                     )
                 )
             );
         } else {
-            return new LetStarHelper(body).translate(environment, bindings);
+            return
+                new LetStarHelper(body)
+                .translate(compilationEnv, bindings);
         }
     }
 }

@@ -28,7 +28,7 @@ final class Define
     { super(Arity.atLeast(2)); }
 
     protected Code checkedTranslate(
-        StaticEnvironment syntax,
+        StaticEnvironment compilationEnv,
         List              arguments
     ) throws CompileError, TypeError
     {
@@ -40,9 +40,9 @@ final class Define
             List   body    = arguments.getTail();
 
             return Set.translate(
-                syntax.define(symbol),
+                compilationEnv.define(symbol),
                 Lambda.INSTANCE.translate(
-                    syntax,
+                    compilationEnv,
                     ValueFactory.prependMutable(
                         formals,
                         body
@@ -50,12 +50,12 @@ final class Define
                 )
             );
         } else {
-            syntax.define(arguments.getHead().toSymbol());
+            compilationEnv.define(arguments.getHead().toSymbol());
             
-            // call the "real" translate to let Set recheck the
-            // argument count
+            // call the translate instead of checkedTranslate 
+            // to let Set check the argument count again
             return Set.INSTANCE.translate(
-                syntax,
+                compilationEnv,
                 arguments
             );
         }

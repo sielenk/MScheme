@@ -33,44 +33,53 @@ final class Macro
         _apply = ApplyFunction.INSTANCE.getLiteral();
 
     private final Code              _transformer;
-    private final StaticEnvironment _def_env;
+    private final StaticEnvironment _definitionEnv;
     
-    Macro(Code transformer, StaticEnvironment def_env)
+    Macro(Code transformer, StaticEnvironment definitionEnv)
     {
         super(Arity.atLeast(0));
-        _transformer = transformer;
-	    _def_env     = def_env;
-	}
+        _transformer   = transformer;
+        _definitionEnv = definitionEnv;
+    }
     
     protected Code checkedTranslate(
-        StaticEnvironment use_env,
+        StaticEnvironment usageEnv,
         List              arguments
     ) throws CompileError, TypeError
     {
         try {
-	        // (apply tranformer def_env use_env args)
-	
-            return new Machine(
-	            Environment.getImplementationEnvironment()
-	        ).execute(
-	            Application.create(
-		            CodeList.prepend(
-			            _apply,
-    		            CodeList.prepend(
-    			            _transformer,
-        		            CodeList.create(
-        					    _def_env.getLiteral(),
-          					     use_env.getLiteral(),
-           				        arguments.toValue().getLiteral()
-						    )
-   					    )
-			        )
-		        )
-    	    ).getCode(use_env);
-	    }
-	    catch (RuntimeError e) {
-	        throw new CompileError(e.getCause());
-	    }
+            // (apply tranformer def_env use_env args)
+    
+            Pair result = new Machine(
+                Environment.getImplementationEnvironment()
+            ).execute(
+                Application.create(
+                    CodeList.prepend(
+                        _apply,
+                        CodeList.prepend(
+                            _transformer,
+                            CodeList.create(
+                                _definitionEnv.getLiteral(),
+                                 usageEnv.getLiteral(),
+                                arguments.toValue().getLiteral()
+                            )
+                        )
+                    )
+                )
+            ).toPair();
+            
+            return
+                result
+                .getSecond()
+                .getCode(
+                    result
+                    .getFirst()
+                    .toStaticEnvironment()
+                );
+        }
+        catch (RuntimeError e) {
+            throw new CompileError(e.getCause());
+        }
     }
 }
 
@@ -86,7 +95,7 @@ final class DefineSyntax
     { super(Arity.exactly(2)); }
 
     protected Code checkedTranslate(
-        StaticEnvironment syntax,
+        StaticEnvironment compilationEnv,
         List              arguments
     ) throws CompileError, TypeError
     {
@@ -98,19 +107,19 @@ final class DefineSyntax
                 new Machine(Environment.getImplementationEnvironment())
                     .evaluate(value)
                     .toFunction()
-				    .getLiteral(),
-				syntax
-	        );
+                    .getLiteral(),
+                compilationEnv
+            );
 
-            syntax.defineSyntax(symbol, macro);
-	        Environment
-		        .getImplementationEnvironment()
-			    .getStatic()
-			    .defineSyntax(symbol, macro);
-	    }
-	    catch (RuntimeError e) {
-	        throw new CompileError(e.getCause());
-	    }
+            compilationEnv.defineSyntax(symbol, macro);
+            Environment
+                .getImplementationEnvironment()
+                .getStatic()
+                .defineSyntax(symbol, macro);
+        }
+        catch (RuntimeError e) {
+            throw new CompileError(e.getCause());
+        }
 
         return Empty.create().getLiteral();
     }
