@@ -7,9 +7,8 @@ import MScheme.machine.Registers;
 import MScheme.Code;
 import MScheme.Value;
 
+import MScheme.values.ListFactory;
 import MScheme.values.List;
-import MScheme.values.Empty;
-import MScheme.values.Pair;
 import MScheme.values.Function;
 
 import MScheme.exceptions.*;
@@ -46,7 +45,7 @@ final class AppendHelper2
 
     private AppendHelper2()
     {
-        super(Empty.create());
+        super(ListFactory.create());
     }
 
     protected Value combine(Value fst, Value snd)
