@@ -11,7 +11,10 @@ public class Quotation
     final private Value _quotedValue;
 
     public Quotation(Value quotedValue)
-    { _quotedValue = quotedValue; }
+    {
+        _quotedValue = quotedValue;
+        _quotedValue.setLiteral();
+    }
 
     public Code executionStep(Machine machine)
         throws SchemeException
