@@ -50,7 +50,24 @@ public class TestR5RS
 
     private void check(String in, String out)
         throws SchemeException
-    { assert(eval(in).equal(quote(out))); }
+    {
+        Value   value   = eval(in);
+        boolean success = value.equal(quote(out));
+
+        if (!success) {
+            System.out.println(
+                "*** evaluation of ***\n" +
+                in + '\n' +
+                "*** returned ***\n" +
+                value + '\n' +
+                "*** expected was ***\n" +
+                out + '\n' +
+                "*** end ***"
+            );
+        }
+
+        assert(success);
+    }
 
 
     // 4 Expressions
@@ -218,5 +235,144 @@ public class TestR5RS
 
     /// 4.2.6 Quasiquotation
 
+    /// 6.1 Equivalence predicates
+    public void test6_1()
+        throws SchemeException
+    {
+        // eqv?
+        check("(eqv? 'a 'a)", "#t");
+        check("(eqv? 'a 'b)", "#f");
+        check("(eqv? 2 2)", "#t");
+        check("(eqv? '() '())", "#t");
+        check("(eqv? (cons 1 2) (cons 1 2))", "#f");
+        check("(eqv? (lambda () 1) (lambda () 2))", "#f");
+        check("(eqv? #f 'nil)", "#f");
+        check("(let ((p (lambda (x) x))) (eqv? p p))", "#t");
+    }
+
+
+    // 6.3 Other data types
+
+    // 6.3.1 Booleans
+
+    /// 6.3.2 Pairs and lists
+    public void test6_3_2()
+        throws SchemeException
+    {
+        // pair?
+        check("(pair? '(a . b))", "#t");
+        check("(pair? '(a b c))", "#t");
+        check("(pair? '())", "#f");
+        check("(pair? '#(a b))", "#f");
+
+        // cons
+        check("(cons 'a '())", "(a)");
+        check("(cons '(a) '(b c d))", "((a) b c d)");
+        check("(cons \"a\" '(b c))", "(\"a\" b c)");
+        check("(cons 'a '3)", "(a . 3)");
+        check("(cons '(a b) 'c)", "((a b) . c)");
+
+        // car
+        check("(car '(a b c))", "a");
+        check("(car '((a) b c d))", "(a)");
+        check("(car '(1 . 2))", "1");
+        try { eval("(car '())"); fail(); }
+        catch (SchemeException e) { }
+
+        // cdr
+        check("(cdr '((a) b c d))", "(b c d)");
+        check("(cdr '(1 . 2))", "2");
+        try { eval("(cdr '())"); fail(); }
+        catch (SchemeException e) { }
+
+        // set-car!
+        eval("(define (f) (list 'not-a-constant-list))");
+        eval("(define (g) '(constant-list))");
+        eval("(set-car! (f) 3)");
+        try { eval("(set-car! (g) 3)"); fail(); }
+        catch (SchemeException e) { }
+
+        // set-cdr!
+        eval("(set-cdr! (f) 3)");
+        try { eval("(set-cdr! (g) 3)"); fail(); }
+        catch (SchemeException e) { }
+
+        // list?
+        check("(list? '(a b c))", "#t");
+        check("(list? '())", "#t");
+        check("(list? '(a . b))", "#f");
+
+        // list
+        check("(list 'a (+ 3 4) 'c)", "(a 7 c)");
+        check("(list)", "()");
+
+        // length
+        check("(length '(a b c))", "3");
+        check("(length '(a (b) (c d e)))", "3");
+        check("(length '())", "0");
+
+        // append
+        check("(append '(x) '(y))", "(x y)");
+        check("(append '(a) '(b c d))", "(a b c d)");    
+        check("(append '(a (b)) '((c)))", "(a (b) (c))");
+
+        check("(append '(a b) '(c . d))", "(a b c . d)");
+        check("(append '() 'a)", "a");
+
+        // reverse
+        check("(reverse '(a b c))", "(c b a)");
+        check("(reverse '(a (b c) d (e (f))))", "((e (f)) d (b c) a)");
+
+        // memq/memv/member
+        check("(memq 'a '(a b c))", "(a b c)");
+        check("(memq 'b '(a b c))", "(b c)");
+        check("(memq 'a '(b c d))", "#f");
+        check("(memq   (list 'a) '(b (a) c))", "#f");
+        check("(member (list 'a) '(b (a) c))", "((a) c)");
+        check("(memv '101 '(100 101 102))", "(101 102)");
+
+        // assq/assv/assoc
+        eval("(define e '((a 1) (b 2) (c 3)))");
+        check("(assq 'a e)", "(a 1)");
+        check("(assq 'b e)", "(b 2)");
+        check("(assq 'd e)", "#f");
+        check("(assq  (list 'a) '(((a)) ((b)) ((c))))", "#f");
+        check("(assoc (list 'a) '(((a)) ((b)) ((c))))", "((a))");
+        check("(assv 5 '((2 3) (5 7) (11 13)))", "(5 7)");
+    }
+    
+
+    /// 6.4 Control features
+    public void test6_4()
+        throws SchemeException
+    {
+        check("(procedure?  car)", "#t");
+        check("(procedure? 'car)", "#f");
+        check("(procedure?  (lambda (x) (* x x)))", "#t");
+        check("(procedure? '(lambda (x) (* x x)))", "#f");
+        check("(call-with-current-continuation procedure?)", "#t");
+
+        check("(apply + (list 3 4))", "7");
+
+        check(
+            "(let ((path '())\n"+
+            "      (c #f))\n"+
+            "  (let ((add (lambda (s)\n"+
+            "               (set! path (cons s path)))))\n"+
+            "    (dynamic-wind\n"+
+            "      (lambda () (add 'connect))\n"+
+            "      (lambda ()\n"+
+            "        (add (call-with-current-continuation\n"+
+            "               (lambda (c0)\n"+
+            "                 (set! c c0)\n"+
+            "                 'talk1))))\n"+
+            "      (lambda () (add 'disconnect)))\n"+
+            "    (if (< (length path) 4)\n"+
+            "        (c 'talk2)\n"+
+            "        (reverse path))))",
+            "(connect talk1 disconnect\n" +
+             "connect talk2 disconnect)"
+        );
+    }
 }
 
