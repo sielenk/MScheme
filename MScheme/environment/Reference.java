@@ -62,6 +62,12 @@ public abstract class Reference
         return _symbol;
     }
 
+    protected final Value getValue(Registers state)
+        throws RuntimeError
+    {
+        return state.getEnvironment().lookup(this);
+    }
+
     abstract int getLevel();
     abstract int getIndex();
 
@@ -100,13 +106,6 @@ final class DelayedReference
         _env = env;
     }
 
-
-    protected Value getValue(Registers state)
-    {
-        throw new RuntimeException(
-            getSymbol().toString() + " delayed reference"
-        );
-    }
 
     int getLevel()
     {
@@ -156,12 +155,6 @@ final class ForcedReference
     int getIndex()
     {
         return _index;
-    }
-
-    protected Value getValue(Registers state)
-        throws RuntimeError
-    {
-        return state.getEnvironment().lookup(this);
     }
 
     public Reference forceRef()
