@@ -10,7 +10,8 @@ import MScheme.exceptions.TypeError;
 public abstract class Result
     extends Code
 {
-    protected abstract Value getValue(Registers registers);
+    protected abstract Value getValue(Registers registers)
+        throws RuntimeError;
 
     public final Code executionStep(Registers registers)
         throws RuntimeError, TypeError
