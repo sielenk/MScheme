@@ -26,10 +26,6 @@ public abstract class List
     { super(isConst); }
 
 
-    public static Pair prepend(Value head, List tail)
-    { return Pair.create(head, tail); }
-
-
     // specialisation/implementation of Value
     
     private final void put(Writer destination, boolean doDisplay)
@@ -105,7 +101,7 @@ public abstract class List
             !rest.isEmpty();
             rest = rest.getTail()
         ) {
-            result = List.prepend(
+            result = ListFactory.prepend(
                 rest.getHead(),
                 result
             );
