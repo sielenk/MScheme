@@ -35,7 +35,7 @@ public class EvalFunc extends Function
             try {
                 stack.push(
                     new ExpectFunctionFunc(
-                        ((SList)pair.getCdr()).toValues()
+                        ((SList)(pair.getCdr())).toValues()
                     )
                 );
 
