@@ -8,6 +8,7 @@ import MScheme.machine.Machine;
 import MScheme.code.Code;
 import MScheme.code.CodeList;
 import MScheme.code.CompiledLambda;
+import MScheme.code.CompiledSequence;
 import MScheme.environment.*;
 import MScheme.exceptions.*;
 import MScheme.functions.*;
@@ -24,7 +25,7 @@ final class LambdaToken
 
 
     protected Code checkedTranslate(
-        StaticEnvironment syntax,
+        StaticEnvironment environment,
         List              arguments
     ) throws CompileError, TypeError
     {
@@ -65,19 +66,12 @@ final class LambdaToken
         }
 
         StaticEnvironment
-            compiledFormals = syntax.newChild(formals);
+            newEnvironment = environment.newChild(formals);
 
-        Code compiledBody =
-            BeginToken.INSTANCE.translate(
-                compiledFormals,
-                body
-            );
-                    
         return new CompiledLambda(
             arity,
-            compiledFormals,
-            compiledBody
+            newEnvironment,
+            body.getCodeList(newEnvironment)
         );
     }
 }
-

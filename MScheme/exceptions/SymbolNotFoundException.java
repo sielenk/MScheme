@@ -7,8 +7,6 @@ public class SymbolNotFoundException
     extends CompileError
 {
     public SymbolNotFoundException(Value cause)
-    {
-        super(cause);
-    }
+    { super(cause); }
 }
 
