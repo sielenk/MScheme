@@ -22,16 +22,16 @@ abstract class AssocBase
         Value values
     ) throws ListExpected
     {
-        List tail = values.toList();
-
-        while (!tail.isEmpty()) {
+        for (
+            List tail = values.toList();
+            !tail.isEmpty();
+            tail = tail.getTail()
+        ) {
             Pair pair = tail.getHead().toPair();
 
             if (equal(key, pair.getHead())) {
                 return pair;
             }
-
-            tail = tail.getTail();
         }
 
         return ScmBoolean.createFalse();
