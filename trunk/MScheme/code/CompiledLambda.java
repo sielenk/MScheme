@@ -17,7 +17,7 @@ import MScheme.environment.Reference;
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Environment;
 
-import MScheme.functions.CheckedFunction;
+import MScheme.values.functions.CheckedFunction;
 
 import MScheme.exceptions.ListExpected;
 import MScheme.exceptions.PairExpected;

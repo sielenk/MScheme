@@ -11,7 +11,7 @@ import MScheme.util.Arity;
 import MScheme.code.*;
 import MScheme.environment.*;
 import MScheme.exceptions.*;
-import MScheme.functions.*;
+import MScheme.values.functions.*;
 import MScheme.values.*;
 
 

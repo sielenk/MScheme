@@ -8,7 +8,8 @@ import MScheme.Code;
 
 import MScheme.code.CodeList;
 import MScheme.code.Application;
-import MScheme.functions.UnaryFunction;
+
+import MScheme.values.functions.UnaryFunction;
 
 import MScheme.exceptions.SchemeException;
 import MScheme.exceptions.RuntimeError;

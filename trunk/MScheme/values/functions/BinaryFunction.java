@@ -1,19 +1,16 @@
-package MScheme.functions;
+package MScheme.values.functions;
 
 import MScheme.util.Arity;
-
 import MScheme.machine.Registers;
-
 import MScheme.Code;
 import MScheme.Value;
-
 import MScheme.values.List;
 import MScheme.values.Function;
 
 import MScheme.exceptions.SchemeException;
 
 
-public abstract class TernaryFunction
+public abstract class BinaryFunction
             extends CheckedFunction
 {
     public final static String id
@@ -22,7 +19,7 @@ public abstract class TernaryFunction
 
     protected final Arity getArity()
     {
-        return Arity.exactly(3);
+        return Arity.exactly(2);
     }
 
     protected final Code checkedCall(
@@ -34,15 +31,13 @@ public abstract class TernaryFunction
         return checkedCall(
                    state,
                    arguments.getHead(),
-                   arguments.getTail().getHead(),
-                   arguments.getTail().getTail().getHead()
+                   arguments.getTail().getHead()
                );
     }
 
     protected abstract Code checkedCall(
         Registers state,
         Value fst,
-        Value snd,
-        Value trd
+        Value snd
     ) throws SchemeException;
 }

@@ -13,7 +13,7 @@ import MScheme.code.CompiledLambda;
 import MScheme.code.Application;
 import MScheme.environment.*;
 import MScheme.exceptions.*;
-import MScheme.functions.*;
+import MScheme.values.functions.*;
 import MScheme.values.*;
 
 

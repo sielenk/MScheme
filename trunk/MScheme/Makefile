@@ -3,7 +3,6 @@
 SRC =	Code.java	\
 	Main.java	\
 	Syntax.java	\
-	Translator.java	\
 	Value.java	\
 	code/Application.java	\
 	code/Assignment.java	\
@@ -51,33 +50,33 @@ SRC =	Code.java	\
 	exceptions/VectorException.java	\
 	exceptions/VectorExpected.java	\
 	exceptions/WriteException.java	\
-	functions/AppendFunction.java	\
-	functions/ApplyFunction.java	\
-	functions/AssocBase.java	\
-	functions/AssocFunction.java	\
-	functions/AssqFunction.java	\
-	functions/AssvFunction.java	\
-	functions/BinaryFunction.java	\
-	functions/BinaryValueFunction.java	\
-	functions/BuiltinTable.java	\
-	functions/Builtins.java	\
-	functions/CallCCFunction.java	\
-	functions/CheckedFunction.java	\
-	functions/DynamicWindFunction.java	\
-	functions/EvalFunction.java	\
-	functions/MemberBase.java	\
-	functions/MemberFunction.java	\
-	functions/MemqFunction.java	\
-	functions/MemvFunction.java	\
-	functions/Reducer.java	\
-	functions/SpawnFunction.java	\
-	functions/TernaryFunction.java	\
-	functions/TernaryValueFunction.java	\
-	functions/Thunk.java	\
-	functions/UnaryFunction.java	\
-	functions/UnaryValueFunction.java	\
-	functions/ValueThunk.java	\
-	functions/YCombinator.java	\
+	values/functions/AppendFunction.java	\
+	values/functions/ApplyFunction.java	\
+	values/functions/AssocBase.java	\
+	values/functions/AssocFunction.java	\
+	values/functions/AssqFunction.java	\
+	values/functions/AssvFunction.java	\
+	values/functions/BinaryFunction.java	\
+	values/functions/BinaryValueFunction.java	\
+	values/functions/BuiltinTable.java	\
+	values/functions/Builtins.java	\
+	values/functions/CallCCFunction.java	\
+	values/functions/CheckedFunction.java	\
+	values/functions/DynamicWindFunction.java	\
+	values/functions/EvalFunction.java	\
+	values/functions/MemberBase.java	\
+	values/functions/MemberFunction.java	\
+	values/functions/MemqFunction.java	\
+	values/functions/MemvFunction.java	\
+	values/functions/Reducer.java	\
+	values/functions/SpawnFunction.java	\
+	values/functions/TernaryFunction.java	\
+	values/functions/TernaryValueFunction.java	\
+	values/functions/Thunk.java	\
+	values/functions/UnaryFunction.java	\
+	values/functions/UnaryValueFunction.java	\
+	values/functions/ValueThunk.java	\
+	values/functions/YCombinator.java	\
 	machine/Continuation.java	\
 	machine/ContinuationFunction.java	\
 	machine/Controller.java	\
@@ -86,6 +85,7 @@ SRC =	Code.java	\
 	machine/Result.java	\
 	machine/WindContinuation.java	\
 	syntax/Begin.java	\
+	syntax/CheckedSyntax.java	\
 	syntax/Define.java	\
 	syntax/DefineSyntax.java	\
 	syntax/If.java	\
@@ -94,6 +94,7 @@ SRC =	Code.java	\
 	syntax/LetStar.java	\
 	syntax/Letrec.java	\
 	syntax/Quote.java	\
+	syntax/ProcedureCall.java	\
 	syntax/Set.java	\
 	syntax/SyntaxFactory.java	\
 	util/Arity.java	\
@@ -142,20 +143,20 @@ GCJ=gcj -O -W -Wall
 JAVAC=jikes -bootclasspath /usr/lib/java/jre/lib/rt.jar +P
 # JAVAC = $(GCJ) -W -Wall -C
 
-all: functions/BuiltinTable.java
+all: values/functions/BuiltinTable.java
 	$(JAVAC) `find . -name "*.java"`
 	time java junit.textui.TestRunner MScheme.TestMScheme
 
-functions/BuiltinTable.java: functions/ParseBuiltins.class functions/Builtins.class
-	java MScheme.functions.ParseBuiltins > functions/BuiltinTable.java
+values/functions/BuiltinTable.java: values/functions/ParseBuiltins.class values/functions/Builtins.class
+	java MScheme.values.functions.ParseBuiltins > values/functions/BuiltinTable.java
 
-functions/ParseBuiltins.class: functions/ParseBuiltins.java
-	cp functions/BuiltinTable.java.empty functions/BuiltinTable.java
-	$(JAVAC) functions/ParseBuiltins.java
-	touch functions/Builtins.java
+values/functions/ParseBuiltins.class: values/functions/ParseBuiltins.java
+	cp values/functions/BuiltinTable.java.empty values/functions/BuiltinTable.java
+	$(JAVAC) values/functions/ParseBuiltins.java
+	touch values/functions/Builtins.java
 
-functions/Builtins.class: functions/Builtins.java
-	$(JAVAC) functions/Builtins.java
+values/functions/Builtins.class: values/functions/Builtins.java
+	$(JAVAC) values/functions/Builtins.java
 
 %.o: %.java
 	$(GCJ) -o $@ -c $<

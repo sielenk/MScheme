@@ -1,7 +1,7 @@
 package MScheme.machine;
 
 import MScheme.environment.Environment;
-import MScheme.functions.UnaryFunction;
+import MScheme.values.functions.UnaryFunction;
 
 
 /**

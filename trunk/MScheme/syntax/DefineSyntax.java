@@ -21,7 +21,7 @@ import MScheme.values.Pair;
 import MScheme.values.Symbol;
 import MScheme.values.InputPort;
 
-import MScheme.functions.ApplyFunction;
+import MScheme.values.functions.ApplyFunction;
 
 import MScheme.exceptions.*;
 

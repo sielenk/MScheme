@@ -15,7 +15,7 @@ public class TestMachine
             extends TestCase
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     private Machine machine;
 
@@ -449,7 +449,7 @@ public class TestMachine
         assert(
             machine.evaluate(
                 ListFactory.create(
-                    MScheme.functions.CallCCFunction.INSTANCE,
+                    MScheme.values.functions.CallCCFunction.INSTANCE,
                     ListFactory.create(
                         Symbol.create("lambda"),
                         ListFactory.create(
