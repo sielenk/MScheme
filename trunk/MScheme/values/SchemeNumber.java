@@ -40,6 +40,10 @@ public class SchemeNumber
 
     // number specific
 
+    public int getInteger()
+    { return _value; }
+
+
     public boolean isLessThan(SchemeNumber other)
     { return _value < other._value; }
 
@@ -56,4 +60,3 @@ public class SchemeNumber
     public SchemeNumber times(SchemeNumber other)
     { return new SchemeNumber(_value * other._value); }
 }
-
