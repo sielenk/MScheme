@@ -24,6 +24,7 @@ import MScheme.Value;
 import MScheme.Code;
 
 import MScheme.environment.Environment;
+import MScheme.environment.StaticEnvironment;
 
 import MScheme.machine.Registers;
 
@@ -45,8 +46,9 @@ public final class EvalFunction
     protected Code checkedCall(Registers state, Value fst, Value snd)
         throws SchemeException
     {
-        Environment newEnv  = snd.toEnvironment();
-        Code        newCode = fst.getCode(newEnv.getStatic());
+        Environment       newEnv    = snd.toEnvironment();
+        StaticEnvironment newGlobal = newEnv.getStatic();
+        Code              newCode   = fst.getCode(newGlobal).force(newGlobal);
 
         state.setEnvironment(newEnv);
         return newCode;
