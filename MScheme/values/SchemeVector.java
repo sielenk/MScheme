@@ -13,13 +13,14 @@ public final class SchemeVector
     extends Value
 {
     private final static SchemeVector _empty = new SchemeVector(0, null);
-    
+
     public static SchemeVector getInstance(int size, Value fill)
     {
         return (size == 0) ? _empty : new SchemeVector(size, fill);
     }
     
     private final Value[] _data;
+    private boolean       _isLiteral = false;
     
     private SchemeVector(int size, Value fill)
     {
@@ -29,7 +30,11 @@ public final class SchemeVector
             _data[i] = fill;
         }
     }
-    
+
+
+    public void setLiteral()
+    { _isLiteral = true; }
+
 
     public int getLength()
     { return _data.length; }
@@ -53,8 +58,12 @@ public final class SchemeVector
     }
 
     public void set(int index, Value value)
-        throws InvalidVectorIndexException
+        throws InvalidVectorIndexException, ImmutableException
     {
+        if (_isLiteral) {
+            throw new ImmutableException(this);
+        }
+
         try {
             _data[index] = value;
         }
@@ -68,6 +77,10 @@ public final class SchemeVector
     
     public boolean isVector()
     { return true; }
+    
+    public SchemeVector toVector()
+    { return this; }
+
     
     public boolean equal(Value other)
     {
