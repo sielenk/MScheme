@@ -5,7 +5,7 @@ import MScheme.machine.Machine;
 import MScheme.code.Code;
 import MScheme.code.CodeList;
 import MScheme.environment.StaticEnvironment;
-import MScheme.functions.Selector;
+import MScheme.code.CompiledSelector;
 import MScheme.values.Value;
 import MScheme.values.Function;
 import MScheme.values.SchemeBoolean;
@@ -34,15 +34,11 @@ final class IfToken
             (arguments.getLength() == 2)
             ? SchemeBoolean.createFalse()
             : arguments.getTail().getTail().getHead();
-            
-        Function selector = new Selector(
-            onTrue .getCode(syntax),
-            onFalse.getCode(syntax)
-        );
 
-        return selector.getCode(syntax).translateArguments(
-            syntax,
-            List.with(flag)
+        return new CompiledSelector(
+            flag.   getCode(syntax),
+            onTrue. getCode(syntax),
+            onFalse.getCode(syntax)
         );
     }
 }
