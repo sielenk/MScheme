@@ -22,7 +22,7 @@ package mscheme.exceptions;
 
 import mscheme.util.Arity;
 
-import mscheme.values.List;
+import mscheme.values.IList;
 
 
 public final class SyntaxArityError
@@ -31,7 +31,7 @@ public final class SyntaxArityError
     public final static String CVS_ID
         = "$Id$";
 
-    public SyntaxArityError(List arguments, Arity expected)
+    public SyntaxArityError(IList arguments, Arity expected)
     {
         super(arguments, "expected " + expected.toString() + " argument(s)");
     }

@@ -29,7 +29,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import mscheme.values.Function;
-import mscheme.values.List;
+import mscheme.values.IList;
 
 
 public class ParseBuiltins
@@ -42,7 +42,7 @@ public class ParseBuiltins
     {
         if (params.length == 1)
         {
-            return (params[0] == Object.class) || (params[0] == List.class);
+            return (params[0] == Object.class) || (params[0] == IList.class);
         }
         else
         {
@@ -240,7 +240,7 @@ public class ParseBuiltins
             final StringBuffer cases;
 
             if ((me.getParameterTypes().length == 1) &&
-                    (me.getParameterTypes()[0] == List.class)
+                    (me.getParameterTypes()[0] == IList.class)
                )
             {
                 cases     = baseCases;

@@ -20,7 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.syntax;
 
-import mscheme.Syntax;
 
 import mscheme.code.Application;
 import mscheme.code.Sequence;
@@ -32,7 +31,7 @@ import mscheme.exceptions.SchemeException;
 
 import mscheme.util.Arity;
 
-import mscheme.values.List;
+import mscheme.values.IList;
 import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
@@ -46,7 +45,7 @@ final class Letrec
         = "$Id$";
 
 
-    final static Syntax INSTANCE = new Letrec();
+    final static ITranslator INSTANCE = new Letrec();
 
     private Letrec()
     {
@@ -56,15 +55,15 @@ final class Letrec
 
     protected Object checkedTranslate(
         StaticEnvironment compilationEnv,
-        List              arguments
+        IList              arguments
     ) throws SchemeException
     {
         // (letrec ((<var> <init>) ...) <body>)
 
-        List[] formalsInitsBody = splitArguments(arguments);
-        List formals = formalsInitsBody[0];
-        List inits   = formalsInitsBody[1];
-        List body    = formalsInitsBody[2];
+        IList[] formalsInitsBody = splitArguments(arguments);
+        IList formals = formalsInitsBody[0];
+        IList inits   = formalsInitsBody[1];
+        IList body    = formalsInitsBody[2];
 
         int numberOfFormals = formals.getLength();
 

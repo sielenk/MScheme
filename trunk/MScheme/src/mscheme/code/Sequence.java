@@ -21,14 +21,14 @@ Boston, MA  02111-1307, USA. */
 package mscheme.code;
 
 import mscheme.exceptions.CompileError;
-import mscheme.machine.Invokeable;
+import mscheme.machine.IInvokeable;
 import mscheme.machine.Registers;
-import mscheme.syntax.SequenceTags;
+import mscheme.syntax.ISequenceTags;
 import mscheme.values.ValueTraits;
 
 
 public final class Sequence
-    implements SequenceTags, Forceable, Reduceable
+    implements ISequenceTags, IForceable, IReduceable
 {
 	public final static String CVS_ID
         = "$Id$";
@@ -118,7 +118,7 @@ public final class Sequence
 		if (index + 1 < _sequence.length)
 		{
 			registers.push(
-			    new Invokeable()
+			    new IInvokeable()
 			    {
 					public final static String CVS_ID
 						= "$Id$";

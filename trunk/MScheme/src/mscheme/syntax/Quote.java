@@ -20,7 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.syntax;
 
-import mscheme.Syntax;
 
 import mscheme.environment.StaticEnvironment;
 
@@ -28,20 +27,20 @@ import mscheme.exceptions.TypeError;
 
 import mscheme.util.Arity;
 
-import mscheme.values.List;
+import mscheme.values.IList;
 import mscheme.values.ValueTraits;
 
 
 // *** quote ***
 
 final class Quote
-    extends CheckedSyntax
+    extends CheckedTranslator
 {
     public final static String CVS_ID
         = "$Id$";
 
 
-    final static Syntax INSTANCE = new Quote();
+    final static ITranslator INSTANCE = new Quote();
 
     private Quote()
     {
@@ -50,7 +49,7 @@ final class Quote
 
     protected Object checkedTranslate(
         StaticEnvironment compilationEnv,
-        List              arguments
+        IList              arguments
     ) throws TypeError
     {
         return ValueTraits.getConst(arguments.getHead());

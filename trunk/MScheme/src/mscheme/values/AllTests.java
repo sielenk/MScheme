@@ -15,16 +15,18 @@ import junit.framework.TestSuite;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class AllTests {
+public class AllTests
+{
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for mscheme.values");
-		//$JUnit-BEGIN$
-		suite.addTest(new TestSuite(TestInputPort.class));
-		suite.addTest(new TestSuite(OutputPortTest.class));
-		suite.addTest(new TestSuite(TestList.class));
-		suite.addTest(new TestSuite(ValueTraitsTest.class));
-		//$JUnit-END$
-		return suite;
-	}
+    public static Test suite()
+    {
+        TestSuite suite = new TestSuite("Test for mscheme.values");
+        //$JUnit-BEGIN$
+        suite.addTestSuite(TestInputPort.class);
+        suite.addTestSuite(OutputPortTest.class);
+        suite.addTestSuite(ValueTraitsTest.class);
+        suite.addTestSuite(TestList.class);
+        //$JUnit-END$
+        return suite;
+    }
 }

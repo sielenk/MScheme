@@ -25,7 +25,7 @@ import mscheme.exceptions.TypeError;
 import mscheme.machine.Registers;
 
 import mscheme.values.Function;
-import mscheme.values.List;
+import mscheme.values.IList;
 import mscheme.values.ListFactory;
 import mscheme.values.ValueTraits;
 
@@ -44,7 +44,7 @@ class YWrappedFunction
         _f = f;
     }
 
-    public Object call(Registers state, List arguments)
+    public Object call(Registers state, IList arguments)
         throws SchemeException
     {
         return ValueTraits.apply(

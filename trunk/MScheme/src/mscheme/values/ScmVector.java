@@ -23,57 +23,72 @@ package mscheme.values;
 import java.io.IOException;
 import java.io.Writer;
 
-import mscheme.environment.StaticEnvironment;
-
-import mscheme.exceptions.CantCompileException;
 import mscheme.exceptions.ImmutableException;
 import mscheme.exceptions.InvalidVectorIndexException;
-import mscheme.exceptions.PairExpected;
 import mscheme.exceptions.VectorException;
 
 
-public final class ScmVector
-    extends Compound
-    implements Outputable
+final class ConstScmVector
+	extends ScmVector
+{
+    public ConstScmVector(int size, Object fill)
+    {
+        super(size, fill);
+    }
+
+    public ConstScmVector(Object[] data)
+    {
+        super(data);
+    }
+
+    protected Object elementInit(Object object)
+    {
+        return ValueTraits.getConst(object);
+    }
+
+    public void modify() throws ImmutableException
+    {
+        throw new ImmutableException(this);
+    }    
+}
+
+final class MutableScmVector
+	extends ScmVector
+	implements IMutable
+{
+    public MutableScmVector(int size, Object fill)
+    {
+        super(size, fill);
+    }
+
+    public MutableScmVector(Object[] data)
+    {
+        super(data);
+    }
+
+    protected Object elementInit(Object object)
+    {
+        return object;
+    }
+
+    public Object getConst()
+    {
+        return null;
+    }
+
+    public void modify()
+    { }    
+}
+
+
+public abstract class ScmVector
+    implements IComparable, IOutputable
 {
     public final static String CVS_ID
         = "$Id$";
 
 
-    private final static ScmVector EMPTY = new ScmVector(false, 0, null);
-
-    private final Object[] _data;
-
-    private ScmVector(boolean isConst, Object[] data)
-    {
-        super(isConst);
-        _data = data;
-
-        if (isConst)
-        {
-            for (int i = 0; i < _data.length; ++i)
-            {
-                _data[i] = ValueTraits.getConst(_data[i]);
-            }
-        }
-    }
-
-    private ScmVector(boolean isConst, int size, Object fill)
-    {
-        super(isConst);
-        _data = new Object[size];
-
-        if (isConst)
-        {
-            fill = ValueTraits.getConst(fill);
-        }
-
-        for (int i = 0; i < _data.length; ++i)
-        {
-            _data[i] = fill;
-        }
-    }
-
+    private final static ScmVector EMPTY = new ConstScmVector(0, null);
 
     public static ScmVector create()
     {
@@ -82,51 +97,64 @@ public final class ScmVector
 
     public static ScmVector create(Object[] data)
     {
-        return (data.length == 0) ? EMPTY : new ScmVector(false, data);
+        return (data.length == 0) ? EMPTY : new MutableScmVector(data);
     }
 
     public static ScmVector createConst(Object[] data)
     {
-        return (data.length == 0) ? EMPTY : new ScmVector(true, data);
+        return (data.length == 0) ? EMPTY : new ConstScmVector(data);
     }
 
     public static ScmVector create(int size, Object fill)
     {
-        return (size == 0) ? EMPTY : new ScmVector(false, size, fill);
+        return (size == 0) ? EMPTY : new MutableScmVector(size, fill);
     }
 
-    public static ScmVector create(List list)
+    public static ScmVector create(IList list)
     {
-        return createHelper(list, 0);
+        ScmVector result = create(list.getLength(), null);
+	
+        int     i = 0;
+        Object l = list;
+        while (l instanceof IPair)
+        {
+            IPair p = (IPair)l;
+
+            result._data[i++] = p.getFirst();
+            l                 = p.getSecond();
+        }
+        
+        return result;
     }
 
-    private static ScmVector createHelper(List list, int index)
+
+    private final Object[] _data;
+
+    protected ScmVector(Object[] data)
     {
-        if (list.isEmpty())
-        {
-            return create(index, null);
-        }
-        else
-        {
-            try
-            {
-                ScmVector result = createHelper(
-                                       list.getTail(),
-                                       index + 1
-                                   );
+        int size = data.length;
+        
+        _data = new Object[size];
 
-                result._data[index] = list.getHead();
-
-                return result;
-            }
-            catch (PairExpected e)
-            {
-                throw new RuntimeException(
-                    "unexpected PairExpected"
-                );
-            }
+        for (int i = 0; i < size; ++i)
+        {
+            _data[i] = elementInit(data[i]);
         }
     }
+
+    protected ScmVector(int size, Object fill)
+    {
+        Object element = elementInit(fill);
+
+        _data = new Object[size];
+
+        for (int i = 0; i < _data.length; ++i)
+        {
+            _data[i] = element;
+        }
+    }
+
+    abstract protected Object elementInit(Object object);
 
 
     public int getLength()
@@ -135,75 +163,69 @@ public final class ScmVector
     }
 
 
-    public Object get(int index)
-        throws VectorException
+    void validateIndex(int index)
+    	throws InvalidVectorIndexException
     {
-        try
-        {
-            return _data[index];
-        }
-        catch (ArrayIndexOutOfBoundsException e)
+        if ((index < 0) || (getLength() <= index))
         {
             throw new InvalidVectorIndexException(this, index);
         }
+    }
+
+    public Object get(int index)
+        throws VectorException
+    {
+        validateIndex(index);
+        return _data[index];
     }
 
     public void set(int index, Object value)
         throws InvalidVectorIndexException, ImmutableException
     {
+        validateIndex(index);
         modify();
+        _data[index] = value;
+    }
 
-        try
+    protected abstract void modify()
+    	throws ImmutableException;
+
+
+    // implementation of Comparable
+
+    public boolean eq(Object other)
+    {
+        return this == other;
+    }
+
+    public boolean eqv(Object other)
+    {
+        return this == other;
+    }
+
+    public boolean equals(Object other)
+    {
+        if (!(other instanceof ScmVector))
         {
-            _data[index] = value;
+            return false;
         }
-        catch (ArrayIndexOutOfBoundsException e)
+
+        ScmVector otherVector = (ScmVector)other;
+
+        if (getLength() != otherVector.getLength())
         {
-            throw new InvalidVectorIndexException(this, index);
+            return false;
         }
-    }
-
-
-    // specialisation of Value
-
-    public boolean isScmVector()
-    {
-        return true;
-    }
-
-    public ScmVector toScmVector()
-    {
-        return this;
-    }
-
-    protected Object getConstCopy()
-    {
-        return createConst((Object[])_data.clone());
-    }
-
-    public boolean equal(Object other)
-    {
-        try
+        
+        for (int i = 0; i < getLength(); i++)
         {
-            ScmVector otherVector = (ScmVector)other;
-
-            if (_data.length == otherVector._data.length)
+            if (!ValueTraits.equal(_data[i], otherVector._data[i]))
             {
-                for (int i = 0; i < _data.length; i++)
-                {
-                    if (!ValueTraits.equal(_data[i], otherVector._data[i]))
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
+                return false;
             }
         }
-        catch (ClassCastException e)
-        { }
 
-        return false;
+        return true;
     }
 
     public void outputOn(Writer destination, boolean doDisplay)
@@ -222,20 +244,15 @@ public final class ScmVector
         destination.write(')');
     }
 
-
-    public Object getCompiled(StaticEnvironment e)
-        throws CantCompileException
+    public IList getList()
     {
-        throw new CantCompileException(this);
-    }
+        IList result = ListFactory.create();
 
-    public List getList()
-    {
-        List result = Empty.create();
-        for (int i = getLength() - 1; i >= 0; i--)
+        for (int i = getLength() - 1; i >= 0; --i)
         {
             result = ListFactory.prepend(_data[i], result);
         }
+
         return result;
     }
 }

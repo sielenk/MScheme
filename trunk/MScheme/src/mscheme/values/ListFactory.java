@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.values;
 
-import mscheme.Value;
-
 
 public abstract class ListFactory
 {
@@ -31,31 +29,50 @@ public abstract class ListFactory
 
     // *** List creation ***
 
-	public static List prepend(Object head, List tail) {
+	public static IList prepend(Object head, IList tail) {
 		return PairOrList.prepend(head, tail);
 	}
 
-    public static List create()
+	public static IList prependConst(Object head, IList tail) {
+		return PairOrList.prependConst(head, tail);
+	}
+
+    public static IList create()
     {
-        return Empty.create();
+        return Empty.INSTANCE;
     }
 
-    public static List create(Object first)
+    public static IList createConst()
+    {
+        return Empty.INSTANCE;
+    }
+
+    public static IList create(Object first)
     {
         return prepend(first, create());
     }
 
-    public static List create(Object first, Object second)
+    public static IList createConst(Object first)
+    {
+        return prependConst(first, createConst());
+    }
+
+    public static IList create(Object first, Object second)
     {
         return prepend(first, create(second));
     }
 
-    public static List create(Object first, Object second, Object third)
+    public static IList createConst(Object first, Object second)
+    {
+        return prependConst(first, createConst(second));
+    }
+
+    public static IList create(Object first, Object second, Object third)
     {
         return prepend(first, create(second, third));
     }
 
-    public static List create(
+    public static IList create(
 		Object first,
 		Object second,
 		Object third,
@@ -67,12 +84,12 @@ public abstract class ListFactory
 
     // *** Pair creation ***
     
-    public static Pair createPair(Object fst, Object snd)
+    public static IPair createPair(Object fst, Object snd)
     {
         return PairOrList.create(fst, snd);
     }
  
-    public static Pair createConstPair(Value fst, Value snd)
+    public static IPair createConstPair(Object fst, Object snd)
     {
         return PairOrList.createConst(fst, snd);
     }

@@ -22,26 +22,20 @@ package mscheme.environment;
 
 import java.io.IOException;
 import java.io.Writer;
-
 import java.util.Hashtable;
-
-import mscheme.Syntax;
-import mscheme.Value;
 
 import mscheme.exceptions.AlreadyBound;
 import mscheme.exceptions.CompileError;
 import mscheme.exceptions.SymbolNotFoundException;
 import mscheme.exceptions.TypeError;
 import mscheme.exceptions.UnexpectedSyntax;
-
-import mscheme.values.List;
+import mscheme.syntax.ITranslator;
+import mscheme.values.IList;
 import mscheme.values.Symbol;
-import mscheme.values.ValueDefaultImplementations;
 import mscheme.values.ValueTraits;
 
 
 public class StaticEnvironment
-    extends ValueDefaultImplementations
 {
     public final static String CVS_ID
         = "$Id$";
@@ -89,13 +83,13 @@ public class StaticEnvironment
     }
 
 
-    StaticEnvironment(StaticEnvironment parent, List symbols)
+    StaticEnvironment(StaticEnvironment parent, IList symbols)
         throws CompileError, TypeError
     {
         this(parent);
 
         for (
-            List tail = symbols;
+            IList tail = symbols;
             !tail.isEmpty();
             tail = tail.getTail())
         {
@@ -139,7 +133,7 @@ public class StaticEnvironment
         return new StaticEnvironment(this);
     }
 
-    public StaticEnvironment createChild(List symbols)
+    public StaticEnvironment createChild(IList symbols)
         throws CompileError, TypeError
     {
         return new StaticEnvironment(this, symbols);
@@ -153,7 +147,7 @@ public class StaticEnvironment
 
     // *** instance access ***************************************************
 
-    public void setStateOpen(Value v)
+    public void setStateOpen(Object v)
         throws CompileError
     {
         switch (_state)
@@ -176,7 +170,7 @@ public class StaticEnvironment
         }
     }
 
-    public void setStateDefinitionBody(Value v)
+    public void setStateDefinitionBody(Object v)
         throws CompileError
     {
         switch (_state)
@@ -252,14 +246,14 @@ public class StaticEnvironment
     }
 
 
-    public void defineSyntax(Symbol symbol, Syntax value)
+    public void defineSyntax(Symbol symbol, ITranslator value)
         throws AlreadyBound
     {
         String  key = symbol.getJavaString();
 
         {
             Object o = _bindings.get(key);
-            if ((o != null) && !(o instanceof Syntax))
+            if ((o != null) && !(o instanceof ITranslator))
             {
                 throw new AlreadyBound(symbol);
             }
@@ -313,14 +307,14 @@ public class StaticEnvironment
         return result;
     }
 
-    public Syntax getSyntaxFor(Symbol key)
+    public ITranslator getSyntaxFor(Symbol key)
         throws SymbolNotFoundException
     {
         Object result = lookup(key);
 
         return 
-            (result instanceof Syntax)
-            ? (Syntax)result
+            (result instanceof ITranslator)
+            ? (ITranslator)result
             : null;
     }
 

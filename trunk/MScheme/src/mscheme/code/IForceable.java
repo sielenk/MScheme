@@ -11,7 +11,7 @@ import mscheme.exceptions.CompileError;
 /**
  * @author sielenk
  */
-public interface Forceable
+public interface IForceable
 {
 	/** The CVS id of the file containing this class. */
 	String CVS_ID

@@ -23,8 +23,8 @@ package mscheme.values.functions;
 import mscheme.exceptions.ListExpected;
 import mscheme.exceptions.PairExpected;
 
-import mscheme.values.List;
-import mscheme.values.Pair;
+import mscheme.values.IList;
+import mscheme.values.IPair;
 import mscheme.values.ValueTraits;
 
 abstract class AssocBase
@@ -42,12 +42,12 @@ abstract class AssocBase
     ) throws ListExpected, PairExpected
     {
         for (
-            List tail = ValueTraits.toList(values);
+            IList tail = ValueTraits.toList(values);
             !tail.isEmpty();
             tail = tail.getTail()
         )
         {
-            Pair pair = ValueTraits.toPair(tail.getHead());
+            IPair pair = ValueTraits.toPair(tail.getHead());
 
             if (equal(key, pair.getFirst()))
             {

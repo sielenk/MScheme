@@ -1,4 +1,4 @@
-/* An extended interface for pairs.
+/* An extended interface for lists.
    Copyright (C) 2001  Marvin H. Sielenkemper
 
 This file is part of MScheme.
@@ -20,20 +20,37 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.values;
 
-import mscheme.Value;
+import mscheme.environment.StaticEnvironment;
 
-import mscheme.exceptions.ImmutableException;
+import mscheme.exceptions.ListExpected;
+import mscheme.exceptions.PairExpected;
+import mscheme.exceptions.SchemeException;
 
-public interface Pair
-    extends Value
+
+public interface IList
 {
+    /** The CVS id of the file containing this class. */
     String CVS_ID
         = "$Id$";
 
 
-    Object getFirst (          );
-    void   setFirst (Object fst) throws ImmutableException;
+    boolean isValid();
+	IList validate()  throws ListExpected;
 
-    Object getSecond(          );
-    void   setSecond(Object snd) throws ImmutableException;
+    boolean isEmpty();
+
+    int     getLength  ();
+    IList  getReversed();
+    IList  getCopy    ();
+    Object getHead    () throws PairExpected;
+    IList  getTail    () throws PairExpected;
+
+    Object[] getCompiledArray(StaticEnvironment compilationEnv)
+        throws SchemeException;
+
+    Object[] getCompiledArray(StaticEnvironment compilationEnv, int index)
+        throws SchemeException;
+
+	Object[] getArray(         );
+	Object[] getArray(int index);
 }

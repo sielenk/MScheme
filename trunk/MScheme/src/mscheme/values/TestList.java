@@ -20,23 +20,22 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.values;
 
-import mscheme.Value;
-
 import mscheme.exceptions.PairExpected;
 
+
 public class TestList
-            extends junit.framework.TestCase
+	extends junit.framework.TestCase
 {
     public final static String CVS_ID
-    = "$Id$";
+    	= "$Id$";
 
 
-    Value firstElement;
-    Value secondElement;
-    Value lastElement;
-    List  emptyList;
-    List  occupiedList;
-    int   occupiedListLength;
+    Object firstElement;
+    Object secondElement;
+    Object lastElement;
+    IList   emptyList;
+    IList   occupiedList;
+    int     occupiedListLength;
 
     public TestList(String name)
     {
@@ -45,7 +44,7 @@ public class TestList
 
     protected void setUp()
     {
-        emptyList     = Empty.create();
+        emptyList     = ListFactory.create();
 
         firstElement  = Symbol.create("x");
         secondElement = Symbol.create("y");
@@ -86,7 +85,7 @@ public class TestList
     {
         assertTrue(
             "empty isn't unique",
-            emptyList == Empty.create()
+            emptyList == ListFactory.create()
         );
     }
 
@@ -100,7 +99,7 @@ public class TestList
 
         assertTrue(
             "toPair returned somethig wrong",
-            occupiedList.toPair().getFirst() == occupiedList.getHead()
+            ValueTraits.toPair(occupiedList).getFirst() == occupiedList.getHead()
         );
     }
 

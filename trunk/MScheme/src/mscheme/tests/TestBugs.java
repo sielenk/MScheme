@@ -72,7 +72,6 @@ public class TestBugs
         // Internal definitions are not allowed after the
         // first expression.
 
-
         try {
             eval("(let () 1 (define x 2) x)");
             fail();

@@ -25,7 +25,7 @@ import mscheme.machine.Registers;
 
 import mscheme.util.Arity;
 
-import mscheme.values.List;
+import mscheme.values.IList;
 
 
 public abstract class UnaryFunction
@@ -42,7 +42,7 @@ public abstract class UnaryFunction
 
     protected final Object checkedCall(
 		mscheme.machine.Registers state,
-        List      arguments
+        IList      arguments
     ) throws SchemeException
     {
         return checkedCall(

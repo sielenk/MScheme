@@ -45,7 +45,7 @@ import mscheme.util.Arity;
 
 import mscheme.values.Function;
 import mscheme.values.InputPort;
-import mscheme.values.List;
+import mscheme.values.IList;
 import mscheme.values.Empty;
 import mscheme.values.ListFactory;
 import mscheme.values.OutputPort;
@@ -68,7 +68,7 @@ final class Order
     public final static int GE =  1;
     public final static int GT =  2;
 
-    public final static boolean check(List arguments, int mode)
+    public final static boolean check(IList arguments, int mode)
         throws RuntimeError, TypeError
     {
         final Arity arity = Arity.atLeast(2);
@@ -80,7 +80,7 @@ final class Order
         }
 
         ScmNumber curr = ValueTraits.toScmNumber(arguments.getHead());
-        List      tail = arguments.getTail();
+        IList      tail = arguments.getTail();
 
         boolean rising  = true;
         boolean strict  = true;
@@ -200,31 +200,31 @@ public class Builtins
     }
 
 
-    public final static Object _3C(List arguments) // <
+    public final static Object _3C(IList arguments) // <
     throws RuntimeError, TypeError
     {
         return ValueTraits.toScmBoolean(Order.check(arguments, Order.LT));
     }
 
-    public final static Object _3C_3D(List arguments) // <=
+    public final static Object _3C_3D(IList arguments) // <=
     throws RuntimeError, TypeError
     {
         return ValueTraits.toScmBoolean(Order.check(arguments, Order.LE));
     }
 
-    public final static Object _3D(List arguments) // =
+    public final static Object _3D(IList arguments) // =
     throws RuntimeError, TypeError
     {
         return ValueTraits.toScmBoolean(Order.check(arguments, Order.EQ));
     }
 
-    public final static Object _3E_3D(List arguments) // >=
+    public final static Object _3E_3D(IList arguments) // >=
     throws RuntimeError, TypeError
     {
         return ValueTraits.toScmBoolean(Order.check(arguments, Order.GE));
     }
 
-    public final static Object _3E(List arguments) // >
+    public final static Object _3E(IList arguments) // >
     throws RuntimeError, TypeError
     {
         return ValueTraits.toScmBoolean(Order.check(arguments, Order.GT));
@@ -238,16 +238,16 @@ public class Builtins
     }
 
 
-    public final static Object _2B(List arguments) // +
+    public final static Object _2B(IList arguments) // +
         throws RuntimeError, TypeError
     {
         ScmNumber sum  = ScmNumber.create(0);
-        List      tail = arguments;
+        IList      tail = arguments;
             
         while (!tail.isEmpty())
         {
             ScmNumber term     = ValueTraits.toScmNumber(tail.getHead());
-            List      nextTail = tail.getTail();
+            IList      nextTail = tail.getTail();
 
             sum  = sum.plus(term);
             tail = nextTail;
@@ -255,18 +255,18 @@ public class Builtins
         return sum;
     }
 
-    public final static Object _2D(List arguments) // -
+    public final static Object _2D(IList arguments) // -
         throws RuntimeError, TypeError
     {
         ScmNumber result = ValueTraits.toScmNumber(arguments.getHead());
-        List      rest   = arguments.getTail();
+        IList      rest   = arguments.getTail();
 
         if (!rest.isEmpty())
         {
             do
             {
                 ScmNumber head = ValueTraits.toScmNumber(rest.getHead());
-                List      tail = rest.getTail();
+                IList      tail = rest.getTail();
 
                 result = result.minus(head);
                 rest   = tail;
@@ -281,16 +281,16 @@ public class Builtins
         }
     }
 
-    public final static Object _2A(List arguments) // *
+    public final static Object _2A(IList arguments) // *
         throws RuntimeError, TypeError
     {
         ScmNumber product = ScmNumber.create(1);
-        List      tail    = arguments;
+        IList      tail    = arguments;
 
         while (!tail.isEmpty())
         {
             ScmNumber factor   = ValueTraits.toScmNumber(tail.getHead());
-            List      nextTail = tail.getTail();
+            IList      nextTail = tail.getTail();
                 
             product = product.times(factor);
             tail    = nextTail;
@@ -299,18 +299,18 @@ public class Builtins
         return product;
     }
 
-    public final static Object _2F(List arguments) // /
+    public final static Object _2F(IList arguments) // /
         throws RuntimeError, TypeError
     {
         ScmNumber result = ValueTraits.toScmNumber(arguments.getHead());
-        List      rest   = arguments.getTail();
+        IList      rest   = arguments.getTail();
 
         if (!rest.isEmpty())
         {
             do
             {
                 ScmNumber head = ValueTraits.toScmNumber(rest.getHead());
-                List      tail = rest.getTail();
+                IList      tail = rest.getTail();
 
                 result = result.divide(head);
                 rest   = tail;
@@ -391,7 +391,7 @@ public class Builtins
         return ValueTraits.toScmBoolean(ValueTraits.isList(argument));
     }
 
-    public final static Object list(List argument)
+    public final static Object list(IList argument)
         throws ListExpected
     {
         // Without first-class continuations, it would be save to
@@ -560,13 +560,13 @@ public class Builtins
         return c;
     }
 
-    public final static Object string_2Dappend(List arguments)
+    public final static Object string_2Dappend(IList arguments)
     throws TypeError, InvalidStringIndexException, ImmutableException
     {
         StringBuffer accu = new StringBuffer();
         
         for (
-            List rest = arguments;
+            IList rest = arguments;
             !rest.isEmpty();
             rest = rest.getTail()
         )
@@ -593,7 +593,7 @@ public class Builtins
     throws TypeError, InvalidStringIndexException, ImmutableException
     {
         String javaString = ValueTraits.toScmString(scmString).getJavaString();
-        List   result     = ListFactory.create();
+        IList   result     = ListFactory.create();
 
         for (
             int i = javaString.length() - 1;
@@ -617,7 +617,7 @@ public class Builtins
         StringBuffer accu = new StringBuffer();
         
         for (
-            List rest = ValueTraits.toList(list);
+            IList rest = ValueTraits.toList(list);
             !rest.isEmpty();
             rest = rest.getTail()
         )
@@ -672,8 +672,8 @@ public class Builtins
         return obj;
     }
 
-    public final static Object vector(List arguments) // vector
-    throws ListExpected
+    public final static Object vector(IList arguments) // vector
+    	throws ListExpected
     {
         return ScmVector.create(arguments);
     }
@@ -686,7 +686,7 @@ public class Builtins
     }
 
     public final static Object list_2D_3Evector(Object argument) // list->vector
-    throws ListExpected
+    	throws ListExpected
     {
         return ScmVector.create(ValueTraits.toList(argument));
     }

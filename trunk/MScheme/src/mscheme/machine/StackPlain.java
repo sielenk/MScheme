@@ -9,7 +9,7 @@ package mscheme.machine;
 /**
  * @author sielenk
  */
-class StackPlain implements Stack
+class StackPlain implements IStack
 {
 	public final static String CVS_ID
 	    = "$Id$";

@@ -20,7 +20,7 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme;
 
-import mscheme.code.Forceable;
+import mscheme.code.IForceable;
 import mscheme.exceptions.CompileError;
 
 
@@ -32,7 +32,7 @@ import mscheme.exceptions.CompileError;
  * The logic needed by the different instructions is contained
  * in the classes which implement them.
  */
-public final class Code
+public final class ICode
 {
     /** The CVS id of the file containing this class. */
     String id
@@ -46,8 +46,8 @@ public final class Code
         throws CompileError
     {
     	return
-    		(o instanceof Forceable)
-    		? ((Forceable)o).force()
+    		(o instanceof IForceable)
+    		? ((IForceable)o).force()
     		: o;
     }
 }

@@ -19,9 +19,9 @@ public abstract class StackTest extends TestCase
 	public final static String CVS_ID
 	   = "$Id$";
 
-	private Stack _stack;
+	private IStack _stack;
 
-	protected abstract Stack createStack();
+	protected abstract IStack createStack();
 
 
 	public StackTest(String name)

@@ -45,7 +45,7 @@ public class Registers
 		return _environment;
 	}
 
-	public void push(Invokeable k)
+	public void push(IInvokeable k)
 	{
 		_stack.push(new StackFrame(_environment, k));
 	}

@@ -9,7 +9,7 @@ package mscheme.machine;
 /**
  * @author sielenk
  */
-interface Stack {
+interface IStack {
 	public abstract boolean isEmpty();
 	public abstract StackFrame pop();
 	public abstract void push(StackFrame frame);

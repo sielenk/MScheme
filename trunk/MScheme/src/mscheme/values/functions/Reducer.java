@@ -23,7 +23,7 @@ package mscheme.values.functions;
 import mscheme.exceptions.RuntimeError;
 import mscheme.exceptions.TypeError;
 
-import mscheme.values.List;
+import mscheme.values.IList;
 
 abstract class Reducer
 {
@@ -42,7 +42,7 @@ abstract class Reducer
         throws RuntimeError, TypeError;
 
 
-    public final Object reduceLeft(List list)
+    public final Object reduceLeft(IList list)
         throws RuntimeError, TypeError
     {
         if (list.isEmpty())
@@ -54,7 +54,7 @@ abstract class Reducer
             Object result = list.getHead();
         
             for (
-                List tail = list.getTail();
+                IList tail = list.getTail();
                 !tail.isEmpty();
                 tail   = tail.getTail()
             )
@@ -66,13 +66,13 @@ abstract class Reducer
         }
     }
 
-    public final Object foldLeft(List list)
+    public final Object foldLeft(IList list)
         throws RuntimeError, TypeError
     {
         Object result = _initial;
     
         for (
-            List tail = list;
+            IList tail = list;
             !tail.isEmpty();
             tail   = tail.getTail()
         )
@@ -83,10 +83,10 @@ abstract class Reducer
         return result;
     }
 
-    private Object reduceRightHelper(List list)
+    private Object reduceRightHelper(IList list)
         throws RuntimeError, TypeError
     {
-        List tail = list.getTail();
+        IList tail = list.getTail();
 
         if (tail.isEmpty())
         {
@@ -101,7 +101,7 @@ abstract class Reducer
         }
     }
 
-    public final Object reduceRight(List list)
+    public final Object reduceRight(IList list)
         throws RuntimeError, TypeError
     {
         if (list.isEmpty())
@@ -114,7 +114,7 @@ abstract class Reducer
         }
     }
 
-    public Object foldRight(List list)
+    public Object foldRight(IList list)
         throws RuntimeError, TypeError
     {
         if (list.isEmpty())

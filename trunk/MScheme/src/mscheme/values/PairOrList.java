@@ -21,56 +21,139 @@ Boston, MA  02111-1307, USA. */
 package mscheme.values;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 
 import mscheme.environment.StaticEnvironment;
-
 import mscheme.exceptions.ImmutableException;
 import mscheme.exceptions.ListExpected;
 import mscheme.exceptions.PairExpected;
 import mscheme.exceptions.SchemeException;
+import mscheme.syntax.ProcedureCall;
+import mscheme.syntax.ITranslator;
 
 
-final class PairOrList
-    extends Compound
-    implements List, Pair, Outputable, Comparable
+class ConstPairOrList
+	extends PairOrList
 {
     public final static String CVS_ID
-        = "$Id$";
+    	= "$Id$";
+
+
+    private final Object _first;
+    private final Object _second;
+
+	ConstPairOrList(Object first, Object second)
+	{
+        _first  = ValueTraits.getConst(first);
+        _second = ValueTraits.getConst(second);
+	}
+
+	public void setFirst(Object first)
+		throws ImmutableException
+	{
+		throw new ImmutableException(this);
+	}
+
+    public Object getFirst()
+    {
+        return _first;
+    }
+   
+
+    public void setSecond(Object second)
+        throws ImmutableException
+    {
+		throw new ImmutableException(this);
+    }
+    
+    public Object getSecond()
+    {
+        return _second;
+    }
+}
+
+
+class MutablePairOrList
+	extends PairOrList
+	implements IMutable
+{
+    public final static String CVS_ID
+    	= "$Id$";
 
 
     private Object _first;
     private Object _second;
 
-    private PairOrList(boolean isConst, Object first, Object second)
-    {
-        super(isConst);
-
+	MutablePairOrList(Object first, Object second)
+	{
         _first  = first;
+        _second = second;
+	}
+
+
+    public void setFirst(Object first)
+    {
+        _first = first;
+    }
+
+    public Object getFirst()
+    {
+        return _first;
+    }
+   
+
+    public void setSecond(Object second)
+    {
         _second = second;
     }
 
-
-    public static List prepend(Object head, List tail)
+    public Object getSecond()
     {
-        return new PairOrList(false, head, tail);
+        return _second;
     }
 
-    public static Pair create(Object first, Object second)
+    
+    public Object getConst()
     {
-        return new PairOrList(false, first, second);
+        return new ConstPairOrList(_first, _second);
+    }
+}
+
+
+public abstract class PairOrList
+    implements IList, IPair, ICompileable, IComparable, IOutputable
+{
+    public final static String CVS_ID
+        = "$Id$";
+
+
+    protected PairOrList()
+    { }
+
+
+    public static IList prepend(Object head, IList tail)
+    {
+        return new MutablePairOrList(head, tail);
     }
 
-    public static Pair createConst(Object first, Object second)
+    public static IList prependConst(Object head, IList tail)
     {
-        return new PairOrList(
-        	true,
-			ValueTraits.getConst(first),
-			ValueTraits.getConst(second));
+        return new ConstPairOrList(head, tail);
+    }
+
+    public static IPair create(Object first, Object second)
+    {
+        return new MutablePairOrList(first, second);
+    }
+
+    public static IPair createConst(Object first, Object second)
+    {
+        return new ConstPairOrList(first, second);
     }
 
 
-    // implementation of Value
+    // implementation of Outputable
 
     public void outputOn(Writer destination, boolean doDisplay)
         throws IOException
@@ -82,7 +165,7 @@ final class PairOrList
         boolean advance = false;
         boolean first   = true;
 
-        while (current instanceof Pair)
+        while (current instanceof IPair)
         {
             if (!first)
             {
@@ -93,7 +176,7 @@ final class PairOrList
                 first = false;
             }
 
-            Pair currentPair = (Pair)current;
+            IPair currentPair = (IPair)current;
 
 			ValueTraits.output(destination, doDisplay, currentPair.getFirst());
 
@@ -101,7 +184,7 @@ final class PairOrList
 
             if (advance)
             {
-                delayed = ((Pair)delayed).getSecond();
+                delayed = ((IPair)delayed).getSecond();
                 
                 if (delayed == current)
                 {
@@ -124,29 +207,44 @@ final class PairOrList
         destination.write(')');
     }
 
-    public boolean equal(Object other)
+    public boolean eq(Object other)
     {
-        try
-        {
-            Pair otherPair = (Pair)other;
-
-            return
-				ValueTraits.equal(getFirst (), otherPair.getFirst ()) &&
-				ValueTraits.equal(getSecond(), otherPair.getSecond());
-        }
-        catch (ClassCastException e)
-        { }
-
-        return false;
+        return this == other;
     }
+
+
+    public boolean eqv(Object other)
+    {
+        return this == other;
+    }
+
+    public boolean equals(Object other)
+    {
+        if (!(other instanceof IPair))
+        {
+            return false;
+        }
+            
+        IPair otherPair = (IPair)other;
+
+        return
+			ValueTraits.equal(getFirst (), otherPair.getFirst ()) &&
+			ValueTraits.equal(getSecond(), otherPair.getSecond());
+    }
+
+    public ITranslator getTranslator(StaticEnvironment compilationEnv)
+    	throws SchemeException
+	{
+	    return ProcedureCall.create(this);
+	}
 
     public Object getCompiled(StaticEnvironment compilationEnv)
         throws SchemeException
     {
-        List list = toList();
+        IList list = validate();
 
         return
-			ValueTraits.getSyntax(
+			ValueTraits.getTranslator(
 				compilationEnv,
 				list.getHead())
             .translate(
@@ -156,95 +254,65 @@ final class PairOrList
     }
 
 
-    // implementation of Compound
-
-    protected final Object getConstCopy()
-    {
-        return createConst(
-            getFirst(),
-            getSecond()
-        );
-    }
-
-
     // implementation of Pair
 
-    public final boolean isPair()
-    {
-        return true;
-    }
+    abstract public Object getFirst();
 
-    public final Pair toPair()
-    {
-        return this;
-    }
+    abstract public void setFirst(Object first)
+        throws ImmutableException;
 
-    public final Object getFirst()
-    {
-        return _first;
-    }
+    abstract public Object getSecond();
 
-    public final void setFirst(Object first)
-        throws ImmutableException
-    {
-        modify();
-        _first = first;
-    }
-
-    public final Object getSecond()
-    {
-        return _second;
-    }
-
-    public final void setSecond(Object second)
-        throws ImmutableException
-    {
-        modify();
-        _second = second;
-    }
+    abstract public void setSecond(Object second)
+        throws ImmutableException;
 
 
     // implementation of List
 
-    public boolean isList()
+    public boolean isValid()
     {
-        try {
-            Object hare = getSecond();
+        Object hare = getSecond();
 
-            if (hare instanceof Empty)
+        if (hare instanceof Empty)
+        {
+            return true;
+        }
+
+        Object tortoise = hare;
+        do {
+            if (hare instanceof IPair)
             {
-                return true;
+                hare = ((IPair)hare).getSecond();
+            }
+            else
+            {
+            	return (hare instanceof Empty);
             }
 
-            Object tortoise = hare;
-            do {
-                hare = ((Pair)hare).getSecond();
-                if (hare instanceof Empty)
-                {
-                    return true;
-                }
+			if (hare instanceof IPair)
+			{
+            	hare = ((IPair)hare).getSecond();
+           	}
+           	else
+           	{
+           		return (hare instanceof Empty);
+            }
 
-                hare = ((Pair)hare).getSecond();
-                if (hare instanceof Empty)
-                {
-                    return true;
-                }
+            tortoise = ((IPair)tortoise).getSecond();
+        } while (hare != tortoise);
 
-                tortoise = ((Pair)tortoise).getSecond();
-            } while (hare != tortoise);
-
-            return false;
-        }
-        catch (ClassCastException e)
-        {
-            return false; // improper list
-        }
+        return false;
     }
 
-    public List toList()
+    public IList validate()
         throws ListExpected
     {
-        return isList() ? this : super.toList();
+        if (!isValid())
+        {
+            throw new ListExpected(this);
+        }
+        
+        return this;
     }
 
     public boolean isEmpty()
@@ -252,28 +320,27 @@ final class PairOrList
         return false;
     }
 
-    public List getCopy()
+    public IList getCopy()
     {
         try
         {
-            PairOrList result  = new PairOrList(false, getHead(), null);
-            PairOrList current = result;
+            MutablePairOrList result  = new MutablePairOrList(getHead(), null);
+            MutablePairOrList current = result;
 
             for (
-                List tail = getTail();
+                IList tail = getTail();
                 !tail.isEmpty();
                 tail = tail.getTail()
             )
             {
-                PairOrList next = new PairOrList(
-                    false,
+                MutablePairOrList next = new MutablePairOrList(
                     tail.getHead(),
                     null
                 );
-                current._second = next;
+                current.setSecond(next);
                 current = next;
             }
-            current._second = Empty.create();
+            current.setSecond(ListFactory.create());
 
             return result;
         }
@@ -290,9 +357,9 @@ final class PairOrList
         return getFirst();
     }
 
-    public List getTail()
+    public IList getTail()
     {
-        return (List)getSecond();
+        return (IList)getSecond();
     }
 
     public int getLength()
@@ -302,7 +369,7 @@ final class PairOrList
             int result = 1;
 
             for (
-                List tail = getTail();
+                IList tail = getTail();
                 !tail.isEmpty();
                 tail = tail.getTail()
             )
@@ -320,14 +387,14 @@ final class PairOrList
         }
     }
 
-    public final List getReversed()
+    public IList getReversed()
     {
         try
         {
-            List result = Empty.create();
+            IList result = ListFactory.create();
 
             for (
-                List rest = this;
+                IList rest = this;
                 !rest.isEmpty();
                 rest = rest.getTail()
             )
@@ -380,5 +447,20 @@ final class PairOrList
 		result[index] = getHead();				 
 
 		return result;
+	}
+
+
+	public String toString()
+	{
+		StringWriter out = new StringWriter();
+		try
+        {
+            outputOn(out, true);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+		return out.toString();
 	}
 }

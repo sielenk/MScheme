@@ -22,7 +22,6 @@ package mscheme.values;
 
 import java.io.StringReader;
 
-import mscheme.Value;
 
 public class TestInputPort
             extends junit.framework.TestCase
@@ -142,9 +141,9 @@ public class TestInputPort
     public void testList()
     throws Exception
     {
-        Value one   = ScmNumber.create(1);
-        Value two   = ScmNumber.create(2);
-        Value three = ScmNumber.create(3);
+        Object one   = ScmNumber.create(1);
+        Object two   = ScmNumber.create(2);
+        Object three = ScmNumber.create(3);
 
         StringReader source = new StringReader(
                                   "()(1 .2)(1 2 3)(1 .(2 .(3 .())))"
@@ -160,8 +159,8 @@ public class TestInputPort
     public void testVector()
     throws Exception
     {
-        Value one   = ScmNumber.create(1);
-        Value two   = ScmNumber.create(2);
+        Object one   = ScmNumber.create(1);
+        Object two   = ScmNumber.create(2);
         ScmVector v = ScmVector.create(3, one);
         v.set(2, two);
         StringReader source = new StringReader(
@@ -177,7 +176,7 @@ public class TestInputPort
     public void testSymbol()
     throws Exception
     {
-        Value test = Symbol.create("hallo");
+        Object test = Symbol.create("hallo");
         StringReader source = new StringReader(
                                   "Hallo hallo HALLO HaLlO hAlLo + - ... ?12"
                               );
@@ -197,7 +196,7 @@ public class TestInputPort
     public void testAbbrev()
     throws Exception
     {
-        Value test = Symbol.create("hallo");
+        Object test = Symbol.create("hallo");
         StringReader source = new StringReader(
                                   "'a ' a `a ,a ,@a"
                               );

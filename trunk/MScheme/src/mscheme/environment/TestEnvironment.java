@@ -20,15 +20,13 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.environment;
 
-import mscheme.Syntax;
 
 import mscheme.exceptions.RuntimeError;
 import mscheme.exceptions.SymbolNotFoundException;
 import mscheme.exceptions.UnexpectedSyntax;
-
-import mscheme.syntax.SyntaxFactory;
-
-import mscheme.values.Empty;
+import mscheme.syntax.ITranslator;
+import mscheme.syntax.TranslatorFactory;
+import mscheme.values.ListFactory;
 import mscheme.values.Symbol;
 
 
@@ -57,7 +55,7 @@ public class TestEnvironment
         sym1 = Symbol.create("test1");
         sym2 = Symbol.create("test2");
 
-        val1 = Empty.create();
+        val1 = ListFactory.create();
         val2 = Boolean.TRUE;
     }
 
@@ -132,7 +130,7 @@ public class TestEnvironment
         catch (SymbolNotFoundException e)
         { }
 
-        Syntax    token = SyntaxFactory.getBeginToken();
+        ITranslator    token = TranslatorFactory.getBeginToken();
         env.defineSyntax(sym1, token);
 
         assertTrue(env.getSyntaxFor(sym1) == token);

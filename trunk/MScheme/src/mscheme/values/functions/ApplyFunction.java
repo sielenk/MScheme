@@ -26,7 +26,7 @@ import mscheme.exceptions.SchemeException;
 
 import mscheme.util.Arity;
 
-import mscheme.values.List;
+import mscheme.values.IList;
 import mscheme.values.ValueTraits;
 
 
@@ -47,7 +47,7 @@ public class ApplyFunction
 
 	protected Object checkedCall(
 		mscheme.machine.Registers state,
-		List      arguments
+		IList      arguments
 	) throws SchemeException
 	{
 		Object func = arguments.getHead();
@@ -57,7 +57,7 @@ public class ApplyFunction
 		// The modification done looks like this:
 		// (f 0 1 (2 3)) is changed to (f 0 1 2 3)
 
-		List toBeModified = arguments;
+		IList toBeModified = arguments;
 		for (int i = toBeModified.getLength() - 2; i > 0; i--)
 		{
 			toBeModified = toBeModified.getTail();
@@ -67,7 +67,7 @@ public class ApplyFunction
 		// last but one argument. In the example it would be
 		// (1 (2 3)) which is equal to (1 . ((2 3)))
 
-		toBeModified.toPair().setSecond(
+		ValueTraits.toPair(toBeModified).setSecond(
 			ValueTraits.toList(toBeModified.getTail().getHead()).getCopy()
 		);
 

@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.exceptions;
 
-import mscheme.Value;
-
 
 public final class CantCompileException
     extends CompileError
@@ -29,7 +27,7 @@ public final class CantCompileException
     public final static String CVS_ID
         = "$Id$";
 
-    public CantCompileException(Value cause)
+    public CantCompileException(Object cause)
     {
         super(cause, "can't compile");
     }

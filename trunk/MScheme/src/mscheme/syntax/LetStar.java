@@ -20,7 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.syntax;
 
-import mscheme.Syntax;
 
 import mscheme.code.Application;
 import mscheme.code.CompiledLambda;
@@ -32,7 +31,7 @@ import mscheme.exceptions.SchemeException;
 
 import mscheme.util.Arity;
 
-import mscheme.values.List;
+import mscheme.values.IList;
 import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
@@ -40,13 +39,13 @@ import mscheme.values.ValueTraits;
 // *** let* ***
 
 final class LetStar
-    extends CheckedSyntax
+    extends CheckedTranslator
 {
     public final static String CVS_ID
         = "$Id$";
 
 
-    final static Syntax INSTANCE = new LetStar();
+    final static ITranslator INSTANCE = new LetStar();
 
     private LetStar()
     {
@@ -56,13 +55,13 @@ final class LetStar
 
     protected Object checkedTranslate(
         StaticEnvironment compilationEnv,
-        List              arguments
+        IList              arguments
     ) throws SchemeException
     {
         // (let* ((<var> <init>) ...) <body>)
 
-        List bindings = ValueTraits.toList(arguments.getHead());
-        List body     = arguments.getTail();
+        IList bindings = ValueTraits.toList(arguments.getHead());
+        IList body     = arguments.getTail();
 
         if (bindings.isEmpty())
         {
@@ -95,16 +94,16 @@ final class LetStarHelper
     = "$Id$";
 
 
-    private final List _body;
+    private final IList _body;
 
-    LetStarHelper(List body)
+    LetStarHelper(IList body)
     {
         _body = body;
     }
 
     Object translate(
         StaticEnvironment outerEnvironment,
-        List              bindings
+        IList              bindings
     ) throws SchemeException
     {
         if (bindings.isEmpty())
@@ -115,7 +114,7 @@ final class LetStarHelper
         }
         else
         {
-            List binding = ValueTraits.toList(bindings.getHead());
+            IList binding = ValueTraits.toList(bindings.getHead());
 
             Symbol formal  = ValueTraits.toSymbol(binding.getHead());
             Object init    = binding.getTail().getHead();

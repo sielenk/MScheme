@@ -26,10 +26,9 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
 
-import mscheme.Code;
-import mscheme.Init;
-import mscheme.Value;
-import mscheme.code.Reduceable;
+import mscheme.ICode;
+import mscheme.IInit;
+import mscheme.code.IReduceable;
 import mscheme.environment.Environment;
 import mscheme.environment.StaticEnvironment;
 import mscheme.exceptions.RuntimeError;
@@ -37,7 +36,7 @@ import mscheme.exceptions.SchemeException;
 import mscheme.exceptions.TypeError;
 import mscheme.values.Function;
 import mscheme.values.InputPort;
-import mscheme.values.List;
+import mscheme.values.IList;
 import mscheme.values.ListFactory;
 import mscheme.values.OutputPort;
 import mscheme.values.ScmNumber;
@@ -113,7 +112,7 @@ public final class Machine
                     protected Object checkedCall(Object argument)
                         throws TypeError
                     {
-                        Value result = _stdin;
+                        Object result = _stdin;
                         _stdin = (InputPort)argument;
                         return result;
                     }
@@ -133,7 +132,7 @@ public final class Machine
                     protected Object checkedCall(Object argument)
                         throws TypeError
                     {
-                        Value result = _stdout;
+                        Object result = _stdout;
                         _stdout = (OutputPort)argument;
                         return result;
                     }
@@ -203,7 +202,7 @@ public final class Machine
             evaluate(
                 InputPort.create(
                     new StringReader(
-                        Init.BOOTSTRAP
+                        IInit.BOOTSTRAP
                     )
                 ).read()
             );
@@ -222,7 +221,7 @@ public final class Machine
         return evaluate(
             InputPort.create(
                 new StringReader(
-                    Init.REP
+                    IInit.REP
                 )
             ).read()
         );
@@ -259,14 +258,14 @@ public final class Machine
 		{
 			try
 			{
-				if (current instanceof Reduceable)
+				if (current instanceof IReduceable)
 				{
-					current = ((Reduceable)current).reduce(state);
+					current = ((IReduceable)current).reduce(state);
 					++_tickerRed;
 				}
 				else
 				{
-					Stack stack = state.getStack();
+					IStack stack = state.getStack();
 	
 					if (!stack.isEmpty())
 					{
@@ -290,10 +289,10 @@ public final class Machine
 			{
 				if (_errorHandler != null)
 				{
-					List errorValue = 
+					IList errorValue = 
 						ListFactory.create(
 							error.getCauseValue(),
-							error.getMessageValue(),
+							error.getMessage(),
 							state.getCurrentContinuation(),
 							Boolean.valueOf(
 								error instanceof RuntimeError));
@@ -334,7 +333,7 @@ public final class Machine
     ) throws SchemeException
     {
         return
-        	Code.force(
+        	ICode.force(
             	ValueTraits.getCompiled(compilationEnv, compilee));
     }
 

@@ -24,7 +24,7 @@ import mscheme.exceptions.SchemeException;
 
 import mscheme.util.Arity;
 
-import mscheme.values.List;
+import mscheme.values.IList;
 
 
 public abstract class Thunk
@@ -41,7 +41,7 @@ public abstract class Thunk
 
     protected final Object checkedCall(
 		mscheme.machine.Registers state,
-        List                      arguments
+        IList                      arguments
     ) throws SchemeException
     {
         return checkedCall(state);

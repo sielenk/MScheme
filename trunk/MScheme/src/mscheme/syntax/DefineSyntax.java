@@ -20,23 +20,22 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.syntax;
 
-import mscheme.Syntax;
 import mscheme.code.Application;
 import mscheme.environment.Environment;
 import mscheme.environment.StaticEnvironment;
 import mscheme.exceptions.SchemeException;
 import mscheme.machine.Machine;
 import mscheme.util.Arity;
-import mscheme.values.Empty;
-import mscheme.values.List;
-import mscheme.values.Pair;
+import mscheme.values.IList;
+import mscheme.values.ListFactory;
+import mscheme.values.IPair;
 import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 import mscheme.values.functions.ApplyFunction;
 
 
 final class Macro
-    implements Syntax
+    implements ITranslator
 {
     public final static String CVS_ID
         = "$Id$";
@@ -61,12 +60,12 @@ final class Macro
 
     public Object translate(
         StaticEnvironment usageEnv,
-        List              arguments
+        IList              arguments
     ) throws SchemeException
     {
         // (apply tranformer def_env use_env args)
 
-        Pair result = (Pair)MACHINE.execute(
+        IPair result = (IPair)MACHINE.execute(
             Application.create(
                 new Object[]
                 {
@@ -86,13 +85,13 @@ final class Macro
 }
 
 final class DefineSyntax
-    extends CheckedSyntax
+    extends CheckedTranslator
 {
     public final static String CVS_ID
         = "$Id$";
 
 
-    final static Syntax INSTANCE = new DefineSyntax();
+    final static ITranslator INSTANCE = new DefineSyntax();
 
     private DefineSyntax()
     {
@@ -101,7 +100,7 @@ final class DefineSyntax
 
     protected Object checkedTranslate(
         StaticEnvironment compilationEnv,
-        List              arguments
+        IList              arguments
     ) throws SchemeException
     {
         Symbol symbol = ValueTraits.toSymbol(arguments.getHead());
@@ -118,6 +117,6 @@ final class DefineSyntax
             .getStatic()
             .defineSyntax(symbol, macro);
 
-        return Empty.create();
+        return ListFactory.create();
     }
 }

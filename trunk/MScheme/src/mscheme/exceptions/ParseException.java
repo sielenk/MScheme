@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.exceptions;
 
-import mscheme.Value;
-
 
 public class ParseException
     extends RuntimeError
@@ -31,7 +29,7 @@ public class ParseException
 
     private final String _message;
 
-    public ParseException(Value port, String message)
+    public ParseException(Object port, String message)
     {
         super(port);
         _message = message;

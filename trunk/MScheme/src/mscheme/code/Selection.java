@@ -20,17 +20,17 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.code;
 
-import mscheme.Code;
+import mscheme.ICode;
 
 import mscheme.exceptions.CompileError;
 
-import mscheme.machine.Invokeable;
+import mscheme.machine.IInvokeable;
 import mscheme.machine.Registers;
 import mscheme.values.ValueTraits;
 
 
 public final class Selection
-    implements Forceable, Reduceable
+    implements IForceable, IReduceable
 {
     public final static String CVS_ID
         = "$Id$";
@@ -63,9 +63,9 @@ public final class Selection
     public Object force()
         throws CompileError
     {
-        _test    = Code.force(_test);
-        _onTrue  = Code.force(_onTrue);
-        _onFalse = Code.force(_onFalse);
+        _test    = ICode.force(_test);
+        _onTrue  = ICode.force(_onTrue);
+        _onFalse = ICode.force(_onFalse);
         return this;
     }
 
@@ -80,7 +80,7 @@ public final class Selection
 	public Object reduce(Registers registers)
 	{
 		registers.push(
-			new Invokeable()
+			new IInvokeable()
 			{
 				public Object invoke(
 					Registers registers,

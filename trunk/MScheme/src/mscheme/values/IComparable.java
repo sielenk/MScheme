@@ -12,7 +12,7 @@ package mscheme.values;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public interface Comparable
+public interface IComparable
 {
 	// scheme equivalence predicates (as in R5RS, 6.1)
 
@@ -42,5 +42,5 @@ public interface Comparable
 	 * <p>
 	 * @param other the value with which to compare.
 	 */
-	boolean equal(Object other);
+	boolean equals(Object other);
 }

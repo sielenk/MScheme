@@ -11,7 +11,7 @@ import mscheme.exceptions.RuntimeError;
 /**
  * @author sielenk
  */
-class StackList implements Stack
+class StackList implements IStack
 {
 	private final Entry _root;
 	private final Mark  _call_cc_mark;
@@ -52,7 +52,7 @@ class StackList implements Stack
 		return e;
 	}
 
-	private Stack getStack()
+	private IStack getStack()
 	{
 		return getTosEntry()._stack;
 	}

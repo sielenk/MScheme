@@ -24,14 +24,13 @@ import mscheme.exceptions.SchemeException;
 
 import mscheme.util.Arity;
 
-import mscheme.values.Empty;
-import mscheme.values.List;
+import mscheme.values.IList;
 import mscheme.values.ListFactory;
 import mscheme.values.ValueTraits;
 
 
 abstract class LetBase
-    extends CheckedSyntax
+    extends CheckedTranslator
 {
     public final static String CVS_ID
         = "$Id$";
@@ -43,19 +42,19 @@ abstract class LetBase
     }
 
 
-    protected static List[] splitArguments(List arguments)
+    protected static IList[] splitArguments(IList arguments)
         throws SchemeException
     {
-        List bindings = ValueTraits.toList(arguments.getHead());
-        List body     = arguments.getTail();
+        IList bindings = ValueTraits.toList(arguments.getHead());
+        IList body     = arguments.getTail();
 
-        List formals = Empty.create();
-        List inits   = Empty.create();
+        IList formals = ListFactory.create();
+        IList inits   = ListFactory.create();
 
         // parse the initializer list
         while (!bindings.isEmpty())
         {
-            List  binding = ValueTraits.toList(bindings.getHead());
+            IList  binding = ValueTraits.toList(bindings.getHead());
 
             Object formal  = binding.getHead();
             Object init    = binding.getTail().getHead();
@@ -77,7 +76,7 @@ abstract class LetBase
         inits   = inits  .getReversed();
 
         return 
-            new List[]
+            new IList[]
             {
                 formals,
                 inits,

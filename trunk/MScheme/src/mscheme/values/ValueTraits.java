@@ -1,8 +1,6 @@
 /*
  * Created on 02.01.2004
  *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 package mscheme.values;
 
@@ -11,10 +9,9 @@ import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import mscheme.Syntax;
-import mscheme.Value;
 import mscheme.environment.Environment;
 import mscheme.environment.StaticEnvironment;
+import mscheme.exceptions.CantCompileException;
 import mscheme.exceptions.CharExpected;
 import mscheme.exceptions.EnvironmentExpected;
 import mscheme.exceptions.FunctionExpected;
@@ -30,259 +27,307 @@ import mscheme.exceptions.SymbolExpected;
 import mscheme.exceptions.VectorExpected;
 import mscheme.machine.Registers;
 import mscheme.syntax.ProcedureCall;
+import mscheme.syntax.ITranslator;
+
 
 /**
  * @author sielenk
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
+ * 
  */
 public class ValueTraits
 {
-	public final static Boolean TRUE  = Boolean.TRUE;
-	public final static Boolean FALSE = Boolean.FALSE;
+    public final static Boolean TRUE  = Boolean.TRUE;
+    public final static Boolean FALSE = Boolean.FALSE;
 
-	/**
-	 * @param value
-	 * @return
-	 */
-	public static boolean isTrue(Object o)
-	{
-		return (o != Boolean.FALSE);
-	}
+    public static boolean isTrue(Object o)
+    {
+        return (o != Boolean.FALSE);
+    }
 
-	/**
-	 * @param object
-	 * @return
-	 */
-	public static boolean isEmptyList(Object object)
-	{
-		return object == Empty.create();
-	}
+    public static boolean isEmpty(Object object)
+    {
+        return object == ListFactory.create();
+    }
 
-	public static Object apply(
-		Registers state,
-		Object    function,
-		List      arguments)
-	throws SchemeException
-	{
-		if (function instanceof Method)
-		{
-			Method m = (Method)function;
+    public static Object apply(Registers state, Object function, IList arguments)
+        throws SchemeException
+    {
+        if (function instanceof Method)
+        {
+            Method m = (Method)function;
 
-			try
-			{
-				if (arguments.isEmpty())
-				{
-					return m.invoke(null, null);
-				}
-				else
-				{
-					return m.invoke(
-						arguments.getHead(),
-						arguments.getTail().getArray());
-				}
-			}
-			catch (IllegalArgumentException e1)
-			{
-				throw new RuntimeError(function, e1.toString());
-			}
-			catch (IllegalAccessException e1)
-			{
-				throw new RuntimeError(function, e1.toString());
-			}
-			catch (InvocationTargetException e1)
-			{
-				throw new RuntimeError(function, e1.toString());
-			}
-		}
-		else if (function instanceof Function)
-		{
-			return ((Function)function).call(state, arguments);
-		}
-		else
-		{
-			throw new FunctionExpected(function);
-		}
-	}
+            try
+            {
+                if (arguments.isEmpty())
+                {
+                    return m.invoke(null, null);
+                }
+                else
+                {
+                    return m.invoke(arguments.getHead(), arguments.getTail()
+                            .getArray());
+                }
+            }
+            catch (IllegalArgumentException e1)
+            {
+                throw new RuntimeError(function, e1.toString());
+            }
+            catch (IllegalAccessException e1)
+            {
+                throw new RuntimeError(function, e1.toString());
+            }
+            catch (InvocationTargetException e1)
+            {
+                throw new RuntimeError(function, e1.toString());
+            }
+        }
+        else if (function instanceof Function)
+        {
+            return ((Function)function).call(state, arguments);
+        }
+        else
+        {
+            throw new FunctionExpected(function);
+        }
+    }
 
-	public static boolean eq(Object fst, Object snd)
-	{
-		return
-			(fst instanceof Comparable)
-			? ((Comparable)fst).eq(snd)
-			: (fst == snd);
-	}
+    public static boolean eq(Object fst, Object snd)
+    {
+        return (fst instanceof IComparable)
+        	? ((IComparable)fst).eq(snd)
+            : (fst == snd);
+    }
 
-	public static boolean eqv(Object fst, Object snd)
-	{
-		return
-			(fst instanceof Comparable)
-			? ((Comparable)fst).eqv(snd)
-			: fst.equals(snd);
-	}
+    public static boolean eqv(Object fst, Object snd)
+    {
+        if (fst instanceof Character)
+        {
+            return fst.equals(snd);
+        }
+        else
+        {
+            return (fst instanceof IComparable)
+            	? ((IComparable)fst).eqv(snd)
+                : (fst == snd);
+        }
+    }
 
-	public static boolean equal(Object fst, Object snd)
-	{
-		return
-			(fst instanceof Comparable)
-			? ((Comparable)fst).equal(snd)
-			: fst.equals(snd);
-	}
+    public static boolean equal(Object fst, Object snd)
+    {
+        return (fst instanceof IComparable)
+        	? ((IComparable)fst).equals(snd)
+        	: fst.equals(snd);
+    }
 
+    public static boolean isList(Object o)
+    {
+        return (o instanceof IList) && ((IList)o).isValid();
+    }
 
-	public static List toList(Object o)
-	throws ListExpected
-	{
-		try { return ((Value)o).toList(); }
-		catch (ClassCastException e) { throw new ListExpected(o); }
-	}
+    public static IList toList(Object o) throws ListExpected
+    {
+        if (o instanceof IList)
+        {
+            return ((IList)o).validate();
+        }
+        else
+        {
+            throw new ListExpected(o);
+        }
+    }
 
-	public static Pair toPair(Object o)
-	throws PairExpected
-	{
-		try	{ return (Pair)o; }
-		catch (ClassCastException e) { throw new PairExpected(o); }
-	}
+    public static boolean isPair(Object o)
+    {
+        return o instanceof IPair;
+    }
 
-	public static InputPort toInputPort(Object o)
-	throws InputPortExpected
-	{
-		try	{ return (InputPort)o; }
-		catch (ClassCastException e) { throw new InputPortExpected(o); }
-	}
+    public static IPair toPair(Object o) throws PairExpected
+    {
+        if (o instanceof IPair)
+        {
+            return (IPair)o;
+        }
+        else
+        {
+            throw new PairExpected(o);
+        }
+    }
 
-	public static Symbol toSymbol(Object o)
-	throws SymbolExpected
-	{
-		try	{ return (Symbol)o; }
-		catch (ClassCastException e) { throw new SymbolExpected(o); }
-	}
+    public static InputPort toInputPort(Object o) throws InputPortExpected
+    {
+        if (o instanceof InputPort)
+        {
+            return (InputPort)o;
+        }
+        else
+        {
+            throw new InputPortExpected(o);
+        }
+    }
 
-	public static Boolean toScmBoolean(boolean b)	
-	{
-		return Boolean.valueOf(b);
-	}
+    public static Symbol toSymbol(Object o) throws SymbolExpected
+    {
+        if (o instanceof Symbol)
+        {
+            return (Symbol)o;
+        }
+        else
+        {
+            throw new SymbolExpected(o);
+        }
+    }
 
-	public static Boolean toScmBoolean(Object o)
-	{
-		return Boolean.valueOf(isTrue(o));
-	}
+    public static Boolean toScmBoolean(boolean b)
+    {
+        return Boolean.valueOf(b);
+    }
 
-	public static ScmNumber toScmNumber(Object o)
-	throws NumberExpected
-	{
-		try	{ return (ScmNumber)o; }
-		catch (ClassCastException e) { throw new NumberExpected(o); }
-	}
+    public static Boolean toScmBoolean(Object o)
+    {
+        return Boolean.valueOf(isTrue(o));
+    }
 
-	public static Object toScmNumber(int i)
-	{
-		return ScmNumber.create(i);
-	}
+    public static ScmNumber toScmNumber(Object o) throws NumberExpected
+    {
+        if (o instanceof ScmNumber)
+        {
+            return (ScmNumber)o;
+        }
+        else
+        {
+            throw new NumberExpected(o);
+        }
+    }
 
-	public static Character toScmChar(Object o)
-	throws CharExpected
-	{
-		try	{ return (Character)o; }
-		catch (ClassCastException e) { throw new CharExpected(o); }
-	}
+    public static Object toScmNumber(int i)
+    {
+        return ScmNumber.create(i);
+    }
 
-	public static Character toScmChar(char c)
-	{
-		return new Character(c);
-	}
+    public static Character toScmChar(Object o) throws CharExpected
+    {
+        if (o instanceof Character)
+        {
+            return (Character)o;
+        }
+        else
+        {
+            throw new CharExpected(o);
+        }
+    }
 
-	public static ScmString toScmString(Object o)
-	throws StringExpected
-	{
-		try	{ return (ScmString)o; }
-		catch (ClassCastException e) { throw new StringExpected(o); }
-	}
+    public static Character toScmChar(char c)
+    {
+        return new Character(c);
+    }
 
-	public static ScmVector toScmVector(Object o)
-	throws VectorExpected
-	{
-		try	{ return (ScmVector)o; }
-		catch (ClassCastException e) { throw new VectorExpected(o); }
-	}
+    public static ScmString toScmString(Object o) throws StringExpected
+    {
+        if (o instanceof ScmString)
+        {
+            return (ScmString)o;
+        }
+        else
+        {
+            throw new StringExpected(o);
+        }
+    }
 
-	public static OutputPort toOutputPort(Object o)
-	throws OutputPortExpected
-	{
-		try	{ return (OutputPort)o; }
-		catch (ClassCastException e) { throw new OutputPortExpected(o); }
-	}
+    public static ScmVector toScmVector(Object o) throws VectorExpected
+    {
+        if (o instanceof ScmVector)
+        {
+            return (ScmVector)o;
+        }
+        else
+        {
+            throw new VectorExpected(o);
+        }
+    }
 
-	public static Environment toEnvironment(Object o)
-	throws EnvironmentExpected
-	{
-		try	{ return (Environment)o; }
-		catch (ClassCastException e) { throw new EnvironmentExpected(o); }
-	}
+    public static OutputPort toOutputPort(Object o) throws OutputPortExpected
+    {
+        if (o instanceof OutputPort)
+        {
+            return (OutputPort)o;
+        }
+        else
+        {
+            throw new OutputPortExpected(o);
+        }
+    }
 
-	public static StaticEnvironment toStaticEnvironment(Object o)
-	throws EnvironmentExpected
-	{
-		try	{ return (StaticEnvironment)o; }
-		catch (ClassCastException e) { throw new EnvironmentExpected(o); }
-	}
+    public static Environment toEnvironment(Object o)
+        throws EnvironmentExpected
+    {
+        if (o instanceof Environment)
+        {
+            return (Environment)o;
+        }
+        else
+        {
+            throw new EnvironmentExpected(o);
+        }
+    }
 
-	public static boolean isList(Object o)
-	{
-		return (o instanceof Value) && ((Value)o).isList();
-	}
+    public static StaticEnvironment toStaticEnvironment(Object o)
+        throws EnvironmentExpected
+    {
+        if (o instanceof StaticEnvironment)
+        {
+            return (StaticEnvironment)o;
+        }
+        else
+        {
+            throw new EnvironmentExpected(o);
+        }
+    }
 
-	public static boolean isScmBoolean(Object o)
-	{
-		return o instanceof Boolean;
-	}
+    public static boolean isScmBoolean(Object o)
+    {
+        return o instanceof Boolean;
+    }
 
-	public static boolean isPair(Object o)
-	{
-		return o instanceof Pair;
-	}
+    public static boolean isSymbol(Object o)
+    {
+        return o instanceof Symbol;
+    }
 
-	public static boolean isSymbol(Object o)
-	{
-		return o instanceof Symbol;
-	}
+    public static boolean isScmNumber(Object o)
+    {
+        return o instanceof ScmNumber;
+    }
 
-	public static boolean isScmNumber(Object o)
-	{
-		return o instanceof ScmNumber;
-	}
+    public static boolean isScmChar(Object o)
+    {
+        return o instanceof Character;
+    }
 
-	public static boolean isScmChar(Object o)
-	{
-		return o instanceof Character;
-	}
+    public static boolean isScmString(Object o)
+    {
+        return o instanceof ScmString;
+    }
 
-	public static boolean isScmString(Object o)
-	{
-		return o instanceof ScmString;
-	}
+    public static boolean isScmVector(Object o)
+    {
+        return o instanceof ScmVector;
+    }
 
-	public static boolean isScmVector(Object o)
-	{
-		return o instanceof ScmVector;
-	}
+    public static boolean isPort(Object o)
+    {
+        return o instanceof Port;
+    }
 
-	public static boolean isPort(Object o)
-	{
-		return o instanceof Port;
-	}
+    public static boolean isFunction(Object o)
+    {
+        return o instanceof Function;
+    }
 
-	public static boolean isFunction(Object o)
-	{
-		return o instanceof Function;
-	}
-
-
-	public static void output(Writer destination, boolean doWrite, Object o) throws IOException
-	{
-		if (isScmChar(o))
-		{
+    public static void output(Writer destination, boolean doWrite, Object o)
+        throws IOException
+    {
+        if (o instanceof Character)
+        {
             final char c = ((Character)o).charValue();
 
             if (doWrite)
@@ -290,15 +335,15 @@ public class ValueTraits
                 destination.write("#\\");
                 switch (c)
                 {
-                case ' ' :
+                case ' ':
                     destination.write("space");
                     break;
 
-                case '\n' :
+                case '\n':
                     destination.write("newline");
                     break;
 
-                default :
+                default:
                     destination.write(c);
                     break;
                 }
@@ -307,82 +352,83 @@ public class ValueTraits
             {
                 destination.write(c);
             }
-		}
-		else if (isScmBoolean(o))
-		{
-			destination.write(
-				isTrue(o)
-				? "#t"
-				: "#f");
-		}
-		else if (o instanceof Outputable)
-		{
-			((Outputable)o).outputOn(destination, doWrite);
-		}
-		else
-		{
-			if (doWrite)
-			{
-				destination.write("#[" + o.toString() + "]");
-			}
-			else
-			{
-				destination.write(o.toString());
-			}
-		}
-	}
+        }
+        else if (isScmBoolean(o))
+        {
+            destination.write(isTrue(o) ? "#t" : "#f");
+        }
+        else if (o instanceof IOutputable)
+        {
+            ((IOutputable)o).outputOn(destination, doWrite);
+        }
+        else
+        {
+            if (doWrite)
+            {
+                destination.write("#[" + o.toString() + "]");
+            }
+            else
+            {
+                destination.write(o.toString());
+            }
+        }
+    }
 
-	public static void display(Writer destination, Object o)
-	throws IOException
-	{
-		output(destination, false, o);
-	}
+    public static void display(Writer destination, Object o) throws IOException
+    {
+        output(destination, false, o);
+    }
 
-	public static void write(Writer destination, Object o)
-	throws IOException
-	{
-		output(destination, true, o);
-	}
+    public static void write(Writer destination, Object o) throws IOException
+    {
+        output(destination, true, o);
+    }
 
-	public static Object getConst(Object o)
-	{
-		if (o instanceof Value)
-		{
-			return ((Value)o).getConst();
-		}
-		else
-		{
-			return o;
-		}
-	}
+    public static Object getConst(Object o)
+    {
+        if (o instanceof IMutable)
+        {
+            return ((IMutable)o).getConst();
+        }
+        else
+        {
+            return o;
+        }
+    }
 
-	public static Object getCompiled(
-		StaticEnvironment compilationEnv,
-		Object            object)
-	throws SchemeException
-	{
-		if (object instanceof Value)
-		{
-			return ((Value)object).getCompiled(compilationEnv);
-		}
-		else
-		{
-			return object; 
-		}
-	}
+    public static Object getCompiled(StaticEnvironment compilationEnv,
+        Object object) throws SchemeException
+    {
+        if (isScmVector(object))
+        {
+            throw new CantCompileException(object);
+        }
+        else if (object instanceof ICompileable)
+        {
+            return ((ICompileable)object).getCompiled(compilationEnv);
+        }
+        else
+        {
+            compilationEnv.setStateClosed();
+            return getConst(object);
+        }
+    }
 
-	public static Syntax getSyntax(
-		StaticEnvironment compilationEnv,
-		Object            object)
-	throws SchemeException
-	{
-		if (object instanceof Value)
-		{
-			return ((Value)object).getSyntax(compilationEnv);
-		}
-		else
-		{
-			return ProcedureCall.create(object);
-		}
-	}
+    public static ITranslator getTranslator(StaticEnvironment compilationEnv,
+        Object object) throws SchemeException
+    {
+        if (object instanceof Symbol)
+        {
+            Symbol symbol = (Symbol)object;
+            
+            ITranslator result = compilationEnv.getSyntaxFor(symbol);
+            
+            if (result != null)
+            {
+                return result;
+            }
+        }
+
+        return ProcedureCall.create(object);
+    }
 }

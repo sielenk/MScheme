@@ -32,7 +32,7 @@ import mscheme.exceptions.ParseException;
 import mscheme.exceptions.ReadException;
 
 class EofValue
-	implements Outputable
+	implements IOutputable
 {
     public final static String CVS_ID
         = "$Id$";
@@ -294,7 +294,7 @@ public class InputPort
 
         if (la == closeToken)
         {
-            return Empty.create();
+            return ListFactory.createConst();
         }
         if (la == EOF)
         {
@@ -311,7 +311,7 @@ public class InputPort
             la = skipWSread();
             if (la == '.')
             {
-                Pair result = ListFactory.createPair(
+                IPair result = ListFactory.createConstPair(
                                   head,
                                   parseDatum()
                               );
@@ -329,7 +329,7 @@ public class InputPort
             else
             {
                 _reader.unread(la);
-                return ListFactory.createPair(
+                return ListFactory.createConstPair(
                            head,
                            parseList(closeToken)
                        );
@@ -349,9 +349,7 @@ public class InputPort
             switch (c)
             {
             case '"':  // "
-                return ScmString.create(
-                           buf.toString()
-                       );
+                return ScmString.createConst(buf.toString());
 
             case '\\':
                 buf.append(readNoEof());
@@ -500,7 +498,7 @@ checkNumber:
                     return parseChar();
 
                 case '(':
-                    return ScmVector.create(parseVector(0));
+                    return ScmVector.createConst(parseVector(0));
 
                 default:
                     throw new ParseException(
@@ -520,13 +518,13 @@ checkNumber:
             return parseString();
 
         case '\'':
-            return ListFactory.create(
+            return ListFactory.createConst(
                        Symbol.create("quote"),
                        parseDatum()
                    );
 
         case '`':
-            return ListFactory.create(
+            return ListFactory.createConst(
                        Symbol.create("quasiquote"),
                        parseDatum()
                    );
@@ -546,7 +544,7 @@ checkNumber:
                     sym = Symbol.create("unquote");
                 }
 
-                return ListFactory.create(
+                return ListFactory.createConst(
                            sym,
                            parseDatum()
                        );

@@ -20,7 +20,7 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.exceptions;
 
-import mscheme.Value;
+import mscheme.values.Symbol;
 
 
 public final class SymbolNotFoundException
@@ -29,7 +29,7 @@ public final class SymbolNotFoundException
     public final static String CVS_ID
         = "$Id$";
 
-    public SymbolNotFoundException(Value cause)
+    public SymbolNotFoundException(Symbol cause)
     {
         super(cause, "symbol not found");
     }

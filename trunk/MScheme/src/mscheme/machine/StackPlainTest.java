@@ -15,7 +15,7 @@ public class StackPlainTest extends StackTest
 
 	private StackPlain _stack;
 
-	protected Stack createStack()
+	protected IStack createStack()
 	{
 		return _stack = new StackPlain();
 	}
@@ -29,7 +29,7 @@ public class StackPlainTest extends StackTest
 			_stack.push(createFrame());
 		}
 
-		Stack otherStack = _stack.getCopy();
+		IStack otherStack = _stack.getCopy();
 
 		for (int j = 0; j < SIZE; ++j)
 		{ 

@@ -23,7 +23,7 @@ package mscheme.values.functions;
 import mscheme.exceptions.ListExpected;
 import mscheme.exceptions.PairExpected;
 
-import mscheme.values.List;
+import mscheme.values.IList;
 import mscheme.values.ValueTraits;
 
 abstract class MemberBase
@@ -41,7 +41,7 @@ abstract class MemberBase
     ) throws ListExpected, PairExpected
     {
         for (
-            List tail = ValueTraits.toList(values);
+            IList tail = ValueTraits.toList(values);
             !tail.isEmpty();
             tail = tail.getTail()
         )

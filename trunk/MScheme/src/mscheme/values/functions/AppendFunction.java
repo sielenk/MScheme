@@ -27,7 +27,7 @@ import mscheme.machine.Registers;
 import mscheme.util.Arity;
 
 import mscheme.values.Function;
-import mscheme.values.List;
+import mscheme.values.IList;
 import mscheme.values.ListFactory;
 import mscheme.values.ValueTraits;
 
@@ -89,7 +89,7 @@ public final class AppendFunction
         return Arity.atLeast(0);
     }
 
-    public Object call(Registers state, List arguments)
+    public Object call(Registers state, IList arguments)
         throws RuntimeError, TypeError
     {
         return AppendHelper2.INSTANCE.reduceRight(arguments);

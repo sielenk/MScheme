@@ -166,7 +166,7 @@ public class MachineTest
 		Object[] sequence = { AppendFunction.INSTANCE };
 
 		assertTrue(
-			ValueTraits.isEmptyList(
+			ValueTraits.isEmpty(
 			    _machine.execute((Object)Application.create(sequence))));
 	}
 }

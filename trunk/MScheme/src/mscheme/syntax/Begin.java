@@ -20,7 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.syntax;
 
-import mscheme.Syntax;
 
 import mscheme.code.Sequence;
 
@@ -30,21 +29,21 @@ import mscheme.exceptions.SchemeException;
 
 import mscheme.util.Arity;
 
-import mscheme.values.List;
+import mscheme.values.IList;
 
 
 final class Begin
-    extends    CheckedSyntax
-    implements SequenceTags
+    extends   CheckedTranslator
+    implements ISequenceTags
 {
     public final static String CVS_ID
         = "$Id$";
 
     private final int _tag;
 
-    final static Syntax INSTANCE_BEGIN = new Begin(TAG_BEGIN);
-    final static Syntax INSTANCE_AND   = new Begin(TAG_AND  );
-    final static Syntax INSTANCE_OR    = new Begin(TAG_OR   );
+    final static ITranslator INSTANCE_BEGIN = new Begin(TAG_BEGIN);
+    final static ITranslator INSTANCE_AND   = new Begin(TAG_AND  );
+    final static ITranslator INSTANCE_OR    = new Begin(TAG_OR   );
 
     private Begin(int tag)
     {
@@ -62,7 +61,7 @@ final class Begin
 
     protected Object checkedTranslate(
         StaticEnvironment compilationEnv,
-        List              arguments
+        IList              arguments
     ) throws SchemeException
     {
         return Sequence.create(

@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.exceptions;
 
-import mscheme.Value;
-
 
 public final class CloseException
     extends SchemeIOException
@@ -29,7 +27,7 @@ public final class CloseException
     public final static String CVS_ID
         = "$Id$";
 
-    public CloseException(Value cause)
+    public CloseException(Object cause)
     {
         super(cause);
     }

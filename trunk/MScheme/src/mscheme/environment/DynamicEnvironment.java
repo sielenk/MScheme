@@ -28,7 +28,7 @@ import mscheme.exceptions.RuntimeError;
 
 import mscheme.util.Arity;
 
-import mscheme.values.List;
+import mscheme.values.IList;
 
 
 public final class DynamicEnvironment
@@ -83,7 +83,7 @@ public final class DynamicEnvironment
         DynamicEnvironment parent,
         Arity              arity,
         int                frameSize,
-        List               values
+        IList               values
     ) throws PairExpected, ListExpected
     {
         DynamicEnvironment result = create(
@@ -92,7 +92,7 @@ public final class DynamicEnvironment
         );
 
         Object[] frame = result._frames[result._frames.length - 1];
-        List     rest  = values;
+        IList     rest  = values;
 
         for (int i = 0; i < arity.getMin(); i++)
         {
@@ -125,7 +125,7 @@ public final class DynamicEnvironment
     public DynamicEnvironment createChild(
         Arity             arity,
         int               frameSize,
-        List              values
+        IList              values
     ) throws ListExpected, PairExpected
     {
         return create(this, arity, frameSize, values);

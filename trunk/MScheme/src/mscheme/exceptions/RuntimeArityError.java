@@ -22,7 +22,7 @@ package mscheme.exceptions;
 
 import mscheme.util.Arity;
 
-import mscheme.values.List;
+import mscheme.values.IList;
 
 
 public final class RuntimeArityError
@@ -31,7 +31,7 @@ public final class RuntimeArityError
     public final static String CVS_ID
         = "$Id$";
 
-    public RuntimeArityError(List arguments, Arity expected)
+    public RuntimeArityError(IList arguments, Arity expected)
     {
         super(
             arguments,

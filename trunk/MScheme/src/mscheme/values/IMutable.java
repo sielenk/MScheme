@@ -1,13 +1,10 @@
 /*
- * Created on 02.01.2004
+ * Created on 17.05.2004
  *
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package mscheme.code;
-
-import mscheme.exceptions.SchemeException;
-import mscheme.machine.Registers;
+package mscheme.values;
 
 /**
  * @author sielenk
@@ -15,10 +12,7 @@ import mscheme.machine.Registers;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public interface Reduceable
+public interface IMutable
 {
-	public final static String CVS_ID
-		= "$Id$";
-
-	Object reduce(Registers state) throws SchemeException;
+    Object getConst();
 }

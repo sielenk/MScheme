@@ -20,71 +20,70 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.syntax;
 
-import mscheme.Syntax;
 
 
-public abstract class SyntaxFactory
+public abstract class TranslatorFactory
 {
     public final static String CVS_ID
         = "$Id$";
 
 
-    public static Syntax getBeginToken()
+    public static ITranslator getBeginToken()
     {
         return Begin.INSTANCE_BEGIN;
     }
 
-    public static Syntax getAndToken()
+    public static ITranslator getAndToken()
     {
         return Begin.INSTANCE_AND;
     }
 
-    public static Syntax getOrToken()
+    public static ITranslator getOrToken()
     {
         return Begin.INSTANCE_OR;
     }
 
-    public static Syntax getSetToken()
+    public static ITranslator getSetToken()
     {
         return Set.INSTANCE;
     }
 
-    public static Syntax getDefineToken()
+    public static ITranslator getDefineToken()
     {
         return Define.INSTANCE;
     }
 
-    public static Syntax getDefineSyntaxToken()
+    public static ITranslator getDefineSyntaxToken()
     {
         return DefineSyntax.INSTANCE;
     }
 
-    public static Syntax getLambdaToken()
+    public static ITranslator getLambdaToken()
     {
         return Lambda.INSTANCE;
     }
 
-    public static Syntax getLetToken()
+    public static ITranslator getLetToken()
     {
         return Let.INSTANCE;
     }
 
-    public static Syntax getLetStarToken()
+    public static ITranslator getLetStarToken()
     {
         return LetStar.INSTANCE;
     }
 
-    public static Syntax getLetrecToken()
+    public static ITranslator getLetrecToken()
     {
         return Letrec.INSTANCE;
     }
 
-    public static Syntax getIfToken()
+    public static ITranslator getIfToken()
     {
         return If.INSTANCE;
     }
 
-    public static Syntax getQuoteToken()
+    public static ITranslator getQuoteToken()
     {
         return Quote.INSTANCE;
     }
