@@ -143,7 +143,7 @@ public class TestMachine
         try {
             assert(
                 machine.evaluate(
-                    ValueFactory.createList(_val1)
+                    ListFactory.create(_val1)
                 ) != null
             );
             fail("expected FunctionExpected");
@@ -156,7 +156,7 @@ public class TestMachine
     {
         assert(
             machine.evaluate(
-                ValueFactory.createList(
+                ListFactory.create(
                     Symbol.create("quote"),
                     _unval
                 )
@@ -172,9 +172,9 @@ public class TestMachine
     
         assert(
             machine.evaluate(
-                List.prepend(
+                ListFactory.prepend(
                     Symbol.create("if"),
-                    ValueFactory.createList(
+                    ListFactory.create(
                         ScmBoolean.createTrue(),
                         _sym1,
                         _sym2
@@ -185,9 +185,9 @@ public class TestMachine
 
         assert(
             machine.evaluate(
-                List.prepend(
+                ListFactory.prepend(
                     Symbol.create("if"),
-                    ValueFactory.createList(
+                    ListFactory.create(
                         ScmBoolean.createTrue(),
                         _sym1
                     )
@@ -197,9 +197,9 @@ public class TestMachine
 
         assert(
             machine.evaluate(
-                List.prepend(
+                ListFactory.prepend(
                     Symbol.create("if"),
-                    ValueFactory.createList(
+                    ListFactory.create(
                         ScmBoolean.createFalse(),
                         _sym1,
                         _sym2
@@ -216,7 +216,7 @@ public class TestMachine
 
         try {
             machine.evaluate(
-                ValueFactory.createList(
+                ListFactory.create(
                     Symbol.create("begin"),
                     _sym1,
                     _sym2
@@ -230,7 +230,7 @@ public class TestMachine
         
         assert(
             machine.evaluate(
-                ValueFactory.createList(
+                ListFactory.create(
                     Symbol.create("begin"),
                     _sym1,
                     _sym2
@@ -265,7 +265,7 @@ public class TestMachine
         throws Exception
     {
         Function func = machine.evaluate(
-            ValueFactory.createList(
+            ListFactory.create(
                 Symbol.create("lambda"),
                 Empty.create(),
                 _val1
@@ -273,17 +273,17 @@ public class TestMachine
         ).toFunction();
         
         assert(
-            machine.evaluate(ValueFactory.createList(func)) == _val1
+            machine.evaluate(ListFactory.create(func)) == _val1
         );
 
         try {
-            machine.evaluate(ValueFactory.createList(func, _unval));
+            machine.evaluate(ListFactory.create(func, _unval));
             fail("expected CantEvaluateException");
         }
         catch (CantCompileException e) { }
         
         try {
-            machine.evaluate(ValueFactory.createList(func, _val1));
+            machine.evaluate(ListFactory.create(func, _val1));
             fail("expected RuntimeArityError");
         }
         catch (RuntimeArityError e) { }
@@ -296,7 +296,7 @@ public class TestMachine
         
         assert(
             machine.evaluate(
-                ValueFactory.createList(
+                ListFactory.create(
                     func,
                     _val1,
                     _val2
@@ -305,7 +305,7 @@ public class TestMachine
         );
         
         try {
-            machine.evaluate(ValueFactory.createList(func, _val1));
+            machine.evaluate(ListFactory.create(func, _val1));
             fail("expected RuntimeArityError");
         }
         catch (RuntimeArityError e) { }
@@ -317,20 +317,20 @@ public class TestMachine
         Function func = evaluate("(lambda (x . y) y)").toFunction();
         
         try {
-            machine.evaluate(ValueFactory.createList(func));
+            machine.evaluate(ListFactory.create(func));
             fail("expected RuntimeArityError");
         }
         catch (RuntimeArityError e) { }
         
         assert(
             machine.evaluate(
-                ValueFactory.createList(func, _val1)
+                ListFactory.create(func, _val1)
             ) == Empty.create()
         );
         
         assert(
             machine.evaluate(
-                ValueFactory.createList(func, _val1, _val2)
+                ListFactory.create(func, _val1, _val2)
             ).toList().getHead() == _val2
         );
     }
@@ -361,7 +361,7 @@ public class TestMachine
         throws Exception
     {
         machine.evaluate(
-            ValueFactory.createList(
+            ListFactory.create(
                 Symbol.create("define"),
                 Symbol.create("a"),
                 _val1
@@ -382,7 +382,7 @@ public class TestMachine
 
         assert(
             machine.evaluate(
-                ValueFactory.createList(
+                ListFactory.create(
                     Symbol.create("f"),
                     _val1
                 )
@@ -406,7 +406,7 @@ public class TestMachine
         assert(
             "function application failed",
             machine.evaluate(
-                ValueFactory.createList(
+                ListFactory.create(
                     Symbol.create("f"),
                     _val1,
                     _val2
@@ -420,14 +420,14 @@ public class TestMachine
     {
         assert(
             machine.evaluate(
-                ValueFactory.createList(
-                    ValueFactory.createFunction("CallCC"),
-                    ValueFactory.createList(
+                ListFactory.create(
+                    MScheme.functions.CallCCFunction.INSTANCE,
+                    ListFactory.create(
                         Symbol.create("lambda"),
-                        ValueFactory.createList(
+                        ListFactory.create(
                             Symbol.create("return")
                         ),
-                        ValueFactory.createList(
+                        ListFactory.create(
                             Symbol.create("return"),
                             _val1
                         )
