@@ -10,38 +10,41 @@ public abstract class CodeList
     public final static String id
         = "$Id$";
 
+    protected CodeList()
+    { }
+
     // static creation functions
-    
+
     public static CodeList prepend(
         Code     head,
         CodeList tail
     )
     { return new CodeListPair(head, tail); }
-    
+
     public static CodeList create()
     { return CodeListEmpty.getInstance(); }
-    
+
     public static CodeList create(
         Code first
     )
     { return prepend(first, create()); }
-    
+
     public static CodeList create(
         Code first,
         Code second
     )
     { return prepend(first, create(second)); }
-    
+
     public static CodeList create(
         Code first,
         Code second,
         Code third
     )
     { return prepend(first, create(second, third)); }
-    
+
 
     // abstract interface
-        
+
     public abstract boolean  isEmpty();
     public abstract Code     getHead();
     public abstract CodeList getTail();
@@ -57,7 +60,7 @@ final class CodeListPair
 
     private final Code     _head;
     private final CodeList _tail;
-    
+
     CodeListPair(
         Code     head,
         CodeList tail
@@ -66,13 +69,13 @@ final class CodeListPair
 
 
     // implementation of CodeList
-        
+
     public boolean isEmpty()
     { return false; }
-    
+
     public Code getHead()
     { return _head; }
-    
+
     public CodeList getTail()
     { return _tail; }
 
@@ -80,7 +83,7 @@ final class CodeListPair
     {
         CodeList currentTail = this;
         CodeList result      = CodeList.create();
-        
+
         while (!currentTail.isEmpty()) {
             result = CodeList.prepend(
                 currentTail.getHead(),
@@ -88,8 +91,8 @@ final class CodeListPair
             );
             currentTail = currentTail.getTail();
         }
-        
-        return result;        
+
+        return result;
     }
 }
 
@@ -102,23 +105,26 @@ final class CodeListEmpty
 
     // construction
 
+    private CodeListEmpty()
+    { }
+
     private final static CodeListEmpty
         _instance = new CodeListEmpty();
-    
+
     static CodeListEmpty getInstance()
     { return _instance; }
 
     // implementation of CodeList
-    
+
     public boolean isEmpty()
     { return true; }
-    
+
     public Code getHead()
     { throw new RuntimeException("called getHead on empty CodeList!"); }
-    
+
     public CodeList getTail()
     { throw new RuntimeException("called getTail on empty CodeList!"); }
-    
+
     public CodeList getReversed()
     { return this; }
 }
