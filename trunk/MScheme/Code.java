@@ -7,9 +7,7 @@ import MScheme.machine.Registers;
 
 import MScheme.environment.StaticEnvironment;
 
-import MScheme.exceptions.TypeError;
-import MScheme.exceptions.CompileError;
-import MScheme.exceptions.RuntimeError;
+import MScheme.exceptions.SchemeException;
 
 
 /**
@@ -48,7 +46,7 @@ public abstract class Code
      * @return the next instruction to execute.
      */
     public abstract Code executionStep(Registers state)
-        throws RuntimeError, TypeError;
+        throws SchemeException;
 
 
     /**
@@ -66,7 +64,7 @@ public abstract class Code
     public final Code translate(
         StaticEnvironment compilationEnv,
         List              arguments
-    ) throws CompileError, TypeError
+    ) throws SchemeException
     {
         return Application.create(
             CodeList.prepend(
@@ -75,4 +73,7 @@ public abstract class Code
             )
         );
     }
+
+
+    public abstract String toString();
 }
