@@ -412,7 +412,37 @@ public class InputPort
             
         case '"':
             return parseString();
-            
+        
+	    case '\'':
+	        return ValueFactory.createList(
+		        ValueFactory.createSymbol("quote"),
+			    parseDatum()
+		    );
+
+	    case '`':
+	        return ValueFactory.createList(
+		        ValueFactory.createSymbol("quasiquote"),
+			    parseDatum()
+		    );
+	        
+	    case ',': {
+    	        int c = _reader.read();
+    		    Symbol sym;
+
+		        if (c == '@') {
+    		        sym = ValueFactory.createSymbol("unquote-splicing");
+    		    } else {
+    		        _reader.unread(c);
+    		        sym = ValueFactory.createSymbol("unquote");
+    		    }
+
+    	        return ValueFactory.createList(
+    		        sym,
+    			    parseDatum()
+    		    );
+    	    }
+	        
+
         case EOF:
             return EOF_VALUE;
 
