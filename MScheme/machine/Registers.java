@@ -15,6 +15,18 @@ public class Registers
         _environment  = environment;
     }
 
+    Registers(Registers other)
+    {
+        _continuation = other._continuation;
+        _environment  = other._environment;    
+    }
+
+    void assign(Registers other)
+    {
+        _continuation = other._continuation;
+        _environment  = other._environment;    
+    }
+
     void setContinuation(Continuation newContinuation)
     { _continuation = newContinuation; }
     
