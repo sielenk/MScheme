@@ -145,6 +145,9 @@ public final class Machine
     private InputPort  _stdin;
     private OutputPort _stdout;
 
+    private SchemeException _lastError      = null;
+    private Value           _lastErrorValue = null;
+
 
     public Machine()
     {
@@ -247,6 +250,7 @@ public final class Machine
         }
     }
 
+
     public Environment getEnvironment()
     {
         return _environment;
@@ -262,9 +266,18 @@ public final class Machine
         return _stdout;
     }
 
+    public Value getLastError()
+    {
+        Value result = 
+            (_lastErrorValue != null)
+            ? _lastErrorValue
+            : ScmBoolean.createFalse();
+        
+        _lastErrorValue = null;
+        
+        return result;
+    }
 
-    private SchemeException   lastError      = null;
-    private Value             lastErrorValue = null;
 
     public Value execute(
         Code program
@@ -274,8 +287,8 @@ public final class Machine
         Registers        state   = new Registers(getEnvironment());
         StopContinuation stop    = new StopContinuation(state);
 
-        lastError      = null;
-        lastErrorValue = null;
+        _lastError      = null;
+        _lastErrorValue = null;
 
         while (!stop.hasResult())
         {
@@ -291,8 +304,8 @@ public final class Machine
                 // remember what happened, to be able
                 // to "rethrow" the caught exception again
                 // after the scheme stack is unwound
-                lastError      = error;
-                lastErrorValue = 
+                _lastError      = error;
+                _lastErrorValue = 
                     ListFactory.create(
                         error.getCauseValue(),
                         error.getMessageValue(),
@@ -309,7 +322,7 @@ public final class Machine
                 ).call(
                     state,
                     ListFactory.create(
-                        lastErrorValue
+                        _lastErrorValue
                     )
                 );
             }
@@ -317,9 +330,9 @@ public final class Machine
 
         Value result = stop.getResult();
         
-        if (result == lastErrorValue)
+        if (result == _lastErrorValue)
         {
-            throw lastError;
+            throw _lastError;
         }
         else
         {
@@ -331,27 +344,27 @@ public final class Machine
         Value evaluatee
     ) throws SchemeException
     {
-        StaticEnvironment global = getEnvironment().getStatic();
-        
-        return execute(
-            evaluatee.getCode(
-                global 
-            ).force(
-                global
-            )
+        return execute(compile(evaluatee));
+    }
+
+    public Code compile(
+        Value compilee
+    ) throws SchemeException
+    {
+        return compile(
+            getEnvironment().getStatic(),
+            compilee
         );
     }
 
-
-    public Value getLastError()
+    public static Code compile(
+        StaticEnvironment compilationEnv,
+        Value             compilee
+    ) throws SchemeException
     {
-        Value result = 
-            (lastErrorValue != null)
-            ? lastErrorValue
-            : ScmBoolean.createFalse();
-        
-        lastErrorValue = null;
-        
-        return result;
+        return
+            compilee
+            .getCode(compilationEnv)
+            .force();
     }
 }
