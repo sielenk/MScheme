@@ -59,14 +59,14 @@ public final class WindContinuation
         Code      after
     ) throws RuntimeError, TypeError
     {
+	Code[] seq = new Code[2];
+
+        seq[0] = before;
+        seq[1] = thunk;
+
         new WindContinuation(state, before, after);
 
-        return Sequence.create(
-                   CodeList.create(
-                       before,
-                       thunk
-                   )
-               );
+        return Sequence.create(seq);
     }
 
     protected Code execute(
@@ -74,33 +74,35 @@ public final class WindContinuation
         Value     result
     ) throws RuntimeError, TypeError
     {
-        return Sequence.create(
-                   CodeList.create(
-                       _after,
-                       result.getLiteral()
-                   )
-               );
+	Code[] seq = new Code[2];
+
+        seq[0] = _after;
+        seq[1] = result.getLiteral();
+
+        return Sequence.create(seq);
     }
 
 
-    protected CodeList dynamicWindLeave(CodeList sequence)
+    protected int dynamicWindLeave(Code[] sequence, int index)
     {
-        return super.dynamicWindLeave(
-                   CodeList.prepend(
-                       _after,
-                       sequence
-                   )
-               );
+	sequence[index++] = _after;
+
+	return super.dynamicWindLeave(
+            sequence,
+            index
+        );
     }
 
-    protected CodeList dynamicWindEnter(CodeList sequence)
+    protected int dynamicWindEnter(Code[] sequence, int index)
     {
-        return CodeList.prepend(
-                   _before,
-                   super.dynamicWindEnter(
-                       sequence
-                   )
-               );
+        index = super.dynamicWindLeave(
+            sequence,
+            index
+        );
+
+        sequence[--index] = _before;
+
+        return index;
     }
 
 
