@@ -35,27 +35,17 @@ public class TestValue
     {
         int count = 0;
 
-        if (v.isList      ())
-            ++count;
+        if (v.isList      ()) ++count;
 
-        if (v.isScmBoolean())
-            ++count;
-        if (v.isPair      ())
-            ++count;
-        if (v.isSymbol    ())
-            ++count;
-        if (v.isScmNumber ())
-            ++count;
-        if (v.isScmChar   ())
-            ++count;
-        if (v.isScmString ())
-            ++count;
-        if (v.isScmVector ())
-            ++count;
-        if (v.isPort      ())
-            ++count;
-        if (v.isFunction  ())
-            ++count;
+        if (v.isScmBoolean()) ++count;
+        if (v.isPair      ()) ++count;
+        if (v.isSymbol    ()) ++count;
+        if (v.isScmNumber ()) ++count;
+        if (v.isScmChar   ()) ++count;
+        if (v.isScmString ()) ++count;
+        if (v.isScmVector ()) ++count;
+        if (v.isPort      ()) ++count;
+        if (v.isFunction  ()) ++count;
 
         return count;
     }
@@ -64,92 +54,20 @@ public class TestValue
     {
         int count = 0;
 
-        try
-        {
-            v.toList             ();
-            ++count;
-        }
-        catch (TypeError e)
-        { }
+        try { v.toList             (); ++count; } catch (TypeError e) { }
 
-        try
-        {
-            v.toPair             ();
-            ++count;
-        }
-        catch (TypeError e)
-        { }
-        try
-        {
-            v.toSymbol           ();
-            ++count;
-        }
-        catch (TypeError e)
-        { }
-        try
-        {
-            v.toScmNumber        ();
-            ++count;
-        }
-        catch (TypeError e)
-        { }
-        try
-        {
-            v.toScmChar          ();
-            ++count;
-        }
-        catch (TypeError e)
-        { }
-        try
-        {
-            v.toScmString        ();
-            ++count;
-        }
-        catch (TypeError e)
-        { }
-        try
-        {
-            v.toScmVector        ();
-            ++count;
-        }
-        catch (TypeError e)
-        { }
-        try
-        {
-            v.toInputPort        ();
-            ++count;
-        }
-        catch (TypeError e)
-        { }
-        try
-        {
-            v.toOutputPort       ();
-            ++count;
-        }
-        catch (TypeError e)
-        { }
-        try
-        {
-            v.toFunction         ();
-            ++count;
-        }
-        catch (TypeError e)
-        { }
+        try { v.toPair             (); ++count; } catch (TypeError e) { }
+        try { v.toSymbol           (); ++count; } catch (TypeError e) { }
+        try { v.toScmNumber        (); ++count; } catch (TypeError e) { }
+        try { v.toScmChar          (); ++count; } catch (TypeError e) { }
+        try { v.toScmString        (); ++count; } catch (TypeError e) { }
+        try { v.toScmVector        (); ++count; } catch (TypeError e) { }
+        try { v.toInputPort        (); ++count; } catch (TypeError e) { }
+        try { v.toOutputPort       (); ++count; } catch (TypeError e) { }
+        try { v.toFunction         (); ++count; } catch (TypeError e) { }
 
-        try
-        {
-            v.toEnvironment      ();
-            ++count;
-        }
-        catch (TypeError e)
-        { }
-        try
-        {
-            v.toStaticEnvironment();
-            ++count;
-        }
-        catch (TypeError e)
-        { }
+        try { v.toEnvironment      (); ++count; } catch (TypeError e) { }
+        try { v.toStaticEnvironment(); ++count; } catch (TypeError e) { }
 
         return count;
     }
