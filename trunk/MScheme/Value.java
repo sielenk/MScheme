@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.io.IOException;
 
 import MScheme.values.*;
+import MScheme.code.Literal;
 
 import MScheme.environment.Environment;
 import MScheme.environment.StaticEnvironment;
@@ -133,9 +134,9 @@ public abstract class Value
 
     // compilation functions
 
-    public final MScheme.machine.Literal getLiteral()
-    { return new MScheme.machine.Literal(this); }
-    
+    public final Literal getLiteral()
+    { return Literal.create(this); }
+
     public MScheme.Code getCode(StaticEnvironment e)
         throws CompileError, TypeError
     { return getLiteral(); }

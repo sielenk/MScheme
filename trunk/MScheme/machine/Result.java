@@ -7,20 +7,17 @@ import MScheme.exceptions.RuntimeError;
 import MScheme.exceptions.TypeError;
 
 
-public class Literal
+public abstract class Result
     extends Code
 {
-    final private Value _literalValue;
+    protected abstract Value getValue(Registers registers);
 
-    public Literal(Value literalValue)
-    { _literalValue = literalValue; }
-
-    public Code executionStep(Registers registers)
+    public final Code executionStep(Registers registers)
         throws RuntimeError, TypeError
     {
         return registers.getContinuation().invoke(
             registers,
-            _literalValue
+            getValue(registers)
         );
     }
 }
