@@ -381,7 +381,9 @@ public class TestR5RS
         eval(
 	        "(define-syntax static-cons " +
 		    "  (lambda (def-env use-env . args)" + 
-		    "    (list 'quote (apply cons args))))"
+		    "    (cons " +
+		    "      use-env " +
+		    "      (list 'quote (apply cons args)))))"
 		);
 		check(
 		    "(static-cons a b)",

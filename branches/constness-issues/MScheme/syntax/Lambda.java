@@ -27,7 +27,7 @@ final class Lambda
 
 
     protected Code checkedTranslate(
-        StaticEnvironment environment,
+        StaticEnvironment compilationEnv,
         List              arguments
     ) throws CompileError, TypeError
     {
@@ -68,11 +68,11 @@ final class Lambda
         }
 
         StaticEnvironment
-            newEnvironment = environment.newChild(formals);
+            bodyCompilationEnv = compilationEnv.newChild(formals);
 
         return new CompiledLambda(
             arity,
-            newEnvironment,
+            bodyCompilationEnv,
             body
         );
     }

@@ -91,8 +91,14 @@
   (define (delay-func def-env use-env expression)
     (list make-promise (list 'lambda '() expression)))
 
+  (define (wrapper func)
+    (lambda (def-env use-env . args)
+      (cons
+        use-env
+        (apply func def-env use-env args))))
+
   (list 'begin
-    (list 'define-syntax 'quasiquote quasiquote-func)
-    (list 'define-syntax 'and        and-func)
-    (list 'define-syntax 'or         or-func)
-    (list 'define-syntax 'delay      delay-func)))
+    (list 'define-syntax 'quasiquote (wrapper quasiquote-func))
+    (list 'define-syntax 'and        (wrapper and-func))
+    (list 'define-syntax 'or         (wrapper or-func))
+    (list 'define-syntax 'delay      (wrapper delay-func))))

@@ -30,7 +30,7 @@ final class If
 
 
     protected Code checkedTranslate(
-        StaticEnvironment syntax,
+        StaticEnvironment compilationEnv,
         List              arguments
     ) throws CompileError, TypeError
     {
@@ -42,10 +42,9 @@ final class If
             : arguments.getTail().getTail().getHead();
 
         return new Selection(
-            flag.   getCode(syntax),
-            onTrue. getCode(syntax),
-            onFalse.getCode(syntax)
+            flag.   getCode(compilationEnv),
+            onTrue. getCode(compilationEnv),
+            onFalse.getCode(compilationEnv)
         );
     }
 }
-
