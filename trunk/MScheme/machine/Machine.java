@@ -43,6 +43,7 @@ import MScheme.values.functions.ValueThunk;
 import MScheme.code.Application;
 
 import MScheme.environment.Environment;
+import MScheme.environment.StaticEnvironment;
 
 import MScheme.exceptions.*;
 
@@ -287,9 +288,13 @@ public final class Machine
         Value evaluatee
     ) throws SchemeException
     {
+        StaticEnvironment global = getEnvironment().getStatic();
+        
         return execute(
             evaluatee.getCode(
-                getEnvironment().getStatic()
+                global 
+            ).force(
+                global
             )
         );
     }
