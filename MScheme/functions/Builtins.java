@@ -107,60 +107,60 @@ public class Builtins
 
     // 6.1 Equivalence predicates
     public final static Value eq_3F(Value fst, Value snd)
-    { return SchemeBoolean.create(fst.eq(snd)); }
+    { return ScmBoolean.create(fst.eq(snd)); }
 
     public final static Value eqv_3F(Value fst, Value snd)
-    { return SchemeBoolean.create(fst.eqv(snd)); }
+    { return ScmBoolean.create(fst.eqv(snd)); }
 
     public final static Value equal_3F(Value fst, Value snd)
-    { return SchemeBoolean.create(fst.equal(snd)); }
+    { return ScmBoolean.create(fst.equal(snd)); }
 
 
     // 6.2 Numbers
 
     // 6.2.5 Numerical operations
     public final static Value number_3F(Value argument)
-    { return SchemeBoolean.create(argument.isNumber()); }
+    { return ScmBoolean.create(argument.isNumber()); }
 
     public final static Value complex_3F(Value argument)
-    { return SchemeBoolean.create(argument.isNumber()); }
+    { return ScmBoolean.create(argument.isNumber()); }
 
     public final static Value real_3F(Value argument)
-    { return SchemeBoolean.create(argument.isNumber()); }
+    { return ScmBoolean.create(argument.isNumber()); }
 
     public final static Value rational_3F(Value argument)
-    { return SchemeBoolean.create(argument.isNumber()); }
+    { return ScmBoolean.create(argument.isNumber()); }
 
     public final static Value integer_3F(Value argument)
-    { return SchemeBoolean.create(argument.isNumber()); }
+    { return ScmBoolean.create(argument.isNumber()); }
 
 
     public final static Value exact_3F(Value argument)
-    { return SchemeBoolean.create(argument.isNumber()); }
+    { return ScmBoolean.create(argument.isNumber()); }
 
     public final static Value inexact_3F(Value argument)
-    { return SchemeBoolean.createFalse(); }
+    { return ScmBoolean.createFalse(); }
 
 
     public final static Value _3C(List arguments) // <
         throws RuntimeError, TypeError
-    { return SchemeBoolean.create(Order.check(arguments, Order.LT)); }
+    { return ScmBoolean.create(Order.check(arguments, Order.LT)); }
 
     public final static Value _3C_3D(List arguments) // <=
         throws RuntimeError, TypeError
-    { return SchemeBoolean.create(Order.check(arguments, Order.LE)); }
+    { return ScmBoolean.create(Order.check(arguments, Order.LE)); }
 
     public final static Value _3D(List arguments) // =
         throws RuntimeError, TypeError
-    { return SchemeBoolean.create(Order.check(arguments, Order.EQ)); }
+    { return ScmBoolean.create(Order.check(arguments, Order.EQ)); }
 
     public final static Value _3E_3D(List arguments) // >=
         throws RuntimeError, TypeError
-    { return SchemeBoolean.create(Order.check(arguments, Order.GE)); }
+    { return ScmBoolean.create(Order.check(arguments, Order.GE)); }
 
     public final static Value _3E(List arguments) // >
         throws RuntimeError, TypeError
-    { return SchemeBoolean.create(Order.check(arguments, Order.GT)); }
+    { return ScmBoolean.create(Order.check(arguments, Order.GT)); }
 
 
     private final static Adder ADDER = new Adder();
@@ -198,16 +198,16 @@ public class Builtins
     // 6.3.1 Booleans
 
     public final static Value not(Value argument) // boolean?
-    { return SchemeBoolean.create(!argument.isTrue()); }
+    { return ScmBoolean.create(!argument.isTrue()); }
 
     public final static Value boolean_3F(Value argument) // boolean?
-    { return SchemeBoolean.create(argument.isBoolean()); }
+    { return ScmBoolean.create(argument.isBoolean()); }
 
 
     // 6.3.2 Pairs and lists
 
     public final static Value pair_3F(Value argument) // pair?
-    { return SchemeBoolean.create(argument.isPair()); }
+    { return ScmBoolean.create(argument.isPair()); }
 
     public final static Value cons(Value fst, Value snd)
     { return Pair.create(fst, snd); }
@@ -230,10 +230,10 @@ public class Builtins
 
 
     public final static Value null_3F(Value argument) // pair?
-    { return SchemeBoolean.create(argument.eq(Empty.create())); }
+    { return ScmBoolean.create(argument.eq(Empty.create())); }
 
     public final static Value list_3F(Value argument) // list?
-    { return SchemeBoolean.create(argument.isList()); }
+    { return ScmBoolean.create(argument.isList()); }
 
     public final static Value list(List argument) // list?
     { return argument.toValue(); }
@@ -259,7 +259,7 @@ public class Builtins
 
     // 6.3.3 Symbols
     public final static Value symbol_3F(Value argument) // symbol?
-    { return SchemeBoolean.create(argument.isSymbol()); }
+    { return ScmBoolean.create(argument.isSymbol()); }
 
     public final static Value symbol_2D_3Estring(Value argument) // symbol->string
         throws SymbolExpected
@@ -273,27 +273,27 @@ public class Builtins
     // 6.3.4 Characters
 
     public final static Value char_3F(Value argument) // char?
-    { return SchemeBoolean.create(argument.isChar()); }
+    { return ScmBoolean.create(argument.isChar()); }
 
     public final static Value char_3C_3F(Value fst, Value snd) // char<?
         throws CharExpected
-    { return SchemeBoolean.create(fst.toChar().getJavaChar() < snd.toChar().getJavaChar()); }
+    { return ScmBoolean.create(fst.toChar().getJavaChar() < snd.toChar().getJavaChar()); }
 
     public final static Value char_3C_3D_3F(Value fst, Value snd) // char<=?
         throws CharExpected
-    { return SchemeBoolean.create(fst.toChar().getJavaChar() <= snd.toChar().getJavaChar()); }
+    { return ScmBoolean.create(fst.toChar().getJavaChar() <= snd.toChar().getJavaChar()); }
 
     public final static Value char_3D_3F(Value fst, Value snd) // char=?
         throws CharExpected
-    { return SchemeBoolean.create(fst.toChar().getJavaChar() == snd.toChar().getJavaChar()); }
+    { return ScmBoolean.create(fst.toChar().getJavaChar() == snd.toChar().getJavaChar()); }
 
     public final static Value char_3E_3D_3F(Value fst, Value snd) // char>=?
         throws CharExpected
-    { return SchemeBoolean.create(fst.toChar().getJavaChar() >= snd.toChar().getJavaChar()); }
+    { return ScmBoolean.create(fst.toChar().getJavaChar() >= snd.toChar().getJavaChar()); }
 
     public final static Value char_3E_3F(Value fst, Value snd) // char>?
         throws CharExpected
-    { return SchemeBoolean.create(fst.toChar().getJavaChar() > snd.toChar().getJavaChar()); }
+    { return ScmBoolean.create(fst.toChar().getJavaChar() > snd.toChar().getJavaChar()); }
 
     public final static Value char_2D_3Einteger(Value argument)
         throws CharExpected
@@ -315,13 +315,13 @@ public class Builtins
     // 6.3.5 Strings
 
     public final static Value string_3F(Value argument) // string?
-    { return SchemeBoolean.create(argument.isString()); }
+    { return ScmBoolean.create(argument.isString()); }
 
 
     // 6.3.6 Vectors
 
     public final static Value vector_3F(Value argument) // vector?
-    { return SchemeBoolean.create(argument.isVector()); }
+    { return ScmBoolean.create(argument.isVector()); }
 
     public final static Value vector(List arguments) // vector
         throws ListExpected
@@ -338,7 +338,7 @@ public class Builtins
     // 6.4 Control features
 
     public final static Value procedure_3F(Value argument) // procedure?
-    { return SchemeBoolean.create(argument.isFunction()); }
+    { return ScmBoolean.create(argument.isFunction()); }
 
     public final static Function apply = ApplyFunction.INSTANCE;
 
@@ -387,15 +387,15 @@ public class Builtins
     // 6.6.1 Ports
 
     public final static Value port_3F(Value argument) // port?
-    { return SchemeBoolean.create(argument.isPort()); }
+    { return ScmBoolean.create(argument.isPort()); }
 
     public final static Value input_2Dport_3F(Value argument) // input-port?
         throws PortExpected
-    { return SchemeBoolean.create(argument.isPort() && argument.toPort().isInput()); }
+    { return ScmBoolean.create(argument.isPort() && argument.toPort().isInput()); }
 
     public final static Value output_2Dport_3F(Value argument) // output-port?
         throws PortExpected
-    { return SchemeBoolean.create(argument.isPort() && argument.toPort().isOutput()); }
+    { return ScmBoolean.create(argument.isPort() && argument.toPort().isOutput()); }
 
 
     public final static Value open_2Dinput_2Dfile(Value argument)
@@ -431,11 +431,11 @@ public class Builtins
     { return fst.toPort().toInput().peekScmChar(); }
 
     public final static Value eof_2Dobject_3F(Value fst)
-    { return SchemeBoolean.create(fst.eq(InputPort.EOF_VALUE)); }
+    { return ScmBoolean.create(fst.eq(InputPort.EOF_VALUE)); }
 
     public final static Value char_2Dready(Value fst)
         throws TypeError
-    { return SchemeBoolean.create(fst.toPort().toInput().isReady()); }
+    { return ScmBoolean.create(fst.toPort().toInput().isReady()); }
 
 
     // 6.6.3 Output
