@@ -36,6 +36,7 @@ public class TestValue
         int count = 0;
 
         if (v.isList      ()) ++count;
+        if (v.isEmpty     ()) ++count;
 
         if (v.isScmBoolean()) ++count;
         if (v.isPair      ()) ++count;
@@ -112,7 +113,13 @@ public class TestValue
     {
         final Value empty = Empty.create();
 
-        commonTests(empty);
+        assert(empty.isTrue());
+
+        assert(countTypes(empty) == 2);
+        assert(countCasts(empty) == 1);
+
+        assert(empty.isEmpty());
+
         assert(empty.isList());
         assert(empty.toList() == empty);
     }
