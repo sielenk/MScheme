@@ -183,7 +183,7 @@ public abstract class ValueDefaultImplementations
      * @throws ListExpected
      */
     public List toList()
-    throws ListExpected
+        throws ListExpected
     {
         throw new ListExpected(this);
     }
@@ -192,7 +192,7 @@ public abstract class ValueDefaultImplementations
      * @throws PairExpected
      */
     public Pair toPair()
-    throws PairExpected
+        throws PairExpected
     {
         throw new PairExpected(this);
     }
@@ -201,7 +201,7 @@ public abstract class ValueDefaultImplementations
      * @throws SymbolExpected
      */
     public Symbol toSymbol()
-    throws SymbolExpected
+        throws SymbolExpected
     {
         throw new SymbolExpected(this);
     }
@@ -210,7 +210,7 @@ public abstract class ValueDefaultImplementations
      * @throws NumberExpected
      */
     public ScmNumber toScmNumber()
-    throws NumberExpected
+        throws NumberExpected
     {
         throw new NumberExpected(this);
     }
@@ -219,7 +219,7 @@ public abstract class ValueDefaultImplementations
      * @throws CharExpected
      */
     public ScmChar toScmChar()
-    throws CharExpected
+        throws CharExpected
     {
         throw new CharExpected(this);
     }
@@ -228,7 +228,7 @@ public abstract class ValueDefaultImplementations
      * @throws StringExpected
      */
     public ScmString toScmString()
-    throws StringExpected
+        throws StringExpected
     {
         throw new StringExpected(this);
     }
@@ -237,7 +237,7 @@ public abstract class ValueDefaultImplementations
      * @throws VectorExpected
      */
     public ScmVector toScmVector()
-    throws VectorExpected
+        throws VectorExpected
     {
         throw new VectorExpected(this);
     }
@@ -246,7 +246,7 @@ public abstract class ValueDefaultImplementations
      * @throws InputPortExpected
      */
     public InputPort toInputPort()
-    throws InputPortExpected
+        throws InputPortExpected
     {
         throw new InputPortExpected(this);
     }
@@ -255,7 +255,7 @@ public abstract class ValueDefaultImplementations
      * @throws OutputPortExpected
      */
     public OutputPort toOutputPort()
-    throws OutputPortExpected
+        throws OutputPortExpected
     {
         throw new OutputPortExpected(this);
     }
@@ -264,7 +264,7 @@ public abstract class ValueDefaultImplementations
      * @throws FunctionExpected
      */
     public Function toFunction()
-    throws FunctionExpected
+        throws FunctionExpected
     {
         throw new FunctionExpected(this);
     }
@@ -273,7 +273,7 @@ public abstract class ValueDefaultImplementations
      * @throws EnvironmentExpected
      */
     public Environment toEnvironment()
-    throws EnvironmentExpected
+        throws EnvironmentExpected
     {
         throw new EnvironmentExpected(this);
     }
@@ -282,7 +282,7 @@ public abstract class ValueDefaultImplementations
      * @throws EnvironmentExpected
      */
     public StaticEnvironment toStaticEnvironment()
-    throws EnvironmentExpected
+        throws EnvironmentExpected
     {
         throw new EnvironmentExpected(this);
     }
@@ -332,7 +332,7 @@ public abstract class ValueDefaultImplementations
      * Calls {@link #write write(destination)}.
      */
     public void display(Writer destination)
-    throws IOException
+        throws IOException
     {
         write(destination);
     }
@@ -364,29 +364,21 @@ public abstract class ValueDefaultImplementations
     // compilation functions
 
     /**
-     * @return a newly created {@link Literal}.
-     */
-    public final Code getLiteral()
-    {
-        return this;
-    }
-
-    /**
      * Assumes the value to be a constant.
      * <p>
      * @param  compilationEnv ignored by this implementation
-     * @return {@link #getLiteral()}
+     * @return {@link #getConst()}
      */
-    public Code getCode(StaticEnvironment compilationEnv)
+    public Code getCompiled(StaticEnvironment compilationEnv)
         throws SchemeException
     {
-        return getConst().getLiteral();
+        return getConst();
     }
 
     /**
      * Compiles as normal code.
      * <p>
-     * @return <code>getCode(compilationEnv)</code>
+     * @return <code>ProcedureCall.create(this)</code>
      */
     public Syntax getSyntax(StaticEnvironment compilationEnv)
         throws SchemeException
