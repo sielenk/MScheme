@@ -7,7 +7,8 @@ import MScheme.machine.Machine;
 
 public class Main
 {
-    public final static String id = "$Id$";
+    public final static String id
+        = "$Id$";
 
     public final static void main(String[] argv)
         throws Exception
