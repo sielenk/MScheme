@@ -285,7 +285,7 @@ public class TestR5RS
             eval("(let ((x 1) (y x)) 0)");
             fail();
         }
-        catch (SymbolNotFoundException e)
+        catch (SchemeException e)
         { }
 
         try
@@ -293,7 +293,7 @@ public class TestR5RS
             eval("(let ((x y) (y 1)) 0)");
             fail();
         }
-        catch (SymbolNotFoundException e)
+        catch (SchemeException e)
         { }
     }
 
@@ -321,7 +321,7 @@ public class TestR5RS
             eval("(let* ((x y) (y 1)) 0)");
             fail();
         }
-        catch (SymbolNotFoundException e)
+        catch (SchemeException e)
         { }
     }
 
