@@ -8,78 +8,72 @@ import MScheme.expressions.SListFactory;
 
 public class Values
 {
-    private ValuePair _data;
-    private int       _length;
+    private SExpr[] _data;
+    private int     _first;
 
 
-    public final static Values EMPTY = new Values(null, 0);
+    public final static Values EMPTY = new Values(new SExpr[0], 0);
+
+
+    private Values(
+        SExpr[] data,
+        int     first
+    ) {
+        _data  = data;
+        _first = first;
+    }
+
+
+    Values(SExpr[] data)
+    {
+        this(data, 0);
+    }
 
 
     public Values(SExpr sexpr)
     {
-        _data      = new ValuePair(sexpr);
-        _data.tail = null;
-        _length    = 1;
-    }
-
-
-    Values(ValuePair data, int length)
-    {
-        _data   = data;
-        _length = length;
+        this(new SExpr[1]);
+        _data[0] = sexpr;
     }
 
 
     public int getLength()
     {
-        return _length;
+        return _data.length - _first;
     }
 
 
     public Values getTail(int index)
     {
-        if ((index == 0) || (_length == 0)) {
-            return this;
-        } else {
-            ValuePair pair   = _data;
-            int       length = _length;
+        int newFirst = _first + index;
 
-            do {
-                pair = pair.tail;
-                length--;
-            } while ((--index > 0) && (length > 0));
-
-            return
-                (length > 0)
-                ? new Values(pair, length)
-                : EMPTY;
-        }
+        return
+            (newFirst < _data.length)
+            ? new Values(_data, newFirst)
+            : EMPTY;
     }
 
 
-    public Values getTail() /* == getTail(1) */
+    public Values getTail()
     {
-        return
-            (_length > 1)
-            ? new Values(_data.tail, _length - 1)
-            : EMPTY;
+        return getTail(1);
     }
 
 
     public SExpr at(int index)
     {
-        throw new RuntimeException("public SExpr at(int index): stub");
+        return _data[_first + index];
     }
 
 
     public SList toList()
     {
-        ValuePair pair = _data;
         SListFactory fab = new SListFactory();
 
-        while (pair != null) {
-            fab.append(pair.head);
-            pair = pair.tail;
+        for (int i = _first; i < _data.length; i++) {
+            fab.append(
+                _data[i]
+            );
         }
 
         return fab.getList();
