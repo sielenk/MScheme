@@ -71,7 +71,25 @@
             (list 'let (list (list id head))
               (list 'if id id (cons 'or tail))))))))
 
+  (define (make-promise proc)
+    (let ((result-ready? #f)
+          (result #f))
+      (lambda ()
+        (if result-ready?
+          result
+          (let ((x (proc)))
+            (if result-ready?
+              result
+              (begin
+                (set! result-ready? #t)
+                (set! result x)
+                result)))))))
+
+  (define (delay-func def-env use-env expression)
+    (list make-promise (list 'lambda '() expression)))
+
   (list 'begin
     (list 'define-syntax 'quasiquote quasiquote-func)
     (list 'define-syntax 'and        and-func)
-    (list 'define-syntax 'or         or-func)))
+    (list 'define-syntax 'or         or-func)
+    (list 'define-syntax 'delay      delay-func)))
