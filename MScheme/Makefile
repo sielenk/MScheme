@@ -14,6 +14,7 @@ SRC =	Code.java	\
 	code/CodeArray.java	\
 	environment/Environment.java	\
 	environment/Reference.java	\
+	environment/DynamicEnvironment.java	\
 	environment/StaticEnvironment.java	\
 	exceptions/AlreadyBound.java	\
 	exceptions/CantCompileException.java	\
@@ -50,7 +51,6 @@ SRC =	Code.java	\
 	exceptions/VectorException.java	\
 	exceptions/VectorExpected.java	\
 	exceptions/WriteException.java	\
-	values/functions/CurrentEnvironment.java	\
 	values/functions/AppendFunction.java	\
 	values/functions/ApplyFunction.java	\
 	values/functions/AssocBase.java	\
@@ -123,8 +123,8 @@ SRC =	Code.java	\
 OBJ =	$(SRC:.java=.o)
 
 SRC_TEST =	TestMScheme.java	\
-		TestMachine.java	\
-		TestR5RS.java	\
+		tests/TestMachine.java	\
+		tests/TestR5RS.java	\
 		environment/TestEnvironment.java	\
 		tests/TestValue.java	\
 		util/TestArity.java	\
@@ -142,15 +142,15 @@ PACKAGES =	MScheme			\
 		MScheme.values		\
 		MScheme.tests
 
-GCJ=gcj -W -Wall -ggdb
+GCJ=gcj
 JAVAC=jikes -bootclasspath /usr/lib/java/jre/lib/rt.jar +P
 # JAVAC = $(GCJ) -W -Wall -C
 
 run: all
 	time java MScheme.TestMScheme
 
-all: values/functions/BuiltinTable.java Init.java
-	$(JAVAC) `find . -name "*.java"`
+all: $(SRC:.java=.class)
+	$(JAVAC) $(SRC_TEST)
 
 values/functions/BuiltinTable.java: values/functions/ParseBuiltins.class values/functions/Builtins.class
 	java MScheme.values.functions.ParseBuiltins > values/functions/BuiltinTable.java
@@ -160,30 +160,28 @@ values/functions/ParseBuiltins.class: values/functions/ParseBuiltins.java
 	$(JAVAC) values/functions/ParseBuiltins.java
 	touch values/functions/Builtins.java
 
-values/functions/Builtins.class: values/functions/Builtins.java
-	$(JAVAC) values/functions/Builtins.java
-
-machine/Machine.class: Init.class
-
 Init.java: bootstrap.scm rep.scm
 	mkinit.pl $^ > $@
 
+%.d: %.java
+	( echo -n "$(<:.java=.class) "; $(GCJ) -M $< ) > $@
+
 %.o: %.java
-	$(GCJ) -o $@ -c $<
+	$(GCJ) -W -Wall -ggdb -o $@ -c $<
+
+%.class: %.java
+	$(JAVAC) $<
 
 main: all $(OBJ)
-	$(GCJ) --main=MScheme.Main -o main $(OBJ)
-
-depend:
-	touch depend
+	$(GCJ) -ggdb --main=MScheme.Main -o main $(OBJ)
 
 clean:
 	rm -f $(OBJ)
 
 indent:
-	for i in `find . -name "*.java"`; do		\
-		echo $$i;				\
-		astyle -j -s -b --convert-tabs $$i;	\
+	for i in `find . -name "*.java"`; do	\
+		echo $$i;			\
+		astyle --convert-tabs $$i;	\
 	done
 
 doc:
@@ -192,4 +190,4 @@ doc:
 
 .PHONY: doc clean all indent
 
-include depend
+include $(SRC:.java=.d)
