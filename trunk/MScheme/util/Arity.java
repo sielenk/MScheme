@@ -1,5 +1,7 @@
 package MScheme.util;
 
+import MScheme.exceptions.RuntimeArityError;
+
 
 public class Arity
 {
@@ -21,6 +23,29 @@ public class Arity
 
     public static Arity inRange(int lo, int hi)
     { return new Arity(lo, hi); }
+
+
+    public Arity getOneLess()
+        throws RuntimeArityError
+    {
+        int newMin = getMin() - 1;
+
+        if (newMin < 0) {
+            newMin = 0;
+        }
+
+        if (allowMore()) {
+            return atLeast(newMin);
+        } else {
+            int newMax = getMax() - 1;
+
+            if (newMax < 0) {
+                throw new RuntimeArityError(null, this);
+            }
+
+            return inRange(newMin, newMax);
+        }
+    }
 
 
     public int getMin()
