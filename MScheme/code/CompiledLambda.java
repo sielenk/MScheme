@@ -13,7 +13,7 @@ import MScheme.values.List;
 import MScheme.exceptions.ListExpected;
 
 
-final public class CompiledLambda
+public final class CompiledLambda
     extends Code
 {
     private final Arity             _arity;
