@@ -152,10 +152,21 @@ public class Machine
 
         try {
             dynamicBindings.define(
+                ValueFactory.createSymbol(">"),
+                ValueFactory.createFunction("NumberGT")
+            );
+            dynamicBindings.define(
+                ValueFactory.createSymbol("<"),
+                ValueFactory.createFunction("NumberLT")
+            );
+            dynamicBindings.define(
                 ValueFactory.createSymbol("+"),
                 ValueFactory.createFunction("Plus")
             );
-
+            dynamicBindings.define(
+                ValueFactory.createSymbol("-"),
+                ValueFactory.createFunction("Minus")
+            );
             dynamicBindings.define(
                 ValueFactory.createSymbol("*"),
                 ValueFactory.createFunction("Times")
@@ -164,6 +175,10 @@ public class Machine
             staticBindings.defineSyntax(
                 ValueFactory.createSymbol("quote"),
                 SyntaxFactory.getQuoteToken()
+            );
+            staticBindings.defineSyntax(
+                ValueFactory.createSymbol("cond"),
+                SyntaxFactory.getCondToken()
             );
             staticBindings.defineSyntax(
                 ValueFactory.createSymbol("if"),
@@ -176,6 +191,10 @@ public class Machine
             staticBindings.defineSyntax(
                 ValueFactory.createSymbol("lambda"),
                 SyntaxFactory.getLambdaToken()
+            );
+            staticBindings.defineSyntax(
+                ValueFactory.createSymbol("let"),
+                SyntaxFactory.getLetToken()
             );
             staticBindings.defineSyntax(
                 ValueFactory.createSymbol("define"),
