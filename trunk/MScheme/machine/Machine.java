@@ -45,6 +45,7 @@ import MScheme.values.InputPort;
 import MScheme.values.ListFactory;
 import MScheme.values.OutputPort;
 import MScheme.values.ScmBoolean;
+import MScheme.values.ScmNumber;
 import MScheme.values.List;
 import MScheme.values.Symbol;
 import MScheme.values.Function;
@@ -99,71 +100,14 @@ public final class Machine
         = "$Id$";
 
 
-    private final Value _getInputFunc =
-        new ValueThunk() {
-            protected Value checkedCall()
-            {
-                return _stdin;
-            }
-        };
-
-    private final Value _resetInputFunc =
-        new UnaryValueFunction() {
-            protected Value checkedCall(Value argument)
-                throws TypeError
-            {
-                Value result = _stdin;
-                _stdin = argument.toInputPort();
-                return result;
-            }
-        };
-
-    private final Value _getOutputFunc =
-        new ValueThunk() {
-            protected Value checkedCall()
-            {
-                return _stdout;
-            }
-        };
-
-    private final Value _resetOutputFunc =
-        new UnaryValueFunction() {
-            protected Value checkedCall(Value argument)
-                throws TypeError
-            {
-                Value result = _stdout;
-                _stdout = argument.toOutputPort();
-                return result;
-            }
-        };
-
-    private final Value _getErrorHandlerFunc =
-        new ValueThunk() {
-            protected Value checkedCall()
-            {
-                return getErrorHandler();
-            }
-        };
-
-    private final Value _resetErrorHandlerFunc =
-        new UnaryValueFunction() {
-            protected Value checkedCall(Value argument)
-                throws TypeError
-            {
-                Value result = getErrorHandler();
-		        _errorHandler = argument.isTrue()
-			                    ? argument.toFunction()
-					            : null;
-                return result;
-            }
-        };
-
     private final Environment _environment;
 
     private InputPort  _stdin;
     private OutputPort _stdout;
 
     private Function   _errorHandler = null;
+
+    private int        _ticker = 0;
 
 
     public Machine()
@@ -203,37 +147,98 @@ public final class Machine
         {
             _environment.define(
                 Symbol.create("current-input-port"),
-                _getInputFunc
+                new ValueThunk()
+		        { protected Value checkedCall() { return _stdin; } }
             );
 
             _environment.define(
                 Symbol.create("reset-input-port"),
-                _resetInputFunc
+                new UnaryValueFunction()
+                {
+                    protected Value checkedCall(Value argument)
+                        throws TypeError
+                    {
+                        Value result = _stdin;
+                        _stdin = argument.toInputPort();
+                        return result;
+                    }
+                }
             );
 
             _environment.define(
                 Symbol.create("current-output-port"),
-                _getOutputFunc
+                new ValueThunk()
+		        { protected Value checkedCall() { return _stdout; } }
             );
 
             _environment.define(
                 Symbol.create("reset-output-port"),
-                _resetOutputFunc
+                new UnaryValueFunction()
+	            {
+                    protected Value checkedCall(Value argument)
+                        throws TypeError
+                    {
+                        Value result = _stdout;
+                        _stdout = argument.toOutputPort();
+                        return result;
+                    }
+                }
             );
 
             _environment.define(
                 Symbol.create("current-error-handler"),
-                _getErrorHandlerFunc
-            );
+                new ValueThunk()
+		        {
+			        protected Value checkedCall()
+				    {
+                        if (_errorHandler != null)
+	                    {
+	                        return _errorHandler;
+		                }
+		                return ScmBoolean.createFalse();
+				    }
+				}
+			);
 
             _environment.define(
                 Symbol.create("reset-error-handler"),
-                _resetErrorHandlerFunc
+                new UnaryValueFunction()
+		        {
+                    protected Value checkedCall(Value argument)
+                        throws TypeError
+                    {
+                        Value oldErrorHandler = _errorHandler;
+
+		                _errorHandler =
+				            argument.isTrue()
+			                ? argument.toFunction()
+					        : null;
+
+                        if (oldErrorHandler != null)
+	                    {
+	                        return oldErrorHandler;
+		                }
+		                return ScmBoolean.createFalse();
+                    }
+                }
             );
 
             _environment.define(
                 Symbol.create("machine-environment"),
                 _environment
+            );
+
+            _environment.define(
+                Symbol.create("ticker"),
+                new ValueThunk()
+		        {
+			        protected Value checkedCall() 
+                    {
+			            int t = _ticker;
+				        _ticker = 0;
+			            return ScmNumber.create(t);
+				    }
+				}
             );
 
             evaluate(
@@ -283,25 +288,6 @@ public final class Machine
         return _environment;
     }
 
-    public InputPort getInputPort()
-    {
-        return _stdin;
-    }
-
-    public OutputPort getOutputPort()
-    {
-        return _stdout;
-    }
-
-    public Value getErrorHandler()
-    {
-        if (_errorHandler != null)
-	    {
-	        return _errorHandler;
-		}
-		return ScmBoolean.createFalse();
-    }
-
 
     public Value execute(
         Code program
@@ -348,6 +334,7 @@ public final class Machine
 			        throw error;
 		        }
             }
+	        ++_ticker;
         }
 
         return stop.getResult();
