@@ -24,6 +24,9 @@ import java.io.Reader;
 import java.io.Writer;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.StringReader;
+
+import MScheme.Init;
 
 import MScheme.Value;
 import MScheme.Code;
@@ -32,6 +35,10 @@ import MScheme.values.Symbol;
 import MScheme.values.ListFactory;
 import MScheme.values.ScmBoolean;
 import MScheme.values.Function;
+import MScheme.values.InputPort;
+import MScheme.values.OutputPort;
+
+import MScheme.values.functions.ValueThunk;
 
 import MScheme.code.CodeList;
 import MScheme.code.Application;
@@ -81,23 +88,130 @@ final class StopContinuation
 
 
 public final class Machine
+    implements Runnable
 {
     public final static String id
         = "$Id$";
 
+    private final Value _lastErrorFunc =
+        new ValueThunk() {
+            protected Value checkedCall()
+            {
+                return getLastError();
+            }
+        };
 
     private final Environment _environment;
 
-    public Machine(Environment environment)
-    {
-        _environment  = environment;
-    }
+    private static boolean initializing = false;
+
+    private Reader _stdin;
+    private Writer _stdout;
+
 
     public Machine()
     {
         _environment = Environment.getSchemeReportEnvironment();
+        _stdin       = new InputStreamReader (System.in );
+        _stdout      = new OutputStreamWriter(System.out);
+        init();
     }
 
+    public Machine(
+        Reader stdin,
+        Writer stdout
+    )
+    {
+        _environment = Environment.getSchemeReportEnvironment();
+        _stdin       = stdin;
+        _stdout      = stdout;
+        init();
+    }
+
+    public Machine(
+        Environment environment
+    )
+    {
+        _environment = environment;
+        _stdin       = new InputStreamReader (System.in );
+        _stdout      = new OutputStreamWriter(System.out);
+    }
+
+    public Machine(
+        Environment environment,
+        Reader      stdin,
+        Writer      stdout
+    )
+    {
+        _environment = environment;
+        _stdin       = stdin;
+        _stdout      = stdout;
+    }
+
+    private void init()
+    {
+        if (initializing)
+        {
+            return;
+        }
+        
+        initializing = true;
+        
+        try
+        {
+            _environment.define(
+                Symbol.create("last-error"),
+                _lastErrorFunc
+            );
+
+            _environment.define(
+                Symbol.create("initial-input-port"),
+                InputPort.create(_stdin)
+            );
+
+            _environment.define(
+                Symbol.create("initial-output-port"),
+                OutputPort.create(_stdout)
+            );
+
+            evaluate(
+                InputPort.create(
+                    new StringReader(
+                        Init.bootstrap
+                    )
+                ).read()
+            );
+        }
+        catch (SchemeException e)
+        {
+            throw new RuntimeException(
+                e.toString()
+            );
+        }
+
+        initializing = false;
+    }
+
+    public Value unprotectedRun()
+        throws SchemeException
+    {
+        return evaluate(
+            InputPort.create(
+                new StringReader(
+                    Init.rep
+                )
+            ).read()
+        );
+    }
+
+    public void run()
+    {
+        try {
+            unprotectedRun();
+        }
+        catch (Throwable t)
+        { }
+    }
 
     public Environment getEnvironment()
     {
@@ -105,43 +219,16 @@ public final class Machine
     }
 
 
+
+    private SchemeException   lastError      = null;
+    private Value             lastErrorValue = null;
+
     public Value execute(
-        Code programm
-    )
-        throws SchemeException
-    {
-        return execute(
-            programm,
-            getEnvironment()
-        );
-    }
-
-    public Value evaluate(
-        Value evaluatee
-    )
-        throws SchemeException
-    {
-        return evaluate(
-            evaluatee,
-            getEnvironment()
-        );
-    }
-
-
-    public static Reader stdin  = new InputStreamReader (System.in );
-    public static Writer stdout = new OutputStreamWriter(System.out);
-
-    private static SchemeException   lastError      = null;
-    private static Value             lastErrorValue = null;
-
-    public static Value execute(
-        Code        program,
-        Environment executionEnv
-    )
-        throws SchemeException
+        Code program
+    ) throws SchemeException
     {
         Code             current = program;
-        Registers        state   = new Registers(executionEnv);
+        Registers        state   = new Registers(getEnvironment());
         StopContinuation stop    = new StopContinuation(state);
 
         lastError      = null;
@@ -197,22 +284,19 @@ public final class Machine
         }
     }
 
-    public static Value evaluate(
-        Value       evaluatee,
-        Environment executionEnv
-    )
-        throws SchemeException
+    public Value evaluate(
+        Value evaluatee
+    ) throws SchemeException
     {
         return execute(
             evaluatee.getCode(
-                executionEnv.getStatic()
-            ),
-            executionEnv
+                getEnvironment().getStatic()
+            )
         );
     }
 
 
-    public static Value getLastError()
+    public Value getLastError()
     {
         Value result = 
             (lastErrorValue != null)
