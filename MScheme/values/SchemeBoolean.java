@@ -7,11 +7,14 @@ import java.io.IOException;
 public final class SchemeBoolean
     extends SelfEvaluatingValue
 {
-    final static SchemeBoolean True  = new SchemeBoolean();
-    final static SchemeBoolean False = new SchemeBoolean();
+    public final static SchemeBoolean True  = new SchemeBoolean();
+    public final static SchemeBoolean False = new SchemeBoolean();
     
     private SchemeBoolean() { }
-        
+
+    public static SchemeBoolean create(boolean flag)
+    { return flag ? True : False; }
+
     public boolean isFalse()
     { return (this == False); }
     
