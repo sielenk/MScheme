@@ -216,6 +216,54 @@ public class TestR5RS
     }
 
     /// 4.2.2 Binding constructs
+    public void test4_2_2_let()
+        throws SchemeException
+    {
+        check(
+            "(let ((x 2) (y 3))\n" +
+            "  (* x y))",
+            "6"
+        );
+
+        check(
+            "(let ((x 2) (y 3))\n" +
+            "  (let ((x 7)\n" +
+            "        (z (+ x y)))\n" +
+            "    (* z x)))",
+            "35"
+        );
+    }
+
+    public void test4_2_2_letstar()
+        throws SchemeException
+    {
+        check(
+            "(let ((x 2) (y 3))\n" +
+            "  (let* ((x 7)\n" +
+            "         (z (+ x y)))\n" +
+            "    (* z x)))",
+            "70"
+        );
+    }
+
+    public void test4_2_2_letrec()
+        throws SchemeException
+    {
+        check(
+            "(letrec ((even?\n" +
+            "          (lambda (n)\n" +
+            "            (if (zero? n)\n" +
+            "                #t\n" +
+            "                (odd? (- n 1)))))\n" +
+            "         (odd?\n" +
+            "          (lambda (n)\n" +
+            "            (if (zero? n)\n" +
+            "                #f\n" +
+            "                (even? (- n 1))))))\n" +
+            "  (even? 88))\n",
+            "#t"
+        );
+    }
 
     /// 4.2.3 Sequencing
     public void test4_2_3()
