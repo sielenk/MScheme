@@ -6,6 +6,7 @@ SRC =	Code.java	\
 	Value.java	\
 	Init.java	\
 	code/Application.java	\
+	code/ApplyContinuation.java	\
 	code/Assignment.java	\
 	code/CompiledLambda.java	\
 	code/Literal.java	\
@@ -46,7 +47,6 @@ SRC =	Code.java	\
 	exceptions/SyntaxArityError.java	\
 	exceptions/TypeError.java	\
 	exceptions/UnexpectedSyntax.java	\
-	exceptions/UninitializedSymbolException.java	\
 	exceptions/UninitializedVectorException.java	\
 	exceptions/VectorException.java	\
 	exceptions/VectorExpected.java	\
