@@ -311,7 +311,7 @@ public class InputPort
             la = skipWSread();
             if (la == '.')
             {
-                IPair result = ListFactory.createConstPair(
+                IConstPair result = ListFactory.createConstPair(
                                   head,
                                   parseDatum()
                               );

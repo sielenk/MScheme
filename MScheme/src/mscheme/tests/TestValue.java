@@ -83,7 +83,7 @@ public class TestValue
 
         try { ValueTraits.toList             (v); ++count; } catch (TypeError e) { }
 
-        try { ValueTraits.toPair             (v); ++count; } catch (TypeError e) { }
+        try { ValueTraits.toConstPair             (v); ++count; } catch (TypeError e) { }
         try { ValueTraits.toSymbol           (v); ++count; } catch (TypeError e) { }
         try { ValueTraits.toScmNumber        (v); ++count; } catch (TypeError e) { }
         try { ValueTraits.toScmChar          (v); ++count; } catch (TypeError e) { }
@@ -164,7 +164,7 @@ public class TestValue
 
         commonTests(pair);
         assertTrue(ValueTraits.isPair(pair));
-        assertTrue(ValueTraits.toPair(pair) == pair);
+        assertTrue(ValueTraits.toConstPair(pair) == pair);
     }
 
     public void testList()
@@ -180,7 +180,7 @@ public class TestValue
         assertTrue(countCasts(list) == 2);
 
         assertTrue(ValueTraits.isPair(list));
-        assertTrue(ValueTraits.toPair(list) == list);
+        assertTrue(ValueTraits.toConstPair(list) == list);
 
         assertTrue(ValueTraits.isList(list));
         assertTrue(ValueTraits.toList(list) == list);

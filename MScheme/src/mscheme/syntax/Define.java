@@ -58,8 +58,8 @@ final class Define
         {
             //    (define (f x y) (+ x y))
             // -> (define f (lambda (x y) (+ x y)))
-            Symbol symbol  = ValueTraits.toSymbol(ValueTraits.toPair(arguments.getHead()).getFirst ());
-            Object formals = ValueTraits.toPair(arguments.getHead()).getSecond();
+            Symbol symbol  = ValueTraits.toSymbol(ValueTraits.toConstPair(arguments.getHead()).getFirst ());
+            Object formals = ValueTraits.toConstPair(arguments.getHead()).getSecond();
             IList   body    = arguments.getTail();
 
             Reference ref = compilationEnv.define(symbol);
