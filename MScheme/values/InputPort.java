@@ -427,13 +427,13 @@ public class InputPort
             return parseString();
         
         case '\'':
-            return ValueFactory.createList(
+            return ListFactory.create(
                 Symbol.create("quote"),
                 parseDatum()
             );
 
         case '`':
-            return ValueFactory.createList(
+            return ListFactory.create(
                 Symbol.create("quasiquote"),
                 parseDatum()
             );
@@ -449,7 +449,7 @@ public class InputPort
                     sym = Symbol.create("unquote");
                 }
 
-                return ValueFactory.createList(
+                return ListFactory.create(
                     sym,
                     parseDatum()
                 );

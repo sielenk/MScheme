@@ -29,7 +29,7 @@ public class TestList
         firstElement  = Symbol.create("x");
         secondElement = Symbol.create("y");
         lastElement   = secondElement;
-        occupiedList  = ValueFactory.createList(
+        occupiedList  = ListFactory.create(
                 firstElement,
                 secondElement
             );
