@@ -26,4 +26,8 @@ public final class Literal
 
     protected Value getValue(Registers state)
     { return _value; }
+
+
+    public String toString()
+    { return _value.toString(); }
 }
