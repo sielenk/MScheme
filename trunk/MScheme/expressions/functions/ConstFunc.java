@@ -16,7 +16,7 @@ public class ConstFunc extends Function
     public ConstFunc(
         SExpr value
     ) {
-        super(0, 0);
+        super(0, 1);
         _value = new Values(value);
     }
 
