@@ -23,6 +23,7 @@ import MScheme.functions.Thunk;
 import MScheme.functions.ValueThunk;
 import MScheme.functions.TernaryValueFunction;
 import MScheme.functions.YCombinator;
+import MScheme.functions.SpawnFunction;
 
 import MScheme.exceptions.*;
 
@@ -80,7 +81,7 @@ public final class Environment
     public void write(Writer destination)
         throws IOException
     {
-        destination.write("[environment]");
+        destination.write("#[environment]");
     }
 
     public Environment toEnvironment()
@@ -214,6 +215,11 @@ public final class Environment
             _implementationEnvironment.define(
                 Symbol.create("y"),
                 YCombinator.INSTANCE
+            );
+
+            _implementationEnvironment.define(
+                Symbol.create("spawn"),
+                SpawnFunction.INSTANCE
             );
 
             _nullEnvironmentHook =
