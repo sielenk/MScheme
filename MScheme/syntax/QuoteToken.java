@@ -1,10 +1,9 @@
 package MScheme.syntax;
 
 import MScheme.util.Arity;
-import MScheme.machine.Literal;
 import MScheme.code.Code;
 import MScheme.environment.StaticEnvironment;
-import MScheme.values.Pair;
+import MScheme.values.Value;
 import MScheme.values.List;
 
 import MScheme.exceptions.TypeError;
@@ -24,6 +23,9 @@ final class QuoteToken
         StaticEnvironment syntax,
         List              arguments
     ) throws TypeError
-    { return new Literal(arguments.getHead().setConst()); }
+    {
+        Value v = arguments.getHead();
+        v.setConst();
+        return v.getLiteral();
+    }
 }
-  
