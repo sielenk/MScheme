@@ -1,6 +1,5 @@
 package MScheme.code;
 
-import MScheme.machine.Machine;
 import MScheme.exceptions.*;
 
 

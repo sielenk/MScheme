@@ -1,7 +1,7 @@
 package MScheme.functions;
 
 import MScheme.util.Arity;
-import MScheme.machine.Machine;
+import MScheme.machine.State;
 import MScheme.code.Code;
 import MScheme.values.List;
 import MScheme.values.Function;
@@ -19,17 +19,13 @@ public abstract class Thunk
     { return _none; }
 
     protected final Code checkedCall(
-        Machine machine,
-        int     len,
-        List    arguments
+        State state,
+        int   len,
+        List  arguments
     ) throws RuntimeError, TypeError
-    {
-        return checkedCall(
-            machine
-        );
-    }
+    { return checkedCall(state); }
 
     protected abstract Code checkedCall(
-        Machine machine
+        State state
     ) throws RuntimeError, TypeError;
 }

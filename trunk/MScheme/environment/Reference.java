@@ -1,6 +1,6 @@
 package MScheme.environment;
 
-import MScheme.machine.Machine;
+import MScheme.machine.State;
 import MScheme.code.Code;
 import MScheme.values.Symbol;
 
@@ -26,7 +26,7 @@ public class Reference
     public int    getIndex () { return _index;  }
     
     
-    public Code executionStep(Machine machine)
+    public Code executionStep(State state)
         throws RuntimeError
-    { return machine.getEnvironment().lookup(this).getLiteral(); }
+    { return state.getEnvironment().lookup(this).getLiteral(); }
 }

@@ -12,4 +12,3 @@ public class AssvFunction
     protected boolean equal(Value fst, Value snd)
     { return fst.eqv(snd); }
 }
-

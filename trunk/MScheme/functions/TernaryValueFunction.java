@@ -1,6 +1,6 @@
 package MScheme.functions;
 
-import MScheme.machine.Machine;
+import MScheme.machine.State;
 import MScheme.code.Code;
 import MScheme.values.Value;
 
@@ -12,10 +12,10 @@ abstract public class TernaryValueFunction
     extends TernaryFunction
 {
     final protected Code checkedCall(
-        Machine machine,
-        Value   fst,
-        Value   snd,
-        Value   trd
+        State state,
+        Value fst,
+        Value snd,
+        Value trd
     ) throws RuntimeError, TypeError
     { return checkedCall(fst, snd, trd).getLiteral(); }
 

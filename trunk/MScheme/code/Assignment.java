@@ -1,6 +1,6 @@
 package MScheme.code;
 
-import MScheme.machine.Machine;
+import MScheme.machine.State;
 import MScheme.machine.Continuation;
 import MScheme.environment.Reference;
 import MScheme.values.Value;
@@ -25,19 +25,19 @@ final public class Assignment
     class AssignmentContinuation
         extends Continuation
     {
-        AssignmentContinuation(Machine machine)
-        { super(machine); }
+        AssignmentContinuation(State state)
+        { super(state); }
 
-        protected Code execute(Machine machine, Value evaluationResult)
+        protected Code execute(State state, Value evaluationResult)
         {
-            machine.getEnvironment().assign(_binding, evaluationResult);
+            state.getEnvironment().assign(_binding, evaluationResult);
             return evaluationResult.getLiteral();
         }
     }
 
-    public Code executionStep(Machine machine)
+    public Code executionStep(State state)
     {
-        new AssignmentContinuation(machine);
+        new AssignmentContinuation(state);
         return _valueCalculation;
     }
 }

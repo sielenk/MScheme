@@ -1,7 +1,7 @@
 package MScheme.functions;
 
 import MScheme.util.Arity;
-import MScheme.machine.Machine;
+import MScheme.machine.State;
 import MScheme.code.Code;
 import MScheme.values.Value;
 import MScheme.values.List;
@@ -20,13 +20,13 @@ public abstract class TernaryFunction
     { return _ternary; }
 
     protected final Code checkedCall(
-        Machine machine,
-        int     len,
-        List    arguments
+        State state,
+        int   len,
+        List  arguments
     ) throws RuntimeError, TypeError
     {
         return checkedCall(
-            machine,
+            state,
             arguments.getHead(),
             arguments.getTail().getHead(),
             arguments.getTail().getTail().getHead()
@@ -34,9 +34,9 @@ public abstract class TernaryFunction
     }
 
     protected abstract Code checkedCall(
-        Machine machine,
-        Value   fst,
-        Value   snd,
-        Value   trd
+        State state,
+        Value fst,
+        Value snd,
+        Value trd
     ) throws RuntimeError, TypeError;
 }

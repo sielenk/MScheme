@@ -1,6 +1,6 @@
 package MScheme.code;
 
-import MScheme.machine.Machine;
+import MScheme.machine.State;
 import MScheme.machine.Continuation;
 import MScheme.values.ValueFactory;
 import MScheme.values.Value;
@@ -18,20 +18,20 @@ final class PushContinuation
 
 
     private PushContinuation(
-        Machine  machine,
+        State    state,
         List     done,
         CodeList todo
     )
-    { super(machine); _done = done; _todo = todo; }
+    { super(state); _done = done; _todo = todo; }
 
     static Code prepareNext(
-        Machine  machine,
+        State    state,
         List     done,
         CodeList todo
     )
     {
         new PushContinuation(
-            machine,
+            state,
             done,
             todo.getTail()
         );
@@ -39,14 +39,14 @@ final class PushContinuation
         return todo.getHead();
     }
 
-    protected Code execute(Machine machine, Value value)
+    protected Code execute(State state, Value value)
         throws RuntimeError, TypeError
     {
         if (_todo.isEmpty()) {
-            return value.toFunction().call(machine, _done);
+            return value.toFunction().call(state, _done);
         } else {
             return prepareNext(
-                machine,
+                state,
                 ValueFactory.prepend(value, _done),
                 _todo
             );
@@ -66,10 +66,10 @@ final public class Application
     public static Code create(CodeList application)
     { return new Application(application); }
     
-    public Code executionStep(Machine machine)
+    public Code executionStep(State state)
     {
         return PushContinuation.prepareNext(
-            machine,
+            state,
             Empty.create(),
             _permutedApplication
         );
