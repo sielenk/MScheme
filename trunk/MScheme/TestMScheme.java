@@ -19,6 +19,7 @@ public class TestMScheme
         addTestSuite(MScheme.environment.TestEnvironment.class);
         addTestSuite(TestFunction.class);
 
+        addTestSuite(TestR5RS.class);
         addTestSuite(TestMachine.class);
     }
     
