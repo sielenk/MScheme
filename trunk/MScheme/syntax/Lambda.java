@@ -101,14 +101,10 @@ final class Lambda
             arity   = Arity.atLeast(minArity);
         }
 
-        StaticEnvironment
-        bodyCompilationEnv = compilationEnv.newChild(formals);
-
         return CompiledLambda.create(
             arity,
-            body.getCodeArray(
-                bodyCompilationEnv
-            )
+            body,
+            compilationEnv.createChild(formals)
         );
     }
 }

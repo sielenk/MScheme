@@ -90,50 +90,6 @@ public final class Environment
         );
     }
 
-    private static Environment create(
-        StaticEnvironment bindings,
-        Environment       parent
-    )
-    {
-        if (parent._bindings != bindings.getParent())
-        {
-            throw new RuntimeException(
-                "consistency failure: StaticEnvironment parent"
-            );
-        }
-
-        return new Environment(
-            bindings,
-            parent._values.createChild(
-                bindings.getSize()
-            )
-        );
-    }
-
-    private static Environment create(
-        StaticEnvironment  bindings,
-        Environment        parent,
-        Arity              arity,
-        List               values
-    ) throws PairExpected, ListExpected
-    {
-        if (parent._bindings != bindings.getParent())
-        {
-            throw new RuntimeException(
-                "consistency failure: StaticEnvironment parent"
-            );
-        }
-
-        return new Environment(
-            bindings,
-            parent._values.createChild(
-                arity,
-                values
-            )
-        );
-    }
-
-
     public static Environment getEmpty()
     {
         return create();
@@ -215,8 +171,8 @@ public final class Environment
         catch (CompileError e)
         {
             throw new RuntimeException(
-                      "unexpected CompileError"
-                  );
+                "unexpected CompileError"
+            );
         }
 
         return result;
@@ -231,35 +187,6 @@ public final class Environment
     public DynamicEnvironment getDynamic()
     {
         return _values;
-    }
-
-    public Environment getParent()
-    {
-        return new Environment(
-            _bindings.getParent(),
-            _values  .getParent()
-        );
-    }
-
-    public Environment newChild()
-    {
-        return newChild(_bindings.newChild());
-    }
-
-    public Environment newChild(
-        StaticEnvironment newFrame
-    )
-    {
-        return create(newFrame, this);
-    }
-
-    public Environment newChild(
-        StaticEnvironment newFrame,
-        Arity             arity,
-        List              values
-    ) throws ListExpected, PairExpected
-    {
-        return create(newFrame, this, arity, values);
     }
 
     // *** Envrionment access ************************************************
