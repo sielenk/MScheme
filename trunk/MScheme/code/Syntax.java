@@ -14,7 +14,7 @@ public abstract class Syntax
         throws SyntaxException
     { throw new SyntaxException(null); }
     
-    public abstract Code transform(
+    public abstract Code translateArguments(
         StaticEnvironment e,
         List              arguments
     ) throws SchemeException;
