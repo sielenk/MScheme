@@ -4,7 +4,7 @@ package MScheme.environment;
 import java.util.Vector;
 
 import MScheme.expressions.SExpr;
-import MScheme.expressions.SEmpty;
+import MScheme.expressions.SList;
 import MScheme.expressions.SSymbol;
 
 import MScheme.exceptions.SSymbolNotFoundException;
@@ -89,6 +89,12 @@ class EnvironmentImpl
              new Names(null),
              null
         );
+    }
+
+
+    public Environment getEmpty()
+    {
+        return new EnvironmentImpl();
     }
 
 
