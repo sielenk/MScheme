@@ -4,6 +4,7 @@ import MScheme.util.Arity;
 
 import MScheme.Value;
 import MScheme.Code;
+import MScheme.Syntax;
 
 import MScheme.machine.Machine;
 import MScheme.code.CodeList;

@@ -8,7 +8,6 @@ import MScheme.values.*;
 
 import MScheme.environment.Environment;
 import MScheme.environment.StaticEnvironment;
-import MScheme.environment.Token;
 import MScheme.exceptions.*;
 
 

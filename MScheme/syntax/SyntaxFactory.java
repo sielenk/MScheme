@@ -1,5 +1,7 @@
 package MScheme.syntax;
 
+import MScheme.Syntax;
+
 
 public abstract class SyntaxFactory
 {

@@ -6,12 +6,12 @@ import java.util.Vector;
 
 import MScheme.Value;
 import MScheme.Code;
+import MScheme.Syntax;
 
 import MScheme.util.Arity;
 import MScheme.machine.Machine;
 import MScheme.machine.Registers;
 import MScheme.values.*;
-import MScheme.syntax.Syntax;
 import MScheme.syntax.SyntaxFactory;
 import MScheme.functions.BuiltinTable;
 import MScheme.functions.Thunk;

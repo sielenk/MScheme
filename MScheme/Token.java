@@ -1,7 +1,9 @@
-package MScheme.environment;
+package MScheme;
 
 import MScheme.Code;
 import MScheme.values.List;
+
+import MScheme.environment.StaticEnvironment;
 
 import MScheme.exceptions.TypeError;
 import MScheme.exceptions.CompileError;

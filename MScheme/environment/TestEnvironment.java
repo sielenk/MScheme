@@ -2,11 +2,12 @@ package MScheme.environment;
 
 import MScheme.Value;
 import MScheme.Code;
+import MScheme.Syntax;
+import MScheme.Token;
 
 import MScheme.environment.*;
 import MScheme.values.*;
 import MScheme.code.*;
-import MScheme.syntax.Syntax;
 import MScheme.syntax.SyntaxFactory;
 import MScheme.exceptions.*;
 
