@@ -82,4 +82,8 @@ public final class WindContinuation
             )
         );
     }
+    
+    
+    protected String debugString()
+    { return "wind[" + _before + ", " + _after + "]"; }
 }
