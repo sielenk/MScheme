@@ -26,56 +26,56 @@
   (define update-null-environment
     (let ()
       (define (and-func def-env use-env . args)
-	(if (null? args)
-	  #t
-	  (let ((head (car args))
-		(tail (cdr args)))
-	    (if (null? tail)
+        (if (null? args)
+          #t
+          (let ((head (car args))
+                (tail (cdr args)))
+            (if (null? tail)
               head
-	      (list 'if head (cons 'and tail) #f)))))
+              (list 'if head (cons 'and tail) #f)))))
 
       (define (or-func def-env use-env . args)
-	(if (null? args)
+        (if (null? args)
           #f
-	  (let ((head (car args))
-		(tail (cdr args)))
-	    (if (null? tail)
-	      head
-	      (let ((id (unique-id)))
-		(list 'let (list (list id head))
-		      (list 'if id id (cons 'or tail))))))))
+          (let ((head (car args))
+                (tail (cdr args)))
+            (if (null? tail)
+              head
+              (let ((id (unique-id)))
+                (list 'let (list (list id head))
+                      (list 'if id id (cons 'or tail))))))))
 
       (define (make-promise proc)
-	(let ((result-ready? #f)
-	      (result #f))
-	  (lambda ()
-	    (if result-ready?
+        (let ((result-ready? #f)
+              (result #f))
+          (lambda ()
+            (if result-ready?
               result
-	      (let ((x (proc)))
-		(if result-ready?
+              (let ((x (proc)))
+                (if result-ready?
                   result
-		  (begin
-		    (set! result-ready? #t)
-		    (set! result x)
-		    result)))))))
+                  (begin
+                    (set! result-ready? #t)
+                    (set! result x)
+                    result)))))))
 
       (define (delay-func def-env use-env expression)
-	(list make-promise (list 'lambda '() expression)))
+        (list make-promise (list 'lambda '() expression)))
 
       (define (wrapper func)
-	(lambda (def-env use-env . args)
-	  (cons
-	   use-env
-	   (apply func def-env use-env args))))
+        (lambda (def-env use-env . args)
+          (cons
+           use-env
+           (apply func def-env use-env args))))
 
       (lambda (env)
-	(eval
-	 (list 'begin
+        (eval
+         (list 'begin
            (list 'define-syntax 'and        (wrapper and-func))
-	   (list 'define-syntax 'or         (wrapper or-func))
-	   (list 'define-syntax 'delay      (wrapper delay-func)))
-	 env)
-	env)))
+           (list 'define-syntax 'or         (wrapper or-func))
+           (list 'define-syntax 'delay      (wrapper delay-func)))
+         env)
+        env)))
 
   (update-null-environment (current-environment))
 
@@ -102,11 +102,15 @@
 
   (define (reduce func initial args)
     (if (null? args)
-      initial
-      (let helper ([head (car args)] [tail (cdr args)])
-        (if (null? tail)
-          head
-          (helper (func head (car tail)) (cdr tail))))))
+        initial
+        (let helper ([head (car args)] 
+                     [tail (cdr args)])
+          (if (null? tail)
+              head
+              (helper 
+                (func head
+                      (car tail))
+                (cdr tail))))))
 
 
   ;procedure+: reduce-right procedure initial list 
@@ -115,14 +119,16 @@
   ;    (reduce-right list '() '(1 2 3 4))      =>  (1 (2 (3 4)))
 
   (define (reduce-right func initial args)
-    (define (helper head tail)
-      (if (null? tail)
-        head
-        (func head (helper (car tail) (cdr tail)))))
-
     (if (null? args)
-      initial
-      (helper (car args) (cdr args))))
+        initial
+        (let helper ([head (car args)]
+                     [tail (cdr args)])
+          (if (null? tail)
+              head
+              (func head 
+                    (helper (car tail)
+                            (cdr tail)))))))
+
 
 
   ;procedure+: fold-right procedure initial list 
@@ -156,20 +162,16 @@
   ;      (fold-right (lambda (x r) (append r (list x))) '() items))
 
   (define (fold-right func initial args)
-    (define (helper head tail)
-      (func
-        head
-        (if (null? tail)
-          initial
-          (helper
-            (car tail)
-            (cdr tail)))))
-
     (if (null? args)
       initial
-      (helper
-        (car args)
-        (cdr args))))
+      (let helper ([head (car args)]
+                   [tail (cdr args)])
+        (func head
+              (if (null? tail)
+                  initial
+                  (helper (car tail)
+                          (cdr tail)))))))
+
 
 
   ;procedure+: fold-left procedure initial list 
@@ -190,18 +192,22 @@
   ;      (fold-left (lambda (x y) (cons y x)) () items))
 
   (define (fold-left func initial args)
-    (let helper ([head initial] [tail args])
+    (let helper ([head initial]
+                 [tail args   ])
       (if (null? tail)
-        head
-        (helper (func head (car tail)) (cdr tail)))))
+          head
+          (helper
+            (func head
+                  (car tail))
+            (cdr tail)))))
 
 
   (define update-scheme-report-environment
     (let ()
       (define (primitve-map f l)
         (fold-right
-	  (lambda (x r)
-	    (cons (f x) r))
+          (lambda (x r)
+            (cons (f x) r))
           '()
           l))
 
@@ -210,7 +216,7 @@
           (if (null? (car rest))
             '()
             (cons
-	      (primitve-map car rest)
+              (primitve-map car rest)
               (loop (primitve-map cdr rest))))))
 
       (define (map func . lists)
@@ -307,42 +313,43 @@
                     thunk
                     (lambda () (set! cop old-cop))))))))
 
-	(define (newline . args) (apply display #\newline args))
+        (define (newline . args) (apply display #\newline args))
 
-	(define (make-load env)
-	  (lambda (filename)
-	    (let ([port (open-input-file filename)])
-	      (let eval-expr ([expr (read port)] [result '()])
-		(if (eof-object? expr)
+        (define (make-load env)
+          (lambda (filename)
+            (let ([port (open-input-file filename)])
+              (let eval-expr ([expr (read port)] [result '()])
+                (if (eof-object? expr)
                   result
                   (eval-expr (read port) (eval expr env)))))))
 
-	(define (null-environment version)
-	  (update-null-environment
-	    (basic-null-environment version)))
+        (define (null-environment version)
+          (update-null-environment
+            (basic-null-environment version)))
 
-	(define (scheme-report-environment version)
-	  (update-scheme-report-environment
-	    (basic-scheme-report-environment version)))
+        (define (scheme-report-environment version)
+          (update-scheme-report-environment
+            (update-null-environment
+              (basic-scheme-report-environment version))))
 
-	(define (make-definition sym)
-	  (list 'define sym (eval sym (current-environment))))
+        (define (make-definition sym)
+          (list 'define sym (eval sym (current-environment))))
 
-	(define definition-list
-	  (cons 'begin
-	    (map make-definition 
-	      '(map for-each force 
-		call-with-input-file call-with-output-file 
-		current-input-port current-output-port 
-		with-input-from-file with-output-to-file 
-		read read-char peek-char char-ready? 
-		write display write-char newline
-		null-environment
-		scheme-report-environment))))
+        (define definition-list
+          (cons 'begin
+            (map make-definition 
+              '(map for-each force 
+                call-with-input-file call-with-output-file 
+                current-input-port current-output-port 
+                with-input-from-file with-output-to-file 
+                read read-char peek-char char-ready? 
+                write display write-char newline
+                null-environment
+                scheme-report-environment))))
 
-	(lambda (env)
-	  (eval definition-list env)
-	  (eval (list 'define 'load (make-load env)) env)
-	  env))))
+        (lambda (env)
+          (eval definition-list env)
+          (eval (list 'define 'load (make-load env)) env)
+          env))))
 
   (update-scheme-report-environment (current-environment)))
