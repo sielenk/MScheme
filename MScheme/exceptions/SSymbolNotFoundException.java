@@ -7,6 +7,5 @@ public class SSymbolNotFoundException extends SException
     SSymbolNotFoundException(SSymbol symbol)
     {
         super(symbol);
-	}
+    }
 }
-
