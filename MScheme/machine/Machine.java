@@ -152,8 +152,28 @@ public class Machine
 
         try {
             dynamicBindings.define(
+                ValueFactory.createSymbol("car"),
+                ValueFactory.createFunction("Car")
+            );
+            dynamicBindings.define(
+                ValueFactory.createSymbol("cdr"),
+                ValueFactory.createFunction("Cdr")
+            );
+            dynamicBindings.define(
+                ValueFactory.createSymbol("cons"),
+                ValueFactory.createFunction("Cons")
+            );
+            dynamicBindings.define(
                 ValueFactory.createSymbol(">"),
                 ValueFactory.createFunction("NumberGT")
+            );
+            dynamicBindings.define(
+                ValueFactory.createSymbol(">="),
+                ValueFactory.createFunction("NumberGE")
+            );
+            dynamicBindings.define(
+                ValueFactory.createSymbol("<="),
+                ValueFactory.createFunction("NumberLE")
             );
             dynamicBindings.define(
                 ValueFactory.createSymbol("<"),
