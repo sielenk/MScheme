@@ -127,8 +127,8 @@ public final class Machine
             }
             catch (SchemeException error)
             {
-                // the java stack is unwound
-                // now go for the scheme's ...
+                // the Java stack is unwound
+                // now go for the Scheme's ...
 
                 // remember what happened, to be able
                 // to "rethrow" the caught exception again
