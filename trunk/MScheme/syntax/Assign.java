@@ -27,11 +27,10 @@ abstract class Assign
 
     protected Code checkedTranslate(
         StaticEnvironment syntax,
-	    int               len,
         List              arguments
     ) throws CompileError, TypeError
     {
-        if (len > 2) {
+        if (arguments.getLength() > 2) {
 	        arityError(arguments);
 	    }
 	    

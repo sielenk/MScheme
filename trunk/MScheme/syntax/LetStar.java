@@ -29,7 +29,6 @@ final class LetStar
 
     protected Code checkedTranslate(
         StaticEnvironment environment,
-	    int               len,
         List              arguments
     ) throws CompileError, TypeError
     {

@@ -23,7 +23,6 @@ final class Quote
     
     protected Code checkedTranslate(
         StaticEnvironment syntax,
-	    int               len,
         List              arguments
     ) throws TypeError
     {

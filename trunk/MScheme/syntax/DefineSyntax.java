@@ -41,7 +41,6 @@ final class Macro
     
     protected Code checkedTranslate(
         StaticEnvironment use_env,
-	    int               len,
         List              arguments
     ) throws CompileError, TypeError
     {
@@ -82,7 +81,6 @@ final class DefineSyntax
 
     protected Code checkedTranslate(
         StaticEnvironment syntax,
-	    int               len,
         List              arguments
     ) throws CompileError, TypeError
     {
