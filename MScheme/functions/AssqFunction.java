@@ -12,4 +12,3 @@ public class AssqFunction
     protected boolean equal(Value fst, Value snd)
     { return fst.eq(snd); }
 }
-

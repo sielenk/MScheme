@@ -12,4 +12,3 @@ public class MemqFunction
     protected boolean equal(Value fst, Value snd)
     { return fst.eq(snd); }
 }
-

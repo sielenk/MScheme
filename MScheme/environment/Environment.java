@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import MScheme.util.Arity;
 import MScheme.machine.Machine;
+import MScheme.machine.State;
 import MScheme.values.*;
 import MScheme.code.Code;
 import MScheme.syntax.Syntax;
@@ -135,8 +136,8 @@ public class Environment
             getImplementationEnvironment().define(
         	    Symbol.create("current-environment"),
         	    new Thunk() {
-			        protected Code checkedCall(Machine machine)
-                    { return machine.getEnvironment().getLiteral(); }
+			        protected Code checkedCall(State state)
+                    { return state.getEnvironment().getLiteral(); }
 			    }
         	);
 

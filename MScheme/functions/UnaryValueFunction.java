@@ -1,6 +1,6 @@
 package MScheme.functions;
 
-import MScheme.machine.Machine;
+import MScheme.machine.State;
 import MScheme.code.Code;
 import MScheme.values.Value;
 
@@ -12,8 +12,8 @@ abstract public class UnaryValueFunction
     extends UnaryFunction
 {
     final protected Code checkedCall(
-        Machine machine,
-        Value   fst
+        State state,
+        Value fst
     ) throws RuntimeError, TypeError
     { return checkedCall(fst).getLiteral(); }
 

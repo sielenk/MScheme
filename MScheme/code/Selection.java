@@ -1,7 +1,7 @@
 package MScheme.code;
 
 import MScheme.values.Value;
-import MScheme.machine.Machine;
+import MScheme.machine.State;
 import MScheme.machine.Continuation;
 
 
@@ -26,16 +26,16 @@ final public class Selection
     class SelectContinuation
         extends Continuation
     {
-        SelectContinuation(Machine machine)
-        { super(machine); }
+        SelectContinuation(State state)
+        { super(state); }
 
-        protected Code execute(Machine machine, Value evaluationResult)
+        protected Code execute(State state, Value evaluationResult)
         { return evaluationResult.isTrue() ? _onTrue : _onFalse; }
     }
-    
-    public Code executionStep(Machine machine)
+
+    public Code executionStep(State state)
     {
-        new SelectContinuation(machine);
+        new SelectContinuation(state);
         return _flag;
     }
 }

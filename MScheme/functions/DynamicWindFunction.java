@@ -1,6 +1,6 @@
 package MScheme.functions;
 
-import MScheme.machine.Machine;
+import MScheme.machine.State;
 import MScheme.machine.WindContinuation;
 import MScheme.code.Code;
 import MScheme.code.CodeList;
@@ -20,17 +20,17 @@ public class DynamicWindFunction
 
 
     protected Code checkedCall(
-        Machine machine,
-        Value   fst,
-        Value   snd,
-        Value   trd
+        State state,
+        Value fst,
+        Value snd,
+        Value trd
     ) throws RuntimeError, TypeError
     {
         Code before = createCall(fst);
         Code thunk  = createCall(snd);
         Code after  = createCall(trd);
 
-        return WindContinuation.create(machine, before, thunk, after);
+        return WindContinuation.create(state, before, thunk, after);
     }
     
     private static Code createCall(Value v)
@@ -43,4 +43,3 @@ public class DynamicWindFunction
 	    );
     }
 }
-
