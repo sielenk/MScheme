@@ -1,14 +1,14 @@
 package MScheme.exceptions;
 
-import MScheme.values.SchemeVector;
+import MScheme.values.ScmVector;
 
 
 public class UninitializedVectorException
     extends VectorException
 {
     public UninitializedVectorException(
-        SchemeVector vector,
-        int          index
+        ScmVector vector,
+        int       index
     )
     { super(vector, index); }
 }

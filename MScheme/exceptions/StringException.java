@@ -1,6 +1,6 @@
 package MScheme.exceptions;
 
-import MScheme.values.SchemeString;
+import MScheme.values.ScmString;
 
 
 public class StringException
@@ -9,8 +9,8 @@ public class StringException
     private final int _index;
     
     public StringException(
-        SchemeString string,
-        int          index
+        ScmString string,
+        int       index
     )
     { super(string); _index = index; }
 }

@@ -49,7 +49,7 @@ public class InputPort
         );
     }
 
-    public static InputPort create(SchemeString filename)
+    public static InputPort create(ScmString filename)
         throws OpenException
     { return create(filename.getJavaString()); }
 
@@ -201,7 +201,7 @@ public class InputPort
         }
     }
     
-    private SchemeVector parseVector(int index)
+    private ScmVector parseVector(int index)
         throws IOException, ParseException
     {
         int c = skipWSread();
@@ -216,8 +216,8 @@ public class InputPort
         } else {
             _reader.unread(c);
             
-            Value        head   = parseDatum();
-            SchemeVector result = parseVector(index + 1);
+            Value     head   = parseDatum();
+            ScmVector result = parseVector(index + 1);
             
             try {
                 result.set(index, head);
@@ -280,7 +280,7 @@ public class InputPort
         }
     }
     
-    private SchemeString parseString()
+    private ScmString parseString()
         throws IOException, ParseException
     {
         StringBuffer buf = new StringBuffer();

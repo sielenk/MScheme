@@ -135,7 +135,7 @@ public class TestInputPort
     {
         Value one   = ValueFactory.createNumber(1);
         Value two   = ValueFactory.createNumber(2);
-        SchemeVector v = ValueFactory.createVector(3, one);
+        ScmVector v = ScmVector.create(3, one);
         v.set(2, two);
         StringReader source = new StringReader(
             "#() #(1 1) #(1 1 2)"
