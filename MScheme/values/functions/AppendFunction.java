@@ -35,10 +35,10 @@ import MScheme.exceptions.*;
 
 
 final class AppendHelper1
-            extends Reducer
+    extends Reducer
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     AppendHelper1(Value initial)
@@ -54,14 +54,14 @@ final class AppendHelper1
 
 
 final class AppendHelper2
-            extends Reducer
+    extends Reducer
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     final static AppendHelper2 INSTANCE
-    = new AppendHelper2();
+        = new AppendHelper2();
 
     private AppendHelper2()
     {
@@ -69,7 +69,7 @@ final class AppendHelper2
     }
 
     protected Value combine(Value fst, Value snd)
-    throws RuntimeError, TypeError
+        throws RuntimeError, TypeError
     {
         return new AppendHelper1(snd).foldRight(fst.toList());
     }
@@ -77,14 +77,14 @@ final class AppendHelper2
 
 
 public final class AppendFunction
-            extends Function
+    extends Function
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     public final static AppendFunction INSTANCE
-    = new AppendFunction();
+        = new AppendFunction();
 
     protected Arity getArity()
     {
@@ -92,7 +92,7 @@ public final class AppendFunction
     }
 
     public Code call(Registers state, List arguments)
-    throws RuntimeError, TypeError
+        throws RuntimeError, TypeError
     {
         return AppendHelper2.INSTANCE.reduceRight(arguments).getLiteral();
     }
