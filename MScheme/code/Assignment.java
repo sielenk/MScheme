@@ -17,7 +17,7 @@ public final class Assignment
     private final Reference _binding;
     private final Code      _valueCalculation;
 
-    public Assignment(
+    private Assignment(
         Reference binding,
         Code      valueCalculation
     ) {
@@ -25,6 +25,11 @@ public final class Assignment
         _valueCalculation = valueCalculation;
     }
 
+    public static Assignment create(
+        Reference binding,
+        Code      valueCalculation
+    )
+    { return new Assignment(binding, valueCalculation); }
 
     public Code executionStep(Registers registers)
     {
