@@ -110,14 +110,14 @@ public class TestMachine
     {
         try
         {
-            assertTrue(_unval.getCode(_environment.getStatic()) != null);
+            assertTrue(_unval.getCompiled(_environment.getStatic()) != null);
             fail("expected CantCompileException");
         }
         catch (CantCompileException e)
         { }
 
-        assertTrue(_val1.getCode(_environment.getStatic()) != null);
-        assertTrue(_val2.getCode(_environment.getStatic()) != null);
+        assertTrue(_val1.getCompiled(_environment.getStatic()) != null);
+        assertTrue(_val2.getCompiled(_environment.getStatic()) != null);
     }
 
     public void testEnvironment()

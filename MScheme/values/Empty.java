@@ -105,18 +105,18 @@ public final class Empty
         throw new PairExpected(this);
     }
 
-    public Code getCode(StaticEnvironment compilationEnv)
+    public Code getCompiled(StaticEnvironment compilationEnv)
         throws CantCompileException
     {
         throw new CantCompileException(this);
     }
 
-    public Code[] getCodeArray(StaticEnvironment compilationEnv)
+    public Code[] getCompiledArray(StaticEnvironment compilationEnv)
     {
         return ARRAY;
     }
 
-    public Code[] getCodeArray(StaticEnvironment compilationEnv, int index)
+    public Code[] getCompiledArray(StaticEnvironment compilationEnv, int index)
     {
         return new Code[index];
     }

@@ -107,7 +107,7 @@ public final class Symbol
     }
 
 
-    public Code getCode(StaticEnvironment env)
+    public Code getCompiled(StaticEnvironment env)
         throws SymbolNotFoundException, UnexpectedSyntax
     {
         return env.getDelayedReferenceFor(this);

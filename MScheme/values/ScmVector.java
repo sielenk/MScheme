@@ -244,7 +244,7 @@ public final class ScmVector
     }
 
 
-    public Code getCode(StaticEnvironment e)
+    public Code getCompiled(StaticEnvironment e)
         throws CantCompileException
     {
         throw new CantCompileException(this);

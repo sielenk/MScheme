@@ -72,7 +72,7 @@ final class Letrec
         StaticEnvironment
             bodyCompilationEnv = compilationEnv.createChild(formals);
 
-        Code[] compiledBody = body.getCodeArray(bodyCompilationEnv);
+        Code[] compiledBody = body.getCompiledArray(bodyCompilationEnv);
 
         Code[] compiledLetrec
             = new Code[numberOfFormals + compiledBody.length];
@@ -87,7 +87,7 @@ final class Letrec
             compiledLetrec[index++]
                 = Set.translate(
                       bodyCompilationEnv.getReferenceFor(formal),
-                      init.getCode(bodyCompilationEnv)
+                      init.getCompiled(bodyCompilationEnv)
                   );
 
             formals = formals.getTail();
