@@ -65,12 +65,12 @@ public abstract class ValueFactory
     public static SchemeNumber createNumber(int value)
     { return new SchemeNumber(value); }
     
-    public static SchemeCharacter createCharacter(char c)
-    { return new SchemeCharacter(c); }
+    public static SchemeChar createChar(char c)
+    { return new SchemeChar(c); }
     
     public static SchemeString createString(String s)
     { return new SchemeString(s); }
-    
+
     public static SchemeVector createVector()
     { return SchemeVector.getInstance(0, null); }
 
