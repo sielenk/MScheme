@@ -17,7 +17,7 @@ public final class Selection
     private final Code _onTrue;
     private final Code _onFalse;
 
-    public Selection(
+    private Selection(
         Code test,
         Code onTrue,
         Code onFalse
@@ -27,6 +27,13 @@ public final class Selection
         _onTrue  = onTrue;
         _onFalse = onFalse;
     }
+
+    public static Selection create(
+        Code test,
+        Code onTrue,
+        Code onFalse
+    )
+    { return new Selection(test, onTrue, onFalse); }
 
     public Code executionStep(Registers registers)
     {
