@@ -50,7 +50,7 @@ public final class Application
     {
         if (index == 0)
         {
-            new ApplyContinuation(
+            ApplyContinuation.create(
                 state,
                 done
             );

@@ -43,13 +43,21 @@ public final class ApplyContinuation
 
     private final List _arguments;
 
-    ApplyContinuation(
+    private ApplyContinuation(
         Registers state,
         List      arguments
     )
     {
         super(state);
         _arguments = arguments;
+    }
+
+    public static void create(
+        Registers state,
+        List      arguments
+    )
+    {
+        new ApplyContinuation(state, arguments);
     }
 
     protected Code execute(Registers state, Value value)
