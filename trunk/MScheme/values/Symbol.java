@@ -14,9 +14,16 @@ public final class Symbol
     final private String _symbol;
     
     
-    Symbol(String symbol)
-    { _symbol = symbol.intern(); }
+    private Symbol(String javaString)
+    { _symbol = javaString.intern(); }
     
+    public static Symbol create(String javaString)
+    { return new Symbol(javaString); }
+
+    public static Symbol create(SchemeString schemeString)
+    { return create(schemeString.getJavaString()); }
+
+
     public String getKey()
     { return _symbol; }
     
