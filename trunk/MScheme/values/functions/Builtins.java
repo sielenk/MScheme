@@ -20,6 +20,9 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values.functions;
 
+import java.io.StringReader;
+import java.io.StringWriter;
+
 import MScheme.util.Arity;
 
 import MScheme.Value;
@@ -823,4 +826,23 @@ public class Builtins
     
     public final static Function
         __current_2Denvironment = CurrentEnvironment.INSTANCE;
+
+    public final static Value __open_2Dinput_2Dstring(Value argument)
+        throws TypeError
+    {
+        return InputPort.create(
+            new StringReader(
+                argument.toScmString().getJavaString()
+            )
+        );
+    }
+
+//  not very usefull yet ... needs GET-OUTPUT-STRING
+//  public final static Value __open_2Doutput_2Dstring()
+//      throws TypeError
+//  {
+//      return OutputPort.create(
+//          new StringWriter()
+//      );
+//  }
 }
