@@ -170,12 +170,14 @@ final class PairOrList
     public Code getCode(StaticEnvironment compilationEnv)
         throws SchemeException
     {
+        List list = toList();
+
         return
-            getHead()
+            list.getHead()
             .getSyntax(compilationEnv)
             .translate(
                 compilationEnv,
-                toList().getTail()
+                list.getTail()
             );
     }
 
