@@ -52,7 +52,10 @@ final class Macro
         = "$Id$";
 
 
-    final static Machine machine = new Machine();
+    final static Machine machine = 
+        new Machine(
+            Environment.getSchemeReportEnvironment()
+        );
 
     private final static Code _apply
         = ApplyFunction.INSTANCE.getLiteral();
