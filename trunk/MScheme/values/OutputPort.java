@@ -7,6 +7,8 @@ import java.io.IOException;
 
 import MScheme.Value;
 
+import MScheme.machine.Machine;
+
 import MScheme.exceptions.OpenException;
 import MScheme.exceptions.WriteException;
 import MScheme.exceptions.CloseException;
@@ -55,7 +57,7 @@ public class OutputPort
 
     public static OutputPort create()
     {
-        return create(new OutputStreamWriter(System.out));
+        return create(Machine.stdout);
     }
 
 
