@@ -165,6 +165,28 @@ public class TestInputPort
         assert(in.read().eq(ValueFactory.createSymbol("-")));
         assert(in.read().eq(ValueFactory.createSymbol("...")));
         assert(in.read().eq(ValueFactory.createSymbol("?12")));
-    }   
+    }
+
+    public void testAbbrev()
+        throws Exception
+    {
+        Value test = ValueFactory.createSymbol("hallo");
+        StringReader source = new StringReader(
+            "'a ' a `a ,a ,@a"
+        );
+        InputPort in = ValueFactory.createInputPort(source);
+
+        Symbol a   = ValueFactory.createSymbol("a");
+        Symbol q   = ValueFactory.createSymbol("quote");
+        Symbol qq  = ValueFactory.createSymbol("quasiquote");
+        Symbol uq  = ValueFactory.createSymbol("unquote");
+        Symbol uqs = ValueFactory.createSymbol("unquote-splicing");
+    
+        assert(in.read().equal(ValueFactory.createList(q,   a)));
+        assert(in.read().equal(ValueFactory.createList(q,   a)));
+        assert(in.read().equal(ValueFactory.createList(qq,  a)));
+        assert(in.read().equal(ValueFactory.createList(uq,  a)));
+        assert(in.read().equal(ValueFactory.createList(uqs, a)));
+    }
 }
 
