@@ -15,7 +15,6 @@ public class TestMScheme
     
         addTestSuite(MScheme.util.TestArity.class);
 
-        addTestSuite(MScheme.values.TestValue.class);
         addTestSuite(MScheme.values.TestList.class);
         addTestSuite(MScheme.values.TestInputPort.class);
 
@@ -23,8 +22,10 @@ public class TestMScheme
 
         addTestSuite(TestR5RS.class);
         addTestSuite(TestMachine.class);
+        
+        addTestSuite(MScheme.tests.TestValue.class);
     }
-    
+
     public void testDummy()
     {
         Assert.fail("failure Test");
