@@ -20,9 +20,12 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.environment;
 
+import java.io.StringReader;
 import java.io.Writer;
 import java.io.IOException;
 import java.util.Vector;
+
+import MScheme.Init;
 
 import MScheme.Value;
 import MScheme.Code;
@@ -41,68 +44,9 @@ import MScheme.values.functions.BuiltinTable;
 import MScheme.values.functions.Thunk;
 import MScheme.values.functions.ValueThunk;
 import MScheme.values.functions.TernaryValueFunction;
-import MScheme.values.functions.YCombinator;
-import MScheme.values.functions.SpawnFunction;
 
 import MScheme.exceptions.*;
 
-
-class UniqueId
-    extends ValueThunk
-{
-    public final static String id
-        = "$Id$";
-
-
-    public final static UniqueId INSTANCE
-        = new UniqueId();
-
-    private UniqueId()
-    { }
-
-    protected Value checkedCall()
-    {
-        return Symbol.createUnique();
-    }
-}
- 
-class CurrentEnvironment
-    extends Thunk
-{
-    public final static String id
-        = "$Id$";
-
-
-    public final static CurrentEnvironment INSTANCE
-        = new CurrentEnvironment();
-
-    private CurrentEnvironment()
-    { }
-
-    protected Code checkedCall(Registers state)
-    {
-        return state.getEnvironment().getLiteral();
-    }
-}
-
-class LastError
-    extends ValueThunk
-{
-    public final static String id
-        = "$Id$";
-
-
-    public final static LastError INSTANCE
-        = new LastError();
-
-    private LastError()
-    { }
-
-    protected Value checkedCall()
-    {
-        return Machine.getLastError();
-    }
-}
 
 public final class Environment
     extends ValueDefaultImplementations
@@ -221,103 +165,8 @@ public final class Environment
     }
 
 
-    private static Value   _nullEnvironmentHook         = null;
-    private static Value   _schemeReportEnvironmentHook = null;
-
-    private static void initHooks()
-    {
-        if (_implementationEnvironment == null)
-        {
-            return;
-        }
-        if (_nullEnvironmentHook != null)
-        {
-            return;
-        }
-
-        try
-        {
-            _implementationEnvironment.define(
-                Symbol.create("unique-id"),
-                UniqueId.INSTANCE
-            );
-
-            _implementationEnvironment.define(
-                Symbol.create("current-environment"),
-                CurrentEnvironment.INSTANCE
-            );
-
-            _implementationEnvironment.define(
-                Symbol.create("y"),
-                YCombinator.INSTANCE
-            );
-
-            _implementationEnvironment.define(
-                Symbol.create("spawn"),
-                SpawnFunction.INSTANCE
-            );
-
-            _implementationEnvironment.define(
-                Symbol.create("last-error"),
-                LastError.INSTANCE
-            );
-
-            _nullEnvironmentHook =
-                Machine.evaluate(
-                    InputPort.create("bootstrap_null.scm").read(),
-                    _implementationEnvironment
-                );
-
-            _schemeReportEnvironmentHook =
-                Machine.evaluate(
-                    InputPort.create("bootstrap_sre.scm").read(),
-                    _implementationEnvironment
-                );
-        }
-        catch (SchemeException e)
-        {
-            throw new RuntimeException(
-                      "unexpected SchemeError:\n"
-                      + e.toString()
-                  );
-        }
-    }
-
-    private static void callHook(Environment env, Value hook)
-    {
-        if (hook != null)
-        {
-            Value null_buffer = _nullEnvironmentHook;
-            Value  sre_buffer = _schemeReportEnvironmentHook;
-
-            try
-            {
-                synchronized (Environment.class)
-                {
-                    _nullEnvironmentHook         = null;
-                    _schemeReportEnvironmentHook = null;
-
-                    Machine.evaluate(hook, env);
-                }
-            }
-            catch (SchemeException e)
-            {
-                throw new RuntimeException(
-                          "nullEnvironmentHook caused an exception:\n"
-                          + e.toString()
-                      );
-            }
-            finally
-            {
-                _nullEnvironmentHook         = null_buffer;
-                _schemeReportEnvironmentHook =  sre_buffer;
-            }
-        }
-    }
-
     public static Environment getEmpty()
     {
-        initHooks();
         return create();
     }
 
@@ -377,8 +226,6 @@ public final class Environment
             );
         }
 
-        callHook(result, _nullEnvironmentHook);
-
         return result;
     }
 
@@ -402,8 +249,6 @@ public final class Environment
                       "unexpected CompileError"
                   );
         }
-
-        callHook(result, _schemeReportEnvironmentHook);
 
         return result;
     }
@@ -484,11 +329,10 @@ public final class Environment
 
         try
         {
-            result = (Value)_frames[
-                         ref.getLevel()
-                     ].get(
-                         ref.getIndex()
-                     );
+            Vector frame = _frames         [ref.getLevel()];
+            Object obj   =  frame.elementAt(ref.getIndex());
+
+            result = (Value)obj;
         }
         catch (ArrayIndexOutOfBoundsException e)
         {
