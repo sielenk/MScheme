@@ -135,6 +135,21 @@ public abstract class Pair
 
     // implementation of Compound
 
+    public Value getCopy()
+    {
+        Value second = getSecond();
+
+        if (second.isPair())
+        {
+            second = second.getCopy();
+        }
+
+        return create(
+            getFirst(),
+            second
+        );
+    }
+
     protected final Value getConstCopy()
     {
         return createConst(getFirst(), getSecond());
