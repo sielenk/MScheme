@@ -25,9 +25,8 @@ public final class Symbol
     private Symbol(String javaString)
     { _key = javaString; }
 
-    public static Symbol create(String javaString)
+    public static Symbol create(String key)
     {
-        final String        key   = javaString.intern();
         final WeakReference ref   = (WeakReference)_map.get(key);
         Symbol              value = (ref != null) ? (Symbol)ref.get() : null;
 
