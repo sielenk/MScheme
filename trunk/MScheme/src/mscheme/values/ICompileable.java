@@ -34,7 +34,8 @@ public interface ICompileable
 
     /**
      * Compiles a value as normal code.
+     * @throws InterruptedException
      */
     Object getForceable(StaticEnvironment compilationEnv)
-        throws SchemeException;
+        throws SchemeException, InterruptedException;
 }

@@ -49,5 +49,5 @@ public abstract class Function
 
     // abstract function interface
     public abstract Object call(Registers state, IList arguments)
-		throws SchemeException;
+		throws SchemeException, InterruptedException;
 }

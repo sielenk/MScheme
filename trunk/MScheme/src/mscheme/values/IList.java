@@ -50,10 +50,10 @@ public interface IList
             throws PairExpected;
 
     Object[] getCompiledArray(StaticEnvironment compilationEnv)
-            throws SchemeException;
+            throws SchemeException, InterruptedException;
 
     Object[] getCompiledArray(StaticEnvironment compilationEnv, int index)
-            throws SchemeException;
+            throws SchemeException, InterruptedException;
 
     Object[] getArray();
 

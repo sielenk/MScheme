@@ -1,22 +1,22 @@
-/* The implementation of scheme's 'lambda'.
-   Copyright (C) 2001  Marvin H. Sielenkemper
-
-This file is part of MScheme.
-
-MScheme is free software; you can redistribute it and/or modify 
-it under the terms of the GNU General Public License as published by 
-the Free Software Foundation; either version 2 of the License, 
-or (at your option) any later version. 
-
-MScheme is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details. 
-
-You should have received a copy of the GNU General Public License
-along with MScheme; see the file COPYING. If not, write to 
-the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA  02111-1307, USA. */
+/*
+ * The implementation of scheme's 'lambda'. Copyright (C) 2001 Marvin H.
+ * Sielenkemper
+ * 
+ * This file is part of MScheme.
+ * 
+ * MScheme is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * MScheme is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 
 package mscheme.code;
 
@@ -36,66 +36,43 @@ import mscheme.util.Arity;
 import mscheme.values.IList;
 import mscheme.values.functions.CheckedFunction;
 
-
 public final class CompiledLambda
-    implements IForceable, IReduceable
+        implements IForceable, IReduceable
 {
-    public final static String CVS_ID
-        = "$Id$";
+    public final static String CVS_ID = "$Id$";
 
+    private final Arity _arity;
 
-    private final Arity  _arity;
-    private final int    _frameSize;
-    private       Object _compiledBody;
+    private final int _frameSize;
 
-    private CompiledLambda(
-        Arity  arity,
-        int    frameSize,
-        Object compiledBody
-    )
+    private Object _compiledBody;
+
+    private CompiledLambda(Arity arity, int frameSize, Object compiledBody)
     {
-        _arity        = arity;
-        _frameSize    = frameSize;
+        _arity = arity;
+        _frameSize = frameSize;
         _compiledBody = compiledBody;
     }
 
-    public static CompiledLambda create(
-        Arity             arity,
-        int               frameSize,
-        Object            compiledBody
-    )
+    public static CompiledLambda create(Arity arity, int frameSize,
+            Object compiledBody)
     {
-        return new CompiledLambda(
-            arity,
-            frameSize,
-            compiledBody
-        );
+        return new CompiledLambda(arity, frameSize, compiledBody);
     }
 
-    public static CompiledLambda create(
-        Arity             arity,
-        IList              body,
-        StaticEnvironment env
-    )
-        throws SchemeException
+    public static CompiledLambda create(Arity arity, IList body,
+            StaticEnvironment env)
+            throws SchemeException, InterruptedException
     {
-        Object compiledBody = Sequence.create(
-            body.getCompiledArray(env)
-        );
+        Object compiledBody = Sequence.create(body.getCompiledArray(env));
 
-        return create(
-            arity,
-            env.getSize(),
-            compiledBody
-        );
+        return create(arity, env.getSize(), compiledBody);
     }
 
     final class Closure
-        extends CheckedFunction
+            extends CheckedFunction
     {
-        public final static String CVS_ID
-            = "$Id$";
-
+        public final static String CVS_ID = "$Id$";
 
         private final DynamicEnvironment _enclosingEnvironment;
 
@@ -105,7 +82,7 @@ public final class CompiledLambda
         }
 
         public void write(Writer destination)
-        throws IOException
+                throws IOException
         {
             destination.write("#[closure]");
         }
@@ -115,17 +92,11 @@ public final class CompiledLambda
             return _arity;
         }
 
-        protected Object checkedCall(
-			Registers state,
-            IList      arguments
-        ) throws ListExpected, PairExpected
+        protected Object checkedCall(Registers state, IList arguments)
+                throws ListExpected, PairExpected
         {
-            DynamicEnvironment newEnvironment =
-                _enclosingEnvironment.createChild(
-                    _arity,
-                    _frameSize,
-                    arguments
-                );
+            DynamicEnvironment newEnvironment = _enclosingEnvironment
+                    .createChild(_arity, _frameSize, arguments);
 
             state.setEnvironment(newEnvironment);
 
@@ -134,7 +105,7 @@ public final class CompiledLambda
     }
 
     public Object force()
-        throws CompileError
+            throws CompileError
     {
         _compiledBody = Compiler.force(_compiledBody);
         return this;
@@ -145,8 +116,8 @@ public final class CompiledLambda
         return "lambda:<" + _compiledBody + '>';
     }
 
-	public Object reduce(Registers state)
-	{
-		return new Closure(state.getEnvironment());
-	}
+    public Object reduce(Registers state)
+    {
+        return new Closure(state.getEnvironment());
+    }
 }

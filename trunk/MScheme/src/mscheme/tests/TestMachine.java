@@ -1,22 +1,21 @@
-/* 
- Copyright (C) 2001  Marvin H. Sielenkemper
-
- This file is part of MScheme.
-
- MScheme is free software; you can redistribute it and/or modify 
- it under the terms of the GNU General Public License as published by 
- the Free Software Foundation; either version 2 of the License, 
- or (at your option) any later version. 
-
- MScheme is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details. 
-
- You should have received a copy of the GNU General Public License
- along with MScheme; see the file COPYING. If not, write to 
- the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- Boston, MA  02111-1307, USA. */
+/*
+ * Copyright (C) 2001 Marvin H. Sielenkemper
+ * 
+ * This file is part of MScheme.
+ * 
+ * MScheme is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * MScheme is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 
 package mscheme.tests;
 
@@ -41,32 +40,38 @@ import mscheme.values.IPair;
 import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
-
-public class TestMachine extends TestCase
+public class TestMachine
+        extends TestCase
 {
     public final static String CVS_ID = "$Id$";
 
-    private Machine            machine;
+    private Machine machine;
 
-    private Symbol             _sym1;
-    private Symbol             _sym2;
-    private Object             _val1;
-    private Object             _val2;
-    private Object             _unval;
-    private Environment        _environment;
+    private Symbol _sym1;
+
+    private Symbol _sym2;
+
+    private Object _val1;
+
+    private Object _val2;
+
+    private Object _unval;
+
+    private Environment _environment;
 
     public TestMachine(String name)
     {
         super(name);
     }
 
-    protected void setUp() throws Exception
+    protected void setUp()
+            throws Exception
     {
         _sym1 = Symbol.create("test1");
         _sym2 = Symbol.create("test2");
 
-        _val1  = Boolean.TRUE;
-        _val2  = Boolean.FALSE;
+        _val1 = Boolean.TRUE;
+        _val2 = Boolean.FALSE;
         _unval = ListFactory.create();
 
         _environment = Environment.getNullEnvironment();
@@ -80,23 +85,25 @@ public class TestMachine extends TestCase
         _environment = null;
     }
 
-    private Object evaluate(String expression) throws SchemeException
+    private Object evaluate(String expression)
+            throws SchemeException, InterruptedException
     {
         return machine.evaluate(InputPort.create(new StringReader(expression))
                 .read());
     }
 
-    public void testTestValues() throws Exception
+    public void testTestValues()
+            throws Exception
     {
         Compiler compiler = new Compiler(_environment.getStatic());
-        
+
         try
         {
             compiler.compile(_unval);
             fail("expected CantCompileException");
         }
         catch (CantCompileException e)
-        { }
+        {}
 
         assertNotNull(compiler.compile(_val1));
         assertNotNull(compiler.compile(_val2));
@@ -107,13 +114,15 @@ public class TestMachine extends TestCase
         assertSame(_environment, machine.getEnvironment());
     }
 
-    public void testValue() throws Exception
+    public void testValue()
+            throws Exception
     {
         assertSame(_val1, machine.evaluate(_val1));
         assertSame(_val2, machine.evaluate(_val2));
     }
 
-    public void testUnevaluatable() throws Exception
+    public void testUnevaluatable()
+            throws Exception
     {
         try
         {
@@ -121,15 +130,17 @@ public class TestMachine extends TestCase
             fail("evaluated Unevaluatable");
         }
         catch (CantCompileException e)
-        { }
+        {}
     }
 
-    private void define(Symbol s, Object v) throws Exception
+    private void define(Symbol s, Object v)
+            throws Exception
     {
         _environment.define(s, v);
     }
 
-    public void testSymbol() throws Exception
+    public void testSymbol()
+            throws Exception
     {
         try
         {
@@ -137,22 +148,19 @@ public class TestMachine extends TestCase
             fail("expected SymbolNotFoundException");
         }
         catch (SchemeException e)
-        { }
+        {}
 
         define(_sym1, _val1);
         define(_sym2, _unval);
 
-        assertSame(
-            "evaluation to Value failed - ",
-            _val1,
-            machine.evaluate(_sym1));
-        assertSame(
-            "evaluation to Unevaluatable failed - ",
-            _unval,
-            machine.evaluate(_sym2));
+        assertSame("evaluation to Value failed - ", _val1, machine
+                .evaluate(_sym1));
+        assertSame("evaluation to Unevaluatable failed - ", _unval, machine
+                .evaluate(_sym2));
     }
 
-    public void testPair1() throws Exception
+    public void testPair1()
+            throws Exception
     {
         try
         {
@@ -160,10 +168,11 @@ public class TestMachine extends TestCase
             fail("expected ListExpected");
         }
         catch (ListExpected e)
-        { }
+        {}
     }
 
-    public void testPair2() throws Exception
+    public void testPair2()
+            throws Exception
     {
         try
         {
@@ -171,82 +180,55 @@ public class TestMachine extends TestCase
             fail("expected FunctionExpected");
         }
         catch (FunctionExpected e)
-        { }
+        {}
     }
 
-    public void testQuote() throws Exception
+    public void testQuote()
+            throws Exception
     {
-        assertSame(
-            _unval,
-            machine.evaluate(
-                ListFactory.create(
-                    Symbol.create("quote"),
-                    _unval)));
+        assertSame(_unval, machine.evaluate(ListFactory.create(Symbol
+                .create("quote"), _unval)));
     }
 
-    public void testIf() throws Exception
+    public void testIf()
+            throws Exception
     {
         define(_sym1, _val1);
         define(_sym2, _val2);
 
-        assertSame(
-            _val1,
-            machine.evaluate(
-                ListFactory.prepend(
-                    Symbol.create("if"),
-                    ListFactory.create(
-                        Boolean.TRUE,
-                        _sym1,
-                        _sym2))));
+        assertSame(_val1, machine.evaluate(ListFactory.prepend(Symbol
+                .create("if"), ListFactory.create(Boolean.TRUE, _sym1, _sym2))));
 
-        assertSame(
-            _val1,
-            machine.evaluate(
-                ListFactory.prepend(
-                    Symbol.create("if"),
-                    ListFactory.create(
-                        Boolean.TRUE,
-                        _sym1))));
+        assertSame(_val1, machine.evaluate(ListFactory.prepend(Symbol
+                .create("if"), ListFactory.create(Boolean.TRUE, _sym1))));
 
-        assertSame(
-            _val2,
-            machine.evaluate(
-                ListFactory.prepend(
-                    Symbol.create("if"),
-                    ListFactory.create(
-                        Boolean.FALSE,
-                        _sym1,
-                        _sym2))));
+        assertSame(_val2, machine
+                .evaluate(ListFactory.prepend(Symbol.create("if"), ListFactory
+                        .create(Boolean.FALSE, _sym1, _sym2))));
     }
 
-    public void testBegin() throws Exception
+    public void testBegin()
+            throws Exception
     {
         define(_sym2, _val2);
 
         try
         {
-            machine.evaluate(
-                ListFactory.create(
-                    Symbol.create("begin"),
-                    _sym1,
+            machine.evaluate(ListFactory.create(Symbol.create("begin"), _sym1,
                     _sym2));
             fail("begin failed");
         }
         catch (SchemeException e)
-        { }
+        {}
 
         _environment.define(_sym1, _val1);
 
-        assertSame(
-            _val2,
-            machine.evaluate(
-                ListFactory.create(
-                    Symbol.create("begin"),
-                    _sym1,
-                    _sym2)));
+        assertSame(_val2, machine.evaluate(ListFactory.create(Symbol
+                .create("begin"), _sym1, _sym2)));
     }
 
-    public void testLambdaFailures() throws Exception
+    public void testLambdaFailures()
+            throws Exception
     {
         try
         {
@@ -254,7 +236,7 @@ public class TestMachine extends TestCase
             fail("expected CantCompileException");
         }
         catch (CantCompileException e)
-        { }
+        {}
 
         try
         {
@@ -262,7 +244,7 @@ public class TestMachine extends TestCase
             fail("expected SymbolExpected");
         }
         catch (SymbolExpected e)
-        { }
+        {}
 
         try
         {
@@ -270,12 +252,13 @@ public class TestMachine extends TestCase
             fail("expected CompileError");
         }
         catch (CompileError e)
-        { }
+        {}
     }
 
-    public void testLambdaNoArgs() throws Exception
+    public void testLambdaNoArgs()
+            throws Exception
     {
-        Function func = (Function)machine.evaluate(ListFactory.create(Symbol
+        Function func = (Function) machine.evaluate(ListFactory.create(Symbol
                 .create("lambda"), ListFactory.create(), _val1));
 
         assertSame(_val1, machine.evaluate(ListFactory.create(func)));
@@ -286,7 +269,7 @@ public class TestMachine extends TestCase
             fail("expected CantEvaluateException");
         }
         catch (CantCompileException e)
-        { }
+        {}
 
         try
         {
@@ -294,20 +277,16 @@ public class TestMachine extends TestCase
             fail("expected RuntimeArityError");
         }
         catch (RuntimeArityError e)
-        { }
+        {}
     }
 
-    public void testLambdaWithSimpleArgs() throws Exception
+    public void testLambdaWithSimpleArgs()
+            throws Exception
     {
-        Function func = (Function)evaluate("(lambda (x y) x)");
+        Function func = (Function) evaluate("(lambda (x y) x)");
 
-        assertSame(
-            _val1,
-            machine.evaluate(
-                ListFactory.create(
-                    func,
-                    _val1,
-                    _val2)));
+        assertSame(_val1, machine.evaluate(ListFactory.create(func, _val1,
+                _val2)));
 
         try
         {
@@ -315,12 +294,13 @@ public class TestMachine extends TestCase
             fail("expected RuntimeArityError");
         }
         catch (RuntimeArityError e)
-        { }
+        {}
     }
 
-    public void testLambdaWithOptionalArgs() throws Exception
+    public void testLambdaWithOptionalArgs()
+            throws Exception
     {
-        Function func = (Function)evaluate("(lambda (x . y) y)");
+        Function func = (Function) evaluate("(lambda (x . y) y)");
 
         try
         {
@@ -328,38 +308,31 @@ public class TestMachine extends TestCase
             fail("expected RuntimeArityError");
         }
         catch (RuntimeArityError e)
-        { }
+        {}
 
-        assertSame(
-            ListFactory.create(),
-            machine.evaluate(
-                ListFactory.create(
-                    func,
-                    _val1)));
+        assertSame(ListFactory.create(), machine.evaluate(ListFactory.create(
+                func, _val1)));
 
-        assertSame(
-            _val2,
-            ((IList)machine.evaluate(
-                ListFactory.create(
-                    func,
-                    _val1,
-                    _val2))).getHead());
+        assertSame(_val2, ((IList) machine.evaluate(ListFactory.create(func,
+                _val1, _val2))).getHead());
     }
 
-    public void testLambdaOptionalIsNewList() throws Exception
+    public void testLambdaOptionalIsNewList()
+            throws Exception
     {
-        Function func = (Function)evaluate("(lambda x x)");
+        Function func = (Function) evaluate("(lambda x x)");
 
         IPair pair2 = ListFactory.createPair(_val2, ListFactory.create());
         IPair pair1 = ListFactory.createPair(_val1, pair2);
 
         Object result = machine.evaluate(ListFactory.createPair(func, pair1));
 
-        assertTrue (ValueTraits.equal(result, pair1));
-        assertFalse(ValueTraits.eq   (result, pair1));
+        assertTrue(ValueTraits.equal(result, pair1));
+        assertFalse(ValueTraits.eq(result, pair1));
     }
 
-    public void testDefineNormal() throws Exception
+    public void testDefineNormal()
+            throws Exception
     {
         machine.evaluate(ListFactory.create(Symbol.create("define"), Symbol
                 .create("a"), _val1));
@@ -367,47 +340,35 @@ public class TestMachine extends TestCase
         assertSame(_val1, machine.evaluate(Symbol.create("a")));
     }
 
-    public void testApplication() throws Exception
+    public void testApplication()
+            throws Exception
     {
         evaluate("(define f (lambda (x) x))");
 
-        assertSame(
-            _val1,
-            machine.evaluate(ListFactory.create(Symbol.create("f"), _val1)));
+        assertSame(_val1, machine.evaluate(ListFactory.create(Symbol
+                .create("f"), _val1)));
     }
 
-    public void testDefineFunction() throws Exception
+    public void testDefineFunction()
+            throws Exception
     {
         evaluate("(define (f x y) x)");
         evaluate("(define (g . x) x)");
 
-        assertTrue(
-            "function creation failed - ",
-            machine.evaluate(Symbol.create("f")) instanceof Function);
+        assertTrue("function creation failed - ", machine.evaluate(Symbol
+                .create("f")) instanceof Function);
 
-        assertSame(
-            "function application failed - ",
-            _val1,
-            machine.evaluate(
-                ListFactory.create(
-                    Symbol.create("f"),
-                    _val1,
-                    _val2)));
+        assertSame("function application failed - ", _val1, machine
+                .evaluate(ListFactory.create(Symbol.create("f"), _val1, _val2)));
     }
 
-    public void testCallCC() throws Exception
+    public void testCallCC()
+            throws Exception
     {
-        assertSame(
-            _val1,
-            machine.evaluate(
-                ListFactory.create(
-                    mscheme.values.functions.CallCCFunction.INSTANCE,
-                    ListFactory.create(
-                        Symbol.create("lambda"),
-                        ListFactory.create(
-                            Symbol.create("return")),
-                        ListFactory.create(
-                            Symbol.create("return"),
-                            _val1)))));
+        assertSame(_val1, machine.evaluate(ListFactory.create(
+                mscheme.values.functions.CallCCFunction.INSTANCE, ListFactory
+                        .create(Symbol.create("lambda"), ListFactory
+                                .create(Symbol.create("return")), ListFactory
+                                .create(Symbol.create("return"), _val1)))));
     }
 }

@@ -22,6 +22,7 @@ package mscheme.values;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.io.PushbackReader;
 import java.io.Reader;
 import java.io.Writer;
@@ -127,11 +128,15 @@ public class InputPort
     // input port
 
     public Object read()
-        throws ReadException, ParseException
+        throws ReadException, ParseException, InterruptedException
     {
         try
         {
             return parseDatum();
+        }
+        catch (InterruptedIOException e)
+        {
+            throw new InterruptedException(e.getMessage());
         }
         catch (IOException e)
         {

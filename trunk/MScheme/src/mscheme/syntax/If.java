@@ -47,7 +47,7 @@ final class If
     protected Object checkedTranslate(
         StaticEnvironment compilationEnv,
         IList              arguments
-    ) throws SchemeException
+    ) throws SchemeException, InterruptedException
     {
         Object flag    = arguments.getHead();
         Object onTrue  = arguments.getTail().getHead();

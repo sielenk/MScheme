@@ -48,7 +48,7 @@ public class TestR5RS
 
     /// 4.1.1 Variable references
     public void test4_1_1()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         eval("(define x 28)");
         check("x", "28");
@@ -56,7 +56,7 @@ public class TestR5RS
 
     /// 4.1.2 Literal expressions
     public void test4_1_2()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check("(quote a)"       , "a"       );
         check("(quote #(a b c))", "#(a b c)");
@@ -105,7 +105,7 @@ public class TestR5RS
     /// 4.1.3 Procedure calls
 
     public void test4_1_3()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check("(+ 3 4)"          , "7" );
         check("((if #f + *) 3 4)", "12");
@@ -123,7 +123,7 @@ public class TestR5RS
     /// 4.1.4 Procedures
 
     public void test4_1_4()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         assertTrue(eval("(lambda (x) (+ x x))") instanceof Function);
         check("((lambda (x) (+ x x)) 4)", "8");
@@ -157,7 +157,7 @@ public class TestR5RS
     /// 4.1.5 Conditionals
 
     public void test4_1_5()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check("(if (> 3 2) 'yes 'no)", "yes");
         check("(if (> 2 3) 'yes 'no)", "no");
@@ -172,7 +172,7 @@ public class TestR5RS
     /// 4.1.6 Assignments
 
     public void test4_1_6()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         eval("(define x 2)");
         check("(+ x 1)", "3");
@@ -186,7 +186,7 @@ public class TestR5RS
     /// 4.2.1 Conditionals
 
     public void no_test4_2_1_cond()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check(
             "(cond ((> 3 2) 'greater)\n" +
@@ -207,7 +207,7 @@ public class TestR5RS
     }
 
     public void test4_2_1_and()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check(
             "(and (= 2 2) (> 2 1))",
@@ -228,7 +228,7 @@ public class TestR5RS
     }
 
     public void test4_2_1_or()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check(
             "(or (= 2 2) (> 2 1))",
@@ -252,7 +252,7 @@ public class TestR5RS
     /// 4.2.2 Binding constructs
 
     public void test4_2_2_let()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check(
             "(let ((x 2) (y 3))\n" +
@@ -286,7 +286,7 @@ public class TestR5RS
     }
 
     public void test4_2_2_letstar()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check(
             "(let ((x 2) (y 3))\n" +
@@ -314,7 +314,7 @@ public class TestR5RS
     }
 
     public void test4_2_2_letrec()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check(
             "(letrec ((even?\n" +
@@ -335,7 +335,7 @@ public class TestR5RS
     }
 
     public void test4_2_2_common()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check("(let ((x 1)) (let    () (define x 2)) x)", "1");
         check("(let ((x 1)) (let*   () (define x 2)) x)", "1");
@@ -346,7 +346,7 @@ public class TestR5RS
     /// 4.2.3 Sequencing
 
     public void test4_2_3()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         eval("(define x 0)");
         check(
@@ -360,7 +360,7 @@ public class TestR5RS
     /// 4.2.4 Iteration
 
     public void test4_2_4_named_let()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check(
             "(let f ((x 3) (y 7))\n" +
@@ -375,7 +375,7 @@ public class TestR5RS
     /// 4.2.6 Quasiquotation
 
     public void notest4_2_6()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check("`(list ,(+ 1 2) 4)", "(list 3 4)");
         check(
@@ -404,7 +404,7 @@ public class TestR5RS
     /// 5.2 Definitions
 
     public void test5_2()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         try
         {
@@ -446,7 +446,7 @@ public class TestR5RS
     /// 5.3 Syntax definitions
 
     public void test5_3()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         eval(
             "(define-syntax static-cons " +
@@ -465,7 +465,7 @@ public class TestR5RS
     /// 6.1 Equivalence predicates
 
     public void test6_1()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         // eqv?
         check("(eqv? 'a 'a)", "#t");
@@ -485,7 +485,7 @@ public class TestR5RS
     /// 6.2.5 Numerical operations
     
     public void testNumbers()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check("(+ 3 4)", "7");
         check("(+ 3)", "3");
@@ -519,7 +519,7 @@ public class TestR5RS
     /// 6.3.2 Pairs and lists
 
     public void test6_3_2()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         // pair?
         check("(pair? '(a . b))", "#t");
@@ -628,7 +628,7 @@ public class TestR5RS
     /// 6.3.3 Symbols
 
     public void test6_3_3()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         // symbol?
         check("(symbol? 'foo)"        , "#t");
@@ -649,7 +649,7 @@ public class TestR5RS
     /// 6.3.5 Strings
 
     public void test6_3_5()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         eval("(define (f) (make-string 3 #\\*))");
         eval("(define (g) \"***\"))");
@@ -677,7 +677,7 @@ public class TestR5RS
     /// 6.3.6 Vectors
 
     public void test6_3_6()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check("(vector-ref '#(1 1 2 3 5 8 13 21) 5)", "8");
         check("(vector 'a 'b 'c)", "#(a b c)");
@@ -691,7 +691,7 @@ public class TestR5RS
     /// 6.4 Control features
 
     public void test6_4_procedureq()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check("(procedure?  car)", "#t");
         check("(procedure? 'car)", "#f");
@@ -701,7 +701,7 @@ public class TestR5RS
     }
 
     public void test6_4_apply()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check("(apply + (list 3 4))", "7");
         check("(apply + 1 2 '(3 4))", "10");
@@ -717,7 +717,7 @@ public class TestR5RS
     }
 
     public void test6_4_map()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check(
             "(map + '(1 2 3) '(4 5 6))",
@@ -726,7 +726,7 @@ public class TestR5RS
     }
 
     public void test6_4_for_each()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         eval("(define count 0)");
         check(
@@ -741,7 +741,7 @@ public class TestR5RS
     }
 
     public void test6_4_force()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check(
             "(force (delay (+ 1 2)))",
@@ -773,7 +773,7 @@ public class TestR5RS
     }
 
     public void test6_4_callcc()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check(
             "(let ((path '())\n"+
@@ -800,7 +800,7 @@ public class TestR5RS
     /// 6.5 Eval
 
     public void test6_5()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         check("(eval '(* 7 3) (scheme-report-environment 5))", "21");
         check(

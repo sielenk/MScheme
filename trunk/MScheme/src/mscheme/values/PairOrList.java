@@ -237,7 +237,7 @@ public abstract class PairOrList
     }
 
     public Object getForceable(StaticEnvironment compilationEnv)
-            throws SchemeException
+            throws SchemeException, InterruptedException
     {
         IList list = validate();
 
@@ -293,16 +293,18 @@ public abstract class PairOrList
         final Object empty = ListFactory.create();
 
         ListEnumerator enumerator = new ListEnumerator(this);
-        final MutablePairOrList result = new MutablePairOrList(enumerator.nextElement(), empty);
+        final MutablePairOrList result = new MutablePairOrList(enumerator
+                .nextElement(), empty);
         MutablePairOrList current = result;
         while (enumerator.hasMoreElements())
         {
-            MutablePairOrList next = new MutablePairOrList(enumerator.nextElement(), empty);
+            MutablePairOrList next = new MutablePairOrList(enumerator
+                    .nextElement(), empty);
             current.setSecond(next);
-            current = next;                    
+            current = next;
         }
 
-        return result;                
+        return result;
     }
 
     public Object getHead()
@@ -354,13 +356,13 @@ public abstract class PairOrList
     }
 
     public Object[] getCompiledArray(StaticEnvironment compilationEnv)
-            throws SchemeException
+            throws SchemeException, InterruptedException
     {
         return getCompiledArray(compilationEnv, 0);
     }
 
     public Object[] getCompiledArray(StaticEnvironment compilationEnv, int index)
-            throws SchemeException
+            throws SchemeException, InterruptedException
     {
         Object compiledHead = new Compiler(compilationEnv)
                 .getForceable(getHead());
