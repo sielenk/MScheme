@@ -159,7 +159,7 @@ public class InputPort
         return (char)c;
     }
 
-    private SchemeChar parseChar()
+    private ScmChar parseChar()
         throws IOException, ParseException
     {
         int c = readNoEof();
@@ -485,7 +485,7 @@ public class InputPort
         return
             (c == EOF)
             ? EOF_VALUE
-            : SchemeChar.create((char)c);
+            : ScmChar.create((char)c);
     }
     
     public int peekChar()
@@ -511,7 +511,7 @@ public class InputPort
         return
             (c == EOF)
             ? EOF_VALUE
-            : SchemeChar.create((char)c);
+            : ScmChar.create((char)c);
     }
     
     public boolean isReady()

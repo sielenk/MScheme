@@ -301,15 +301,15 @@ public class Builtins
 
     public final static Value integer_2D_3Echar(Value argument)
         throws NumberExpected
-    { return SchemeChar.create((char)argument.toNumber().getInteger()); }
+    { return ScmChar.create((char)argument.toNumber().getInteger()); }
 
     public final static Value char_2Dupcase(Value argument)
         throws CharExpected
-    { return SchemeChar.create(Character.toUpperCase(argument.toChar().getJavaChar())); }
+    { return ScmChar.create(Character.toUpperCase(argument.toChar().getJavaChar())); }
 
     public final static Value char_2Ddowncase(Value argument)
         throws CharExpected
-    { return SchemeChar.create(Character.toLowerCase(argument.toChar().getJavaChar())); }
+    { return ScmChar.create(Character.toLowerCase(argument.toChar().getJavaChar())); }
 
 
     // 6.3.5 Strings

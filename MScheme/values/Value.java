@@ -55,7 +55,7 @@ public abstract class Value
     public SchemeNumber toNumber   () throws   NumberExpected
     { throw new NumberExpected(this); }
 
-    public SchemeChar   toChar     () throws     CharExpected
+    public ScmChar      toChar     () throws     CharExpected
     { throw new CharExpected(this); }
 
     public SchemeString toScmString() throws   StringExpected
