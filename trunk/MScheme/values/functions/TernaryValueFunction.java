@@ -42,7 +42,7 @@ public abstract class TernaryValueFunction
         Value     trd
     ) throws SchemeException
     {
-        return checkedCall(fst, snd, trd).getLiteral();
+        return checkedCall(fst, snd, trd);
     }
 
     protected abstract Value checkedCall(Value fst, Value snd, Value trd)

@@ -84,6 +84,6 @@ public class ApplyFunction
         // statement marked with (*) above true.
 
         ApplyContinuation.create(state, arguments.getTail());
-        return func.getLiteral();
+        return func;
     }
 }

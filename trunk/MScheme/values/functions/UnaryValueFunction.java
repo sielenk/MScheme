@@ -40,7 +40,7 @@ public abstract class UnaryValueFunction
         Value     fst
     ) throws SchemeException
     {
-        return checkedCall(fst).getLiteral();
+        return checkedCall(fst);
     }
 
     protected abstract Value checkedCall(Value fst)

@@ -53,6 +53,6 @@ final class Quote
         List              arguments
     ) throws TypeError
     {
-        return arguments.getHead().getConst().getLiteral();
+        return arguments.getHead().getConst();
     }
 }
