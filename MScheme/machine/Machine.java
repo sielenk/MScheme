@@ -345,13 +345,6 @@ public final class Machine
         }
     }
 
-    public Value evaluate(
-        Value evaluatee
-    ) throws SchemeException
-    {
-        return execute(compile(evaluatee));
-    }
-
     public Code compile(
         Value compilee
     ) throws SchemeException
@@ -371,5 +364,29 @@ public final class Machine
             compilee
             .getCode(compilationEnv)
             .force();
+    }
+
+    public static Value parse(
+        String expression
+    ) throws SchemeException
+    {
+        return InputPort.create(
+            new StringReader(expression)
+        ).read();
+    }
+
+
+    public Value evaluate(
+        Value evaluatee
+    ) throws SchemeException
+    {
+        return execute(compile(evaluatee));
+    }
+
+    public Value evaluate(
+        String expression
+    ) throws SchemeException
+    {
+        return evaluate(parse(expression));
     }
 }
