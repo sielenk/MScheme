@@ -38,13 +38,13 @@ public class Machine
         return state.getResult();
     }
 
-	public Value evaluate(Value evaluatee)
+    public Value evaluate(Value evaluatee)
         throws RuntimeError, CompileError, TypeError
     {
         return execute(
-	        evaluatee.getCode(
+            evaluatee.getCode(
                 getEnvironment().getStatic()
-		    )
+            )
         );
     }
 }
