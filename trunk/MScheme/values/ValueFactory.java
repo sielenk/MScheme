@@ -16,20 +16,17 @@ public abstract class ValueFactory
         = "$Id$";
 
 
-    public static Pair prepend(Value head, List tail)
-    { return Pair.create(head, tail.toValue()); }
-
     public static Empty createList()
     { return Empty.create(); }
 
     public static Pair createList(Value first)
-    { return prepend(first, createList()); }
+    { return List.prepend(first, createList()); }
 
     public static Pair createList(Value first, Value second)
-    { return prepend(first, createList(second)); }
+    { return List.prepend(first, createList(second)); }
 
     public static Pair createList(Value first, Value second, Value third)
-    { return prepend(first, createList(second, third)); }
+    { return List.prepend(first, createList(second, third)); }
 
     
     public static Function createFunction(String name)
