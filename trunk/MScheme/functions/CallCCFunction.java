@@ -17,6 +17,9 @@ public class CallCCFunction
 
     public final static CallCCFunction INSTANCE = new CallCCFunction();
 
+    private CallCCFunction()
+    { }
+
     protected Code checkedCall(Registers registers, Value argument)
         throws RuntimeError, TypeError
     {
