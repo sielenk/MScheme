@@ -207,21 +207,21 @@ public class InputPort
     private ScmVector parseVector(int index)
         throws IOException, ParseException
     {
-        int c = skipWSread();
+        int la = skipWSread();
     
-        if (c == ')') {
+        if (la == ')') {
             return ScmVector.create(index);
-        } if (c == EOF) {
+        } else if (la == EOF) {
             throw new ParseException(
                 this,
                 "unexpected EOF"
             );
         } else {
-            _reader.unread(c);
-            
+            _reader.unread(la);
+
             Value     head   = parseDatum();
             ScmVector result = parseVector(index + 1);
-            
+
             try {
                 result.set(index, head);
             }
@@ -237,44 +237,44 @@ public class InputPort
                     + "InputPort.parseVector"
                 );
             }
-            
+
             return result;
         }
     }
-    
+
     private Value parseList()
         throws IOException, ParseException
     {
-        int c = skipWSread();
-    
-        if (c == ')') {
+        int la = skipWSread();
+
+        if (la == ')') {
             return Empty.create();
-        } if (c == EOF) {
+        } if (la == EOF) {
             throw new ParseException(
                 this,
                 "unexpected EOF"
             );
         } else {
-            _reader.unread(c);
+            _reader.unread(la);
             Value head = parseDatum();
-            
-            int la1 = skipWSread();
-            if (la1 == '.') {
+
+            la = skipWSread();
+            if (la == '.') {
                 Pair result = Pair.create(
                     head,
                     parseDatum()
                 );
-            
+
                 if (skipWSread() != ')') {
                     throw new ParseException(
                         this,
                         "expected ')'"
                     );
                 }
-                
+
                 return result;
             } else {
-                _reader.unread(la1);
+                _reader.unread(la);
                 return Pair.create(
                     head,
                     parseList()
@@ -531,4 +531,3 @@ public class InputPort
         return false;
     }
 }
-
