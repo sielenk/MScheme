@@ -2,8 +2,8 @@ package MScheme.expressions.functions;
 
 
 import MScheme.expressions.SExpr;
+import MScheme.expressions.SList;
 import MScheme.expressions.SPair;
-import MScheme.expressions.SEmpty;
 import MScheme.expressions.SBool;
 import MScheme.expressions.SSymbol;
 
@@ -235,7 +235,7 @@ public class SyntaxFunc
                     }
 
                     // the last cdr may be a symbol
-                    if (formals != SEmpty.INSTANCE) {
+                    if (formals != SList.EMPTY) {
                         SSymbol symbol = (SSymbol)formals;
 
                         fab.append(symbol);

@@ -1,5 +1,6 @@
 package MScheme.expressions.functions;
 
+
 import MScheme.expressions.SExpr;
 import MScheme.expressions.SSymbol;
 import MScheme.expressions.SList;
@@ -14,6 +15,7 @@ import MScheme.machine.Values;
 import MScheme.machine.ContinuationStack;
 
 import MScheme.environment.Environment;
+
 
 public class EvalFunc extends Function
 {
@@ -42,15 +44,14 @@ public class EvalFunc extends Function
             try {
                 stack.push(
                     environment,
-                    new ExpectFunctionFunc(
-                        ((SList)(pair.getCdr())).toValues()
+                    new ComposeFunc(
+                        EvalFunc.INSTANCE,
+                        new ExpectFunctionFunc(
+                            ((SList)(pair.getCdr())).toValues()
+                        )
                     )
                 );
 
-                stack.push(
-                    environment,
-                    INSTANCE
-                );
                 sexpr = pair.getCar();
             } catch (ClassCastException e) {
                 throw new SExpectedListException(pair.getCdr());

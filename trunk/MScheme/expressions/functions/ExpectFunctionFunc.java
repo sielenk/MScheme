@@ -2,6 +2,7 @@ package MScheme.expressions.functions;
 
 
 import MScheme.expressions.SExpr;
+import MScheme.expressions.SFunction;
 
 import MScheme.exceptions.SExpectedFunctionException;
 
@@ -32,7 +33,7 @@ public class ExpectFunctionFunc extends Function
         try {
             stack.push(
                 environment,
-                (Function)sexpr
+                (SFunction)sexpr
             );
         } catch (ClassCastException e) {
             throw new SExpectedFunctionException(sexpr);
@@ -45,7 +46,7 @@ public class ExpectFunctionFunc extends Function
     protected String defaultString()
     {
         return
-            "[arguments "
+            "[call-with-values "
             + _arguments.toList()
             + "]";
     }

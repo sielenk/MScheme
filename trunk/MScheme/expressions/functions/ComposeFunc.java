@@ -1,8 +1,7 @@
 package MScheme.expressions.functions;
 
 
-import MScheme.expressions.SExpr;
-import MScheme.expressions.SBool;
+import MScheme.expressions.SFunction;
 
 import MScheme.machine.Values;
 import MScheme.machine.ContinuationStack;
@@ -11,13 +10,13 @@ import MScheme.environment.Environment;
 
 public class ComposeFunc extends Function
 {
-    private Function _first;
-    private Function _second;
+    private SFunction _first;
+    private SFunction _second;
 
 
     public ComposeFunc(
-        Function first,
-        Function second
+        SFunction first,
+        SFunction second
     ) {
         super(
             first.getMinArity(),
