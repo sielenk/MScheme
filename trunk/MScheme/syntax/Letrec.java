@@ -66,36 +66,47 @@ final class Letrec
         List inits   = formalsInitsBody[1];
         List body    = formalsInitsBody[2];
 
+        int numberOfFormals = formals.getLength();
+
         StaticEnvironment
             bodyCompilationEnv = compilationEnv.newChild(formals);
 
-        CodeList
-            compiledBody = body.getCodeList(bodyCompilationEnv);
+        Code[] compiledBody = body.getCodeArray(bodyCompilationEnv);
+
+	Code[] compiledLetrec
+            = new Code[numberOfFormals + compiledBody.length];
 
         // prepend the initialisations to the body
+	int index = 0;
         while (!formals.isEmpty())
         {
             Symbol formal = formals.getHead().toSymbol();
             Value  init   = inits  .getHead();
 
-            compiledBody = CodeList.prepend(
-                               Set.translate(
-                                   formal.getReference(bodyCompilationEnv),
-                                   init  .getCode     (bodyCompilationEnv)
-                               ),
-                               compiledBody
-                           );
+            compiledLetrec[index++]
+                = Set.translate(
+                      formal.getReference(bodyCompilationEnv),
+                      init  .getCode     (bodyCompilationEnv)
+                  );
 
             formals = formals.getTail();
             inits   = inits  .getTail();
         }
+
+	System.arraycopy(
+		compiledBody,
+		0,
+		compiledLetrec,
+		index,
+		compiledBody.length
+	);
 
         return Application.create(
             CodeList.create(
                 CompiledLambda.create(
                     Arity.exactly(0),
                     bodyCompilationEnv,
-                    compiledBody
+                    compiledLetrec
                 )
             )
         );
