@@ -40,7 +40,7 @@ import MScheme.exceptions.*;
 
 
 public class StaticEnvironment
-            extends ValueDefaultImplementations
+    extends ValueDefaultImplementations
 {
     public final static String id
         = "$Id$";
