@@ -9,9 +9,11 @@ public class SchemeNumber
 {
     private int _value;
     
-    public SchemeNumber(int v)
+    private SchemeNumber(int v)
     { _value = v; }
     
+    public static SchemeNumber create(int v)
+    { return new SchemeNumber(v); }
     
     // implementation of Value
     
