@@ -8,13 +8,13 @@ import MScheme.exceptions.RuntimeError;
 import MScheme.exceptions.TypeError;
 
 
-abstract public class TernaryValueFunction
+public abstract class TernaryValueFunction
     extends TernaryFunction
 {
     public final static String id
         = "$Id$";
 
-    final protected Code checkedCall(
+    protected final Code checkedCall(
         Registers registers,
         Value     fst,
         Value     snd,
@@ -22,6 +22,6 @@ abstract public class TernaryValueFunction
     ) throws RuntimeError, TypeError
     { return checkedCall(fst, snd, trd).getLiteral(); }
 
-    abstract protected Value checkedCall(Value fst, Value snd, Value trd)
+    protected abstract Value checkedCall(Value fst, Value snd, Value trd)
         throws RuntimeError, TypeError;
 }

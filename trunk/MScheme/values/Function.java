@@ -20,10 +20,10 @@ public abstract class Function
 
     // specialisation of Value
 
-    final public boolean isFunction()
+    public final boolean isFunction()
     { return true; }
     
-    final public Function toFunction()
+    public final Function toFunction()
     { return this; }
     
     public void write(Writer destination)

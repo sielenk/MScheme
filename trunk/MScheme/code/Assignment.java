@@ -8,14 +8,14 @@ import MScheme.machine.Continuation;
 import MScheme.environment.Reference;
 
 
-final public class Assignment
+public final class Assignment
     extends Code
 {
     public final static String id
         = "$Id$";
 
-    final private Reference _binding;
-    final private Code      _valueCalculation;
+    private final Reference _binding;
+    private final Code      _valueCalculation;
 
     public Assignment(
         Reference binding,

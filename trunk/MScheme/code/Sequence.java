@@ -13,7 +13,7 @@ final class SequenceContinuation
     public final static String id
         = "$Id$";
 
-    final private CodeList _todo;
+    private final CodeList _todo;
 
     private SequenceContinuation(
         Registers registers,
@@ -40,13 +40,13 @@ final class SequenceContinuation
 }
 
 
-final public class Sequence
+public final class Sequence
     extends Code
 {
     public final static String id
         = "$Id$";
 
-    final private CodeList _sequence;
+    private final CodeList _sequence;
 
     private Sequence(CodeList sequence)
     { _sequence = sequence; }

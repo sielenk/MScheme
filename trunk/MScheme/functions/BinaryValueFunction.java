@@ -8,19 +8,19 @@ import MScheme.exceptions.RuntimeError;
 import MScheme.exceptions.TypeError;
 
 
-abstract public class BinaryValueFunction
+public abstract class BinaryValueFunction
     extends BinaryFunction
 {
     public final static String id
         = "$Id$";
 
-    final protected Code checkedCall(
+    protected final Code checkedCall(
         Registers registers,
         Value     fst,
         Value     snd
     ) throws RuntimeError, TypeError
     { return checkedCall(fst, snd).getLiteral(); }
 
-    abstract protected Value checkedCall(Value fst, Value snd)
+    protected abstract Value checkedCall(Value fst, Value snd)
         throws RuntimeError, TypeError;
 }

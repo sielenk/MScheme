@@ -25,7 +25,7 @@ public abstract class CheckedFunction
 
     // partial implementation of Function
 
-    final public Code call(Registers registers, List arguments)
+    public final Code call(Registers registers, List arguments)
         throws RuntimeError, TypeError
     {
         return checkedCall(

@@ -5,7 +5,7 @@ import MScheme.Code;
 import MScheme.exceptions.*;
 
 
-abstract public class CodeList
+public abstract class CodeList
 {
     public final static String id
         = "$Id$";
@@ -42,10 +42,10 @@ abstract public class CodeList
 
     // abstract interface
         
-    abstract public boolean  isEmpty();
-    abstract public Code     getHead();
-    abstract public CodeList getTail();
-    abstract public CodeList getReversed();
+    public abstract boolean  isEmpty();
+    public abstract Code     getHead();
+    public abstract CodeList getTail();
+    public abstract CodeList getReversed();
 }
 
 

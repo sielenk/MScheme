@@ -17,7 +17,7 @@ class ContinuationFunction
     public final static String id
         = "$Id$";
 
-    final private Continuation _continuation;
+    private final Continuation _continuation;
 
     ContinuationFunction(Continuation continuation)
     { _continuation = continuation; }

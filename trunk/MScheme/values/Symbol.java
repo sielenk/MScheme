@@ -22,9 +22,9 @@ public final class Symbol
     public final static String id
         = "$Id$";
 
-    final private static WeakHashMap _map = new WeakHashMap();
+    private final static WeakHashMap _map = new WeakHashMap();
 
-    final private String _javaString;
+    private final String _javaString;
 
     private Symbol(String javaString)
     { _javaString = javaString; }
