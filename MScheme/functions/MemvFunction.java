@@ -3,7 +3,7 @@ package MScheme.functions;
 import MScheme.Value;
 
 
-public class MemvFunction
+public final class MemvFunction
     extends MemberBase
 {
     public final static String id
@@ -16,4 +16,3 @@ public class MemvFunction
     protected boolean equal(Value fst, Value snd)
     { return fst.eqv(snd); }
 }
-

@@ -3,7 +3,7 @@ package MScheme.functions;
 import MScheme.Value;
 
 
-public class AssvFunction
+public final class AssvFunction
     extends AssocBase
 {
     public final static String id
