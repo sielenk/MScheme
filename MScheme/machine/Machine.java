@@ -66,12 +66,10 @@ public class Machine
     { return WindContinuation.handle(this, before, thunk, after); }
 
 
-    public Value evaluate(Value evaluatee)
-        throws RuntimeError, CompileError, TypeError
+    public Value execute(Code program)
+        throws RuntimeError, TypeError
     {
-        Code accumulator = evaluatee.getCode(
-            getEnvironment().getStatic()
-        );
+        Code accumulator = program;
         
         setContinuation(null);
         AbortContinuation abort = new AbortContinuation(this);
@@ -81,5 +79,15 @@ public class Machine
         }
 
         return abort.getResult();
+    }
+    
+	public Value evaluate(Value evaluatee)
+        throws RuntimeError, CompileError, TypeError
+    {
+        return execute(
+	        evaluatee.getCode(
+                getEnvironment().getStatic()
+		    )
+        );
     }
 }
