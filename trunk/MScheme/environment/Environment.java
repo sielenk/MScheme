@@ -299,45 +299,51 @@ public final class Environment
 
     // *** value access (runtime) ***
 
-    public void assign(Reference key, Value value)
+    public Value assign(Reference key, Value value)
     {
         Vector locations = _frames[key.getLevel()];
         int    index     = key.getIndex();
 
         try
         {
+            Value result = (Value)locations.elementAt(index);
             locations.setElementAt(value, index);
+            return (result != null) ? result : value;
         }
         catch (ArrayIndexOutOfBoundsException e)
         {
             locations.setSize(index + 1);
             locations.setElementAt(value, index);
+            return value;
         }
     }
 
-    public void assign(Symbol key, Value value)
+    public Value assign(Symbol key, Value value)
         throws SymbolNotFoundException, UnexpectedSyntax
     {
-        assign(_bindings.getReferenceFor(key), value);
+        return assign(_bindings.getReferenceFor(key), value);
     }
 
 
-    public Value lookup(Reference ref)
-    throws UninitializedSymbolException
+    public Value lookupNoThrow(Reference ref)
     {
-        Value result;
-
         try
         {
-            Vector frame = _frames         [ref.getLevel()];
-            Object obj   =  frame.elementAt(ref.getIndex());
-
-            result = (Value)obj;
+            return 
+                (Value)
+                _frames   [ref.getLevel()]
+                .elementAt(ref.getIndex());
         }
         catch (ArrayIndexOutOfBoundsException e)
         {
-            result = null;
+            return null;
         }
+    }
+
+    public Value lookup(Reference ref)
+        throws UninitializedSymbolException
+    {
+        Value result = lookupNoThrow(ref);
 
         if (result == null)
         {
@@ -348,7 +354,7 @@ public final class Environment
     }
 
     public Value lookup(Symbol key)
-    throws SymbolNotFoundException,
+        throws SymbolNotFoundException,
                 UnexpectedSyntax,
                 UninitializedSymbolException
     {

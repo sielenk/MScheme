@@ -65,14 +65,17 @@ public final class Assignment
 
             protected Code execute(Registers regs, Value evaluationResult)
             {
-                regs.getEnvironment().assign(_binding, evaluationResult);
-                return evaluationResult.getLiteral();
+                return 
+                    regs
+                    .getEnvironment()
+                    .assign(_binding, evaluationResult)
+                    .getLiteral();
             }
 
 
             protected String debugString()
             {
-                return "assign[" + _binding + "]";
+                return "assign<" + _binding + ">";
             }
         };
 
@@ -82,6 +85,6 @@ public final class Assignment
 
     public String toString()
     {
-        return "SET[" + _binding + ' ' + _valueCalculation + ']';
+        return "set:<" + _binding + ' ' + _valueCalculation + '>';
     }
 }
