@@ -6,8 +6,8 @@ import MScheme.machine.Machine;
 import MScheme.code.Code;
 import MScheme.code.CodeList;
 import MScheme.code.Application;
+import MScheme.environment.Environment;
 import MScheme.environment.StaticEnvironment;
-import MScheme.environment.DynamicEnvironment;
 import MScheme.environment.Reference;
 import MScheme.values.ValueFactory;
 import MScheme.values.Value;
@@ -47,7 +47,7 @@ final class Macro
 	        // (apply tranformer def_env use_env args)
 	
             return new Machine(
-	            DynamicEnvironment.getImplementationEnvironment()
+	            Environment.getImplementationEnvironment()
 	        ).execute(
 	            Application.create(
 		            CodeList.prepend(
@@ -89,7 +89,7 @@ final class DefineSyntax
 
         try {
             Macro macro = new Macro(
-                new Machine(DynamicEnvironment.getImplementationEnvironment())
+                new Machine(Environment.getImplementationEnvironment())
                     .evaluate(value)
                     .toFunction()
 				    .getLiteral(),
@@ -97,7 +97,7 @@ final class DefineSyntax
 	        );
 
             syntax.defineSyntax(symbol, macro);
-	        DynamicEnvironment
+	        Environment
 		        .getImplementationEnvironment()
 			    .getStatic()
 			    .defineSyntax(symbol, macro);
