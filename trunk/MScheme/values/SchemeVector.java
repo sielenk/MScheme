@@ -14,11 +14,6 @@ public final class SchemeVector
 {
     private final static SchemeVector _empty = new SchemeVector(0, null);
 
-    public static SchemeVector getInstance(int size, Value fill)
-    {
-        return (size == 0) ? _empty : new SchemeVector(size, fill);
-    }
-    
     private final Value[] _data;
     private boolean       _isLiteral = false;
     
@@ -31,9 +26,15 @@ public final class SchemeVector
         }
     }
 
+    public static SchemeVector create(int size)
+    { return create(size, null); }
+    
+    public static SchemeVector create(int size, Value fill)
+    { return (size == 0) ? _empty : new SchemeVector(size, fill); }
+    
 
-    public void setLiteral()
-    { _isLiteral = true; }
+    public Value setLiteral()
+    { _isLiteral = true; return this; }
 
 
     public int getLength()
