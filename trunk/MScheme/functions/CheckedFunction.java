@@ -24,44 +24,81 @@ public abstract class CheckedFunction
     protected CheckedFunction(int arity)
     { this(Arity.exactly(arity)); }
     
+    protected CheckedFunction(boolean dispatch)
+    { this(Arity.atLeast(0), dispatch); }
+    
+    protected CheckedFunction()
+    { this(Arity.atLeast(0), false); }
+
+
     public Arity getArity()
     { return _arity; }
     
 
-    private Code fail()
+    private Value fail()
     { throw new RuntimeException("unimplemented Function called"); }
+
+
+    protected Value checkedCall(
+    ) throws SchemeException
+    { return fail(); }
+
+    protected Value checkedCall(
+        Value fst
+    ) throws SchemeException
+    { return fail(); }
+
+    protected Value checkedCall(
+        Value fst,
+        Value snd
+    ) throws SchemeException
+    { return fail(); }
+
+    protected Value checkedCall(
+        Value fst,
+        Value snd,
+        Value trd
+    ) throws SchemeException
+    { return fail(); }
+
+    protected Value checkedCall(
+        List  args
+    ) throws SchemeException
+    { return fail(); }
+
 
     protected Code checkedCall(
         Machine machine
     ) throws SchemeException
-    { return fail(); }
+    { return machine.handleResult(checkedCall()); }
     
     protected Code checkedCall(
         Machine machine,
-        Value   first
+        Value   fst
     ) throws SchemeException
-    { return fail(); }
+    { return machine.handleResult(checkedCall(fst)); }
     
     protected Code checkedCall(
         Machine machine,
-        Value   first,
-        Value   second
+        Value   fst,
+        Value   snd
     ) throws SchemeException
-    { return fail(); }
+    { return machine.handleResult(checkedCall(fst, snd)); }
     
     protected Code checkedCall(
         Machine machine,
-        Value   first,
-        Value   second,
-        Value   third
+        Value   fst,
+        Value   snd,
+        Value   trd
     ) throws SchemeException
-    { return fail(); }
-    
+    { return machine.handleResult(checkedCall(fst, snd, trd)); }
+
+
     protected Code checkedCall(
         Machine machine,
-        List arguments
+        List    args
     ) throws SchemeException
-    { return fail(); }
+    { return machine.handleResult(checkedCall(args)); }
 
 
     // implementation of Function
