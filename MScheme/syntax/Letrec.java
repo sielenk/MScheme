@@ -25,6 +25,7 @@ import MScheme.Syntax;
 import MScheme.Value;
 
 import MScheme.code.Application;
+import MScheme.code.Sequence;
 import MScheme.code.CompiledLambda;
 
 import MScheme.environment.StaticEnvironment;
@@ -69,7 +70,7 @@ final class Letrec
         int numberOfFormals = formals.getLength();
 
         StaticEnvironment
-            bodyCompilationEnv = compilationEnv.newChild(formals);
+            bodyCompilationEnv = compilationEnv.createChild(formals);
 
         Code[] compiledBody = body.getCodeArray(bodyCompilationEnv);
 
@@ -106,8 +107,11 @@ final class Letrec
             new Code[]
             {
                 CompiledLambda.create( 
-                    Arity.exactly(0),  
-                    compiledLetrec
+                    Arity.exactly(0),
+                    bodyCompilationEnv.getSize(),
+                    Sequence.create(
+                        compiledLetrec
+                    )
                 )
             }
         );

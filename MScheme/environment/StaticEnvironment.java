@@ -116,12 +116,12 @@ public class StaticEnvironment
 
     // *** instance access ***************************************************
 
-    int getLevel ()
+    int getLevel()
     {
         return _level;
     }
 
-    int getSize  ()
+    public int getSize()
     {
         return _numberOfReferences;
     }
@@ -138,18 +138,18 @@ public class StaticEnvironment
         return _parent;
     }
 
-    public StaticEnvironment newChild()
+    public StaticEnvironment createChild()
     {
         return new StaticEnvironment(this);
     }
 
-    public StaticEnvironment newChild(List symbols)
+    public StaticEnvironment createChild(List symbols)
         throws CompileError, TypeError
     {
         return new StaticEnvironment(this, symbols);
     }
 
-    public StaticEnvironment newChild(Symbol symbol)
+    public StaticEnvironment createChild(Symbol symbol)
         throws CompileError
     {
         return new StaticEnvironment(this, symbol);

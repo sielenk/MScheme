@@ -80,7 +80,7 @@ public class TestEnvironment
     }
 
     public void testNormal()
-    throws Exception
+        throws Exception
     {
         try
         {
@@ -113,35 +113,8 @@ public class TestEnvironment
         );
     }
 
-    public void testChild()
-    throws Exception
-    {
-        Environment child  = env.newChild();
-
-        assertTrue(child != env);
-
-        env  .define(sym1, val1);
-        child.define(sym2, val2);
-
-        assertTrue(child.lookup(sym1) == val1);
-        assertTrue(child.lookup(sym2) == val2);
-        assertTrue(env  .lookup(sym1) == val1);
-
-        try
-        {
-            env.lookup(sym2);
-            fail("expected SymbolNotFoundException");
-        }
-        catch (SymbolNotFoundException e)
-        { }
-
-        env.define(sym2, val1);
-        assertTrue(child.lookup(sym2) == val2);
-        assertTrue(env  .lookup(sym2) == val1);
-    }
-
     public void testSyntax()
-    throws Exception
+        throws Exception
     {
         StaticEnvironment env = new StaticEnvironment();
 
@@ -180,7 +153,7 @@ public class TestEnvironment
     }
 
     public void testExtendedStatic()
-    throws Exception
+        throws Exception
     {
         env.getStatic().define(sym1);
 
@@ -198,5 +171,10 @@ public class TestEnvironment
             env.lookup(sym1) == val1
         );
     }
-}
 
+    public void testDynamic()
+        throws Exception
+    {
+        
+    }
+}

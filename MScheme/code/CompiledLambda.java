@@ -26,6 +26,7 @@ import java.io.Writer;
 import MScheme.Code;
 import MScheme.Value;
 
+import MScheme.environment.StaticEnvironment;
 import MScheme.environment.DynamicEnvironment;
 
 import MScheme.exceptions.ListExpected;
@@ -52,31 +53,49 @@ public final class CompiledLambda
 
 
     private final Arity _arity;
+    private final int   _frameSize;
     private       Code  _compiledBody;
 
     private CompiledLambda(
         Arity arity,
+        int   frameSize,
         Code  compiledBody
     )
     {
         _arity        = arity;
+        _frameSize    = frameSize;
         _compiledBody = compiledBody;
     }
 
     public static CompiledLambda create(
-        Arity arity,
-        Code  compiledBody
+        Arity             arity,
+        int               frameSize,
+        Code              compiledBody
     )
     {
-        return new CompiledLambda(arity, compiledBody);
+        return new CompiledLambda(
+            arity,
+            frameSize,
+            compiledBody
+        );
     }
 
     public static CompiledLambda create(
-        Arity  arity,
-        Code[] compiledBody
+        Arity             arity,
+        List              body,
+        StaticEnvironment env
     )
+        throws SchemeException
     {
-        return create(arity, Sequence.create(compiledBody));
+        Code compiledBody = Sequence.create(
+            body.getCodeArray(env)
+        );
+
+        return create(
+            arity,
+            env.getSize(),
+            compiledBody
+        );
     }
 
     final class Closure
@@ -111,7 +130,8 @@ public final class CompiledLambda
         {
             DynamicEnvironment newEnvironment =
                 _enclosingEnvironment.createChild(
-                    getArity(),
+                    _arity,
+                    _frameSize,
                     arguments
                 );
 

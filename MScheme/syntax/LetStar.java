@@ -75,9 +75,8 @@ final class LetStar
                 {
                     CompiledLambda.create(
                         Arity.exactly(0),
-                        body.getCodeArray(
-                            compilationEnv.newChild()
-                        )
+                        body,
+                        compilationEnv.createChild()
                     )
                 }
             );
@@ -86,7 +85,7 @@ final class LetStar
         {
             return
                 new LetStarHelper(body)
-                .translate(compilationEnv, bindings);
+                    .translate(compilationEnv, bindings);
         }
     }
 }
@@ -122,8 +121,8 @@ final class LetStarHelper
             Symbol formal  = binding.getHead().toSymbol();
             Value  init    = binding.getTail().getHead();
 
-            StaticEnvironment
-            innerEnvironment = outerEnvironment.newChild(formal);
+            StaticEnvironment innerEnvironment
+                = outerEnvironment.createChild(formal);
 
             Code innerBody = translate(
                                  innerEnvironment,
@@ -132,6 +131,7 @@ final class LetStarHelper
 
             Code lambda = CompiledLambda.create(
                               Arity.exactly(1),
+                              innerEnvironment.getSize(),
                               innerBody
                           );
 

@@ -41,18 +41,18 @@ public final class DynamicEnvironment
 
     // *******************************************************************
 
-    private final int               _level;
-    private final Vector[]          _frames;
+    private final Vector    _globals;
+    private final Value[][] _frames;
 
     // *******************************************************************
 
     private DynamicEnvironment(
-        int      level,
-        Vector[] frames
+        Vector    globals,
+        Value[][] frames
     )
     {
-        _level  = level;
-        _frames = frames;
+        _globals = globals;
+        _frames  = frames;
     }
 
     private static DynamicEnvironment create(
@@ -60,57 +60,51 @@ public final class DynamicEnvironment
         int                size
     )
     {
-        int      level  = (parent == null) ? 0 : parent._level + 1;
-        Vector[] frames = new Vector[level + 1];
+        Value[][] oldFrames = parent._frames;
+        int       newIndex  = (oldFrames == null) ? 0 : oldFrames.length;
+        Value[][] newFrames = new Value[newIndex + 1][];
 
-        if (level > 0)
+        if (newIndex > 0)
         {
             System.arraycopy(
-                parent._frames, 0,
-                        frames, 0,
-                level
+                oldFrames, 0,
+                newFrames, 0,
+                newIndex
             );
         }
 
-        {
-            Vector locations = new Vector();
-            locations.setSize(size);
-            frames[level] = locations;
-        }
+        newFrames[newIndex] = new Value[size];
 
-        return new DynamicEnvironment(level, frames);
+        return new DynamicEnvironment(
+            parent._globals,
+            newFrames
+        );
     }
 
     private static DynamicEnvironment create(
         DynamicEnvironment parent,
         Arity              arity,
+        int                frameSize,
         List               values
     ) throws PairExpected, ListExpected
     {
         DynamicEnvironment result = create(
             parent,
-            arity.getMin() + (arity.allowMore() ? 1 : 0)
+            frameSize
         );
 
-        Vector frame = result._frames[result._level];
-        List   rest  = values;
+        Value[] frame = result._frames[result._frames.length - 1];
+        List    rest  = values;
 
         for (int i = 0; i < arity.getMin(); i++)
         {
-            frame.setElementAt(
-                rest.getHead(),
-                i
-            );
-
-            rest = rest.getTail();
+            frame[i] = rest.getHead();
+            rest     = rest.getTail();
         }
 
         if (arity.allowMore())
         {
-            frame.setElementAt(
-                rest,
-                arity.getMin()
-            );
+            frame[arity.getMin()] = rest;
         }
 
         return result;
@@ -119,7 +113,10 @@ public final class DynamicEnvironment
 
     public static DynamicEnvironment create()
     {
-        return create(null, 0);
+        return new DynamicEnvironment(
+            new Vector(),
+            null
+        );
     }
 
     public DynamicEnvironment createChild(int size)
@@ -129,17 +126,13 @@ public final class DynamicEnvironment
 
     public DynamicEnvironment createChild(
         Arity             arity,
+        int               frameSize,
         List              values
     ) throws ListExpected, PairExpected
     {
-        return create(this, arity, values);
+        return create(this, arity, frameSize, values);
     }
 
-
-    public DynamicEnvironment getParent()
-    {
-        return new DynamicEnvironment(_level - 1, _frames);
-    }
 
     // *** Envrionment access ************************************************
 
@@ -147,31 +140,48 @@ public final class DynamicEnvironment
 
     public Value assign(Reference ref, Value value)
     {
-        Vector frame = _frames[ref.getLevel()];
-        int    index =         ref.getIndex() ;
+        int level = ref.getLevel();
+        int index = ref.getIndex();
 
-        try
+        Value result = null;
+
+        if (level > 0)
         {
-            Value result = (Value)frame.elementAt(index);
-            frame.setElementAt(value, index);
-            return (result != null) ? result : value;
+            result = _frames[level - 1][index];
+            _frames[level - 1][index] = value;
         }
-        catch (ArrayIndexOutOfBoundsException e)
+        else
         {
-            frame.setSize(index + 1);
-            frame.setElementAt(value, index);
-            return value;
+            try
+            {
+                result = (Value)_globals.elementAt(index);
+                _globals.setElementAt(value, index);
+            }
+            catch (ArrayIndexOutOfBoundsException e)
+            {
+                _globals.setSize(index + 1);
+                _globals.setElementAt(value, index);
+            }
         }
+
+        return (result != null) ? result : value;
     }
 
     public Value lookupNoThrow(Reference ref)
     {
         try
         {
-            return 
-                (Value)
-                _frames   [ref.getLevel()]
-                .elementAt(ref.getIndex());
+            int level = ref.getLevel();
+            int index = ref.getIndex();
+            
+            if (level > 0)
+            {
+                return _frames[level - 1][index];
+            }
+            else
+            {
+                return  (Value)_globals.elementAt(index);
+            }
         }
         catch (ArrayIndexOutOfBoundsException e)
         {
