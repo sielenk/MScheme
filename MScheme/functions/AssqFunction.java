@@ -9,6 +9,7 @@ public class AssqFunction
     public final static String id
         = "$Id$";
 
+
     public final static AssqFunction INSTANCE
         = new AssqFunction();
 

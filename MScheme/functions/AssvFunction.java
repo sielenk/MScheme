@@ -9,6 +9,7 @@ public class AssvFunction
     public final static String id
         = "$Id$";
 
+
     public final static AssvFunction INSTANCE
         = new AssvFunction();
 

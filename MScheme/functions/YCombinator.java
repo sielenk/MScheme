@@ -18,25 +18,22 @@ class YWrappedFunction
     public final static String id
         = "$Id$";
 
-    private final Arity    _arity;
+
     private final Function _f;
 
     YWrappedFunction(Function f)
         throws RuntimeArityError
-    {
-        _arity = f.getArity().getOneLess();
-        _f     = f;
-    }
-
-    public Arity getArity()
-    { return _arity; }
+    { _f = f; }
 
     public Code call(Registers state, List arguments)
         throws RuntimeError, TypeError
     {
         return _f.call(
             state,
-            ValueFactory.prepend(this, arguments)
+            ValueFactory.prepend(
+                this,
+                arguments
+            )
         );
     }
 }
@@ -46,6 +43,7 @@ public final class YCombinator
 {
     public final static String id
         = "$Id$";
+
 
     public final static YCombinator INSTANCE = new YCombinator();
 

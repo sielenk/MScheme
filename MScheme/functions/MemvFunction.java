@@ -9,6 +9,7 @@ public class MemvFunction
     public final static String id
         = "$Id$";
 
+
     public final static MemvFunction INSTANCE
         = new MemvFunction();
 

@@ -14,6 +14,7 @@ public abstract class ValueThunk
     public final static String id
         = "$Id$";
 
+
     protected final Code checkedCall(
         Registers state
     ) throws RuntimeError, TypeError

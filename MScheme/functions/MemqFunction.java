@@ -9,6 +9,7 @@ public class MemqFunction
     public final static String id
         = "$Id$";
 
+
     public final static MemqFunction INSTANCE
         = new MemqFunction();
 

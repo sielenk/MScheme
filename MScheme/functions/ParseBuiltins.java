@@ -15,6 +15,7 @@ public class ParseBuiltins
     public final static String id
         = "$Id$";
 
+
     private static boolean paramsValid(Class[] params)
     {
         if (params.length == 1) {
@@ -44,6 +45,7 @@ public class ParseBuiltins
             .append("{\n")
             .append("    public final static String id\n")
             .append("        = \"$Id$\";\n")
+            .append("\n")
             .append("\n")
             .append("    private final int    _id;\n")
             .append("    private final String _name;\n")
@@ -230,7 +232,7 @@ public class ParseBuiltins
             .append("        }\n")
             .append("    }\n")
             .append("\n")
-            .append("    public Arity getArity()\n")
+            .append("    protected Arity getArity()\n")
             .append("    { return Arity.atLeast(0); }\n")
             .append("\n")
             .append("    public Code call(Registers state, List args)\n")
@@ -286,6 +288,7 @@ public class ParseBuiltins
             "{\n" +
             "    String id\n" +
             "        = \"$Id$\";\n" +
+            "\n" +
             "\n" +
             "    String getName();\n" +
             "    Function getFunc();\n\n"

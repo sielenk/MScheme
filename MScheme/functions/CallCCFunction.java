@@ -15,6 +15,7 @@ public final class CallCCFunction
     public final static String id
         = "$Id$";
 
+
     public final static CallCCFunction INSTANCE = new CallCCFunction();
 
     private CallCCFunction()

@@ -14,6 +14,7 @@ public abstract class TernaryValueFunction
     public final static String id
         = "$Id$";
 
+
     protected final Code checkedCall(
         Registers state,
         Value     fst,

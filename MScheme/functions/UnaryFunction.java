@@ -17,10 +17,9 @@ public abstract class UnaryFunction
     public final static String id
         = "$Id$";
 
-    private final static Arity _unary = Arity.exactly(1);
 
-    public final Arity getArity()
-    { return _unary; }
+    protected final Arity getArity()
+    { return Arity.exactly(1); }
 
     protected final Code checkedCall(
         Registers state,

@@ -15,6 +15,7 @@ final class Adder
     public final static String id
         = "$Id$";
 
+
     Adder()
     { super(ScmNumber.create(0)); }
 
@@ -28,6 +29,7 @@ final class Suber
 {
     public final static String id
         = "$Id$";
+
 
     Suber(ScmNumber first)
     { super(first); }
@@ -43,6 +45,7 @@ final class Multiplier
     public final static String id
         = "$Id$";
 
+
     Multiplier()
     { super(ScmNumber.create(1)); }
 
@@ -56,7 +59,6 @@ final class Order {
     public final static String id
         = "$Id$";
 
-    private final static Arity _arity = Arity.atLeast(2);
 
     public final static int LT = -2;
     public final static int LE = -1;
@@ -67,10 +69,11 @@ final class Order {
     public final static boolean check(List arguments, int mode)
         throws RuntimeError, TypeError
     {
+        final Arity arity = Arity.atLeast(2);
         int len = arguments.getLength();
         
-        if (!_arity.isValid(len)) {
-            throw new RuntimeArityError(arguments, _arity);
+        if (!arity.isValid(len)) {
+            throw new RuntimeArityError(arguments, arity);
         }
 
         ScmNumber curr = arguments.getHead().toScmNumber();
@@ -118,6 +121,7 @@ public class Builtins
 {
     public final static String id
         = "$Id$";
+
 
     // 6. Standard procedures
 

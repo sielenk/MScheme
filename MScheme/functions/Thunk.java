@@ -16,10 +16,9 @@ public abstract class Thunk
     public final static String id
         = "$Id$";
 
-    private final static Arity _none = Arity.exactly(0);
 
-    public final Arity getArity()
-    { return _none; }
+    protected final Arity getArity()
+    { return Arity.exactly(0); }
 
     protected final Code checkedCall(
         Registers state,

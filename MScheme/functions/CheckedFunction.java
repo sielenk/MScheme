@@ -16,6 +16,9 @@ public abstract class CheckedFunction
     public final static String id
         = "$Id$";
 
+
+    protected abstract Arity getArity();
+
     protected abstract Code checkedCall(
         Registers state,
         int       len,
@@ -23,7 +26,7 @@ public abstract class CheckedFunction
     ) throws RuntimeError, TypeError;
 
 
-    // partial implementation of Function
+    // implementation of Function
 
     public final Code call(Registers state, List arguments)
         throws RuntimeError, TypeError
