@@ -39,27 +39,27 @@ class Order {
     public final static int GT =  2;
 
     public static boolean check(List arguments, int mode)
-        throws SchemeException
+        throws RuntimeError, TypeError
     {
         int len = arguments.getLength();
         
         if (!_arity.isValid(len)) {
-            throw new ArityException(arguments, _arity);
+            throw new RuntimeArityError(arguments, _arity);
         }
 
         SchemeNumber curr = arguments.getHead().toNumber();
         List         tail = arguments.getTail();
 
-        boolean rising   = true;
-        boolean strictly = true;
-        boolean falling  = true;
+        boolean rising  = true;
+        boolean strict  = true;
+        boolean falling = true;
 
         do {
             SchemeNumber next = tail.getHead().toNumber();
                          tail = tail.getTail();
 
             if (curr.isEqualTo(next)) {
-                strictly = false;
+                strict = false;
             } else {
                 if (curr.isLessThan(next)) {
                     falling = false;
@@ -76,11 +76,11 @@ class Order {
         } while (!tail.isEmpty());
 
         switch (mode) {
-        case LT: return strictly & rising;
+        case LT: return strict & rising;
         case LE: return rising;
         case EQ: return rising & falling;
         case GE: return falling;
-        case GT: return strictly & falling;
+        case GT: return strict & falling;
         }
 
         return false; // unknown mode ...
@@ -130,36 +130,36 @@ public class Builtins
 
 
     public static Value _3C(List arguments) // <
-        throws SchemeException
+        throws RuntimeError, TypeError
     { return SchemeBoolean.create(Order.check(arguments, Order.LT)); }
 
     public static Value _3C_3D(List arguments) // <=
-        throws SchemeException
+        throws RuntimeError, TypeError
     { return SchemeBoolean.create(Order.check(arguments, Order.LE)); }
 
     public static Value _3D(List arguments) // =
-        throws SchemeException
+        throws RuntimeError, TypeError
     { return SchemeBoolean.create(Order.check(arguments, Order.EQ)); }
 
     public static Value _3E_3D(List arguments) // >=
-        throws SchemeException
+        throws RuntimeError, TypeError
     { return SchemeBoolean.create(Order.check(arguments, Order.GE)); }
 
     public static Value _3E(List arguments) // >
-        throws SchemeException
+        throws RuntimeError, TypeError
     { return SchemeBoolean.create(Order.check(arguments, Order.GT)); }
 
 
     private final static Adder ADDER = new Adder();
 
     public static Value _2B(List arguments) // +
-        throws SchemeException
+        throws RuntimeError, TypeError
     { return ADDER.foldLeft(arguments); }
 
     private final static Multiplier MULTIPLITER = new Multiplier();
 
     public static Value _2A(List arguments) // *
-        throws SchemeException
+        throws RuntimeError, TypeError
     { return MULTIPLITER.foldLeft(arguments); }
 
     // 6.3 Other data types

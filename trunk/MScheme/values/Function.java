@@ -4,9 +4,10 @@ import java.io.Writer;
 import java.io.IOException;
 
 import MScheme.util.Arity;
-import MScheme.exceptions.*;
 import MScheme.machine.Machine;
 import MScheme.code.Code;
+
+import MScheme.exceptions.*;
 
 
 public abstract class Function
@@ -28,6 +29,6 @@ public abstract class Function
     // abstract function interface
     
     abstract public Code call(Machine machine, List arguments)
-        throws SchemeException;
+        throws RuntimeError, TypeError;
 }
 

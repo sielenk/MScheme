@@ -9,7 +9,7 @@ import MScheme.values.Function;
 import MScheme.values.List;
 import MScheme.values.Pair;
 
-import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.*;
 
 
 public class ApplyFunction
@@ -24,7 +24,7 @@ public class ApplyFunction
     protected Code checkedCall(
         Machine machine,
         List    arguments
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     {
         {
             Pair toBeModified = arguments.toPair();

@@ -4,7 +4,7 @@ import MScheme.values.Value;
 
 
 public class DuplicateSymbolException
-    extends SyntaxException
+    extends CompileError
 {
     public DuplicateSymbolException(Value cause)
     {

@@ -7,8 +7,9 @@ import MScheme.values.Value;
 import MScheme.values.List;
 import MScheme.values.Function;
 
-import MScheme.exceptions.SchemeException;
-import MScheme.exceptions.ArityException;
+import MScheme.exceptions.RuntimeError;
+import MScheme.exceptions.RuntimeArityError;
+import MScheme.exceptions.TypeError;
 
 
 abstract public class BinaryFunction
@@ -18,12 +19,12 @@ abstract public class BinaryFunction
     
     
     final public Code call(Machine machine, List arguments)
-        throws SchemeException
+        throws RuntimeError, TypeError
     {
         int len = arguments.getLength();
         
         if (!_binary.isValid(len)) {
-            throw new ArityException(arguments, _binary);
+            throw new RuntimeArityError(arguments, _binary);
         }
         
         return checkedCall(
@@ -37,5 +38,5 @@ abstract public class BinaryFunction
         Machine machine,
         Value   fst,
         Value   snd
-    ) throws SchemeException;
+    ) throws RuntimeError, TypeError;
 }

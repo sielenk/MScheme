@@ -5,8 +5,7 @@ import MScheme.environment.StaticEnvironment;
 import MScheme.code.Code;
 import MScheme.values.List;
 
-import MScheme.exceptions.SchemeException;
-import MScheme.exceptions.UnimplementedException;
+import MScheme.exceptions.CompileError;
 
 
 final class CondToken
@@ -18,12 +17,12 @@ final class CondToken
     { super(Arity.atLeast(1)); }
 
 
-    protected Code checkedTransform(
+    protected Code checkedTranslate(
         StaticEnvironment syntax,
         List              arguments
-    ) throws SchemeException
+    ) throws CompileError
     {
-        throw new UnimplementedException(null);
+        throw new CompileError(null);
     }
 }
 

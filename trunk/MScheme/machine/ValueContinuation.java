@@ -3,7 +3,7 @@ package MScheme.machine;
 import MScheme.code.Code;
 import MScheme.values.Value;
 
-import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.*;
 
 
 class ValueContinuation
@@ -17,7 +17,7 @@ class ValueContinuation
     protected Code internalInvoke(
         Machine machine,
         Value   value
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     { return machine.handleResult(_value); }
 }
 

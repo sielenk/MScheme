@@ -161,7 +161,7 @@ public class TestR5RS
             eval("(lambda (x y x) y)");
             fail();
         }
-        catch (SyntaxException e) { }
+        catch (CompileError e) { }
 
         check("((lambda x x) 3 4 5 6)", "(3 4 5 6)");
         check("((lambda (x y .z) z) 3 4 5 6)", "(5 6)");

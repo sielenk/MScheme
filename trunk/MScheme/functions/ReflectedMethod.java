@@ -9,8 +9,7 @@ import MScheme.values.Value;
 import MScheme.values.List;
 import MScheme.values.Function;
 
-import MScheme.exceptions.SchemeException;
-import MScheme.exceptions.ArityException;
+import MScheme.exceptions.*;
 
 
 public class ReflectedMethod
@@ -38,7 +37,7 @@ public class ReflectedMethod
     }
 
     final public Code call(Machine machine, List arguments)
-        throws SchemeException
+        throws RuntimeError, TypeError
     {
         Value[] argumentArray;
 
@@ -49,7 +48,7 @@ public class ReflectedMethod
             int len = arguments.getLength();
         
             if (!_arity.isValid(len)) {
-                throw new ArityException(arguments, _arity);
+                throw new RuntimeArityError(arguments, _arity);
             }
         
             argumentArray = new Value[len];
@@ -80,13 +79,15 @@ public class ReflectedMethod
         catch (InvocationTargetException e) {
             Throwable t = e.getTargetException();
 
-            if (!(t instanceof SchemeException)) {
+            if (t instanceof RuntimeError) {
+                throw (RuntimeError)e.getTargetException();
+            } else if (t instanceof TypeError) {
+                throw (TypeError)e.getTargetException();
+            } else {
                 throw new RuntimeException(
                     "not a SchemeException thrown in ReflectedMethod.call"
                 );
             }
-
-            throw (SchemeException)e.getTargetException();
         }
     }
 }

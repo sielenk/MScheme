@@ -3,7 +3,6 @@ package MScheme.code;
 import MScheme.util.Arity;
 import MScheme.machine.Machine;
 import MScheme.environment.StaticEnvironment;
-import MScheme.exceptions.SchemeException;
 import MScheme.functions.Closure;
 
 
@@ -26,7 +25,6 @@ final public class CompiledLambda
     }
 
     public Code executionStep(Machine machine)
-        throws SchemeException
     {
         return machine.handleResult(
             new Closure(

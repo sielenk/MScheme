@@ -10,7 +10,8 @@ import MScheme.code.Code;
 import MScheme.values.Value;
 import MScheme.functions.UnaryFunction;
 
-import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.RuntimeError;
+import MScheme.exceptions.TypeError;
 
 
 abstract class Continuation
@@ -44,7 +45,7 @@ abstract class Continuation
     protected void enter(Machine machine) { }
 
     final public Code invoke(Machine machine, Value value)
-        throws SchemeException
+        throws RuntimeError, TypeError
     {
         machine.setEnvironment (_capturedEnvironment);
         machine.setContinuation(_capturedContinuation);
@@ -56,7 +57,7 @@ abstract class Continuation
     abstract protected Code internalInvoke(
         Machine machine,
         Value value
-    ) throws SchemeException;
+    ) throws RuntimeError, TypeError;
         
         
     private static void dynamicWind(
@@ -103,7 +104,6 @@ abstract class Continuation
     // implementation of UnaryFunction
     
     protected Code checkedCall(Machine machine, Value argument)
-        throws SchemeException
     {
         Continuation source      = machine.getContinuation();
         Continuation destination = this;

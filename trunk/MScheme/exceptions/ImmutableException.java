@@ -4,7 +4,7 @@ import MScheme.values.Value;
 
 
 public class ImmutableException
-    extends SchemeException
+    extends RuntimeError
 {
     public ImmutableException(Value cause)
     { super(cause); }

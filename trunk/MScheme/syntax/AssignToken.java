@@ -21,12 +21,12 @@ abstract class AssignToken
     abstract protected Reference getReference(
         StaticEnvironment syntax,
         Symbol            symbol
-    ) throws SymbolNotFoundException, SyntaxException;
+    ) throws CompileError;
 
-    protected Code create(
+    protected Code checkedTranslate(
         StaticEnvironment syntax,
         List              arguments
-    ) throws SchemeException
+    ) throws CompileError, TypeError
     {
         Symbol symbol = arguments.getHead().toSymbol();
         Value  value  = arguments.getTail().getHead();

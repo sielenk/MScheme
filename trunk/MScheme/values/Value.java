@@ -114,10 +114,10 @@ public abstract class Value
     // compilation functions
     
     public abstract Code getCode(StaticEnvironment e)
-        throws SchemeException;
+        throws CompileError, TypeError;
 
     public Token getToken(StaticEnvironment e)
-        throws SchemeException
+        throws CompileError, TypeError
     { return getCode(e); }
 }
  

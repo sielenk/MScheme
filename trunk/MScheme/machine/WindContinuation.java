@@ -5,7 +5,7 @@ import MScheme.values.ValueFactory;
 import MScheme.values.Value;
 import MScheme.values.Function;
 
-import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.*;
 
 
 class CallThunkContinuation
@@ -19,7 +19,7 @@ class CallThunkContinuation
     protected Code internalInvoke(
         Machine machine,
         Value   value
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     { return _thunk.call(machine, ValueFactory.createList()); }
 }
 
@@ -47,7 +47,7 @@ class WindContinuation
         Function before,
         Function thunk,
         Function after
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     {
         new WindContinuation(machine, before, after);
         new CallThunkContinuation(machine, thunk);
@@ -64,7 +64,7 @@ class WindContinuation
     protected Code internalInvoke(
         Machine machine,
         Value   value
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     {
         new ValueContinuation(machine, value);
         return _after.call(machine, ValueFactory.createList());

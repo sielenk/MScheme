@@ -2,7 +2,9 @@ package MScheme.machine;
 
 import MScheme.code.Code;
 import MScheme.values.Value;
-import MScheme.exceptions.SchemeException;
+
+import MScheme.exceptions.RuntimeError;
+import MScheme.exceptions.TypeError;
 
 
 public class Literal
@@ -14,7 +16,7 @@ public class Literal
     { _literalValue = literalValue; }
 
     public Code executionStep(Machine machine)
-        throws SchemeException
+        throws RuntimeError, TypeError
     {
         return machine.getContinuation().invoke(
             machine,

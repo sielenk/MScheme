@@ -4,7 +4,7 @@ import MScheme.values.Value;
 
 
 public class ExpectedException
-    extends SchemeException
+    extends TypeError
 {
     public ExpectedException(Value cause)
     {

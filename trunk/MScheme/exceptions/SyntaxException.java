@@ -4,7 +4,7 @@ import MScheme.values.Value;
 
 
 public class SyntaxException
-    extends SchemeException
+    extends CompileError
 {
     public SyntaxException(Value cause)
     { super(cause); }

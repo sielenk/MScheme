@@ -6,6 +6,7 @@ import java.io.IOException;
 import MScheme.environment.StaticEnvironment;
 import MScheme.values.Value; 
 import MScheme.code.CodeList;
+
 import MScheme.exceptions.*;
 
 
@@ -91,8 +92,19 @@ public abstract class List
     
     abstract public boolean isEmpty();
     
-    abstract public int getLength()
-        throws ListExpectedException;
+    abstract public int safeGetLength();
+        
+    final public int getLength()
+        throws ListExpectedException
+    {
+        int result = safeGetLength();
+
+        if (result < 0) {
+            throw new ListExpectedException(this);
+        } else {
+            return result;
+        }
+    }
         
     abstract public Value getHead() throws PairExpectedException;
     abstract public List  getTail() throws ListExpectedException;
@@ -101,6 +113,6 @@ public abstract class List
 
 
     public abstract CodeList getCodeList(StaticEnvironment e)
-        throws SchemeException;
+        throws CompileError, TypeError;
 }
 

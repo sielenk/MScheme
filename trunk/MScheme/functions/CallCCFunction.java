@@ -7,7 +7,7 @@ import MScheme.values.ValueFactory;
 import MScheme.values.Value;
 import MScheme.values.List;
 
-import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.*;
 
 
 public class CallCCFunction
@@ -17,12 +17,12 @@ public class CallCCFunction
     
     
     protected Code checkedCall(Machine machine, Value argument)
-        throws SchemeException
+        throws RuntimeError, TypeError
     {
         return argument.toFunction().call(
             machine,
             ValueFactory.createList(
-                machine.getCurrentContinuation()
+                machine.getContinuation()
             )
         );
     }

@@ -24,10 +24,10 @@ final class LetToken
     { super(Arity.atLeast(2)); }
 
 
-    protected Code checkedTransform(
+    protected Code checkedTranslate(
         StaticEnvironment syntax,
         List              arguments
-    ) throws SchemeException
+    ) throws CompileError, TypeError
     {
         // (let ((<var> <init>) ...) <body>)
 
@@ -52,14 +52,15 @@ final class LetToken
 
 
         // ((lambda (<var> ...) <body>) <init> ...)
-        return SyntaxFactory.getLambdaToken(
-            ).translateArguments(
+        return LambdaToken.INSTANCE
+            .translate(
                 syntax,
                 ValueFactory.prepend(
                     formals,
                     body
                 )
-            ).translateArguments(
+            )
+            .translate(
                 syntax,
                 inits
             );

@@ -7,8 +7,9 @@ import MScheme.values.Value;
 import MScheme.values.List;
 import MScheme.values.Function;
 
-import MScheme.exceptions.SchemeException;
-import MScheme.exceptions.ArityException;
+import MScheme.exceptions.RuntimeError;
+import MScheme.exceptions.RuntimeArityError;
+import MScheme.exceptions.TypeError;
 
 
 abstract public class UnaryFunction
@@ -18,12 +19,12 @@ abstract public class UnaryFunction
     
     
     final public Code call(Machine machine, List arguments)
-        throws SchemeException
+        throws RuntimeError, TypeError
     {
         int len = arguments.getLength();
         
         if (!_unary.isValid(len)) {
-            throw new ArityException(arguments, _unary);
+            throw new RuntimeArityError(arguments, _unary);
         }
         
         return checkedCall(
@@ -35,5 +36,5 @@ abstract public class UnaryFunction
     abstract protected Code checkedCall(
         Machine machine,
         Value   fst
-    ) throws SchemeException;
+    ) throws RuntimeError, TypeError;
 }
