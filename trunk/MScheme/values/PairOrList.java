@@ -302,33 +302,24 @@ final class PairOrList
         }
     }
 
-    public CodeList getCodeList(StaticEnvironment compilationEnv)
-        throws SchemeException
-    {
-        return CodeList.prepend(
-                   getHead().getCode    (compilationEnv),
-                   getTail().getCodeList(compilationEnv)
-               );
-    }
-
     public Code[] getCodeArray(StaticEnvironment compilationEnv)
-    	throws SchemeException
+        throws SchemeException
     {
         return getCodeArray(compilationEnv, 0);
     }
 
     public Code[] getCodeArray(StaticEnvironment compilationEnv, int index)
-    	throws SchemeException
+        throws SchemeException
     {
-	Code         compiledHead = getHead().getCode(compilationEnv);
-	ExtendedList tail         = (ExtendedList)getTail();
-	Code[]       result       = tail.getCodeArray(
+        Code         compiledHead = getHead().getCode(compilationEnv);
+        ExtendedList tail         = (ExtendedList)getTail();
+        Code[]       result       = tail.getCodeArray(
                                         compilationEnv,
                                         index + 1
                                     );
 
-	result[index] = compiledHead;
-	
-	return result;
+        result[index] = compiledHead;
+        
+        return result;
     }
 }

@@ -48,9 +48,6 @@ public interface List
     Value getHead    () throws PairExpected;
     List  getTail    () throws PairExpected, ListExpected;
 
-    CodeList getCodeList(StaticEnvironment compilationEnv)
-        throws SchemeException;
-
     Code[] getCodeArray(StaticEnvironment compilationEnv)
         throws SchemeException;
 }
