@@ -43,6 +43,18 @@ public abstract class Function extends SExpr
     }
 
 
+    public int getMinArity()
+    {
+        return _minArity;
+    }
+
+
+    public int getMaxArity()
+    {
+        return _maxArity;
+    }
+
+
     private void _checkArity(
         Values arguments
     ) throws SException {
