@@ -16,7 +16,7 @@ public abstract class Value
 {
     /** 
      */
-    public Value setConst() { return this; }
+    public void setConst() { }
 
     /** <code>false</code> only for the false singleton */
     public boolean isTrue() { return true; }
@@ -118,7 +118,7 @@ public abstract class Value
 
     // compilation functions
 
-    public final Code getLiteral()
+    public final Literal getLiteral()
     { return new Literal(this); }
     
     public Code getCode(StaticEnvironment e)
