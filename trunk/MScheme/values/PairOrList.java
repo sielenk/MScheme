@@ -10,11 +10,11 @@ import MScheme.exceptions.*;
 
 
 final class PairOrList
-            extends Pair
-            implements List
+    extends Pair
+    implements List
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     private PairOrList(boolean isConst, Value first, Value second)
@@ -47,13 +47,13 @@ final class PairOrList
     }
 
     public List toList()
-    throws ListExpected
+        throws ListExpected
     {
         return isList() ? this : super.toList();
     }
 
     public int getLength()
-    throws ListExpected
+        throws ListExpected
     {
         try
         {
@@ -79,7 +79,7 @@ final class PairOrList
     }
 
     public final List getReversed()
-    throws ListExpected
+        throws ListExpected
     {
         try
         {
@@ -114,14 +114,14 @@ final class PairOrList
     }
 
     public List getTail()
-    throws ListExpected
+        throws ListExpected
     {
         return getSecond().toList();
     }
 
 
     public Code getCode(StaticEnvironment compilationEnv)
-    throws SchemeException
+        throws SchemeException
     {
         return
             getHead()
@@ -133,7 +133,7 @@ final class PairOrList
     }
 
     public CodeList getCodeList(StaticEnvironment compilationEnv)
-    throws SchemeException
+        throws SchemeException
     {
         return CodeList.prepend(
                    getHead().getCode    (compilationEnv),
