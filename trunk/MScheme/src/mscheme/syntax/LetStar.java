@@ -138,7 +138,7 @@ final class LetStarHelper
                 new Object[]
                 {
                     lambda,
-					Compiler.getForceable(outerEnvironment, init)
+					new Compiler(outerEnvironment).getForceable(init)
                 }
             );
         }

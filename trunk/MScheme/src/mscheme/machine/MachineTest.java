@@ -97,8 +97,8 @@ public class MachineTest
 		Object onTrue,
 		Object onFalse) throws Exception
 	{
-		return _machine.execute(
-		    (Object)new Selection(test, onTrue, onFalse));
+		return _machine.evaluate(
+		    Selection.create(test, onTrue, onFalse));
 	}
 
 	final public void testSelection() throws Exception
@@ -115,7 +115,7 @@ public class MachineTest
 		Object    value) throws Exception
 	{
 		_machine.execute(
-			(Object)new Assignment(_key, value));
+			Assignment.create(_key, value));
 
 		return _environment.lookup(_key);
 	}
@@ -128,7 +128,7 @@ public class MachineTest
 
 	final public void testSequence() throws Exception
 	{
-		Object[]  sequence = { new Assignment(_key, O3), O2 };
+		Object[]  sequence = { Assignment.create(_key, O3), O2 };
 		
 		assertSame(O1, _environment.lookup(_key));
 		assertSame(O2, _machine.execute((Object)Sequence.create(sequence)));
@@ -137,7 +137,7 @@ public class MachineTest
 
 	final public void testConj() throws Exception
 	{
-		Object    assignment = new Assignment(_key, O2);
+		Object    assignment = Assignment.create(_key, O2);
 		Object[]  sequence1  = { Boolean.FALSE, assignment };
 		Object[]  sequence2  = { Boolean.TRUE,  assignment };
 
@@ -150,7 +150,7 @@ public class MachineTest
 
 	final public void testDisj() throws Exception
 	{
-		Object    assignment = new Assignment(_key, O2);
+		Object    assignment = Assignment.create(_key, O2);
 		Object[]  sequence1  = { Boolean.TRUE,  assignment };
 		Object[]  sequence2  = { Boolean.FALSE, assignment };
 

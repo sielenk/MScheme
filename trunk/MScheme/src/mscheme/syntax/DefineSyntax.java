@@ -79,8 +79,9 @@ final class Macro
             )
         );
 
-        return Compiler.getForceable(
-        	ValueTraits.toStaticEnvironment(result.getFirst()),
+        return new Compiler(
+            ValueTraits.toStaticEnvironment(result.getFirst())
+        ).getForceable(
         	result.getSecond());
     }
 }

@@ -60,7 +60,7 @@ final class Set
 
         return translate(
             compilationEnv.getDelayedReferenceFor(symbol),
-			Compiler.getForceable(compilationEnv, value)
+			new Compiler(compilationEnv).getForceable(value)
         );
     }
 
