@@ -69,7 +69,6 @@ public class TestValue
         int count = 0;
 
         if (v.isList      ()) ++count;
-        if (v.isEmpty     ()) ++count;
 
         if (v.isScmBoolean()) ++count;
         if (v.isPair      ()) ++count;
@@ -148,10 +147,10 @@ public class TestValue
 
         assertTrue(empty.isTrue());
 
-        assertTrue(countTypes(empty) == 2); // List and Empty
+        assertTrue(countTypes(empty) == 1); // List
         assertTrue(countCasts(empty) == 1);
 
-        assertTrue(empty.isEmpty());
+        assertTrue(empty instanceof Empty);
 
         assertTrue(empty.isList());
         assertTrue(empty.toList() == empty);
