@@ -1,36 +1,40 @@
 <project name="MScheme" default="all">
   <property file="${basedir}/build.properties"/>
-  <property name="srcdir"      value="${basedir}/.."          />
-  <property name="classdir"    value="${basedir}/classes"     />
-  <property name="docdir"      value="${basedir}/doc/javadoc" />
-  <property name="schemedir"   value="${basedir}"             />
-  <property name="jarname"     value="MScheme.jar"            />
+  <property name="srcdir"      value="${basedir}"     />
+  <property name="classdir"    value="${basedir}"     />
+  <property name="docdir"      value="${basedir}/doc" />
+  <property name="schemedir"   value="${basedir}/scm" />
+  <property name="jarname"     value="mscheme.jar"    />
 
   <target name="init">
     <uptodate property="uptodate.Init"
-              targetfile="${srcdir}/MScheme/Init.java">
-      <srcfiles dir="${schemedir}" includes="*.scm"/>
+              targetfile="${srcdir}/mscheme/Init.java">
+      <srcfiles dir="${schemedir}"
+                includes="bootstrap.scm,rep.scm"/>
     </uptodate>
 
     <uptodate property="uptodate.BuiltinTable"
-              targetfile="${srcdir}/MScheme/values/functions/BuiltinTable.java">
-      <srcfiles dir="${srcdir}/MScheme/values/functions" 
+              targetfile="${srcdir}/mscheme/values/functions/BuiltinTable.java">
+      <srcfiles dir="${srcdir}/mscheme/values/functions" 
                 includes="ParseBuiltins.java,Builtins.java"/>
     </uptodate>
   </target>
 
   <target name="updateInit" depends="init" unless="uptodate.Init">
-    <exec executable="mkinit.pl" output="${srcdir}/MScheme/Init.java">
+    <delete file="${srcdir}/mscheme/Init.java"/>
+    <exec dir="${schemedir}"
+          executable="${basedir}/mkinit.pl"
+          output="${srcdir}/mscheme/Init.java">
       <arg value="bootstrap.scm"/>
       <arg value="rep.scm"/>
     </exec>
-    <delete file="${classdir}/MScheme/Init.class"/>
+    <delete file="${classdir}/mscheme/Init.class"/>
   </target>
 
   <target name="updateBuiltin" depends="init" unless="uptodate.BuiltinTable">
     <copy
-      file="${srcdir}/MScheme/values/functions/BuiltinTable.java.empty"
-      tofile="${srcdir}/MScheme/values/functions/BuiltinTable.java"
+      file="${srcdir}/mscheme/values/functions/BuiltinTable.java.empty"
+      tofile="${srcdir}/mscheme/values/functions/BuiltinTable.java"
       overwrite="yes"/>
   </target>
 
@@ -39,19 +43,19 @@
     <javac srcdir="${srcdir}"
            destdir="${classdir}"
            classpath="${classdir}"
-           includes="MScheme/**/*.java"
+           includes="mscheme/**/*.java"
            debug="on"/>
   </target>
 
   <target name="compileBuiltin" depends="compileMScheme" unless="uptodate.BuiltinTable">
-    <java classname="MScheme.values.functions.ParseBuiltins"
+    <java classname="mscheme.values.functions.ParseBuiltins"
           classpath="${classdir}"
-          output="${srcdir}/MScheme/values/functions/BuiltinTable.java"/>
-    <delete file="${classdir}/MScheme/values/functions/BuiltinTable.class"/>
+          output="${srcdir}/mscheme/values/functions/BuiltinTable.java"/>
+    <delete file="${classdir}/mscheme/values/functions/BuiltinTable.class"/>
     <javac srcdir="${srcdir}"
            destdir="${classdir}"
            classpath="${classdir}"
-           includes="MScheme/values/functions/BuiltinTable.java"
+           includes="mscheme/values/functions/BuiltinTable.java"
            debug="on"/>
   </target>
 
@@ -66,23 +70,23 @@
 
       <formatter type="plain"/>
 
-      <test name="MScheme.util.TestArity"/>
+      <test name="mscheme.util.TestArity"/>
 
-      <test name="MScheme.values.TestList"/>
-      <test name="MScheme.values.TestInputPort"/>
+      <test name="mscheme.values.TestList"/>
+      <test name="mscheme.values.TestInputPort"/>
 
-      <test name="MScheme.environment.TestEnvironment"/>
+      <test name="mscheme.environment.TestEnvironment"/>
 
-      <test name="MScheme.tests.TestR5RS"/>
-      <test name="MScheme.tests.TestMachine"/>
-      <test name="MScheme.tests.TestValue"/>
-      <test name="MScheme.tests.TestBugs"/>
+      <test name="mscheme.tests.TestR5RS"/>
+      <test name="mscheme.tests.TestMachine"/>
+      <test name="mscheme.tests.TestValue"/>
+      <test name="mscheme.tests.TestBugs"/>
     </junit>
   </target>
 
   <target name="jar" depends="compile">
     <jar jarfile="${classdir}/${jarname}"
-         basedir="${classdir}/MScheme"
+         basedir="${classdir}/mscheme"
          excludes="**/Test*.class"
     />
   </target>
