@@ -4,7 +4,8 @@ package MScheme.expressions.functions;
 import MScheme.expressions.SExpr;
 
 import MScheme.machine.Values;
-import MScheme.machine.ContinuationStack;
+import MScheme.machine.Machine;
+
 import MScheme.environment.Environment;
 
 
@@ -20,9 +21,8 @@ public class ConstFunc extends Function
     }
 
     protected Values _call(
-        ContinuationStack stack,
-        Environment       environment,
-        Values            arguments
+        Machine machine,
+        Values  arguments
     ) {
         return _value;
     }

@@ -5,7 +5,7 @@ import MScheme.expressions.SExpr;
 import MScheme.expressions.SBool;
 
 import MScheme.machine.Values;
-import MScheme.machine.ContinuationStack;
+import MScheme.machine.Machine;
 
 import MScheme.environment.Environment;
 import MScheme.environment.EnvironmentStub;
@@ -31,17 +31,16 @@ public class ClosureFunc extends Function
     }
 
     protected Values _call(
-        ContinuationStack stack,
-        Environment       environment,
-        Values            arguments
+        Machine machine,
+        Values  arguments
     ) {
-        stack.push(
+        machine.push(
+            SyntaxFunc.BEGIN_FUNC,
             _stub.fill(
                 getMinArity(),
                 (getMaxArity() == -1),
                 arguments
-            ),
-            SyntaxFunc.BEGIN_FUNC
+            )
         );
 
         return _body;

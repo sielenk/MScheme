@@ -7,7 +7,7 @@ import MScheme.expressions.SFunction;
 import MScheme.exceptions.SExpectedFunctionException;
 
 import MScheme.machine.Values;
-import MScheme.machine.ContinuationStack;
+import MScheme.machine.Machine;
 
 import MScheme.environment.Environment;
 
@@ -24,15 +24,13 @@ public class ExpectFunctionFunc extends Function
     }
 
     protected Values _call(
-        ContinuationStack stack,
-        Environment       environment,
-        Values            arguments
+        Machine machine,
+        Values  arguments
     ) throws SExpectedFunctionException {
         SExpr sexpr = arguments.at(0);
 
         try {
-            stack.push(
-                environment,
+            machine.push(
                 (SFunction)sexpr
             );
         } catch (ClassCastException e) {

@@ -12,7 +12,7 @@ import MScheme.exceptions.SExpectedListException;
 import MScheme.exceptions.SCantEvaluateException;
 
 import MScheme.machine.Values;
-import MScheme.machine.ContinuationStack;
+import MScheme.machine.Machine;
 
 import MScheme.environment.Environment;
 
@@ -29,28 +29,26 @@ public class EvalFunc extends Function
 
 
     protected Values _call(
-        ContinuationStack stack,
-        Environment       environment,
-        Values            arguments
+        Machine machine,
+        Values  arguments
     ) throws SException {
         SExpr sexpr = arguments.at(0);
 
         if (sexpr instanceof SSymbol) {
-            sexpr = environment.get((SSymbol)sexpr);
+            sexpr = machine
+                .getEnvironment()
+                .get((SSymbol)sexpr);
             // throws SSymbolNotFoundException
         } else if (sexpr instanceof SPair) {
             SPair pair = (SPair)sexpr;
 
             try {
-                stack.push(
-                    environment,
-                    new ComposeFunc(
-                        EvalFunc.INSTANCE,
-                        new ExpectFunctionFunc(
-                            ((SList)(pair.getCdr())).toValues()
-                        )
+                machine.push(
+                    new ExpectFunctionFunc(
+                        ((SList)(pair.getCdr())).toValues()
                     )
                 );
+                machine.push(EvalFunc.INSTANCE);
 
                 sexpr = pair.getCar();
             } catch (ClassCastException e) {
