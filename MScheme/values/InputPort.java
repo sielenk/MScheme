@@ -38,7 +38,7 @@ class EofValue
 
 
 public class InputPort
-    extends ValueDefaultImplementations
+    extends Port
 {
     public final static String id
         = "$Id$";
@@ -98,11 +98,6 @@ public class InputPort
         throws IOException
     {
         destination.write("[input port]");
-    }
-
-    public boolean isPort()
-    {
-        return true;
     }
 
     public InputPort toInputPort()

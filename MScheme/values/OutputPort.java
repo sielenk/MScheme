@@ -13,7 +13,7 @@ import MScheme.exceptions.CloseException;
 
 
 public class OutputPort
-            extends ValueDefaultImplementations
+            extends Port
 {
     public final static String id
     = "$Id$";
@@ -65,11 +65,6 @@ public class OutputPort
     throws IOException
     {
         destination.write("[output port]");
-    }
-
-    public boolean isPort()
-    {
-        return true;
     }
 
     public OutputPort toOutputPort()
