@@ -2,7 +2,7 @@ package MScheme.functions;
 
 import MScheme.util.Arity;
 import MScheme.machine.Machine;
-import MScheme.environment.DynamicEnvironment;
+import MScheme.environment.Environment;
 import MScheme.values.*;
 
 import MScheme.exceptions.*;
@@ -373,7 +373,7 @@ public class Builtins
             throw new RuntimeError(fst);
         }
 
-        return DynamicEnvironment.getSchemeReportEnvironment();
+        return Environment.getSchemeReportEnvironment();
     }
 
     public final static Value null_2Denvironment(Value fst)
@@ -383,7 +383,7 @@ public class Builtins
             throw new RuntimeError(fst);
         }
 
-        return DynamicEnvironment.getNullEnvironment();
+        return Environment.getNullEnvironment();
     }
 
 

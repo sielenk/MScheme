@@ -4,7 +4,7 @@ import java.io.Writer;
 import java.io.StringWriter;
 import java.io.IOException;
 
-import MScheme.environment.DynamicEnvironment;
+import MScheme.environment.Environment;
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Token;
 import MScheme.code.Code;
@@ -83,7 +83,7 @@ public abstract class Value
         throws FunctionExpected
     { throw new FunctionExpected(this); }
 
-    public DynamicEnvironment toEnvironment()
+    public Environment toEnvironment()
         throws EnvironmentExpected
     { throw new EnvironmentExpected(this); }
 

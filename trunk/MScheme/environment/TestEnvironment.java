@@ -11,7 +11,7 @@ import MScheme.exceptions.*;
 public class TestEnvironment
     extends junit.framework.TestCase
 {
-    protected DynamicEnvironment env;
+    protected Environment env;
     protected Symbol sym1;
     protected Symbol sym2;
     protected Value  val1;
@@ -22,7 +22,7 @@ public class TestEnvironment
     
     protected void setUp()
     {
-        env = DynamicEnvironment.getEmpty();
+        env = Environment.getEmpty();
     
         sym1 = Symbol.create("test1");
         sym2 = Symbol.create("test2");
@@ -80,7 +80,7 @@ public class TestEnvironment
     public void testChild()
         throws Exception
     {
-        DynamicEnvironment child  = env.newChild();
+        Environment child  = env.newChild();
         
         assert(child != env);
         

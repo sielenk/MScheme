@@ -21,7 +21,7 @@ public class TestMachine
     private Value       _val1;
     private Value       _val2;
     private Value       _unval;
-    private DynamicEnvironment _environment;
+    private Environment _environment;
 
 
     public TestMachine(String name)
@@ -38,7 +38,7 @@ public class TestMachine
         _val2  = ScmBoolean.createFalse();
         _unval = Empty.create();
     
-        _environment = DynamicEnvironment.getNullEnvironment();
+        _environment = Environment.getNullEnvironment();
     
         machine = new Machine(_environment);
     }
@@ -78,8 +78,7 @@ public class TestMachine
     {
         assert(machine.getEnvironment() == _environment);
     
-        DynamicEnvironment
-            otherEnvironment = _environment.newChild();
+        Environment otherEnvironment = _environment.newChild();
         
         machine.setEnvironment(otherEnvironment);
 

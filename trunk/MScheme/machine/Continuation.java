@@ -3,7 +3,7 @@ package MScheme.machine;
 import java.io.Writer;
 import java.io.IOException;
 
-import MScheme.environment.DynamicEnvironment;
+import MScheme.environment.Environment;
 import MScheme.code.Code;
 import MScheme.code.CodeList;
 import MScheme.code.Sequence;
@@ -91,9 +91,9 @@ class ContinuationFunction
 
 public abstract class Continuation
 {
-    final private int                _level;
-    final private DynamicEnvironment _capturedEnvironment;
-    final private Continuation       _capturedContinuation;
+    final private int          _level;
+    final private Environment  _capturedEnvironment;
+    final private Continuation _capturedContinuation;
 
 
     protected Continuation(Machine machine)

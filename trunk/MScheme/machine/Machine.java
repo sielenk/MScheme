@@ -31,23 +31,23 @@ class AbortContinuation
 
 public class Machine
 {
-    private DynamicEnvironment _environment;
-    private Continuation       _continuation;
+    private Environment  _environment;
+    private Continuation _continuation;
     
-    public Machine(DynamicEnvironment environment)
+    public Machine(Environment environment)
     {
         _environment  = environment;
         _continuation = null;
     }
 
     public Machine()
-    { this(DynamicEnvironment.getSchemeReportEnvironment()); }
+    { this(Environment.getSchemeReportEnvironment()); }
 
 
-    public DynamicEnvironment getEnvironment()
+    public Environment getEnvironment()
     { return _environment; }
 
-    public void setEnvironment(DynamicEnvironment newEnvironment)
+    public void setEnvironment(Environment newEnvironment)
     { _environment = newEnvironment; }
     
 
