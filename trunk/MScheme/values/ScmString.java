@@ -15,11 +15,21 @@ public final class ScmString
         = "$Id$";
 
 
-    private char[] _string;
+    private final char[]  _string;
 
 
-    private ScmString(String value)
+    private ScmString(boolean isConst, int size, char fill)
     {
+        super(isConst);
+        _string = new char[size];
+        for (int i = 0; i < size; ++i) {
+            _string[i] = fill;
+        }
+    }
+
+    private ScmString(boolean isConst, String value)
+    {
+        super(isConst);
         _string = new char[value.length()];
         value.getChars(
             0,
@@ -29,15 +39,17 @@ public final class ScmString
         );
     }
 
+    public static ScmString create(int size, char fill)
+    { return new ScmString(false, size, fill); }
+
     public static ScmString create(String javaString)
-    { return new ScmString(javaString); }
+    { return new ScmString(false, javaString); }
+
+    public static ScmString createConst(String javaString)
+    { return new ScmString(true, javaString); }
 
     public static ScmString create(Symbol schemeSymbol)
-    {
-        ScmString result = create(schemeSymbol.getJavaString());
-        result.setConst();
-        return result;
-    }
+    { return createConst(schemeSymbol.getJavaString()); }
 
 
     public String getJavaString()
@@ -52,15 +64,32 @@ public final class ScmString
     public ScmString toScmString()
     { return this; }
 
+    public Value getConst()
+    { return isConst() ? this : createConst(getJavaString()); }
+
 
     // accessors
 
+    public int getLength()
+    { return _string.length; }
+    
     public void set(int index, char c)
         throws InvalidStringIndexException, ImmutableException
     {
         modify();
         try {
             _string[index] = c;
+        }
+        catch (ArrayIndexOutOfBoundsException e) {
+            throw new InvalidStringIndexException(this, index);
+        }
+    }
+
+    public char get(int index)
+        throws InvalidStringIndexException
+    {
+        try {
+            return _string[index];
         }
         catch (ArrayIndexOutOfBoundsException e) {
             throw new InvalidStringIndexException(this, index);
