@@ -14,14 +14,18 @@ public final class Pair
     private boolean _isLiteral = false;
   
 
-    Pair(Value first, Value second)
+    private Pair(Value first, Value second)
     {
         _first  = first;
         _second = second;
     }
 
-    public void setLiteral()
-    { _isLiteral = true; }
+    public static Pair create(Value first, Value second)
+    { return new Pair(first, second); }
+
+
+    public Value setLiteral()
+    { _isLiteral = true; return this; }
 
 
     // implementation of List
