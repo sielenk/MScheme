@@ -17,10 +17,10 @@ public class SchemeNumber
     
     // implementation of Value
     
-    public boolean isNumber()
+    public boolean isScmNumber()
     { return true; }
     
-    public SchemeNumber toNumber()
+    public SchemeNumber toScmNumber()
     { return this; }
     
     public boolean eqv(Value other)

@@ -11,7 +11,7 @@ import MScheme.exceptions.CloseException;
 
 
 public class OutputPort
-    extends Port
+    extends Value
 {
     private final Writer _writer;
     
@@ -45,10 +45,14 @@ public class OutputPort
 
     // specialisation of Port
     
-    public boolean isOutput()
+    public void write(Writer destination)
+        throws IOException
+    { destination.write("[output port]"); }
+        
+    public boolean isPort()
     { return true; }
     
-    public OutputPort toOutput()
+    public OutputPort toOutputPort()
     { return this; }
     
     

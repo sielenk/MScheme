@@ -117,7 +117,7 @@ public class TestR5RS
         catch (ImmutableException e) { }
 
         try {
-            eval("'#(1 2 3)").toVector().set(0, quote("a"));
+            eval("'#(1 2 3)").toScmVector().set(0, quote("a"));
             fail();
         }
         catch (ImmutableException e) { }

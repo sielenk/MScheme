@@ -40,7 +40,7 @@ public final class SchemeString
 
     // specialisation of Value
 
-    public boolean isString()
+    public boolean isScmString()
     { return true; }
 
     public SchemeString toScmString()

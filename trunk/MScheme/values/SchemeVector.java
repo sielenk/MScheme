@@ -91,10 +91,10 @@ public final class SchemeVector
     
     // specialisation of Value
     
-    public boolean isVector()
+    public boolean isScmVector()
     { return true; }
     
-    public SchemeVector toVector()
+    public SchemeVector toScmVector()
     { return this; }
 
     

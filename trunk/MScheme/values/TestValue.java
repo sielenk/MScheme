@@ -24,15 +24,15 @@ public class TestValue
     {
         int count = 0;
     
-        if (v.isBoolean ()) count++;
-        if (v.isPair    ()) count++;
-        if (v.isSymbol  ()) count++;
-        if (v.isNumber  ()) count++;
-        if (v.isScmChar ()) count++;
-        if (v.isString  ()) count++;
-        if (v.isVector  ()) count++;
-        if (v.isPort    ()) count++;
-        if (v.isFunction()) count++;
+        if (v.isScmBoolean()) count++;
+        if (v.isPair      ()) count++;
+        if (v.isSymbol    ()) count++;
+        if (v.isScmNumber ()) count++;
+        if (v.isScmChar   ()) count++;
+        if (v.isScmString ()) count++;
+        if (v.isScmVector ()) count++;
+        if (v.isPort      ()) count++;
+        if (v.isFunction  ()) count++;
         
         return count;
     }
@@ -48,12 +48,12 @@ public class TestValue
     {
         Pair.create(null, null).toPair();
         Empty.create().toList();
-        ValueFactory.createNumber(0).toNumber();
+        SchemeNumber.create(0).toScmNumber();
         ScmChar.create('a').toScmChar();
         ValueFactory.createString("").toScmString();
-        ValueFactory.createVector().toVector();
-        ValueFactory.createInputPort().toPort().toInput();
-        ValueFactory.createOutputPort().toPort().toOutput();
+        ValueFactory.createVector().toScmVector();
+        InputPort .create().toInputPort();
+        OutputPort.create().toOutputPort();
     }
 
     public void testTrue()
@@ -63,7 +63,7 @@ public class TestValue
 
         assert(True.isTrue());
         
-        assert(True.isBoolean());
+        assert(True.isScmBoolean());
         assert(countTypes(True) == 1);
         
         checkNotAList(True);
@@ -76,7 +76,7 @@ public class TestValue
 
         assert(!False.isTrue());
         
-        assert(False.isBoolean());
+        assert(False.isScmBoolean());
         assert(countTypes(False) == 1);
         
         checkNotAList(False);
@@ -176,7 +176,7 @@ public class TestValue
         final Value number = ValueFactory.createNumber(49875);
     
         commonLiteralTests(number);
-        assert(number.isNumber());
+        assert(number.isScmNumber());
     }
     
     public void testChar()
@@ -194,7 +194,7 @@ public class TestValue
         final Value string = ValueFactory.createString("Hallo !");
     
         commonLiteralTests(string);
-        assert(string.isString());
+        assert(string.isScmString());
     }
     
     public void testVector()
@@ -204,7 +204,7 @@ public class TestValue
     
         commonLiteralTests(vector);
         assert(
-            vector.isVector()
+            vector.isScmVector()
         );
     }
     
