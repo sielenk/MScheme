@@ -18,10 +18,10 @@ import MScheme.exceptions.*;
 
 
 final class Define
-            extends Syntax
+    extends CheckedSyntax
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     final static Syntax INSTANCE = new Define();

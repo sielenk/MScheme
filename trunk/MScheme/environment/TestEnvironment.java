@@ -124,7 +124,7 @@ public class TestEnvironment
 
         try
         {
-            env.getTranslatorFor(sym1);
+            env.getSyntaxFor(sym1);
             fail("expected SymbolNotFoundException");
         }
         catch (SymbolNotFoundException e)
@@ -132,7 +132,7 @@ public class TestEnvironment
 
         try
         {
-            env.getTranslatorFor(sym1);
+            env.getSyntaxFor(sym1);
             fail("expected SymbolNotFoundException");
         }
         catch (SymbolNotFoundException e)
@@ -141,7 +141,7 @@ public class TestEnvironment
         Syntax    token = SyntaxFactory.getBeginToken();
         env.defineSyntax(sym1, token);
 
-        assert(env.getTranslatorFor(sym1) == token);
+        assert(env.getSyntaxFor(sym1) == token);
 
         try
         {

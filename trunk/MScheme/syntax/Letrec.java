@@ -20,10 +20,10 @@ import MScheme.values.*;
 // *** letrec ***
 
 final class Letrec
-            extends Syntax
+    extends CheckedSyntax
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     final static Syntax INSTANCE = new Letrec();

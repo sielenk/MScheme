@@ -17,7 +17,7 @@ import MScheme.exceptions.SchemeException;
 
 
 final class Lambda
-            extends Syntax
+    extends CheckedSyntax
 {
     public final static String id
     = "$Id$";

@@ -18,10 +18,10 @@ import MScheme.values.*;
 // *** let ***
 
 final class Let
-            extends Syntax
+    extends CheckedSyntax
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     final static Syntax INSTANCE = new Let();

@@ -19,7 +19,7 @@ import MScheme.exceptions.SchemeException;
 
 
 final class If
-            extends Syntax
+    extends CheckedSyntax
 {
     public final static String id
     = "$Id$";

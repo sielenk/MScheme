@@ -4,7 +4,7 @@ import java.io.Writer;
 import java.io.IOException;
 
 import MScheme.Value;
-import MScheme.Translator;
+import MScheme.Syntax;
 import MScheme.Code;
 
 import MScheme.environment.Reference;
@@ -97,9 +97,9 @@ public final class Symbol
         return getReference(env);
     }
 
-    public Translator getTranslator(StaticEnvironment env)
+    public Syntax getSyntax(StaticEnvironment env)
     throws SymbolNotFoundException
     {
-        return env.getTranslatorFor(this);
+        return env.getSyntaxFor(this);
     }
 }

@@ -13,10 +13,10 @@ import MScheme.exceptions.SchemeException;
 
 
 final class Begin
-            extends Syntax
+    extends CheckedSyntax
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     final static Syntax INSTANCE = new Begin();

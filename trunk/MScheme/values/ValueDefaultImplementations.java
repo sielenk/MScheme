@@ -5,7 +5,7 @@ import java.io.StringWriter;
 import java.io.IOException;
 
 import MScheme.Value;
-import MScheme.Translator;
+import MScheme.Syntax;
 import MScheme.Code;
 
 import MScheme.syntax.ProcedureCall;
@@ -357,7 +357,7 @@ public abstract class ValueDefaultImplementations
      * <p>
      * @return <code>getCode(compilationEnv)</code>
      */
-    public Translator getTranslator(StaticEnvironment compilationEnv)
+    public Syntax getSyntax(StaticEnvironment compilationEnv)
         throws SchemeException
     {
         return ProcedureCall.create(

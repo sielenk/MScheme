@@ -16,7 +16,7 @@ import MScheme.exceptions.TypeError;
 // *** quote ***
 
 final class Quote
-            extends Syntax
+    extends CheckedSyntax
 {
     public final static String id
     = "$Id$";

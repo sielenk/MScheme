@@ -125,7 +125,7 @@ final class PairOrList
     {
         return
             getHead()
-            .getTranslator(compilationEnv)
+            .getSyntax(compilationEnv)
             .translate(
                 compilationEnv,
                 getTail()
