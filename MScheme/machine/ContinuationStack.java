@@ -1,7 +1,7 @@
 package MScheme.machine;
 
 
-import MScheme.expressions.functions.Function;
+import MScheme.expressions.SFunction;
 import MScheme.environment.Environment;
 
 
@@ -42,7 +42,7 @@ public class ContinuationStack
 
     public void push(
         Environment environment,
-        Function    function
+        SFunction   function
     ) {
         new Continuation(
             this,

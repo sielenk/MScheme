@@ -3,7 +3,7 @@ package MScheme.machine;
 import MScheme.machine.Values;
 import MScheme.exceptions.SException;
 import MScheme.environment.Environment;
-import MScheme.expressions.functions.Function;
+import MScheme.expressions.SFunction;
 
 
 class Context
@@ -34,14 +34,14 @@ class Context
 
 class Continuation extends Context
 {
-    private Function _function;
+    private SFunction _function;
 
     /** push a new continuation on the given machine
      */
     Continuation(
         ContinuationStack stack,
         Environment       environment,
-        Function          function
+        SFunction         function
     ) {
         super(stack, environment);
         stack.setTop(this);
