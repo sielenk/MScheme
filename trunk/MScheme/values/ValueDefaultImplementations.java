@@ -396,7 +396,7 @@ public abstract class ValueDefaultImplementations
     public Code getCode(StaticEnvironment compilationEnv)
         throws SchemeException
     {
-        return this;
+        return getConst().getLiteral();
     }
 
     /**
