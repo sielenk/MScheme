@@ -2,7 +2,7 @@ package MScheme.exceptions;
 
 import MScheme.expressions.SSymbol;
 
-public class SSymbolNotFoundException extends SException 
+public class SSymbolNotFoundException extends SException
 {
     SSymbolNotFoundException(SSymbol symbol)
     {
