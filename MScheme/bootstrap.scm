@@ -25,26 +25,6 @@
 (begin
   (define update-null-environment
     (let ()
-      (define (and-func def-env use-env . args)
-        (if (null? args)
-          #t
-          (let ((head (car args))
-                (tail (cdr args)))
-            (if (null? tail)
-              head
-              (list 'if head (cons 'and tail) #f)))))
-
-      (define (or-func def-env use-env . args)
-        (if (null? args)
-          #f
-          (let ((head (car args))
-                (tail (cdr args)))
-            (if (null? tail)
-              head
-              (let ((id (unique-id)))
-                (list 'let (list (list id head))
-                      (list 'if id id (cons 'or tail))))))))
-
       (define (make-promise proc)
         (let ((result-ready? #f)
               (result #f))
@@ -71,8 +51,6 @@
       (lambda (env)
         (eval
          (list 'begin
-           (list 'define-syntax 'and        (wrapper and-func))
-           (list 'define-syntax 'or         (wrapper or-func))
            (list 'define-syntax 'delay      (wrapper delay-func)))
          env)
         env)))
