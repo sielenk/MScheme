@@ -38,6 +38,8 @@ public interface List
         = "$Id$";
 
 
+    boolean isEmpty();
+
     int   getLength  ();
     List  getReversed();
     List  getCopy    ();
