@@ -70,7 +70,6 @@ SRC =	Code.java	\
 	functions/MemberFunction.java	\
 	functions/MemqFunction.java	\
 	functions/MemvFunction.java	\
-	functions/ParseBuiltins.java	\
 	functions/Reducer.java	\
 	functions/TernaryFunction.java	\
 	functions/TernaryValueFunction.java	\
@@ -137,11 +136,12 @@ PACKAGES =	MScheme			\
 		MScheme.values		\
 		MScheme.tests
 
-JIKES=jikes -bootclasspath /usr/lib/java/jre/lib/rt.jar
 GCJ=gcj
+JAVAC=jikes -bootclasspath /usr/lib/java/jre/lib/rt.jar +P
+# JAVAC = $(GCJ) -W -Wall -C
 
 all: functions/BuiltinTable.java
-	$(JIKES) +P `find . -name "*.java"`
+	$(JAVAC) `find . -name "*.java"`
 	time java junit.textui.TestRunner MScheme.TestMScheme
 
 functions/BuiltinTable.java: functions/ParseBuiltins.class functions/Builtins.class
@@ -149,17 +149,17 @@ functions/BuiltinTable.java: functions/ParseBuiltins.class functions/Builtins.cl
 
 functions/ParseBuiltins.class: functions/ParseBuiltins.java
 	cp functions/BuiltinTable.java.empty functions/BuiltinTable.java
-	$(JIKES) functions/ParseBuiltins.java
+	$(JAVAC) functions/ParseBuiltins.java
 	touch functions/Builtins.java
 
 functions/Builtins.class: functions/Builtins.java
-	$(JIKES) functions/Builtins.java
+	$(JAVAC) functions/Builtins.java
 
 %.o: %.java
-	$(GCJ) -ggdb -o $@ -c $<
+	$(GCJ) -O2 -o $@ -c $<
 
 main: $(OBJ)
-	gcj -ggdb --main=MScheme.Main -o main $^
+	$(GCJ) -O2 --main=MScheme.Main -o main $^
 
 depend:
 	touch depend
