@@ -45,11 +45,13 @@ class SelectFunc extends Function
             EvalFunc.INSTANCE
         );
 
-        return new Values(
-            (flag != SBool.FALSE)
-            ? _trueExpr
-            : _falseExpr
-        );
+        if (flag != SBool.FALSE) {
+            return new Values(_trueExpr);
+        } else if (_falseExpr != null) {
+            return new Values(_falseExpr);
+        } else {
+            return Values.EMPTY;
+        }
     }
 
 
@@ -170,6 +172,12 @@ public class SyntaxFunc
 
     // *** Operator implementation *******************************************
 
+    protected boolean evaluateArgs()
+    {
+        return false;
+    }
+
+
     protected Values _call(
         ContinuationStack stack,
         Environment       environment,
@@ -198,7 +206,7 @@ public class SyntaxFunc
                     );
                 }
                 return new Values(
-                    arguments.at(0 /* = i */)
+                    arguments.at(0 /* = --i */)
                 );
             }
 
@@ -244,17 +252,15 @@ public class SyntaxFunc
                     );
                 }
 
-                EnvironmentStub stub
-                    = environment.newChildStub(symbols);
-
-                Values  body = arguments.getTail();
-
                 return new Values(
-                    new ClosureFunc(
-                        stub,
-                        minArity,
-                        allowMore,
-                        body
+                    MapFunc.wrap(
+                        EvalFunc.INSTANCE,
+                        new ClosureFunc(
+                            environment.newChildStub(symbols),
+                            minArity,
+                            allowMore,
+                            arguments.getTail()
+                        )
                     )
                 );
             }
