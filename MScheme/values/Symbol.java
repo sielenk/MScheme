@@ -40,7 +40,7 @@ public final class Symbol
     private static int _index = 0;
     public static Symbol createUnique()
     {
-        return create("[" + _index++ + "]");
+        return create("#[" + _index++ + "]");
     }
 
 
