@@ -11,7 +11,7 @@ public abstract class Code
     public abstract Code executionStep(Machine machine)
         throws SchemeException;
     
-    public Code transform(
+    public Code translateArguments(
         StaticEnvironment e,
         List              arguments
     ) throws SchemeException
