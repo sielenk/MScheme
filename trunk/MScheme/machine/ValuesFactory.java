@@ -51,15 +51,30 @@ public class ValuesFactory
 
     public Values getValues()
     {
-        if (_length == 0) {
+        int length = _length;
+
+        // reset the factory
+        _length = 0;
+
+        switch (length) {
+        case 0:
             return Values.EMPTY;
-        } else {
-            Values result = new Values(_first, _length);
 
-            _first  = _last.tail = null;
-            _length = 0;
+        case 1:
+            return new Values(_first.head);
 
-            return result;
+        default:
+            {
+                SExpr[] data = new SExpr[length];
+                int     i    = 0;
+
+                do {
+                    data[i++] = _first.head;
+                    _first    = _first.tail;
+                } while (i < length);
+
+                return new Values(data);
+            }
         }
     }
 }
