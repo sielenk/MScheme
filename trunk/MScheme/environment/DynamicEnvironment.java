@@ -8,6 +8,7 @@ import MScheme.values.*;
 import MScheme.code.Code;
 import MScheme.syntax.Syntax;
 import MScheme.syntax.SyntaxFactory;
+import MScheme.functions.BuiltinTable;
 import MScheme.exceptions.*;
 
 
@@ -141,273 +142,26 @@ public class DynamicEnvironment
         return result;
     }
 
-    private final static String[][] dynamicBindings = {
-        // 6. Standard procedures
-
-        // 6.1 Equivalence predicates
-//      {"eqv?",    "Eqv"},
-//      {"eq?",     "Eq"},
-//      {"equal?",  "Equal"},
-
-        // 6.2 Numbers
-
-        // 6.2.5 Numerical operations
-//      {"number?",     "IsNumber"},
-//      {"complex?",    "IsNumber"},
-//      {"real?",       "IsNumber"},
-//      {"rational?",   "IsNumber"},
-//      {"integer?",    "IsNumber"},
-
-//      {"exact?",      "IsNumber"},
-//      {"inexact?",    "IsNumber"},
-
-//      {"=",   "NumberEQ"},
-        {"<",   "NumberLT"},
-        {">",   "NumberGT"},
-        {"<=",  "NumberLE"},
-        {">=",  "NumberGE"},
-
-//      {"+",   "Plus"},
-//      {"*",   "Times"},
-
-        {"-",   "Minus"},
-//      {"/",   "Slash"},
-
-//      {"quotient",  },
-//      {"remainder", },
-//      {"modulo",    },
-
-//      {"numerator",    },
-//      {"denominator",  },
-
-//      {"floor",        },
-//      {"ceiling",      },
-//      {"truncate",     },
-//      {"round",        },
-
-//      {"exp",          },
-//      {"log",          },
-//      {"sin",          },
-//      {"cos",          },
-//      {"tan",          },
-//      {"asin",         },
-//      {"acos",         },
-//      {"atan",         },
-
-//      {"sqrt",         },
-
-//      {"expt",         },
-
-//      {"make-rectangular", },
-//      {"make-polar",   },
-//      {"real-part",    },
-//      {"imag-part",    },
-//      {"magnitude",    },
-//      {"angle",        },
-
-//      {"exact->inexact", },
-//      {"inexact->exact", },
-
-        // 6.2.6 Numerical input and output
-//      {"number->string", },
-//      {"string->number", },
-
-
-        // 6.3 Other data types
-        
-        // 6.3.1 Booleans
-//      {"not",                    },
-//      {"boolean?",    "IsBoolean"},
-
-        // 6.3.2 Pairs and lists
-//      {"pair?",       "IsPair"},
-//      {"cons",        "Cons"},
-//      {"car",         "Car"},
-//      {"cdr",         "Cdr"},
-//      {"set-car!",    "SetCar"},
-//      {"set-cdr!",    "SetCdr"},
-
-//      {"null?",       "IsEmpty"},
-//      {"list?",       "IsList"},
-//      {"list",        "List"},
-//      {"length",      "Length"},
-        {"append",      "Append"},
-//      {"reverse",     "Reverse"},
-
-        {"memq",        "Memq"},
-        {"memv",        "Memv"},
-        {"member",      "Member"},
-
-        {"assq",        "Assq"},
-        {"assv",        "Assv"},
-        {"assoc",       "Assoc"},
-
-        // 6.3.3 Symbols
-//      {"symbol?",        "IsSymbol"},
-//      {"symbol->string", "SymbolToString"},
-//      {"string->symbol", "StringToSymbol"},
-
-        // 6.3.4 Characters
-//      {"char?",         "IsChar"},
-
-//      {"char=?",        "CharEQ"},
-//      {"char<?",        "CharLT"},
-//      {"char>?",        "CharGT"},
-//      {"char<=?",       "CharLE"},
-//      {"char>=?",       "CharGE"},
-
-//      {"char->integer", "CharToInteger"},
-//      {"integer->char", "IntegerToChar"},
-
-//      {"char-upcase",   "CharUpcase"},
-//      {"char-downcase", "CharDowncase"},
-
-        // 6.3.5 Strings
-//      {"string?",       "IsString"},
-        {"make-string",   "MakeString"},
-        {"string-length", "StringLength"},
-        {"string-ref",    "StringRef"},
-        {"string-set!",   "StringSet"},
-
-        // 6.3.6 Vectors
-//      {"vector?",       "IsVector"},
-        {"make-vector",   "MakeVector"},
-        {"vector-length", "VectorLength"},
-        {"vector-ref",    "VectorRef"},
-        {"vector-set!",   "VectorSet"},
-
-        // 6.4 Control features
-//      {"procedure?",    "IsProcedure"},
-        {"apply",         "Apply"},
-//      {"force",         "Force"},
-        {"call-with-current-continuation", "CallCC"},
-        {"dynamic-wind",  "DynamicWind"},
-
-        // 6.5 Eval
-
-        // 6.6 Input and output
-
-        // 6.6.1 Ports
-//      {"port?",        "IsPort"},
-//      {"input-port?",  "IsInputPort"},
-//      {"output-port?", "IsOutputPort"},
-
-//      {"open-input-file",   "OpenInput"},
-//      {"open-output-file",  "OpenOutput"},
-
-//      {"close-input-port",  "CloseInput"},
-//      {"close-output-port", "CloseOutput"},
-
-        // 6.6.2 Input
-//      {"read",         "Read"},
-//      {"read-char",    "ReadChar"},
-//      {"peek-char",    "PeekChar"},
-//      {"eof-object",   "IsEof"},
-//      {"char-ready",   "IsCharReady"},
-
-        // 6.6.3 Output
-//      {"write",        "Write"},
-//      {"display",      "Display"},
-//      {"write-char",   "WriteChar"}
-    };
-
     public static DynamicEnvironment getSchemeReportEnvironment()
     {
         DynamicEnvironment result = getNullEnvironment();
 
-        for (int i = 0; i < dynamicBindings.length; i++) {
-            try {
+        try {
+            for (int i = 0; i < BuiltinTable.builtins.length; i++) {
                 result.define(
-                    ValueFactory.createSymbol  (dynamicBindings[i][0]),
-                    ValueFactory.createFunction(dynamicBindings[i][1])
+                    Symbol.create(BuiltinTable.builtins[i].getName()),
+                    BuiltinTable.builtins[i].getFunc()
                 );
-            }
-            catch (CompileError e) {
-                throw new RuntimeException(
-                    "unexpected CompileError"
-                );
-            }
-            catch (FunctionNotFoundException e) {
-//              System.err.println("not found: " + dynamicBindings[i][1]);
-//              throw new RuntimeException(
-//                  "unexpected FunctionNotFoundException"
-//              );
             }
         }
-
-        result.parseClass(MScheme.functions.Builtins.class);
+        catch (CompileError e) {
+            throw new RuntimeException(
+                "unexpected CompileError"
+            );
+        }
 
         return result;
     }
-
-    private static boolean paramsValid(Class[] params)
-    {
-        if (params.length == 1) {
-            return (params[0] == Value.class) || (params[0] == List.class);
-        } else {
-            for (int i = 0; i < params.length; i++) {
-                if (params[i] != Value.class) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    public void parseClass(Class cls)
-    {
-        Method[] methods = cls.getMethods();
-
-        for (int i = 0; i < methods.length; i++) {
-            Method me = methods[i];
-            int    mo = me.getModifiers();
-
-            if (!Modifier.isStatic(mo) || !Modifier.isPublic(mo)) {
-                continue;
-            }
-
-            if (!paramsValid(me.getParameterTypes())) {
-                continue;
-            }
-
-            if (!Value.class.isAssignableFrom(me.getReturnType())) {
-                continue;
-            }
-
-            String name = me.getName();
-            StringBuffer buf = new StringBuffer();
-
-            for (int index = 0; index < name.length(); index++) {
-                char c = name.charAt(index);
-
-                if (c == '_') {
-                    buf.append(
-                        (char)Integer.parseInt(
-                            name.substring(index + 1, index + 3),
-                            16
-                        )
-                    );
-                    index += 2;
-                } else {
-                    buf.append(c);
-                }
-            }
-
-            try {
-                define(
-                    Symbol.create(buf.toString()),
-                    new MScheme.functions.ReflectedMethod(me)
-                );
-            }
-            catch (CompileError e) {
-                throw new RuntimeException(
-                    "unexpected CompileError"
-                );
-            }
-        }
-    }
-
 
 
     public StaticEnvironment getStatic()

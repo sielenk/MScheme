@@ -8,16 +8,14 @@ import MScheme.exceptions.RuntimeError;
 import MScheme.exceptions.TypeError;
 
 
-abstract public class BinaryValueFunction
-    extends BinaryFunction
+abstract public class ValueThunk
+    extends Thunk
 {
     final protected Code checkedCall(
-        Machine machine,
-        Value   fst,
-        Value   snd
+        Machine machine
     ) throws RuntimeError, TypeError
-    { return machine.handleResult(checkedCall(fst, snd)); }
+    { return machine.handleResult(checkedCall()); }
 
-    abstract protected Value checkedCall(Value fst, Value snd)
+    abstract protected Value checkedCall()
         throws RuntimeError, TypeError;
 }

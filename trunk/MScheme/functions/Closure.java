@@ -16,6 +16,7 @@ import MScheme.exceptions.ListExpected;
 final public class Closure
     extends CheckedFunction
 {
+    private final Arity              _arity;
     private final DynamicEnvironment _dynamicParent;
     private final StaticEnvironment  _compiledFormals;
     private final Code               _compiledBody;
@@ -27,18 +28,25 @@ final public class Closure
         Code               compiledBody
     )
     {
-        super(arity, false);
+        _arity           = arity;
         _dynamicParent   = dynamicParent;
         _compiledFormals = compiledFormals;
         _compiledBody    = compiledBody;
     }
 
-    public void put(Writer destination, boolean doDisplay)
+    public void write(Writer destination)
         throws IOException
     { destination.write("[closure]"); }
-    
-    protected Code checkedCall(Machine machine, List arguments)
-        throws ListExpected
+
+
+    protected Arity getArity()
+    { return _arity; }
+
+    protected Code checkedCall(
+        Machine machine,
+        int     length,
+        List    arguments
+    ) throws ListExpected
     {
         machine.setEnvironment(
             _dynamicParent.newChild(

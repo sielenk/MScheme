@@ -17,18 +17,23 @@ public class ApplyFunction
 {
     public final static ApplyFunction INSTANCE = new ApplyFunction();
 
-    private ApplyFunction()
-    { super(Arity.atLeast(2), false); }
+
+    private final static Arity _arity = Arity.atLeast(2);
     
+    protected Arity getArity()
+    { return _arity; }
 
     protected Code checkedCall(
         Machine machine,
+        int     length,
         List    arguments
     ) throws RuntimeError, TypeError
     {
+        Function func  = arguments.getHead().toFunction();
+
         {
             Pair toBeModified = arguments.toPair();
-            for (int i = arguments.getLength() - 2; i > 0; i--) {
+            for (int i = length - 2; i > 0; i--) {
                 toBeModified = toBeModified.getSecond().toPair();
             }
             toBeModified.setSecond(
@@ -36,11 +41,7 @@ public class ApplyFunction
             );
         }
 
-        {
-            Function func  = arguments.getHead().toFunction();
-            List     args  = arguments.getTail();
-            return func.call(machine, args);
-        }
+        List     args  = arguments.getTail();
+        return func.call(machine, args);
     }
 }
-

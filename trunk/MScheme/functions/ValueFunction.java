@@ -3,21 +3,22 @@ package MScheme.functions;
 import MScheme.machine.Machine;
 import MScheme.code.Code;
 import MScheme.values.Value;
+import MScheme.values.List;
+import MScheme.values.Function;
 
 import MScheme.exceptions.RuntimeError;
 import MScheme.exceptions.TypeError;
 
 
-abstract public class BinaryValueFunction
-    extends BinaryFunction
+abstract public class ValueFunction
+    extends Function
 {
-    final protected Code checkedCall(
+    final public Code call(
         Machine machine,
-        Value   fst,
-        Value   snd
+        List    arguments
     ) throws RuntimeError, TypeError
-    { return machine.handleResult(checkedCall(fst, snd)); }
+    { return machine.handleResult(call(arguments)); }
 
-    abstract protected Value checkedCall(Value fst, Value snd)
+    abstract protected Value call(List arguments)
         throws RuntimeError, TypeError;
 }
