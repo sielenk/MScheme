@@ -16,12 +16,17 @@ public interface Value
 {
     /** The CVS id of the file containing this class. */
     String id
-    = "$Id$";
+        = "$Id$";
 
     /**
      * Returns an immutable version of <code>this</code>.
      */
     Value getConst();
+
+    /**
+     * Returns a mutable shallow copy of <code>this</code>.
+     */
+    Value getCopy();
 
     /**
      * Returns Scheme's boolean interpretation of a value.
