@@ -22,7 +22,7 @@ import MScheme.exceptions.*;
 
 
 public final class Environment
-    extends ValueImplementation
+    extends ValueDefaultImplementations
 {
     public final static String id
         = "$Id$";

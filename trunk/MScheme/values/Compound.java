@@ -13,7 +13,7 @@ import MScheme.exceptions.*;
  * 
  */
 abstract class Compound
-    extends ValueImplementation
+    extends ValueDefaultImplementations
 {
     /** The CVS id of the file containing this class. */
     public final static String id

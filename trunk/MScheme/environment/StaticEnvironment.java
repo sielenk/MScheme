@@ -12,14 +12,14 @@ import MScheme.Code;
 import MScheme.Syntax;
 import MScheme.Translator;
 
-import MScheme.values.ValueImplementation; 
+import MScheme.values.ValueDefaultImplementations;
 import MScheme.values.Symbol;
 
 import MScheme.exceptions.*;
 
 
 public class StaticEnvironment
-    extends ValueImplementation
+    extends ValueDefaultImplementations
 {
     public final static String id
         = "$Id$";
