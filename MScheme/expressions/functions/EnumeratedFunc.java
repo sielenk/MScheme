@@ -23,7 +23,7 @@ abstract public class EnumeratedFunc extends Function
     public final static int LAMBDA =  105;
     public final static int BEGIN  =  106;
 
-    private static EnumeratedFunc _operators[] = {
+    private static EnumeratedFunc _functions[] = {
         SyntaxFunc.DEFINE_FUNC,
         SyntaxFunc.SET_FUNC,
         SyntaxFunc.QUOTE_FUNC,
@@ -51,11 +51,18 @@ abstract public class EnumeratedFunc extends Function
     protected String name() { return _name; }
     protected int    id  () { return _id;   }
 
+    abstract protected boolean evaluateArgs();
+
     public static SExpr fromId(int id)
     {
-        for (int index = 0; index < _operators.length; index++) {
-            if (_operators[index].id() == id) {
-                return _operators[index];
+        for (int index = 0; index < _functions.length; index++) {
+            EnumeratedFunc func = _functions[index];
+
+            if (func.id() == id) {
+                return
+                    func.evaluateArgs()
+                    ? MapFunc.wrap(EvalFunc.INSTANCE, func)
+                    : func;
             }
         }
         return SBool.FALSE;
