@@ -112,18 +112,25 @@ SRC =	values/Function.java	\
 
 OBJ =	$(SRC:.java=.o)
 
-SRC_TEST = 	TestFunction.java	\
-	TestMachine.java	\
-	TestR5RS.java	\
+SRC_TEST = 	TestFunction.java		\
+	TestMachine.java			\
+	TestR5RS.java				\
 	environment/TestEnvironment.java	\
-	values/TestInputPort.java	\
-	values/TestList.java	\
-	values/TestValue.java	\
-	util/TestArity.java	\
-	TestMScheme.java	\
+	values/TestInputPort.java		\
+	values/TestList.java			\
+	values/TestValue.java			\
+	util/TestArity.java			\
+	TestMScheme.java			\
 
-
-
+PACKAGES =	MScheme			\
+		MScheme.code		\
+		MScheme.environment	\
+		MScheme.exceptions	\
+		MScheme.functions	\
+		MScheme.machine		\
+		MScheme.syntax		\
+		MScheme.util		\
+		MScheme.values
 
 JIKES=jikes -bootclasspath /usr/lib/java/jre/lib/rt.jar
 GCJ=gcj
@@ -152,5 +159,10 @@ depend:
 
 clean:
 	rm -f $(OBJ)
+
+doc:
+	javadoc -d doc $(PACKAGES)
+
+.PHONY: doc clean all
 
 include depend
