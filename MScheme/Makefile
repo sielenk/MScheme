@@ -71,6 +71,7 @@ SRC =	Code.java	\
 	functions/MemqFunction.java	\
 	functions/MemvFunction.java	\
 	functions/Reducer.java	\
+	functions/SpawnFunction.java	\
 	functions/TernaryFunction.java	\
 	functions/TernaryValueFunction.java	\
 	functions/Thunk.java	\
@@ -80,6 +81,7 @@ SRC =	Code.java	\
 	functions/YCombinator.java	\
 	machine/Continuation.java	\
 	machine/ContinuationFunction.java	\
+	machine/Controller.java	\
 	machine/Machine.java	\
 	machine/Registers.java	\
 	machine/Result.java	\
@@ -156,10 +158,10 @@ functions/Builtins.class: functions/Builtins.java
 	$(JAVAC) functions/Builtins.java
 
 %.o: %.java
-	$(GCJ) -O2 -o $@ -c $<
+	$(GCJ) -ggdb -o $@ -c $<
 
 main: $(OBJ)
-	$(GCJ) -O2 --main=MScheme.Main -o main $^
+	$(GCJ) -ggdb --main=MScheme.Main -o main $^
 
 depend:
 	touch depend
