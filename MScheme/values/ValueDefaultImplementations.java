@@ -31,24 +31,39 @@ import MScheme.Code;
 
 import MScheme.syntax.ProcedureCall;
 
-import MScheme.code.Literal;
-
 import MScheme.environment.Environment;
 import MScheme.environment.StaticEnvironment;
+
+import MScheme.machine.Result;
+import MScheme.machine.Registers;
 
 import MScheme.exceptions.*;
 
 
 public abstract class ValueDefaultImplementations
+    extends    Result
     implements Value
 {
     /** The CVS id of the file containing this class. */
     public final static String id
         = "$Id$";
 
+
     /** The default constructor. */
     protected ValueDefaultImplementations()
     { }
+
+
+    protected final Value getValue(Registers state)
+    {
+        return this;
+    }
+
+    public Code force()
+    {
+        return this;
+    }
+
 
     /**
      * @return <code>this</code>.
@@ -356,9 +371,9 @@ public abstract class ValueDefaultImplementations
     /**
      * @return a newly created {@link Literal}.
      */
-    public final Literal getLiteral()
+    public final Code getLiteral()
     {
-        return Literal.create(this);
+        return this;
     }
 
     /**
@@ -370,7 +385,7 @@ public abstract class ValueDefaultImplementations
     public Code getCode(StaticEnvironment compilationEnv)
         throws SchemeException
     {
-        return getLiteral();
+        return this;
     }
 
     /**
