@@ -1,28 +1,19 @@
 package MScheme.functions;
 
-import MScheme.machine.Machine;
-import MScheme.code.Code;
-import MScheme.values.ValueFactory;
 import MScheme.values.Value;
-
-import MScheme.exceptions.SchemeException;
 
 
 public class EqualFunction
-    extends BinaryFunction
+    extends BinaryPredicate
 {
-    public final static EqualFunction INSTANCE = new EqualFunction();
+    public final static EqualFunction INSTANCE
+        = new EqualFunction();
     
     
-    protected Code checkedCall(
-        Machine machine,
-        Value   fst,
-        Value   snd
-    ) throws SchemeException
-    {
-        return machine.handleResult(
-            ValueFactory.createBool(fst.equal(snd))
-        );
-    }
+    protected boolean test(
+        Value fst,
+        Value snd
+    )
+    { return fst.equal(snd); }
 }
 
