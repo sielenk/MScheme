@@ -1,6 +1,6 @@
 package MScheme.functions;
 
-import MScheme.machine.State;
+import MScheme.machine.Registers;
 import MScheme.values.Value;
 import MScheme.code.Code;
 import MScheme.values.ValueFactory;
@@ -15,13 +15,13 @@ public class CallCCFunction
 {
     public final static CallCCFunction INSTANCE = new CallCCFunction();
 
-    protected Code checkedCall(State state, Value argument)
+    protected Code checkedCall(Registers registers, Value argument)
         throws RuntimeError, TypeError
     {
         return argument.toFunction().call(
-            state,
+            registers,
             ValueFactory.createList(
-                state.getCurrentContinuation()
+                registers.getCurrentContinuation()
             )
         );
     }

@@ -1,7 +1,7 @@
 package MScheme.code;
 
 import MScheme.machine.Continuation;
-import MScheme.machine.State;
+import MScheme.machine.Registers;
 import MScheme.values.Value;
 
 
@@ -11,27 +11,27 @@ final class SequenceContinuation
     final private CodeList _todo;
 
     private SequenceContinuation(
-        State    state,
-        CodeList todo
+        Registers registers,
+        CodeList  todo
     )
-    { super(state); _todo = todo; }
+    { super(registers); _todo = todo; }
 
     static Code prepareNext(
-        State    state,
-        CodeList todo
+        Registers registers,
+        CodeList  todo
     )
     {
         CodeList tail = todo.getTail();
 
         if (!tail.isEmpty()) {
-            new SequenceContinuation(state, tail);
+            new SequenceContinuation(registers, tail);
         }
 
         return todo.getHead();
     }
 
-    protected Code execute(State state, Value value)
-    { return prepareNext(state, _todo); }
+    protected Code execute(Registers registers, Value value)
+    { return prepareNext(registers, _todo); }
 }
 
 
@@ -52,6 +52,6 @@ final public class Sequence
         }
     }
 
-    public Code executionStep(State state)
-    { return SequenceContinuation.prepareNext(state, _sequence); }
+    public Code executionStep(Registers registers)
+    { return SequenceContinuation.prepareNext(registers, _sequence); }
 }

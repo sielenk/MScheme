@@ -2,7 +2,7 @@ package MScheme.functions;
 
 import MScheme.util.Arity;
 
-import MScheme.machine.State;
+import MScheme.machine.Registers;
 import MScheme.code.Code;
 import MScheme.values.Value;
 import MScheme.values.Function;
@@ -24,9 +24,9 @@ public class ApplyFunction
     { return _arity; }
 
     protected Code checkedCall(
-        State state,
-        int   length,
-        List  arguments
+        Registers registers,
+        int       length,
+        List      arguments
     ) throws RuntimeError, TypeError
     {
         Function func  = arguments.getHead().toFunction();
@@ -42,6 +42,6 @@ public class ApplyFunction
         }
 
         List args  = arguments.getTail();
-        return func.call(state, args);
+        return func.call(registers, args);
     }
 }

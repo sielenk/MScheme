@@ -1,7 +1,7 @@
 package MScheme.functions;
 
 import MScheme.util.Arity;
-import MScheme.machine.State;
+import MScheme.machine.Registers;
 import MScheme.code.Code;
 import MScheme.values.Value;
 import MScheme.values.List;
@@ -16,19 +16,19 @@ public abstract class CheckedFunction
     protected abstract Arity getArity();
     
     protected abstract Code checkedCall(
-        State state,
-        int   len,
-        List  args
+        Registers registers,
+        int       len,
+        List      args
     ) throws RuntimeError, TypeError;
 
 
     // implementation of Function
     
-    final public Code call(State state, List arguments)
+    final public Code call(Registers registers, List arguments)
         throws RuntimeError, TypeError
     {
         return checkedCall(
-            state,
+            registers,
             checkArguments(getArity(), arguments),
             arguments
         );

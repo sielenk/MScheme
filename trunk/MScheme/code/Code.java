@@ -1,6 +1,6 @@
 package MScheme.code;
 
-import MScheme.machine.State;
+import MScheme.machine.Registers;
 import MScheme.environment.Token;
 import MScheme.environment.StaticEnvironment;
 import MScheme.values.List;
@@ -13,7 +13,7 @@ import MScheme.exceptions.RuntimeError;
 public abstract class Code
     extends Token
 {
-    public abstract Code executionStep(State state)
+    public abstract Code executionStep(Registers registers)
         throws RuntimeError, TypeError;
 
     public final Code translate(

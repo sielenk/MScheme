@@ -77,12 +77,6 @@ public class TestMachine
     public void testEnvironment()
     {
         assert(machine.getEnvironment() == _environment);
-    
-        Environment otherEnvironment = _environment.newChild();
-        
-        machine.setEnvironment(otherEnvironment);
-
-        assert(machine.getEnvironment() == otherEnvironment);
     }
 
     public void testValue()
