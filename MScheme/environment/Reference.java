@@ -32,7 +32,7 @@ public class Reference
     int getIndex () { return _index;  }
 
 
-    protected Value getValue(Registers registers)
+    protected Value getValue(Registers state)
         throws RuntimeError
-    { return registers.getEnvironment().lookup(this); }
+    { return state.getEnvironment().lookup(this); }
 }

@@ -11,9 +11,16 @@ import MScheme.code.Sequence;
 import MScheme.functions.UnaryFunction;
 
 
-class ContinuationFunction
+/**
+ * Continuations are first class objects in scheme. They
+ * seem to behave like unary functions. But if such a
+ * function is called, continuations waiting to be invoked
+ * are instead skipped.
+ */
+final class ContinuationFunction
     extends UnaryFunction
 {
+    /** The CVS id of the file containing this class. */
     public final static String id
         = "$Id$";
 
@@ -68,13 +75,18 @@ class ContinuationFunction
 
 
     // implementation of UnaryFunction
-    
-    protected Code checkedCall(Registers registers, Value argument)
+
+    /**
+     *
+     *
+     * @returns  the code created during the stack unwinding.
+     */
+    protected Code checkedCall(Registers state, Value argument)
     {
-        Continuation source      = registers.getContinuation();
+        Continuation source      = state.getContinuation();
         Continuation destination = _continuation;
         
-        registers.setContinuation(destination);
+        state.setContinuation(destination);
 
         return Sequence.create(
             dynamicWind(

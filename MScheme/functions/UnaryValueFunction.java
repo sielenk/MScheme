@@ -16,7 +16,7 @@ public abstract class UnaryValueFunction
         = "$Id$";
 
     protected final Code checkedCall(
-        Registers registers,
+        Registers state,
         Value     fst
     ) throws RuntimeError, TypeError
     { return checkedCall(fst).getLiteral(); }

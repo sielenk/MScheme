@@ -15,7 +15,7 @@ public abstract class ValueThunk
         = "$Id$";
 
     protected final Code checkedCall(
-        Registers registers
+        Registers state
     ) throws RuntimeError, TypeError
     { return checkedCall().getLiteral(); }
 

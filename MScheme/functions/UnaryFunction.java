@@ -23,19 +23,19 @@ public abstract class UnaryFunction
     { return _unary; }
 
     protected final Code checkedCall(
-        Registers registers,
+        Registers state,
         int       len,
         List      arguments
     ) throws RuntimeError, TypeError
     {
         return checkedCall(
-            registers,
+            state,
             arguments.getHead()
         );
     }
 
     protected abstract Code checkedCall(
-        Registers registers,
+        Registers state,
         Value     fst
     ) throws RuntimeError, TypeError;
 }

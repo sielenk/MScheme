@@ -23,20 +23,20 @@ public abstract class BinaryFunction
     { return _binary; }
 
     protected final Code checkedCall(
-        Registers registers,
+        Registers state,
         int       len,
         List      arguments
     ) throws RuntimeError, TypeError
     {
         return checkedCall(
-            registers,
+            state,
             arguments.getHead(),
             arguments.getTail().getHead()
         );
     }
 
     protected abstract Code checkedCall(
-        Registers registers,
+        Registers state,
         Value fst,
         Value snd
     ) throws RuntimeError, TypeError;

@@ -23,6 +23,6 @@ public final class Literal
     { return new Literal(value); }
 
 
-    protected Value getValue(Registers registers)
+    protected Value getValue(Registers state)
     { return _value; }
 }

@@ -22,6 +22,7 @@ public abstract class Value
     public final static String id
         = "$Id$";
 
+    /** The default constructor. */
     protected Value()
     { }
 
@@ -39,7 +40,7 @@ public abstract class Value
      * All values except <code>#f</code> are regarded as
      * true in Scheme.
      * <p>
-     * @return <code>true</code>
+     * @return always <code>true</code>
      */
     public boolean isTrue() { return true; }
 
@@ -50,7 +51,7 @@ public abstract class Value
      * This function is opverridden in the classes
      * {@link Empty} and {@link Pair}.
      * <p>
-     * @return <code>false</code>
+     * @return always <code>false</code>
      */
     public boolean isList() { return false; }
 

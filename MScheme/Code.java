@@ -27,19 +27,22 @@ public abstract class Code
     public final static String id
         = "$Id$";
 
+
+    /** The default constructor. */
     protected Code()
     { }
+
 
     /**
      * Executes some calculation.
      * Derived classes have to implement this function to
      * provide appropriate actions.
      * Such actions will be either
-     *   returning a {@link MScheme.machine.Result Result}
+     *   returning a {@link MScheme.machine.Result}
      * or
-     *   pushing a new {@link MScheme.machine.Continuation Continuation}
-     *   and returning a compiled subexpression to evaluate.
-     *
+     *   pushing a {@link MScheme.machine.Continuation}
+     *   and returning code for a sub-calculation.
+     * <p>
      * @param state the current state of the scheme machine.
      *
      * @return the next instruction to execute.
@@ -53,7 +56,7 @@ public abstract class Code
      * as first element.
      * Such lists compile to an application. The result of the evaluation
      * of <code>this</code> will be the function to be called.
-     *
+     * <p>
      * @param compilationEnv the current static environment.
      * @param arguments      the tail of the list, its elements will be
      *                       evaluated to the functions arguments.

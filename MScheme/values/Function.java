@@ -48,6 +48,6 @@ public abstract class Function
     
     public abstract Arity getArity();
 
-    public abstract Code call(Registers registers, List arguments)
+    public abstract Code call(Registers state, List arguments)
         throws RuntimeError, TypeError;
 }
