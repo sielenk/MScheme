@@ -24,13 +24,11 @@ SRC =	Code.java	\
 	exceptions/DuplicateSymbolException.java	\
 	exceptions/EnvironmentExpected.java	\
 	exceptions/FunctionExpected.java	\
-	exceptions/FunctionNotFoundException.java	\
 	exceptions/ImmutableException.java	\
 	exceptions/InputPortExpected.java	\
 	exceptions/InvalidStringIndexException.java	\
 	exceptions/InvalidVectorIndexException.java	\
 	exceptions/ListExpected.java	\
-	exceptions/ListSyntaxException.java	\
 	exceptions/NumberExpected.java	\
 	exceptions/OpenException.java	\
 	exceptions/OutputPortExpected.java	\
@@ -49,7 +47,6 @@ SRC =	Code.java	\
 	exceptions/SyntaxArityError.java	\
 	exceptions/TypeError.java	\
 	exceptions/UnexpectedSyntax.java	\
-	exceptions/UnimplementedException.java	\
 	exceptions/UninitializedSymbolException.java	\
 	exceptions/UninitializedVectorException.java	\
 	exceptions/VectorException.java	\
@@ -68,6 +65,7 @@ SRC =	Code.java	\
 	functions/CallCCFunction.java	\
 	functions/CheckedFunction.java	\
 	functions/DynamicWindFunction.java	\
+	functions/EvalFunction.java	\
 	functions/MemberBase.java	\
 	functions/MemberFunction.java	\
 	functions/MemqFunction.java	\
@@ -107,6 +105,7 @@ SRC =	Code.java	\
 	values/OutputPort.java	\
 	values/Pair.java	\
 	values/PairOrList.java	\
+	values/Port.java	\
 	values/ScmBoolean.java	\
 	values/ScmChar.java	\
 	values/ScmNumber.java	\
@@ -122,10 +121,10 @@ SRC_TEST =	TestMScheme.java	\
 		TestMachine.java	\
 		TestR5RS.java	\
 		environment/TestEnvironment.java	\
+		tests/TestValue.java	\
 		util/TestArity.java	\
 		values/TestInputPort.java	\
-		values/TestList.java	\
-		tests/TestValue.java
+		values/TestList.java
 
 PACKAGES =	MScheme			\
 		MScheme.code		\
