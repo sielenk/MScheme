@@ -4,7 +4,7 @@ import MScheme.expressions.SExpr;
 
 public class SExpectedListException extends SException
 {
-    SExpectedListException(SExpr sexpr)
+    public SExpectedListException(SExpr sexpr)
     {
         super(sexpr);
     }
