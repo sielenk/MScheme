@@ -60,7 +60,7 @@ public class ParseBuiltins
             .append("\n")
             .append("    protected Value checkedCall(")
                 .append(arguments).append(")\n")
-            .append("        throws RuntimeError, TypeError\n")
+            .append("        throws SchemeException\n")
             .append("    {\n")
             .append("        switch(_id) {\n");
     }
@@ -237,7 +237,7 @@ public class ParseBuiltins
             .append("    { return Arity.atLeast(0); }\n")
             .append("\n")
             .append("    public Code call(Registers state, List args)\n")
-            .append("        throws RuntimeError, TypeError\n")
+            .append("        throws SchemeException\n")
             .append("    { return checkedCall(args).getLiteral(); }\n")
             .append("}\n\n");
 

@@ -7,8 +7,7 @@ import MScheme.util.Arity;
 
 import MScheme.environment.StaticEnvironment;
 
-import MScheme.exceptions.TypeError;
-import MScheme.exceptions.CompileError;
+import MScheme.exceptions.SchemeException;
 import MScheme.exceptions.SyntaxArityError;
 
 
@@ -27,15 +26,10 @@ public abstract class Syntax
         throws SyntaxArityError
     { throw new SyntaxArityError(arguments, _arity); }
 
-    protected abstract Code checkedTranslate(
-        StaticEnvironment compilationEnv,
-        List              arguments
-    ) throws CompileError, TypeError;
-
     public final Code translate(
         StaticEnvironment compilationEnv,
         List              arguments
-    ) throws CompileError, TypeError
+    ) throws SchemeException
     {
         int len = arguments.getLength();
 
@@ -45,4 +39,9 @@ public abstract class Syntax
 
         return checkedTranslate(compilationEnv, arguments);
     }
+
+    protected abstract Code checkedTranslate(
+        StaticEnvironment compilationEnv,
+        List              arguments
+    ) throws SchemeException;
 }

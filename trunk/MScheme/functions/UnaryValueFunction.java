@@ -5,8 +5,7 @@ import MScheme.Code;
 
 import MScheme.machine.Registers;
 
-import MScheme.exceptions.RuntimeError;
-import MScheme.exceptions.TypeError;
+import MScheme.exceptions.SchemeException;
 
 
 public abstract class UnaryValueFunction
@@ -19,9 +18,9 @@ public abstract class UnaryValueFunction
     protected final Code checkedCall(
         Registers state,
         Value     fst
-    ) throws RuntimeError, TypeError
+    ) throws SchemeException
     { return checkedCall(fst).getLiteral(); }
 
     protected abstract Value checkedCall(Value fst)
-        throws RuntimeError, TypeError;
+        throws SchemeException;
 }

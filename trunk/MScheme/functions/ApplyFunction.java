@@ -9,7 +9,7 @@ import MScheme.values.Function;
 import MScheme.List;
 import MScheme.values.Pair;
 
-import MScheme.exceptions.*;
+import MScheme.exceptions.SchemeException;
 
 
 public class ApplyFunction
@@ -29,7 +29,7 @@ public class ApplyFunction
         Registers state,
         int       length,
         List      arguments
-    ) throws RuntimeError, TypeError
+    ) throws SchemeException
     {
         // First try the cast ... if it fails, no work is lost
         Function func = arguments.getHead().toFunction();

@@ -28,8 +28,8 @@ public interface List
     List  getTail    () throws ListExpected;
 
     Code getCode(StaticEnvironment env)
-        throws CompileError, TypeError;
+        throws SchemeException;
 
     CodeList getCodeList(StaticEnvironment compilationEnv)
-        throws CompileError, TypeError;
+        throws SchemeException;
 }

@@ -37,7 +37,7 @@ final class Letrec
     protected Code checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
-    ) throws CompileError, TypeError
+    ) throws SchemeException
     {
         // (letrec ((<var> <init>) ...) <body>)
 

@@ -239,7 +239,7 @@ public interface Value
      * Compiles a value as normal code.
      */
     Code getCode(StaticEnvironment compilationEnv)
-        throws CompileError, TypeError;
+        throws SchemeException;
 
     /**
      * Compiles a value as list head.
@@ -247,5 +247,5 @@ public interface Value
      * keyword which needs special treatment.
      */
     Translator getTranslator(StaticEnvironment compilationEnv)
-        throws CompileError, TypeError;
+        throws SchemeException;
 }

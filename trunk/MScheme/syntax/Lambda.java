@@ -13,7 +13,7 @@ import MScheme.values.ListFactory;
 import MScheme.values.Empty;
 import MScheme.values.Pair;
 
-import MScheme.exceptions.*;
+import MScheme.exceptions.SchemeException;
 
 
 final class Lambda
@@ -32,7 +32,7 @@ final class Lambda
     protected Code checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
-    ) throws CompileError, TypeError
+    ) throws SchemeException
     {
         Value rawFormals = arguments.getHead();
         List  body       = arguments.getTail();

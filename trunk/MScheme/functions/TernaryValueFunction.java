@@ -4,8 +4,7 @@ import MScheme.machine.Registers;
 import MScheme.Code;
 import MScheme.Value;
 
-import MScheme.exceptions.RuntimeError;
-import MScheme.exceptions.TypeError;
+import MScheme.exceptions.SchemeException;
 
 
 public abstract class TernaryValueFunction
@@ -20,9 +19,9 @@ public abstract class TernaryValueFunction
         Value     fst,
         Value     snd,
         Value     trd
-    ) throws RuntimeError, TypeError
+    ) throws SchemeException
     { return checkedCall(fst, snd, trd).getLiteral(); }
 
     protected abstract Value checkedCall(Value fst, Value snd, Value trd)
-        throws RuntimeError, TypeError;
+        throws SchemeException;
 }

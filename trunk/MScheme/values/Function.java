@@ -34,7 +34,7 @@ public abstract class Function
 
 
     public final static int checkArguments(Arity arity, List arguments)
-        throws RuntimeError, TypeError
+        throws SchemeException
     {
         int len = arguments.getLength();
 
@@ -49,5 +49,5 @@ public abstract class Function
     // abstract function interface
     
     public abstract Code call(Registers state, List arguments)
-        throws RuntimeError, TypeError;
+        throws SchemeException;
 }

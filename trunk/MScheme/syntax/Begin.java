@@ -9,8 +9,8 @@ import MScheme.machine.Machine;
 import MScheme.code.Sequence;
 import MScheme.environment.StaticEnvironment;
 
-import MScheme.exceptions.CompileError;
-import MScheme.exceptions.TypeError;
+import MScheme.exceptions.SchemeException;
+
 
 final class Begin
     extends Syntax
@@ -27,7 +27,7 @@ final class Begin
     protected Code checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
-    ) throws CompileError, TypeError
+    ) throws SchemeException
     {
         return Sequence.create(
             arguments.getCodeList(compilationEnv)
