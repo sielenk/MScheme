@@ -18,6 +18,9 @@ public class SchemeNumber
     public boolean isNumber()
     { return true; }
     
+    public SchemeNumber toNumber()
+    { return this; }
+    
     public boolean eqv(Value other)
     {
         try {
@@ -33,5 +36,22 @@ public class SchemeNumber
     public void write(Writer destination)
         throws IOException
     { destination.write("" + _value); }
+
+
+    // number specific
+
+    public SchemeNumber plus(SchemeNumber other)
+    {
+        return new SchemeNumber(
+            _value + other._value
+        );
+    }
+
+    public SchemeNumber times(SchemeNumber other)
+    {
+        return new SchemeNumber(
+            _value * other._value
+        );
+    }
 }
 
