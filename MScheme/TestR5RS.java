@@ -244,6 +244,12 @@ public class TestR5RS
             "    (* z x)))",
             "70"
         );
+
+        check(
+            "(let* ((a 1) (b (+ a 1)) (c (+ a b)) (d (+ b c)) (e (+ c d)))" +
+            "  (list a b c d e))",
+            "(1 2 3 5 8)"
+        );
     }
 
     public void test4_2_2_letrec()
@@ -263,6 +269,16 @@ public class TestR5RS
             "  (even? 88))\n",
             "#t"
         );
+    }
+
+    public void test4_2_2_common()
+        throws SchemeException
+    {
+        check("(let ((x 1)) (let    () (define x 2)) x)", "1");
+        check("(let ((x 1)) (let*   () (define x 2)) x)", "1");
+        check("(let ((x 1)) (letrec () (define x 2)) x)", "1");
+        
+        check("(let ((x 1)) (begin     (define x 2)) x)", "2");
     }
 
     /// 4.2.3 Sequencing
