@@ -36,19 +36,33 @@ public class Values
     }
 
 
-    public SExpr getHead()
+    public Values getTail(int index)
     {
-        return _data.head;
+        if ((index == 0) || (_length == 0)) {
+            return this;
+        } else {
+            ValuePair pair   = _data;
+            int       length = _length;
+
+            do {
+                pair = pair.tail;
+                length--;
+            } while ((--index > 0) && (length > 0));
+
+            return
+                (length > 0)
+                ? new Values(pair, length)
+                : EMPTY;
+        }
     }
 
 
-    public Values getTail()
+    public Values getTail() /* == getTail(1) */
     {
-        if (_length > 1) {
-            return new Values(_data.tail, _length - 1);
-        } else {
-            return EMPTY;
-        }
+        return
+            (_length > 1)
+            ? new Values(_data.tail, _length - 1)
+            : EMPTY;
     }
 
 
