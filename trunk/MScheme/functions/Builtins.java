@@ -277,27 +277,27 @@ public class Builtins
 
     public final static Value char_3C_3F(Value fst, Value snd) // char<?
         throws CharExpected
-    { return ScmBoolean.create(fst.toChar().getJavaChar() < snd.toChar().getJavaChar()); }
+    { return ScmBoolean.create(fst.toScmChar().getJavaChar() < snd.toScmChar().getJavaChar()); }
 
     public final static Value char_3C_3D_3F(Value fst, Value snd) // char<=?
         throws CharExpected
-    { return ScmBoolean.create(fst.toChar().getJavaChar() <= snd.toChar().getJavaChar()); }
+    { return ScmBoolean.create(fst.toScmChar().getJavaChar() <= snd.toScmChar().getJavaChar()); }
 
     public final static Value char_3D_3F(Value fst, Value snd) // char=?
         throws CharExpected
-    { return ScmBoolean.create(fst.toChar().getJavaChar() == snd.toChar().getJavaChar()); }
+    { return ScmBoolean.create(fst.toScmChar().getJavaChar() == snd.toScmChar().getJavaChar()); }
 
     public final static Value char_3E_3D_3F(Value fst, Value snd) // char>=?
         throws CharExpected
-    { return ScmBoolean.create(fst.toChar().getJavaChar() >= snd.toChar().getJavaChar()); }
+    { return ScmBoolean.create(fst.toScmChar().getJavaChar() >= snd.toScmChar().getJavaChar()); }
 
     public final static Value char_3E_3F(Value fst, Value snd) // char>?
         throws CharExpected
-    { return ScmBoolean.create(fst.toChar().getJavaChar() > snd.toChar().getJavaChar()); }
+    { return ScmBoolean.create(fst.toScmChar().getJavaChar() > snd.toScmChar().getJavaChar()); }
 
     public final static Value char_2D_3Einteger(Value argument)
         throws CharExpected
-    { return SchemeNumber.create(argument.toChar().getJavaChar()); }
+    { return SchemeNumber.create(argument.toScmChar().getJavaChar()); }
 
     public final static Value integer_2D_3Echar(Value argument)
         throws NumberExpected
@@ -305,11 +305,11 @@ public class Builtins
 
     public final static Value char_2Dupcase(Value argument)
         throws CharExpected
-    { return ScmChar.create(Character.toUpperCase(argument.toChar().getJavaChar())); }
+    { return ScmChar.create(Character.toUpperCase(argument.toScmChar().getJavaChar())); }
 
     public final static Value char_2Ddowncase(Value argument)
         throws CharExpected
-    { return ScmChar.create(Character.toLowerCase(argument.toChar().getJavaChar())); }
+    { return ScmChar.create(Character.toLowerCase(argument.toScmChar().getJavaChar())); }
 
 
     // 6.3.5 Strings
@@ -450,6 +450,6 @@ public class Builtins
 
     public final static Value write_2Dchar(Value fst, Value snd)
         throws RuntimeError, TypeError
-    { snd.toPort().toOutput().writeScmChar(fst.toChar()); return snd; }
+    { snd.toPort().toOutput().writeScmChar(fst.toScmChar()); return snd; }
 }
 
