@@ -1,0 +1,164 @@
+package MScheme.environment;
+
+import java.util.Hashtable;
+
+import MScheme.util.Arity;
+
+import MScheme.values.Symbol;
+import MScheme.values.List;
+
+import MScheme.code.Code;
+import MScheme.code.Syntax;
+
+import MScheme.exceptions.*;
+
+
+public class StaticEnvironment
+{
+    // ***********************************************************************
+
+    private StaticEnvironment _parent;
+    private Hashtable         _bindings;
+    private int               _level;
+    private int               _numberOfReferences;
+
+    // *** constructors ******************************************************
+
+    StaticEnvironment()
+    { this(null); }
+    
+    StaticEnvironment(StaticEnvironment parent)
+    {
+        _bindings = new Hashtable();
+        _parent   = parent;
+        _level    = (parent == null) ? 0 : (parent.getLevel() + 1);
+        _numberOfReferences = 0;
+    }
+
+
+    StaticEnvironment(StaticEnvironment parent, List symbols)
+        throws SchemeException
+    {
+        this(parent);
+
+        int symbolsDefined = 0;
+
+        for (
+            List tail = symbols;
+            !tail.isEmpty();
+            tail = tail.getTail())
+        {
+            define(tail.getHead().toSymbol());
+            symbolsDefined++;
+        }
+
+        if (getSize() != symbolsDefined)
+        {
+            throw new DuplicateSymbolException(symbols.toList());
+        }
+    }
+
+    // *** instance access ***************************************************
+
+    int getLevel () { return _level; }
+    int getSize  () { return _numberOfReferences; }
+
+    // *** implementation of StaticEnvironment *******************************
+    
+    public StaticEnvironment getParent() { return _parent; }
+
+    public StaticEnvironment newChild()
+    { return new StaticEnvironment(this); }
+    
+    public StaticEnvironment newChild(List symbols)
+        throws SchemeException
+    { return new StaticEnvironment(this, symbols); }
+    
+    // *** instance access ***************************************************
+
+    public Reference define(Symbol symbol)
+        throws SyntaxException
+    {
+        try {
+            String    key = symbol.getKey();
+            Reference ref = (Reference)_bindings.get(key);
+
+            // if ref is != null
+            // the symbol is already bound in the
+            // current frame. This define is in fact
+            // a lookup.
+            if (ref == null) {
+                ref = new Reference(
+                    symbol,
+                    getLevel(),
+                    getSize()
+                );
+                
+                _bindings.put(key, ref);
+                _numberOfReferences++;
+            }
+
+            return ref;
+        }
+        catch (ClassCastException e) {
+            throw new SyntaxException(symbol);
+        }
+    }
+
+
+    public void defineSyntax(Symbol symbol, Syntax value)
+        throws SyntaxException
+    {
+        String  key = symbol.getKey();
+
+        if (_bindings.get(key) != null) {
+            throw new SyntaxException(symbol);
+        }
+
+        _bindings.put(key, value);
+    }
+
+
+    private Code safeGetCodeFor(Symbol symbol)
+    {
+        for (
+            StaticEnvironment current = this;
+            current != null;
+            current = current._parent
+        ) {
+            Code result = (Code)current._bindings.get(symbol.getKey());
+        
+            if (result != null) {
+                return result;
+            }
+        }
+
+        return null;
+    }
+
+    public Code getCodeFor(Symbol symbol)
+        throws SymbolNotFoundException
+    {
+        Code result = safeGetCodeFor(symbol);
+
+        if (result != null) {
+            return result;
+        } else {
+            throw new SymbolNotFoundException(symbol);
+        }
+    }
+
+    public Reference getReferenceFor(Symbol key)
+        throws SymbolNotFoundException, SyntaxException
+    {
+        try {
+            return (Reference)getCodeFor(key);
+        }
+        catch (ClassCastException e) {
+            throw new SyntaxException(key);
+        }
+    }
+
+    // ***********************************************************************
+}
+

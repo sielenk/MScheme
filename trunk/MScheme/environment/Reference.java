@@ -1,32 +1,37 @@
 package MScheme.environment;
 
-class Reference {
-    private int   _level;
-    private int   _index;
+import MScheme.machine.Machine;
+import MScheme.environment.DynamicEnvironment;
+import MScheme.code.Code;
+import MScheme.values.Symbol;
+import MScheme.exceptions.SchemeException;
 
-    public Reference(int level, int index)
+
+public class Reference
+    extends Code
+{
+    private final Symbol _symbol;
+    private final int    _level;
+    private final int    _index;
+
+    public Reference(Symbol symbol, int level, int index)
     {
-        _level = level;
-        _index = index;
+        _symbol = symbol;
+        _level  = level;
+        _index  = index;
     }
 
-    public int   getLevel() { return _level; }
-    public int   getIndex() { return _index; }
-
-    public String toString()
+    public Symbol getSymbol() { return _symbol; }
+    public int    getLevel () { return _level;  }
+    public int    getIndex () { return _index;  }
+    
+    
+    public Code executionStep(Machine machine)
+        throws SchemeException
     {
-        return "<" + _level + "-" + _index + ">";
-    }
-
-    public boolean equals(Object o)
-    {
-        if (o instanceof Reference) {
-            Reference ref = (Reference)o;
-
-            return (_level == ref._level)
-                && (_index == ref._index);
-        } else {
-            return false;
-        }
+        return machine.handleResult(
+            machine.getEnvironment().lookup(this)
+        );
     }
 }
+
