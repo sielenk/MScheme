@@ -142,7 +142,7 @@ public class TestMachine
         {
             assert(
                 machine.evaluate(
-                    Pair.create(_val1, _val2)
+                    ListFactory.createPair(_val1, _val2)
                 ) != null
             );
             fail("expected ListExpected");
@@ -368,17 +368,17 @@ public class TestMachine
     {
         Function func = evaluate("(lambda x x)").toFunction();
 
-        Pair pair2 = Pair.create(
+        Pair pair2 = ListFactory.createPair(
                          _val2,
                          Empty.create()
                      );
-        Pair pair1 = Pair.create(
+        Pair pair1 = ListFactory.createPair(
                          _val1,
                          pair2
                      );
 
         Value result = machine.evaluate(
-                           Pair.create(func, pair1)
+                           ListFactory.createPair(func, pair1)
                        );
 
         assert(result.equal(pair1));

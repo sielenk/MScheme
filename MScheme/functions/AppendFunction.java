@@ -29,7 +29,7 @@ final class AppendHelper1
 
     protected Value combine(Value fst, Value snd)
     {
-        return Pair.create(fst, snd);
+        return ListFactory.createPair(fst, snd);
     }
 }
 
