@@ -1,7 +1,7 @@
 package MScheme.code;
 
 import MScheme.util.Arity;
-import MScheme.machine.Machine;
+import MScheme.machine.Literal;
 import MScheme.environment.*;
 import MScheme.exceptions.*;
 import MScheme.functions.*;
@@ -23,9 +23,9 @@ final class QuoteToken
         List              arguments
     )
     {
-        return new Quotation(
-            ((Pair)arguments).getHead()
+        return new Literal(
+            ((Pair)arguments).getHead().setConst()
         );
     }
 }
-
+  
