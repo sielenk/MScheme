@@ -8,19 +8,30 @@ import MScheme.values.Value;
 final class SequenceContinuation
     extends Continuation
 {
-    final private CodeList _unevaluatedTail;
+    final private CodeList _todo;
 
-    SequenceContinuation(
+    private SequenceContinuation(
         Machine  machine,
-        CodeList unevaluatedTail
+        CodeList todo
+    )
+    { super(machine); _todo = todo; }
+
+    static Code prepareNext(
+        Machine  machine,
+        CodeList todo
     )
     {
-        super(machine);
-        _unevaluatedTail = unevaluatedTail;
+        CodeList tail = todo.getTail();
+
+        if (!tail.isEmpty()) {
+            new SequenceContinuation(machine, tail);
+        }
+
+        return todo.getHead();
     }
 
     protected Code execute(Machine machine, Value value)
-    { return new CompiledSequence(_unevaluatedTail).executionStep(machine); }
+    { return prepareNext(machine, _todo); }
 }
 
 
@@ -33,13 +44,5 @@ final public class CompiledSequence
     { _sequence = sequence; }
 
     public Code executionStep(Machine machine)
-    {
-        CodeList tail = _sequence.getTail();
-
-        if (!tail.isEmpty()) {
-            new SequenceContinuation(machine, tail);
-        }
-
-        return _sequence.getHead();
-    }
+    { return SequenceContinuation.prepareNext(machine, _sequence); }
 }
