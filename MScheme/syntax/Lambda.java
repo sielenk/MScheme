@@ -1,20 +1,17 @@
 package MScheme.syntax;
 
-import java.io.Writer;
-import java.io.IOException;
-
 import MScheme.Value;
 import MScheme.Code;
 import MScheme.Syntax;
 
 import MScheme.util.Arity;
-import MScheme.machine.Machine;
-import MScheme.code.CodeList;
 import MScheme.code.CompiledLambda;
-import MScheme.environment.*;
+import MScheme.environment.StaticEnvironment;
+import MScheme.values.List;
+import MScheme.values.Pair;
+import MScheme.values.ValueFactory;
+
 import MScheme.exceptions.*;
-import MScheme.functions.*;
-import MScheme.values.*;
 
 
 final class Lambda
@@ -28,7 +25,7 @@ final class Lambda
 
     protected Code checkedTranslate(
         StaticEnvironment environment,
-	    int               len,
+        int               len,
         List              arguments
     ) throws CompileError, TypeError
     {
