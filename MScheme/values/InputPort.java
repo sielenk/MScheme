@@ -61,7 +61,7 @@ public class InputPort
         }
         catch (IOException e) {
             throw new OpenException(
-                ValueFactory.createString(filename)
+                ScmString.create(filename)
             );
         }
     }
@@ -183,13 +183,13 @@ public class InputPort
             String name = charName.toString();
             
             if (name.equals("s")) {
-                return ValueFactory.createChar('s');
+                return ScmChar.create('s');
             } else if (name.equals("n")) {
-                return ValueFactory.createChar('n');
+                return ScmChar.create('n');
             } else if (name.equals("space")) {
-                return ValueFactory.createChar(' ');
+                return ScmChar.create(' ');
             } else if (name.equals("newline")) {
-                return ValueFactory.createChar('\n');
+                return ScmChar.create('\n');
             } else {
                 throw new ParseException(
                     this,
@@ -197,7 +197,7 @@ public class InputPort
                 );
             }
         } else {
-            return ValueFactory.createChar((char)c);
+            return ScmChar.create((char)c);
         }
     }
     
@@ -207,7 +207,7 @@ public class InputPort
         int c = skipWSread();
     
         if (c == ')') {
-            return ValueFactory.createVector(index);
+            return ScmVector.create(index);
         } if (c == EOF) {
             throw new ParseException(
                 this,
@@ -239,13 +239,13 @@ public class InputPort
         }
     }
     
-    private List parseList()
+    private Value parseList()
         throws IOException, ParseException
     {
         int c = skipWSread();
     
         if (c == ')') {
-            return ValueFactory.createList();
+            return Empty.create();
         } if (c == EOF) {
             throw new ParseException(
                 this,
@@ -257,7 +257,7 @@ public class InputPort
             
             int la1 = skipWSread();
             if (la1 == '.') {
-                List result = Pair.create(
+                Pair result = Pair.create(
                     head,
                     parseDatum()
                 );
@@ -272,7 +272,7 @@ public class InputPort
                 return result;
             } else {
                 _reader.unread(la1);
-                return ValueFactory.prepend(
+                return Pair.create(
                     head,
                     parseList()
                 );
@@ -290,7 +290,7 @@ public class InputPort
         
             switch (c) {
             case '"':
-                return ValueFactory.createString(
+                return ScmString.create(
                     buf.toString()
                 );
                 
@@ -350,11 +350,11 @@ public class InputPort
         String str = buf.toString();
         
         if (str.equals("+")) {
-            return ValueFactory.createSymbol("+");
+            return Symbol.create("+");
         } else if (str.equals("-")) {
-            return ValueFactory.createSymbol("-");
+            return Symbol.create("-");
         } else if (str.equals("...")) {
-            return ValueFactory.createSymbol("...");
+            return Symbol.create("...");
         }
 
         checkNumber: {
@@ -369,7 +369,7 @@ public class InputPort
                 }
             }
             try {
-                return ValueFactory.createNumber(
+                return ScmNumber.create(
                     Integer.parseInt(str)
                 );
             }
@@ -392,7 +392,7 @@ public class InputPort
             }
         }
         
-        return ValueFactory.createSymbol(str);
+        return Symbol.create(str);
     }
 
     private Value parseDatum()
@@ -406,17 +406,17 @@ public class InputPort
 
             switch (la2) {
             case 't':
-                return ValueFactory.createTrue();
+                return ScmBoolean.createTrue();
 
             case 'f':
-                return ValueFactory.createFalse();
-                
+                return ScmBoolean.createFalse();
+
             case '\\':
                 return parseChar();
 
             case '(':
                 return parseVector(0);
-                
+
             default:
                 throw new ParseException(
                     this,
@@ -426,32 +426,32 @@ public class InputPort
         } // break;
                 
         case '(':
-            return parseList().toValue();
+            return parseList();
             
         case '"':
             return parseString();
         
         case '\'':
             return ValueFactory.createList(
-                ValueFactory.createSymbol("quote"),
+                Symbol.create("quote"),
                 parseDatum()
             );
 
         case '`':
             return ValueFactory.createList(
-                ValueFactory.createSymbol("quasiquote"),
+                Symbol.create("quasiquote"),
                 parseDatum()
             );
             
         case ',': {
-                int c = _reader.read();
+                int la2 = _reader.read();
                 Symbol sym;
 
-                if (c == '@') {
-                    sym = ValueFactory.createSymbol("unquote-splicing");
+                if (la2 == '@') {
+                    sym = Symbol.create("unquote-splicing");
                 } else {
-                    _reader.unread(c);
-                    sym = ValueFactory.createSymbol("unquote");
+                    _reader.unread(la2);
+                    sym = Symbol.create("unquote");
                 }
 
                 return ValueFactory.createList(

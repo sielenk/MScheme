@@ -31,43 +31,15 @@ public class TestMachine
     protected void setUp()
         throws Exception
     {
-        _sym1 = ValueFactory.createSymbol("test1");
-        _sym2 = ValueFactory.createSymbol("test2");
+        _sym1 = Symbol.create("test1");
+        _sym2 = Symbol.create("test2");
     
-        _val1  = ValueFactory.createTrue();
-        _val2  = ValueFactory.createFalse();
-        _unval = ValueFactory.createList();
+        _val1  = ScmBoolean.createTrue();
+        _val2  = ScmBoolean.createFalse();
+        _unval = Empty.create();
     
-        _environment = DynamicEnvironment.getEmpty();
+        _environment = DynamicEnvironment.getNullEnvironment();
     
-        StaticEnvironment staticBindings =
-            _environment.getStatic();
-        
-        staticBindings.defineSyntax(
-            ValueFactory.createSymbol("quote"),
-            SyntaxFactory.getQuoteToken()
-        );
-        staticBindings.defineSyntax(
-            ValueFactory.createSymbol("if"),
-            SyntaxFactory.getIfToken()
-        );
-        staticBindings.defineSyntax(
-            ValueFactory.createSymbol("begin"),
-            SyntaxFactory.getBeginToken()
-        );
-        staticBindings.defineSyntax(
-            ValueFactory.createSymbol("lambda"),
-            SyntaxFactory.getLambdaToken()
-        );
-        staticBindings.defineSyntax(
-            ValueFactory.createSymbol("define"),
-            SyntaxFactory.getDefineToken()
-        );
-        staticBindings.defineSyntax(
-            ValueFactory.createSymbol("set!"),
-            SyntaxFactory.getSetToken()
-        );
-
         machine = new Machine(_environment);
     }
     
@@ -82,7 +54,7 @@ public class TestMachine
         throws SchemeException
     {
         return machine.evaluate(
-            ValueFactory.createInputPort(
+            InputPort.create(
                 new StringReader(expression)
             ).read()
         );
@@ -189,7 +161,7 @@ public class TestMachine
         assert(
             machine.evaluate(
                 ValueFactory.createList(
-                    ValueFactory.createSymbol("quote"),
+                    Symbol.create("quote"),
                     _unval
                 )
             ) == _unval
@@ -205,9 +177,9 @@ public class TestMachine
         assert(
             machine.evaluate(
                 ValueFactory.prepend(
-                    ValueFactory.createSymbol("if"),
+                    Symbol.create("if"),
                     ValueFactory.createList(
-                        ValueFactory.createTrue(),
+                        ScmBoolean.createTrue(),
                         _sym1,
                         _sym2
                     )
@@ -218,9 +190,9 @@ public class TestMachine
         assert(
             machine.evaluate(
                 ValueFactory.prepend(
-                    ValueFactory.createSymbol("if"),
+                    Symbol.create("if"),
                     ValueFactory.createList(
-                        ValueFactory.createTrue(),
+                        ScmBoolean.createTrue(),
                         _sym1
                     )
                 )
@@ -230,9 +202,9 @@ public class TestMachine
         assert(
             machine.evaluate(
                 ValueFactory.prepend(
-                    ValueFactory.createSymbol("if"),
+                    Symbol.create("if"),
                     ValueFactory.createList(
-                        ValueFactory.createFalse(),
+                        ScmBoolean.createFalse(),
                         _sym1,
                         _sym2
                     )
@@ -249,7 +221,7 @@ public class TestMachine
         try {
             machine.evaluate(
                 ValueFactory.createList(
-                    ValueFactory.createSymbol("begin"),
+                    Symbol.create("begin"),
                     _sym1,
                     _sym2
                 )
@@ -263,7 +235,7 @@ public class TestMachine
         assert(
             machine.evaluate(
                 ValueFactory.createList(
-                    ValueFactory.createSymbol("begin"),
+                    Symbol.create("begin"),
                     _sym1,
                     _sym2
                 )
@@ -298,8 +270,8 @@ public class TestMachine
     {
         Function func = machine.evaluate(
             ValueFactory.createList(
-                ValueFactory.createSymbol("lambda"),
-                ValueFactory.createList(),
+                Symbol.create("lambda"),
+                Empty.create(),
                 _val1
             )
         ).toFunction();
@@ -357,7 +329,7 @@ public class TestMachine
         assert(
             machine.evaluate(
                 ValueFactory.createList(func, _val1)
-            ) == ValueFactory.createList()
+            ) == Empty.create()
         );
         
         assert(
@@ -374,7 +346,7 @@ public class TestMachine
 
         Pair pair2 = Pair.create(
             _val2,
-            ValueFactory.createList()
+            Empty.create()
         );
         Pair pair1 = Pair.create(
             _val1,
@@ -394,15 +366,15 @@ public class TestMachine
     {
         machine.evaluate(
             ValueFactory.createList(
-                ValueFactory.createSymbol("define"),
-                ValueFactory.createSymbol("a"),
+                Symbol.create("define"),
+                Symbol.create("a"),
                 _val1
             )
         );
         
         assert(
             machine.evaluate(
-                ValueFactory.createSymbol("a")
+                Symbol.create("a")
             ) == _val1
         );
     }
@@ -415,7 +387,7 @@ public class TestMachine
         assert(
             machine.evaluate(
                 ValueFactory.createList(
-                    ValueFactory.createSymbol("f"),
+                    Symbol.create("f"),
                     _val1
                 )
             ) == _val1
@@ -431,7 +403,7 @@ public class TestMachine
         assert(
             "function creation failed",
             machine.evaluate(
-                ValueFactory.createSymbol("f")
+                Symbol.create("f")
             ).isFunction()
         );
         
@@ -439,7 +411,7 @@ public class TestMachine
             "function application failed",
             machine.evaluate(
                 ValueFactory.createList(
-                    ValueFactory.createSymbol("f"),
+                    Symbol.create("f"),
                     _val1,
                     _val2
                 )
@@ -455,12 +427,12 @@ public class TestMachine
                 ValueFactory.createList(
                     ValueFactory.createFunction("CallCC"),
                     ValueFactory.createList(
-                        ValueFactory.createSymbol("lambda"),
+                        Symbol.create("lambda"),
                         ValueFactory.createList(
-                            ValueFactory.createSymbol("return")
+                            Symbol.create("return")
                         ),
                         ValueFactory.createList(
-                            ValueFactory.createSymbol("return"),
+                            Symbol.create("return"),
                             _val1
                         )
                     )

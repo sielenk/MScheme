@@ -35,7 +35,7 @@ public class TestR5RS
     private Value quote(String expression)
         throws SchemeException
     {
-        return ValueFactory.createInputPort(
+        return InputPort.create(
                 new StringReader(expression)
         ).read();
     }

@@ -11,16 +11,6 @@ import MScheme.exceptions.FunctionNotFoundException;
 
 public abstract class ValueFactory
 {
-    public static ScmBoolean createTrue()
-    { return ScmBoolean.createTrue(); }
-
-    public static ScmBoolean createFalse()
-    { return ScmBoolean.createFalse(); }
-    
-    public static ScmBoolean createBool(boolean flag)
-    { return ScmBoolean.create(flag); }
-
-
     public static Pair prepend(Value head, List tail)
     { return Pair.create(head, tail.toValue()); }
 
@@ -35,10 +25,6 @@ public abstract class ValueFactory
 
     public static Pair createList(Value first, Value second, Value third)
     { return prepend(first, createList(second, third)); }
-
-    
-    public static Symbol createSymbol(String javaString)
-    { return Symbol.create(javaString); }
 
     
     public static Function createFunction(String name)
@@ -56,45 +42,5 @@ public abstract class ValueFactory
             throw new FunctionNotFoundException(name);
         }
     }
-    
-    
-    public static ScmNumber createNumber(int value)
-    { return ScmNumber.create(value); }
-    
-    public static ScmChar createChar(char c)
-    { return ScmChar.create(c); }
-    
-    public static ScmString createString(String javaString)
-    { return ScmString.create(javaString); }
-
-    public static ScmVector createVector()
-    { return ScmVector.create(0); }
-
-    public static ScmVector createVector(int size)
-    { return ScmVector.create(size); }
-
-    public static ScmVector createVector(int size, Value fill)
-    { return ScmVector.create(size, fill); }
-
-    
-    public static InputPort createInputPort()
-    { return InputPort.create(); }
-    
-    public static InputPort createInputPort(String filename)
-        throws OpenException
-    { return InputPort.create(filename); }
-    
-    public static InputPort createInputPort(Reader source)
-    { return InputPort.create(source); }
-    
-    public static OutputPort createOutputPort()
-    { return OutputPort.create(); }
-    
-    public static OutputPort createOutputPort(String filename)
-        throws OpenException
-    { return OutputPort.create(filename); }
-    
-    public static OutputPort createOutputPort(Writer destination)
-    { return OutputPort.create(destination); }
 }
 

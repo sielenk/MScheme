@@ -1,7 +1,7 @@
 package MScheme.functions;
 
-import MScheme.values.ValueFactory;
 import MScheme.values.Value;
+import MScheme.values.ScmBoolean;
 import MScheme.values.List;
 
 import MScheme.exceptions.ListExpected;
@@ -27,7 +27,7 @@ abstract class MemberBase
             tail = tail.getTail();
         }
 
-        return ValueFactory.createFalse();
+        return ScmBoolean.createFalse();
     }
 }
 

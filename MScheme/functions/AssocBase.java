@@ -1,7 +1,7 @@
 package MScheme.functions;
 
-import MScheme.values.ValueFactory;
 import MScheme.values.Value;
+import MScheme.values.ScmBoolean;
 import MScheme.values.List;
 import MScheme.values.Pair;
 
@@ -30,6 +30,6 @@ abstract class AssocBase
             tail = tail.getTail();
         }
 
-        return ValueFactory.createFalse();
+        return ScmBoolean.createFalse();
     }
 }

@@ -5,6 +5,7 @@ import MScheme.machine.Continuation;
 import MScheme.values.ValueFactory;
 import MScheme.values.Value;
 import MScheme.values.List;
+import MScheme.values.Empty;
 
 import MScheme.exceptions.*;
 
@@ -66,7 +67,7 @@ final public class CompiledApplication
     {
         return PushContinuation.prepareNext(
             machine,
-            ValueFactory.createList(),
+            Empty.create(),
             _permutedApplication
         );
     }
