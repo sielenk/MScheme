@@ -6,7 +6,7 @@ import MScheme.machine.Registers;
 import MScheme.Code;
 import MScheme.Value;
 import MScheme.values.Function;
-import MScheme.List;
+import MScheme.values.List;
 import MScheme.values.Pair;
 
 import MScheme.exceptions.SchemeException;

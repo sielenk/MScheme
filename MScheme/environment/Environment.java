@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Vector;
 
 import MScheme.Value;
-import MScheme.List;
 import MScheme.Code;
 import MScheme.Syntax;
 

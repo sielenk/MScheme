@@ -3,7 +3,7 @@ package MScheme.functions;
 import MScheme.util.Arity;
 import MScheme.machine.Registers;
 import MScheme.Code;
-import MScheme.List;
+import MScheme.values.List;
 import MScheme.values.Function;
 
 import MScheme.exceptions.SchemeException;

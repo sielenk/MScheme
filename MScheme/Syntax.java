@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import MScheme.util.Arity;
 
+import MScheme.values.List;
+
 import MScheme.environment.StaticEnvironment;
 
 import MScheme.exceptions.SchemeException;
@@ -12,10 +14,10 @@ import MScheme.exceptions.SyntaxArityError;
 
 
 public abstract class Syntax
-            implements Translator
+    implements Translator
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     private final Arity _arity;
 
@@ -25,7 +27,7 @@ public abstract class Syntax
     }
 
     protected void arityError(List arguments)
-    throws SyntaxArityError
+        throws SyntaxArityError
     {
         throw new SyntaxArityError(arguments, _arity);
     }

@@ -1,7 +1,6 @@
 # $Id$
 
 SRC =	Code.java	\
-	List.java	\
 	Main.java	\
 	Syntax.java	\
 	Translator.java	\
@@ -103,6 +102,7 @@ SRC =	Code.java	\
 	values/Function.java	\
 	values/InputPort.java	\
 	values/ListFactory.java	\
+	values/List.java	\
 	values/OutputPort.java	\
 	values/Pair.java	\
 	values/PairOrList.java	\
@@ -138,7 +138,7 @@ PACKAGES =	MScheme			\
 		MScheme.values		\
 		MScheme.tests
 
-GCJ=gcj
+GCJ=gcj -O -W -Wall
 JAVAC=jikes -bootclasspath /usr/lib/java/jre/lib/rt.jar +P
 # JAVAC = $(GCJ) -W -Wall -C
 
@@ -158,10 +158,10 @@ functions/Builtins.class: functions/Builtins.java
 	$(JAVAC) functions/Builtins.java
 
 %.o: %.java
-	$(GCJ) -ggdb -o $@ -c $<
+	$(GCJ) -o $@ -c $<
 
 main: $(OBJ)
-	$(GCJ) -ggdb --main=MScheme.Main -o main $^
+	$(GCJ) --main=MScheme.Main -o main $^
 
 depend:
 	touch depend

@@ -3,7 +3,6 @@ package MScheme.functions;
 import MScheme.util.Arity;
 
 import MScheme.Value;
-import MScheme.List;
 
 import MScheme.environment.Environment;
 
@@ -503,6 +502,85 @@ public class Builtins
         );
 
         return c;
+    }
+
+    public final static Value string_2Dappend(List arguments)
+    throws TypeError, InvalidStringIndexException, ImmutableException
+    {
+        StringBuffer accu = new StringBuffer();
+        
+        for (
+            List rest = arguments;
+            !rest.isEmpty();
+            rest = rest.getTail()
+        )
+        {
+            accu.append(
+                rest
+                .getHead()
+                .toScmString()
+                .getJavaString()
+            );
+        }
+        
+        return ScmString.create(
+            accu.toString()
+        );
+    }
+
+    public final static Value string_2Dcopy(Value string)
+    throws TypeError, InvalidStringIndexException, ImmutableException
+    {
+        return ScmString.create(
+            string.toScmString().getJavaString()
+        );
+    }
+
+    public final static Value string_2D_3Elist(Value scmString)
+    throws TypeError, InvalidStringIndexException, ImmutableException
+    {
+        String javaString = scmString.toScmString().getJavaString();
+        List   result     = ListFactory.create();
+
+        for (
+            int i = javaString.length() - 1;
+            i >= 0;
+            --i
+        )
+        {
+            result = ListFactory.prepend(
+                ScmChar.create(
+                    javaString.charAt(i)
+                ),
+                result
+            );
+        }
+
+        return result;
+    }
+
+    public final static Value list_2D_3Estring(Value list)
+    throws TypeError, InvalidStringIndexException, ImmutableException
+    {
+        StringBuffer accu = new StringBuffer();
+        
+        for (
+            List rest = list.toList();
+            !rest.isEmpty();
+            rest = rest.getTail()
+        )
+        {
+            accu.append(
+                rest
+                .getHead()
+                .toScmChar()
+                .getJavaChar()
+            );
+        }
+        
+        return ScmString.create(
+            accu.toString()
+        );
     }
 
     // 6.3.6 Vectors
