@@ -14,8 +14,6 @@ public interface Environment
 {
     // *** Envrionment access ************************************************
 
-    public Environment     getEmpty    (              );
-
     public Environment     getParent   (              );
     public Environment     newChild    (              );
     public EnvironmentStub newChildStub(Values symbols)
