@@ -40,7 +40,7 @@ public final class CompiledLambda
         StaticEnvironment compiledFormals,
         CodeList          compiledBody
     )
-    { this(arity, compiledFormals, CompiledSequence.create(compiledBody)); }
+    { this(arity, compiledFormals, Sequence.create(compiledBody)); }
 
     public CompiledLambda(
         Arity             arity,

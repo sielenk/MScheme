@@ -4,38 +4,32 @@ package MScheme.syntax;
 public abstract class SyntaxFactory
 {
     public static Syntax getBeginToken()
-    { return BeginToken.INSTANCE; }
-    
-    public static Syntax getCondToken()
-    { return CondToken.INSTANCE; }
+    { return Begin.INSTANCE; }
     
     public static Syntax getSetToken()
-    { return SetToken.INSTANCE; }
+    { return Set.INSTANCE; }
     
     public static Syntax getDefineToken()
-    { return DefineToken.INSTANCE; }
+    { return Define.INSTANCE; }
     
     public static Syntax getDefineSyntaxToken()
-    { return DefineSyntaxToken.INSTANCE; }
+    { return DefineSyntax.INSTANCE; }
     
     public static Syntax getLambdaToken()
-    { return LambdaToken.INSTANCE; }
+    { return Lambda.INSTANCE; }
     
     public static Syntax getLetToken()
-    { return LetToken.INSTANCE; }
+    { return Let.INSTANCE; }
     
     public static Syntax getLetStarToken()
-    { return LetStarToken.INSTANCE; }
+    { return LetStar.INSTANCE; }
     
     public static Syntax getLetrecToken()
-    { return LetrecToken.INSTANCE; }
+    { return Letrec.INSTANCE; }
     
     public static Syntax getIfToken()
-    { return IfToken.INSTANCE; }
+    { return If.INSTANCE; }
     
     public static Syntax getQuoteToken()
-    { return QuoteToken.INSTANCE; }
-
-    public static Syntax getQuasiquoteToken()
-    { return QuasiquoteToken.INSTANCE; }
+    { return Quote.INSTANCE; }
 }

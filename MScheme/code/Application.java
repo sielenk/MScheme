@@ -55,12 +55,12 @@ final class PushContinuation
 }
 
 
-final public class CompiledApplication
+final public class Application
     extends Code
 {
     final private CodeList _permutedApplication;
 
-    public CompiledApplication(CodeList application)
+    public Application(CodeList application)
     { _permutedApplication = application.getReversed(); }
     
     public Code executionStep(Machine machine)

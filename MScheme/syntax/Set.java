@@ -6,13 +6,13 @@ import MScheme.environment.Reference;
 import MScheme.values.List;
 import MScheme.values.Symbol;
 
-import MScheme.exceptions.*;
+import MScheme.exceptions.CompileError;
 
 
-final class SetToken
-    extends AssignToken
+final class Set
+    extends Assign
 {
-    final static Syntax INSTANCE = new SetToken();
+    final static Syntax INSTANCE = new Set();
     
     protected Reference getReference(
         StaticEnvironment syntax,

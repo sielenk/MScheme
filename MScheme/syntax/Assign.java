@@ -2,7 +2,7 @@ package MScheme.syntax;
 
 import MScheme.util.Arity;
 import MScheme.code.Code;
-import MScheme.code.CompiledAssignment;
+import MScheme.code.Assignment;
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Reference;
 import MScheme.values.Value;
@@ -12,10 +12,10 @@ import MScheme.values.Symbol;
 import MScheme.exceptions.*;
 
 
-abstract class AssignToken
+abstract class Assign
     extends Syntax
 {
-    protected AssignToken()
+    protected Assign()
     { super(Arity.atLeast(2)); }
 
     abstract protected Reference getReference(
@@ -36,7 +36,7 @@ abstract class AssignToken
         Symbol symbol = arguments.getHead().toSymbol();
         Value  value  = arguments.getTail().getHead();
 
-        return new CompiledAssignment(
+        return new Assignment(
             getReference(syntax, symbol),
             value.getCode(syntax)
         );

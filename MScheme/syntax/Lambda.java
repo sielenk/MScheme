@@ -8,19 +8,18 @@ import MScheme.machine.Machine;
 import MScheme.code.Code;
 import MScheme.code.CodeList;
 import MScheme.code.CompiledLambda;
-import MScheme.code.CompiledSequence;
 import MScheme.environment.*;
 import MScheme.exceptions.*;
 import MScheme.functions.*;
 import MScheme.values.*;
 
 
-final class LambdaToken
+final class Lambda
     extends Syntax
 {
-    final static Syntax INSTANCE = new LambdaToken();
+    final static Syntax INSTANCE = new Lambda();
     
-    private LambdaToken()
+    private Lambda()
     { super(Arity.atLeast(2)); }
 
 

@@ -232,6 +232,18 @@ public class TestR5RS
             "    (* z x)))",
             "35"
         );
+        
+        try {
+            eval("(let ((x 1) (y x)) 0)");
+            fail();
+        }
+        catch (SymbolNotFoundException e) { }
+
+        try {
+            eval("(let ((x y) (y 1)) 0)");
+            fail();
+        }
+        catch (SymbolNotFoundException e) { }
     }
 
     public void test4_2_2_letstar()
@@ -250,6 +262,14 @@ public class TestR5RS
             "  (list a b c d e))",
             "(1 2 3 5 8)"
         );
+
+        check("(let* ((x 1) (y x)) y)", "1");
+
+        try {
+            eval("(let* ((x y) (y 1)) 0)");
+            fail();
+        }
+        catch (SymbolNotFoundException e) { }
     }
 
     public void test4_2_2_letrec()
@@ -269,6 +289,8 @@ public class TestR5RS
             "  (even? 88))\n",
             "#t"
         );
+
+        check("(letrec ((x (lambda () y)) (y (lambda () x))) 0)",  "0");
     }
 
     public void test4_2_2_common()

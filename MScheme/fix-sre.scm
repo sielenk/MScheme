@@ -1,10 +1,12 @@
-(let ((basic-sre scheme-report-environment))
+(let ((basic-sre  scheme-report-environment)
+      (fix-io     (read (open-input-file "fix-io.scm")))
+      (fix-syntax (read (open-input-file "fix-syntax.scm"))))
   (set! scheme-report-environment
     (eval 'scheme-report-environment
       (let fixed-sre ((n 5))
         (define env (basic-sre n))
-        (eval (read (open-input-file "fix-io.scm")) env)
-        (eval (read (open-input-file "fix-syntax.scm")) env)
+        (eval fix-io     env)
+        (eval fix-syntax env)
         (eval
           (list 'define 'load
             (lambda (filename)

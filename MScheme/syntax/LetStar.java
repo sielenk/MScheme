@@ -14,12 +14,12 @@ import MScheme.values.*;
 
 // *** let ***
 
-final class LetStarToken
+final class LetStar
     extends Syntax
 {
-    final static Syntax INSTANCE = new LetStarToken();
+    final static Syntax INSTANCE = new LetStar();
     
-    private LetStarToken()
+    private LetStar()
     { super(Arity.atLeast(2)); }
 
 
@@ -38,7 +38,7 @@ final class LetStarToken
             // special handling because the helper wouldn't
             // create a new environment in this case
 
-            return new CompiledApplication(
+            return new Application(
                 CodeList.create(
                     new CompiledLambda(
                         Arity.exactly(0),
@@ -66,7 +66,7 @@ final class LetStarHelper
     ) throws CompileError, TypeError
     {
         if (bindings.isEmpty()) {
-            return CompiledSequence.create(
+            return Sequence.create(
                 _body.getCodeList(outerEnvironment)
             );
         } else {
@@ -89,7 +89,7 @@ final class LetStarHelper
                 innerBody
             );
 
-            return new CompiledApplication(
+            return new Application(
                 CodeList.create(
                     lambda,
                     init.getCode(outerEnvironment)

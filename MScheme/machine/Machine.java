@@ -69,13 +69,13 @@ public class Machine
     public Value execute(Code program)
         throws RuntimeError, TypeError
     {
-        Code accumulator = program;
+        Code nextInstruction = program;
         
         setContinuation(null);
         AbortContinuation abort = new AbortContinuation(this);
         
-        while (accumulator != null) {
-            accumulator = accumulator.executionStep(this);
+        while (nextInstruction != null) {
+            nextInstruction = nextInstruction.executionStep(this);
         }
 
         return abort.getResult();
