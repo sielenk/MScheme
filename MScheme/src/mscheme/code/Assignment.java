@@ -22,6 +22,7 @@ package mscheme.code;
 
 import mscheme.Code;
 
+import mscheme.environment.DelayedReference;
 import mscheme.environment.Reference;
 
 import mscheme.exceptions.CompileError;
@@ -30,45 +31,57 @@ import mscheme.machine.Invokeable;
 import mscheme.machine.Registers;
 
 
+final class ForceableAssignment
+	implements Forceable
+{
+	public final static String id
+		= "$Id$";
+
+
+	private DelayedReference _binding;
+	private Forceable        _expression;
+
+
+	public ForceableAssignment(
+		DelayedReference binding,
+		Forceable        expression)
+	{
+		_binding    = binding;
+		_expression = expression;
+	}
+
+    public Reduceable force() throws CompileError
+    {
+        return new Assignment(
+        	_binding.forceRef(),
+        	_expression.force());
+    }
+}
+
+
 public final class Assignment
-    implements Forceable, Reduceable
+    implements Reduceable
 {
 	public final static String id
         = "$Id$";
 
 
-    private Reference _binding;
-    private Object    _expression;
+    private Reference  _binding;
+    private Reduceable _expression;
 
 
-	public Assignment(Reference binding, Object expression)
+	Assignment(Reference binding, Reduceable expression)
 	{
 		_binding    = binding;
 		_expression = expression;		
 	}
 
-    private Assignment(
-        Reference binding,
-        Code      valueCalculation
+    public static Forceable create(
+        DelayedReference binding,
+        Forceable        valueCalculation
     )
     {
-    	this(binding, (Object)valueCalculation);
-    }
-
-    public static Assignment create(
-        Reference binding,
-        Object    valueCalculation
-    )
-    {
-        return new Assignment(binding, valueCalculation);
-    }
-
-    public Object force()
-        throws CompileError
-    {
-        _binding    = _binding.forceRef();        
-		_expression = Code.force(_expression);
-        return this;
+        return new ForceableAssignment(binding, valueCalculation);
     }
 
     public String toString()

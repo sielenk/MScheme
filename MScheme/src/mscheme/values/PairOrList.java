@@ -23,16 +23,14 @@ package mscheme.values;
 import java.io.IOException;
 import java.io.Writer;
 
+import mscheme.code.Forceable;
 import mscheme.environment.StaticEnvironment;
 
-import mscheme.exceptions.ImmutableException;
-import mscheme.exceptions.ListExpected;
 import mscheme.exceptions.PairExpected;
 import mscheme.exceptions.SchemeException;
 
 
 final class PairOrList
-    extends Compound
     implements List, Pair, Outputable, Comparable
 {
     public final static String id
@@ -42,10 +40,8 @@ final class PairOrList
     private Object _first;
     private Object _second;
 
-    private PairOrList(boolean isConst, Object first, Object second)
+    private PairOrList(Object first, Object second)
     {
-        super(isConst);
-
         _first  = first;
         _second = second;
     }
@@ -53,27 +49,19 @@ final class PairOrList
 
     public static List prepend(Object head, List tail)
     {
-        return new PairOrList(false, head, tail);
+        return new PairOrList(head, tail);
     }
 
     public static Pair create(Object first, Object second)
     {
-        return new PairOrList(false, first, second);
-    }
-
-    public static Pair createConst(Object first, Object second)
-    {
-        return new PairOrList(
-        	true,
-			ValueTraits.getConst(first),
-			ValueTraits.getConst(second));
+        return new PairOrList(first, second);
     }
 
 
     // implementation of Value
 
     public void outputOn(Writer destination, boolean doDisplay)
-        throws IOException
+        throws IOException, SchemeException
     {
         destination.write('(');
 
@@ -95,7 +83,7 @@ final class PairOrList
 
             Pair currentPair = (Pair)current;
 
-			ValueTraits.output(destination, doDisplay, currentPair.getFirst());
+			ValueTraits.output(currentPair.getFirst(), destination, doDisplay);
 
             current = currentPair.getSecond();
 
@@ -118,32 +106,16 @@ final class PairOrList
 
             destination.write(" . ");
 
-			ValueTraits.output(destination, doDisplay, current);
+			ValueTraits.output(current, destination, doDisplay);
         }
 
         destination.write(')');
     }
 
-    public boolean equal(Object other)
-    {
-        try
-        {
-            Pair otherPair = (Pair)other;
-
-            return
-				ValueTraits.equal(getFirst (), otherPair.getFirst ()) &&
-				ValueTraits.equal(getSecond(), otherPair.getSecond());
-        }
-        catch (ClassCastException e)
-        { }
-
-        return false;
-    }
-
-    public Object getCompiled(StaticEnvironment compilationEnv)
+    public Forceable getForceable(StaticEnvironment compilationEnv)
         throws SchemeException
     {
-        List list = toList();
+        List list = ValueTraits.toList(this);
 
         return
 			ValueTraits.getSyntax(
@@ -156,28 +128,7 @@ final class PairOrList
     }
 
 
-    // implementation of Compound
-
-    protected final Object getConstCopy()
-    {
-        return createConst(
-            getFirst(),
-            getSecond()
-        );
-    }
-
-
     // implementation of Pair
-
-    public final boolean isPair()
-    {
-        return true;
-    }
-
-    public final Pair toPair()
-    {
-        return this;
-    }
 
     public final Object getFirst()
     {
@@ -185,9 +136,7 @@ final class PairOrList
     }
 
     public final void setFirst(Object first)
-        throws ImmutableException
     {
-        modify();
         _first = first;
     }
 
@@ -197,16 +146,14 @@ final class PairOrList
     }
 
     public final void setSecond(Object second)
-        throws ImmutableException
     {
-        modify();
         _second = second;
     }
 
 
     // implementation of List
 
-    public boolean isList()
+    public boolean isValid()
     {
         try {
             Object hare = getSecond();
@@ -241,12 +188,6 @@ final class PairOrList
         }
     }
 
-    public List toList()
-        throws ListExpected
-    {
-        return isList() ? this : super.toList();
-    }
-
     public boolean isEmpty()
     {
         return false;
@@ -256,7 +197,7 @@ final class PairOrList
     {
         try
         {
-            PairOrList result  = new PairOrList(false, getHead(), null);
+            PairOrList result  = new PairOrList(getHead(), null);
             PairOrList current = result;
 
             for (
@@ -266,7 +207,6 @@ final class PairOrList
             )
             {
                 PairOrList next = new PairOrList(
-                    false,
                     tail.getHead(),
                     null
                 );
@@ -348,19 +288,19 @@ final class PairOrList
         }
     }
 
-    public Object[] getCompiledArray(StaticEnvironment compilationEnv)
+    public Forceable[] getForceableArray(StaticEnvironment compilationEnv)
         throws SchemeException
     {
-        return getCompiledArray(compilationEnv, 0);
+        return getForceableArray(compilationEnv, 0);
     }
 
-    public Object[] getCompiledArray(StaticEnvironment compilationEnv, int index)
+    public Forceable[] getForceableArray(StaticEnvironment compilationEnv, int index)
         throws SchemeException
     {
-        Object   compiledHead = ValueTraits.getCompiled(compilationEnv, getHead());
-        Object[] result       = getTail().getCompiledArray(
-                                    compilationEnv,
-                                    index + 1);
+		Forceable   compiledHead = ValueTraits.getForceable(compilationEnv, getHead());
+		Forceable[] result       = getTail().getForceableArray(
+                                       compilationEnv,
+                                       index + 1);
 
        	result[index] = compiledHead;
         
@@ -380,5 +320,32 @@ final class PairOrList
 		result[index] = getHead();				 
 
 		return result;
+	}
+
+
+    public boolean eq(Object other)
+    {
+        return this == other;
+    }
+
+    public boolean eqv(Object other)
+    {
+		return this == other;
+    }
+
+	public boolean equal(Object other)
+	{
+		try
+		{
+			Pair otherPair = (Pair)other;
+
+			return
+				ValueTraits.equal(getFirst (), otherPair.getFirst ()) &&
+				ValueTraits.equal(getSecond(), otherPair.getSecond());
+		}
+		catch (ClassCastException e)
+		{ }
+
+		return false;
 	}
 }

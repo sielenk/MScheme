@@ -24,8 +24,6 @@ import java.io.StringReader;
 
 import junit.framework.TestCase;
 
-import mscheme.Value;
-
 import mscheme.environment.Environment;
 
 import mscheme.exceptions.CompileError;
@@ -44,7 +42,6 @@ import mscheme.values.InputPort;
 import mscheme.values.List;
 import mscheme.values.ListFactory;
 import mscheme.values.Pair;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
 
@@ -56,11 +53,11 @@ public class TestMachine
 
     private Machine machine;
 
-    private Symbol      _sym1;
-    private Symbol      _sym2;
+    private String      _sym1;
+    private String      _sym2;
     private Object      _val1;
     private Object      _val2;
-    private Value       _unval;
+    private Object      _unval;
     private Environment _environment;
 
 
@@ -73,8 +70,8 @@ public class TestMachine
     protected void setUp()
     throws Exception
     {
-        _sym1 = Symbol.create("test1");
-        _sym2 = Symbol.create("test2");
+        _sym1 = "test1";
+        _sym2 = "test2";
 
         _val1  = Boolean.TRUE;
         _val2  = Boolean.FALSE;
@@ -108,14 +105,14 @@ public class TestMachine
     {
         try
         {
-            assertTrue(_unval.getCompiled(_environment.getStatic()) != null);
+            assertTrue(ValueTraits.getForceable(_environment.getStatic(), _unval) != null);
             fail("expected CantCompileException");
         }
         catch (CantCompileException e)
         { }
 
-        assertTrue(ValueTraits.getCompiled(_environment.getStatic(), _val1) != null);
-        assertTrue(ValueTraits.getCompiled(_environment.getStatic(), _val2) != null);
+        assertTrue(ValueTraits.getForceable(_environment.getStatic(), _val1) != null);
+        assertTrue(ValueTraits.getForceable(_environment.getStatic(), _val2) != null);
     }
 
     public void testEnvironment()
@@ -142,7 +139,7 @@ public class TestMachine
         { }
     }
 
-    private void define(Symbol s, Object v)
+    private void define(String s, Object v)
     throws Exception
     {
         _environment.define(s, v);
@@ -210,7 +207,7 @@ public class TestMachine
         assertTrue(
             machine.evaluate(
                 ListFactory.create(
-                    Symbol.create("quote"),
+                    "quote",
                     _unval
                 )
             ) == _unval
@@ -226,7 +223,7 @@ public class TestMachine
         assertTrue(
             machine.evaluate(
                 ListFactory.prepend(
-                    Symbol.create("if"),
+                    "if",
                     ListFactory.create(
                         Boolean.TRUE,
                         _sym1,
@@ -239,7 +236,7 @@ public class TestMachine
         assertTrue(
             machine.evaluate(
                 ListFactory.prepend(
-                    Symbol.create("if"),
+                    "if",
                     ListFactory.create(
                         Boolean.TRUE,
                         _sym1
@@ -251,7 +248,7 @@ public class TestMachine
         assertTrue(
             machine.evaluate(
                 ListFactory.prepend(
-                    Symbol.create("if"),
+                    "if",
                     ListFactory.create(
                         Boolean.FALSE,
                         _sym1,
@@ -271,7 +268,7 @@ public class TestMachine
         {
             machine.evaluate(
                 ListFactory.create(
-                    Symbol.create("begin"),
+                    "begin",
                     _sym1,
                     _sym2
                 )
@@ -286,7 +283,7 @@ public class TestMachine
         assertTrue(
             machine.evaluate(
                 ListFactory.create(
-                    Symbol.create("begin"),
+                    "begin",
                     _sym1,
                     _sym2
                 )
@@ -327,7 +324,7 @@ public class TestMachine
     {
         Function func = (Function)machine.evaluate(
                             ListFactory.create(
-                                Symbol.create("lambda"),
+                                "lambda",
                                 Empty.create(),
                                 _val1
                             )
@@ -431,15 +428,15 @@ public class TestMachine
     {
         machine.evaluate(
             ListFactory.create(
-                Symbol.create("define"),
-                Symbol.create("a"),
+                "define",
+                "a",
                 _val1
             )
         );
 
         assertTrue(
             machine.evaluate(
-                Symbol.create("a")
+                "a"
             ) == _val1
         );
     }
@@ -452,7 +449,7 @@ public class TestMachine
         assertTrue(
             machine.evaluate(
                 ListFactory.create(
-                    Symbol.create("f"),
+                    "f",
                     _val1
                 )
             ) == _val1
@@ -468,14 +465,14 @@ public class TestMachine
         assertTrue(
             "function creation failed",
             machine.evaluate(
-                Symbol.create("f")
+                "f"
             ) instanceof Function);
 
         assertTrue(
             "function application failed",
             machine.evaluate(
                 ListFactory.create(
-                    Symbol.create("f"),
+                    "f",
                     _val1,
                     _val2
                 )
@@ -491,12 +488,12 @@ public class TestMachine
                 ListFactory.create(
                     mscheme.values.functions.CallCCFunction.INSTANCE,
                     ListFactory.create(
-                        Symbol.create("lambda"),
+                        "lambda",
                         ListFactory.create(
-                            Symbol.create("return")
+                            "return"
                         ),
                         ListFactory.create(
-                            Symbol.create("return"),
+                            "return",
                             _val1
                         )
                     )

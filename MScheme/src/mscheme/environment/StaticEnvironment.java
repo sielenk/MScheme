@@ -26,8 +26,7 @@ import java.io.Writer;
 import java.util.Hashtable;
 
 import mscheme.Syntax;
-import mscheme.Value;
-
+import mscheme.code.Forceable;
 import mscheme.exceptions.AlreadyBound;
 import mscheme.exceptions.CompileError;
 import mscheme.exceptions.SymbolNotFoundException;
@@ -35,13 +34,10 @@ import mscheme.exceptions.TypeError;
 import mscheme.exceptions.UnexpectedSyntax;
 
 import mscheme.values.List;
-import mscheme.values.Symbol;
-import mscheme.values.ValueDefaultImplementations;
 import mscheme.values.ValueTraits;
 
 
 public class StaticEnvironment
-    extends ValueDefaultImplementations
 {
     public final static String id
         = "$Id$";
@@ -103,7 +99,7 @@ public class StaticEnvironment
         }
     }
 
-    StaticEnvironment(StaticEnvironment parent, Symbol symbol)
+    StaticEnvironment(StaticEnvironment parent, String symbol)
         throws CompileError
     {
         this(parent);
@@ -145,7 +141,7 @@ public class StaticEnvironment
         return new StaticEnvironment(this, symbols);
     }
 
-    public StaticEnvironment createChild(Symbol symbol)
+    public StaticEnvironment createChild(String symbol)
         throws CompileError
     {
         return new StaticEnvironment(this, symbol);
@@ -153,7 +149,7 @@ public class StaticEnvironment
 
     // *** instance access ***************************************************
 
-    public void setStateOpen(Value v)
+    public void setStateOpen(Object v)
         throws CompileError
     {
         switch (_state)
@@ -176,7 +172,7 @@ public class StaticEnvironment
         }
     }
 
-    public void setStateDefinitionBody(Value v)
+    public void setStateDefinitionBody(Object v)
         throws CompileError
     {
         switch (_state)
@@ -207,7 +203,7 @@ public class StaticEnvironment
         }
     }
 
-    public Reference define(Symbol symbol)
+    public Reference define(String symbol)
         throws CompileError
     {
         if (_state != OPEN)
@@ -220,7 +216,7 @@ public class StaticEnvironment
 
         try
         {
-            String    key = symbol.getJavaString();
+            String    key = symbol;
             Reference ref = (Reference)_bindings.get(key);
 
             // if ref is != null
@@ -252,24 +248,21 @@ public class StaticEnvironment
     }
 
 
-    public void defineSyntax(Symbol symbol, Syntax value)
+    public void defineSyntax(String key, Syntax value)
         throws AlreadyBound
     {
-        String  key = symbol.getJavaString();
+        Object o = _bindings.get(key);
 
+        if ((o != null) && !(o instanceof Syntax))
         {
-            Object o = _bindings.get(key);
-            if ((o != null) && !(o instanceof Syntax))
-            {
-                throw new AlreadyBound(symbol);
-            }
+            throw new AlreadyBound(key);
         }
 
         _bindings.put(key, value);
     }
 
 
-    private Object lookupNoThrow(Symbol key)
+    private Object lookupNoThrow(String key)
     {
         for (
             StaticEnvironment current = this;
@@ -277,7 +270,7 @@ public class StaticEnvironment
             current = current._parent
         )
         {
-            Object result = current._bindings.get(key.getJavaString());
+            Object result = current._bindings.get(key);
 
             if (result != null)
             {
@@ -288,19 +281,12 @@ public class StaticEnvironment
         return null;
     }
 
-    private Object delayedLookup(Symbol key)
+    private DelayedReference delayedLookup(String key)
     {
-        Object result = lookupNoThrow(key);
-
-        if ((result == null) || (result instanceof Reference))
-        {
-            return Reference.create(key, this, _state == DEF_BODY);
-        }
-
-        return result;
+        return Reference.create(key, this, _state == DEF_BODY);
     }
 
-    private Object lookup(Symbol key)
+    private Object lookup(String key)
         throws SymbolNotFoundException
     {
         Object result = lookupNoThrow(key);
@@ -313,7 +299,7 @@ public class StaticEnvironment
         return result;
     }
 
-    public Syntax getSyntaxFor(Symbol key)
+    public Syntax getSyntaxFor(String key)
         throws SymbolNotFoundException
     {
         Object result = lookup(key);
@@ -324,12 +310,12 @@ public class StaticEnvironment
             : null;
     }
 
-    public Reference getDelayedReferenceFor(Symbol key)
+    public DelayedReference getDelayedReferenceFor(String key)
         throws UnexpectedSyntax
     {
         try
         {
-            return (Reference)delayedLookup(key);
+            return delayedLookup(key);
         }
         catch (ClassCastException e)
         {
@@ -337,7 +323,7 @@ public class StaticEnvironment
         }
     }
 
-    public Reference getReferenceFor(Symbol key, boolean restricted)
+    public Reference getReferenceFor(String key, boolean restricted)
         throws CompileError
     {
         try
@@ -361,13 +347,13 @@ public class StaticEnvironment
         }
     }
 
-    public Reference getReferenceFor(Symbol key)
+    public Reference getReferenceFor(String key)
         throws CompileError
     {
         return getReferenceFor(key, false);
     }
 
-    public boolean isBound(Symbol key)
+    public boolean isBound(String key)
     {
         return lookupNoThrow(key) != null;
     }

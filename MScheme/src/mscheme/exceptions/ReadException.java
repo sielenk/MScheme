@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.exceptions;
 
-import mscheme.Value;
-
 
 public class ReadException
     extends SchemeIOException
@@ -29,7 +27,7 @@ public class ReadException
     public final static String id
         = "$Id$";
 
-    public ReadException(Value cause)
+    public ReadException(Object cause)
     {
         super(cause);
     }

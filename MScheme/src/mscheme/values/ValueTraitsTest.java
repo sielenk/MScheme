@@ -33,4 +33,16 @@ public class ValueTraitsTest extends TestCase
 
 		assertTrue(ValueTraits.isTrue(new Object()));
 	}
+	
+	final public void testArrays()
+	{
+		Object string = new char[1];
+		Object vector = new Object[1];
+		
+		assertTrue (string instanceof char  []);
+		assertFalse(string instanceof Object[]);
+
+		assertFalse(vector instanceof char  []);
+		assertTrue (vector instanceof Object[]);
+	}
 }

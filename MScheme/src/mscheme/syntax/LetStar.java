@@ -24,6 +24,7 @@ import mscheme.Syntax;
 
 import mscheme.code.Application;
 import mscheme.code.CompiledLambda;
+import mscheme.code.Forceable;
 import mscheme.code.Sequence;
 
 import mscheme.environment.StaticEnvironment;
@@ -32,8 +33,8 @@ import mscheme.exceptions.SchemeException;
 
 import mscheme.util.Arity;
 
+import mscheme.values.Function;
 import mscheme.values.List;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
 
@@ -54,7 +55,7 @@ final class LetStar
     }
 
 
-    protected Object checkedTranslate(
+    protected Forceable checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws SchemeException
@@ -70,7 +71,7 @@ final class LetStar
             // create a new environment in this case
 
             return Application.create(
-                new Object[]
+                new Forceable[]
                 {
                     CompiledLambda.create(
                         Arity.exactly(0),
@@ -90,6 +91,7 @@ final class LetStar
 }
 
 final class LetStarHelper
+	implements Syntax
 {
     public final static String id
     = "$Id$";
@@ -102,7 +104,7 @@ final class LetStarHelper
         _body = body;
     }
 
-    Object translate(
+	public Forceable translate(
         StaticEnvironment outerEnvironment,
         List              bindings
     ) throws SchemeException
@@ -110,35 +112,34 @@ final class LetStarHelper
         if (bindings.isEmpty())
         {
             return Sequence.create(
-                _body.getCompiledArray(outerEnvironment)
+                _body.getForceableArray(outerEnvironment)
             );
         }
         else
         {
             List binding = ValueTraits.toList(bindings.getHead());
 
-            Symbol formal  = ValueTraits.toSymbol(binding.getHead());
+			String formal  = ValueTraits.toSymbol(binding.getHead());
             Object init    = binding.getTail().getHead();
 
             StaticEnvironment innerEnvironment
                 = outerEnvironment.createChild(formal);
 
-            Object innerBody = translate(
-                                 innerEnvironment,
-                                 bindings.getTail()
-                             );
+            Forceable innerBody = translate(
+                                      innerEnvironment,
+                                      bindings.getTail());
 
-            Object lambda = CompiledLambda.create(
+            Forceable lambda = CompiledLambda.create(
                               Arity.exactly(1),
                               innerEnvironment.getSize(),
                               innerBody
                           );
 
             return Application.create(
-                new Object[]
+                new Forceable[]
                 {
                     lambda,
-					ValueTraits.getCompiled(outerEnvironment, init)
+					ValueTraits.getForceable(outerEnvironment, init)
                 }
             );
         }

@@ -20,20 +20,15 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.values;
 
-import mscheme.Value;
-
-import mscheme.exceptions.ImmutableException;
-
 public interface Pair
-    extends Value
 {
     String id
         = "$Id$";
 
 
     Object getFirst (          );
-    void   setFirst (Object fst) throws ImmutableException;
+    void   setFirst (Object fst);
 
     Object getSecond(          );
-    void   setSecond(Object snd) throws ImmutableException;
+    void   setSecond(Object snd);
 }

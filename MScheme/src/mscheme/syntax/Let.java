@@ -23,6 +23,8 @@ package mscheme.syntax;
 import mscheme.Syntax;
 
 import mscheme.code.Application;
+import mscheme.code.Forceable;
+import mscheme.code.Reduceable;
 
 import mscheme.environment.StaticEnvironment;
 
@@ -32,7 +34,6 @@ import mscheme.util.Arity;
 
 import mscheme.values.List;
 import mscheme.values.ListFactory;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
 import mscheme.values.functions.YCombinator;
@@ -55,12 +56,12 @@ final class Let
     }
 
 
-    protected Object checkedTranslate(
+    protected Forceable  checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws SchemeException
     {
-        Symbol name;
+		String name;
         if (ValueTraits.isSymbol(arguments.getHead()))
         {
             if (arguments.getLength() < 3)
@@ -92,7 +93,7 @@ final class Let
             formals = ListFactory.prepend(name, formals);
         }
 
-        Object compiledProc =
+        Forceable compiledProc =
             Lambda.INSTANCE.translate(
                 compilationEnv,
                 ListFactory.prepend(formals, body)
@@ -105,7 +106,7 @@ final class Let
             // closure -- the YCombinator does it's magic ...
 
             compiledProc = Application.create(
-                new Object[]
+                new Forceable[]
                 {
                     YCombinator.INSTANCE,
                     compiledProc
@@ -113,7 +114,7 @@ final class Let
             );
         }
 
-        Object[] compiledLet = inits.getCompiledArray(compilationEnv, 1);
+        Forceable[] compiledLet = inits.getForceableArray(compilationEnv, 1);
 
         compiledLet[0] = compiledProc;
 

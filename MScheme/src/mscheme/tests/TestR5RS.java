@@ -24,10 +24,9 @@ import mscheme.exceptions.CompileError;
 import mscheme.exceptions.ImmutableException;
 import mscheme.exceptions.SchemeException;
 import mscheme.exceptions.SyntaxArityError;
-import mscheme.values.Function;
-import mscheme.values.Pair;
 import mscheme.values.ScmString;
 import mscheme.values.ScmVector;
+import mscheme.values.ValueTraits;
 
 
 public class TestR5RS
@@ -35,6 +34,10 @@ public class TestR5RS
 {
     public final static String id
         = "$Id$";
+
+
+	private final static boolean checkImmutable = false;
+
 
     public TestR5RS(String name)
     {
@@ -76,29 +79,38 @@ public class TestR5RS
         check("'#t"     , "#t"     );
         check("#t"      , "#t"     );
 
-        try
-        {
-            ((Pair)eval("'(1 . 2)")).setFirst(quote("a"));
-            fail();
-        }
-        catch (ImmutableException e)
-        { }
-
-        try
-        {
-            ((ScmString)eval("'\"abc\"")).set(0, 'b');
-            fail();
-        }
-        catch (ImmutableException e)
-        { }
-
-        try
-        {
-            ((ScmVector)eval("'#(1 2 3)")).set(0, quote("a"));
-            fail();
-        }
-        catch (ImmutableException e)
-        { }
+		if (checkImmutable)
+		{
+	        try
+	        {
+	            ValueTraits.toPair(eval("'(1 . 2)")).setFirst(quote("a"));
+	            fail();
+	        }
+	        catch (ImmutableException e)
+	        { }
+	
+	        try
+	        {
+	        	ScmString.set(
+		            ValueTraits.toScmString(eval("'\"abc\"")),
+		            0,
+		            'b');
+	            fail();
+	        }
+	        catch (ImmutableException e)
+	        { }
+	
+	        try
+	        {
+	        	ScmVector.set(
+	            	ValueTraits.toScmVector(eval("'#(1 2 3)")),
+					0,
+					quote("a"));
+	            fail();
+	        }
+	        catch (ImmutableException e)
+	        { }
+		}
     }
 
 
@@ -125,7 +137,10 @@ public class TestR5RS
     public void test4_1_4()
         throws SchemeException
     {
-        assertTrue(eval("(lambda (x) (+ x x))") instanceof Function);
+        assertTrue(
+        	ValueTraits.isFunction(
+        		eval("(lambda (x) (+ x x))")));
+
         check("((lambda (x) (+ x x)) 4)", "8");
 
         eval(
@@ -564,7 +579,11 @@ public class TestR5RS
         try
         {
             eval("(set-car! (g) 3)");
-            fail();
+
+            if (checkImmutable)
+            {
+	            fail();
+			}
         }
         catch (SchemeException e)
         { }
@@ -574,7 +593,11 @@ public class TestR5RS
         try
         {
             eval("(set-cdr! (g) 3)");
-            fail();
+            
+            if (checkImmutable)
+            {
+	            fail();
+			}
         }
         catch (SchemeException e)
         { }
@@ -656,21 +679,25 @@ public class TestR5RS
 
         eval("(string-set! (f) 0 #\\?)");
 
-        try
-        {
-            eval("(string-set! (g) 0 #\\?)");
-            fail();
-        }
-        catch (SchemeException e)
-        { }
 
-        try
-        {
-            eval("(string-set! (symbol->string 'immutable) 0 #\\?)");
-            fail();
-        }
-        catch (SchemeException e)
-        { }
+		if (checkImmutable)
+		{
+			try
+			{
+				eval("(string-set! (g) 0 #\\?)");
+				fail();			
+			}
+			catch (SchemeException e)
+			{ }
+
+            try
+	        {
+	            eval("(string-set! (symbol->string 'immutable) 0 #\\?)");
+	            fail();
+	        }
+	        catch (SchemeException e)
+	        { }
+		}
     }
 
 
@@ -855,4 +882,43 @@ public class TestR5RS
         check("(id  45)", "45");
         check("(id '())", "()");
     }
+
+	public void testStringLiterals() throws SchemeException
+	{
+		if (!checkImmutable)
+		{
+			check(
+				"(begin " +
+		    	"  (define (f) \"123\") " + 
+		    	"  (string-set! (f) 0 #\\2) " +
+		    	"  (string-ref  (f) 0))",
+		    	"#\\1");
+		}
+	}
+
+	public void testVectorLiterals() throws SchemeException
+	{
+		if (!checkImmutable)
+		{
+			check(
+				"(begin " +
+				"  (define (f) '#(1 2 3)) " + 
+				"  (vector-set! (f) 0 2) " +
+				"  (vector-ref  (f) 0))",
+				"1");
+		}
+	}
+
+	public void testListLiterals() throws SchemeException
+	{
+		if (!checkImmutable)
+		{
+			check(
+				"(begin " +
+				"  (define (f) '(1 2 3)) " + 
+				"  (set-car! (f) 2) " +
+				"  (car (f)))",
+				"1");
+		}
+	}
 }

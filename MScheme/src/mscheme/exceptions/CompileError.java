@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.exceptions;
 
-import mscheme.Value;
-
 
 public class CompileError
     extends SchemeException
@@ -29,7 +27,7 @@ public class CompileError
     public final static String id
         = "$Id$";
 
-    public CompileError(Value cause, String message)
+    public CompileError(Object cause, String message)
     {
         super(cause, message);
     }

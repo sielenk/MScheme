@@ -1,14 +1,13 @@
 /*
- * Created on 04.01.2004
+ * Created on 15.02.2004
  *
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 package mscheme.values;
 
-import java.io.IOException;
-import java.io.Writer;
-
+import mscheme.code.Forceable;
+import mscheme.environment.StaticEnvironment;
 import mscheme.exceptions.SchemeException;
 
 /**
@@ -17,12 +16,13 @@ import mscheme.exceptions.SchemeException;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public interface Outputable
+public interface Compileable
 {
+	// compilation functions
+
 	/**
-	 * Part of Scheme's <code>write</code> function implementation.
-	 * <p>
-	 * @param  destination  the java writer which expects the output.
+	 * Compiles a value as normal code.
 	 */
-	void outputOn(Writer destination, boolean doWrite) throws IOException, SchemeException;
+	Forceable getForceable(StaticEnvironment compilationEnv)
+		throws SchemeException;
 }

@@ -22,8 +22,6 @@ package mscheme.values;
 
 import java.io.StringReader;
 
-import mscheme.Value;
-
 public class TestInputPort
             extends junit.framework.TestCase
 {
@@ -142,9 +140,9 @@ public class TestInputPort
     public void testList()
     throws Exception
     {
-        Value one   = ScmNumber.create(1);
-        Value two   = ScmNumber.create(2);
-        Value three = ScmNumber.create(3);
+        Object one   = ScmNumber.create(1);
+        Object two   = ScmNumber.create(2);
+        Object three = ScmNumber.create(3);
 
         StringReader source = new StringReader(
                                   "()(1 .2)(1 2 3)(1 .(2 .(3 .())))"
@@ -160,10 +158,10 @@ public class TestInputPort
     public void testVector()
     throws Exception
     {
-        Value one   = ScmNumber.create(1);
-        Value two   = ScmNumber.create(2);
-        ScmVector v = ScmVector.create(3, one);
-        v.set(2, two);
+        Object    one = ScmNumber.create(1);
+        Object    two = ScmNumber.create(2);
+        Object[]  v   = ScmVector.create(3, one);
+        ScmVector.set(v, 2, two);
         StringReader source = new StringReader(
                                   "#() #(1 1) #(1 1 2)"
                               );
@@ -177,7 +175,7 @@ public class TestInputPort
     public void testSymbol()
     throws Exception
     {
-        Value test = Symbol.create("hallo");
+        Object test = "hallo";
         StringReader source = new StringReader(
                                   "Hallo hallo HALLO HaLlO hAlLo + - ... ?12"
                               );
@@ -188,26 +186,25 @@ public class TestInputPort
         assertTrue(ValueTraits.eq(in.read(), test));
         assertTrue(ValueTraits.eq(in.read(), test));
         assertTrue(ValueTraits.eq(in.read(), test));
-        assertTrue(ValueTraits.eq(in.read(), Symbol.create("+")));
-        assertTrue(ValueTraits.eq(in.read(), Symbol.create("-")));
-        assertTrue(ValueTraits.eq(in.read(), Symbol.create("...")));
-        assertTrue(ValueTraits.eq(in.read(), Symbol.create("?12")));
+        assertTrue(ValueTraits.eq(in.read(), "+"));
+        assertTrue(ValueTraits.eq(in.read(), "-"));
+        assertTrue(ValueTraits.eq(in.read(), "..."));
+        assertTrue(ValueTraits.eq(in.read(), "?12"));
     }
 
     public void testAbbrev()
     throws Exception
     {
-        Value test = Symbol.create("hallo");
         StringReader source = new StringReader(
                                   "'a ' a `a ,a ,@a"
                               );
         InputPort in = InputPort.create(source);
 
-        Symbol a   = Symbol.create("a");
-        Symbol q   = Symbol.create("quote");
-        Symbol qq  = Symbol.create("quasiquote");
-        Symbol uq  = Symbol.create("unquote");
-        Symbol uqs = Symbol.create("unquote-splicing");
+		String a   = "a";
+		String q   = "quote";
+		String qq  = "quasiquote";
+		String uq  = "unquote";
+		String uqs = "unquote-splicing";
 
         assertTrue(ValueTraits.equal(in.read(), ListFactory.create(q,   a)));
         assertTrue(ValueTraits.equal(in.read(), ListFactory.create(q,   a)));

@@ -23,29 +23,30 @@ package mscheme.environment;
 import mscheme.code.Forceable;
 import mscheme.code.Reduceable;
 import mscheme.exceptions.RuntimeError;
-import mscheme.exceptions.CompileError;
-
 import mscheme.machine.Registers;
 
-import mscheme.values.Symbol;
 
-
-public abstract class Reference
-    implements Forceable, Reduceable
+public final class Reference
+	implements Forceable, Reduceable
 {
     public final static String id
         = "$Id$";
 
 
-    private final Symbol _symbol;
+    private final String _symbol;
+	private final int    _level;
+	private final int    _index;
 
-    protected Reference(Symbol symbol)
-    {
-        _symbol = symbol;
-    }
 
-    static Reference create(
-        Symbol            key,
+	private Reference(String symbol, int level, int index)
+	{
+		_symbol = symbol;
+		_level  = level;
+		_index  = index;
+	}
+
+    static DelayedReference create(
+		String            key,
         StaticEnvironment env,
         boolean           restricted
     )
@@ -53,15 +54,20 @@ public abstract class Reference
         return new DelayedReference(key, env, restricted);
     }
 
-    static Reference create(Symbol key, int level, int index)
+    static Reference create(String key, int level, int index)
     {
-        return new ForcedReference(key, level, index);
+        return new Reference(key, level, index);
     }
 
-    public final Symbol getSymbol()
+    public final String getSymbol()
     {
         return _symbol;
     }
+
+	public final Reduceable force()
+	{
+		return this;
+	}
 
     public final Object reduce(
     	Registers state)
@@ -70,103 +76,22 @@ public abstract class Reference
     	return state.getEnvironment().lookup(this);
     }
 
-    abstract int getLevel();
-    abstract int getIndex();
-
-    public abstract Reference forceRef()
-        throws CompileError;
-
-    public final Object force()
-        throws CompileError
+    int getLevel()
     {
-        return forceRef();
+    	return _level;
+    }
+
+    int getIndex()
+    {
+    	return _index;
     }
 
     public final String toString()
     {
         return
-            "ptr:<" + getLevel()
-            + ", "  + getIndex()
+            "ptr:<" + _level
+            + ", "  + _index
             + ", "  + _symbol
             + '>';
-    }
-}
-
-final class DelayedReference
-    extends Reference
-{
-    public final static String id
-        = "$Id$";
-
-
-    private final StaticEnvironment _env;
-    private final boolean           _restricted;
-
-
-    DelayedReference(
-        Symbol            key,
-        StaticEnvironment env,
-        boolean           restricted
-    )
-    {
-        super(key);
-        _env        = env;
-        _restricted = restricted;
-    }
-
-
-    int getLevel()
-    {
-        throw new RuntimeException(
-            getSymbol().toString() + " delayed reference"
-        );
-    }
-    
-    int getIndex()
-    {
-        throw new RuntimeException(
-            getSymbol().toString() + " delayed reference"
-        );
-    }
-
-
-    public Reference forceRef()
-        throws CompileError
-    {
-        return _env.getReferenceFor(getSymbol(), _restricted);
-    }
-}
-
-
-final class ForcedReference
-    extends Reference
-{
-    public final static String id
-        = "$Id$";
-
-
-    private final int _level;
-    private final int _index;
-
-    protected ForcedReference(Symbol symbol, int level, int index)
-    {
-        super(symbol);
-        _level  = level;
-        _index  = index;
-    }
-
-    int getLevel()
-    {
-        return _level;
-    }
-
-    int getIndex()
-    {
-        return _index;
-    }
-
-    public Reference forceRef()
-    {
-        return this;
     }
 }

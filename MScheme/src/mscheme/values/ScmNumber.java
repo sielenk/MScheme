@@ -22,13 +22,11 @@ package mscheme.values;
 
 import java.io.IOException;
 import java.io.Writer;
-
 import java.math.BigInteger;
 
 
 public class ScmNumber
-    extends ValueDefaultImplementations
-    implements Outputable
+	implements Outputable
 {
     public final static String id
         = "$Id$";
@@ -58,26 +56,16 @@ public class ScmNumber
 
     // implementation of Value
 
-    public boolean isScmNumber()
+    public boolean equals(Object other)
     {
-        return true;
-    }
-
-    public ScmNumber toScmNumber()
-    {
-        return this;
-    }
-
-    public boolean eqv(Object other)
-    {
-        try
+        if (other instanceof ScmNumber)
         {
             return isEqualTo((ScmNumber)other);
         }
-        catch (ClassCastException e)
-        { }
-
-        return false;
+        else
+        {
+			return false;
+        }
     }
 
 
@@ -96,7 +84,7 @@ public class ScmNumber
 
     public boolean isEqualTo(ScmNumber other)
     {
-        return _value.equals(other._value);
+		return _value.equals(other._value);
     }
 
 
@@ -130,9 +118,8 @@ public class ScmNumber
         return new ScmNumber(_value.divide(other._value));
     }
 
-	public void outputOn(Writer destination, boolean doWrite)
-	throws IOException
-	{
+    public void outputOn(Writer destination, boolean doWrite) throws IOException
+    {
 		destination.write(_value.toString());
-	}
+    }
 }

@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.exceptions;
 
-import mscheme.Value;
-
 
 public final class OpenException
     extends SchemeIOException
@@ -29,7 +27,7 @@ public final class OpenException
     public final static String id
         = "$Id$";
 
-    public OpenException(Value cause)
+    public OpenException(char[] cause)
     {
         super(cause);
     }

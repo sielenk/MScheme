@@ -21,13 +21,14 @@ Boston, MA  02111-1307, USA. */
 package mscheme.syntax;
 
 import mscheme.Syntax;
+import mscheme.code.Forceable;
+import mscheme.code.Reduceable;
 import mscheme.environment.Reference;
 import mscheme.environment.StaticEnvironment;
 import mscheme.exceptions.SchemeException;
 import mscheme.util.Arity;
 import mscheme.values.List;
 import mscheme.values.ListFactory;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
 
@@ -49,7 +50,7 @@ final class Define
     protected void preTranslate(StaticEnvironment compilationEnv)
     { }
 
-    protected Object checkedTranslate(
+    protected Forceable checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws SchemeException
@@ -58,7 +59,7 @@ final class Define
         {
             //    (define (f x y) (+ x y))
             // -> (define f (lambda (x y) (+ x y)))
-            Symbol symbol  = ValueTraits.toSymbol(ValueTraits.toPair(arguments.getHead()).getFirst ());
+			String symbol  = ValueTraits.toSymbol(ValueTraits.toPair(arguments.getHead()).getFirst ());
             Object formals = ValueTraits.toPair(arguments.getHead()).getSecond();
             List   body    = arguments.getTail();
 
@@ -89,7 +90,7 @@ final class Define
                 arityError(arguments, Arity.exactly(2));
             }
 
-            Symbol symbol = ValueTraits.toSymbol(arguments.getHead());
+			String symbol = ValueTraits.toSymbol(arguments.getHead());
             Object value  = arguments.getTail().getHead();
 
             Reference ref = compilationEnv.define(symbol);
@@ -98,7 +99,7 @@ final class Define
             {
                 return Set.translate(
                     ref,
-					ValueTraits.getCompiled(compilationEnv, value)
+					ValueTraits.getForceable(compilationEnv, value)
                 );
             }
             finally

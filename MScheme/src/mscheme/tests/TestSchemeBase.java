@@ -70,8 +70,9 @@ public abstract class TestSchemeBase
     public void check(String in, String out)
         throws SchemeException
     {
-        Object  value   = eval(in);
-        boolean success = ValueTraits.equal(value, quote(out));
+        Object  valueIn  = eval(in);
+        Object  valueOut = quote(out);
+        boolean success = ValueTraits.equal(valueIn, valueOut);
 
         if (!success)
         {
@@ -79,9 +80,9 @@ public abstract class TestSchemeBase
                 "*** evaluation of ***\n" +
                 in + '\n' +
                 "*** returned ***\n" +
-                value + '\n' +
+                ValueTraits.toString(valueIn) + '\n' +
                 "*** expected was ***\n" +
-                out + '\n' +
+				ValueTraits.toString(valueOut) + '\n' +
                 "*** end ***"
             );
         }

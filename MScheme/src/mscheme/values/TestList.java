@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.values;
 
-import mscheme.Value;
-
 import mscheme.exceptions.PairExpected;
 
 public class TestList
@@ -31,12 +29,12 @@ public class TestList
     = "$Id$";
 
 
-    Value firstElement;
-    Value secondElement;
-    Value lastElement;
-    List  emptyList;
-    List  occupiedList;
-    int   occupiedListLength;
+    Object firstElement;
+    Object secondElement;
+    Object lastElement;
+    List   emptyList;
+    List   occupiedList;
+    int    occupiedListLength;
 
     public TestList(String name)
     {
@@ -47,8 +45,8 @@ public class TestList
     {
         emptyList     = Empty.create();
 
-        firstElement  = Symbol.create("x");
-        secondElement = Symbol.create("y");
+        firstElement  = "x";
+        secondElement = "y";
         lastElement   = secondElement;
         occupiedList  = ListFactory.create(
                             firstElement,
@@ -100,7 +98,7 @@ public class TestList
 
         assertTrue(
             "toPair returned somethig wrong",
-            occupiedList.toPair().getFirst() == occupiedList.getHead()
+			ValueTraits.toPair(occupiedList).getFirst() == occupiedList.getHead()
         );
     }
 

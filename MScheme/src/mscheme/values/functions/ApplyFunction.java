@@ -67,7 +67,7 @@ public class ApplyFunction
 		// last but one argument. In the example it would be
 		// (1 (2 3)) which is equal to (1 . ((2 3)))
 
-		toBeModified.toPair().setSecond(
+		ValueTraits.toPair(toBeModified).setSecond(
 			ValueTraits.toList(toBeModified.getTail().getHead()).getCopy()
 		);
 

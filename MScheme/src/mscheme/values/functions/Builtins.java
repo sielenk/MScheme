@@ -31,10 +31,12 @@ import mscheme.exceptions.InvalidStringIndexException;
 import mscheme.exceptions.ListExpected;
 import mscheme.exceptions.NumberExpected;
 import mscheme.exceptions.OpenException;
+import mscheme.exceptions.OutputPortExpected;
 import mscheme.exceptions.PairExpected;
 import mscheme.exceptions.PortExpected;
 import mscheme.exceptions.RuntimeArityError;
 import mscheme.exceptions.RuntimeError;
+import mscheme.exceptions.SchemeException;
 import mscheme.exceptions.StringExpected;
 import mscheme.exceptions.SymbolExpected;
 import mscheme.exceptions.TypeError;
@@ -52,7 +54,6 @@ import mscheme.values.OutputPort;
 import mscheme.values.ScmNumber;
 import mscheme.values.ScmString;
 import mscheme.values.ScmVector;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
 
@@ -438,7 +439,7 @@ public class Builtins
     public final static Object string_2D_3Esymbol(Object argument) // string->symbol
     throws StringExpected
     {
-        return Symbol.create(ValueTraits.toScmString(argument));
+        return ScmString.toString(ValueTraits.toScmString(argument)).intern();
     }
 
 
@@ -539,21 +540,28 @@ public class Builtins
     throws TypeError
     {
         return ScmNumber.create(
-			ValueTraits.toScmString(str).getLength());
+        	ScmString.getLength(
+        		ValueTraits.toScmString(
+        			str)));
     }
 
     public final static Object string_2Dref(Object str, Object k)
     throws TypeError, InvalidStringIndexException
     {
         return ValueTraits.toScmChar(
-		ValueTraits.toScmString(str).get(
-		ValueTraits.toScmNumber(k).getInteger()));
+			ScmString.get(
+				ValueTraits
+				  .toScmString(str),
+				ValueTraits
+				  .toScmNumber(k)
+				  .getInteger()));
     }
 
     public final static Object string_2Dset_21(Object str, Object k, Object c)
     throws TypeError, InvalidStringIndexException, ImmutableException
     {
-		ValueTraits.toScmString(str).set(
+    	ScmString.set(
+			ValueTraits.toScmString(str),
 			ValueTraits.toScmNumber(k).getInteger(),
 			ValueTraits.toScmChar(c).charValue());
 
@@ -572,9 +580,9 @@ public class Builtins
         )
         {
             accu.append(
-				ValueTraits.toScmString(
-					rest.getHead())
-                .getJavaString());
+            	ScmString.toString(
+					ValueTraits.toScmString(
+						rest.getHead())));
         }
 
         return ScmString.create(
@@ -586,13 +594,15 @@ public class Builtins
     throws TypeError, InvalidStringIndexException, ImmutableException
     {
         return ScmString.create(
-			ValueTraits.toScmString(string).getJavaString());
+        	ScmString.toString(
+				ValueTraits.toScmString(
+					string)));
     }
 
     public final static Object string_2D_3Elist(Object scmString)
     throws TypeError, InvalidStringIndexException, ImmutableException
     {
-        String javaString = ValueTraits.toScmString(scmString).getJavaString();
+        String javaString = ScmString.toString(ValueTraits.toScmString(scmString));
         List   result     = ListFactory.create();
 
         for (
@@ -651,23 +661,26 @@ public class Builtins
     public final static Object vector_2Dlength(Object str)
     throws TypeError
     {
-        return ScmNumber.create(ValueTraits.toScmVector(str).getLength());
+        return ScmNumber.create(
+			ScmVector.getLength(
+				ValueTraits.toScmVector(str)));
     }
 
     public final static Object vector_2Dref(Object vector, Object k)
     throws TypeError, VectorException
     {
-        return ValueTraits.toScmVector(vector).get(
+        return ScmVector.get(
+        	ValueTraits.toScmVector(vector),
 			ValueTraits.toScmNumber(k).getInteger());
     }
 
     public final static Object vector_2Dset_21(Object vector, Object k, Object obj)
     throws TypeError, VectorException, ImmutableException
     {
-		ValueTraits.toScmVector(vector).set(
+		ScmVector.set(
+			ValueTraits.toScmVector(vector),
 			ValueTraits.toScmNumber(k).getInteger(),
-            obj
-        );
+            obj);
 
         return obj;
     }
@@ -682,7 +695,7 @@ public class Builtins
     public final static Object vector_2D_3Elist(Object argument) // vector->list
     throws VectorExpected
     {
-        return ValueTraits.toScmVector(argument).getList();
+        return ScmVector.getList(ValueTraits.toScmVector(argument));
     }
 
     public final static Object list_2D_3Evector(Object argument) // list->vector
@@ -758,13 +771,19 @@ public class Builtins
     public final static Object open_2Dinput_2Dfile(Object argument)
     throws StringExpected, OpenException
     {
-        return InputPort.create(ValueTraits.toScmString(argument));
+        return InputPort.create(
+        	ScmString.toString(
+        		ValueTraits.toScmString(
+        			argument)));
     }
 
     public final static Object open_2Doutput_2Dfile(Object argument)
     throws StringExpected, OpenException
     {
-        return OutputPort.create(ValueTraits.toScmString(argument));
+        return OutputPort.create(
+        	ScmString.toString(
+        		ValueTraits.toScmString(
+        			argument)));
     }
 
 
@@ -818,14 +837,14 @@ public class Builtins
     // 6.6.3 Output
 
     public final static Object write(Object fst, Object snd)
-    throws RuntimeError, TypeError
+    throws OutputPortExpected, SchemeException
     {
 		ValueTraits.toOutputPort(snd).write(fst);
         return snd;
     }
 
     public final static Object display(Object fst, Object snd)
-    throws RuntimeError, TypeError
+    throws OutputPortExpected, SchemeException
     {
 		ValueTraits.toOutputPort(snd).display(fst);
         return snd;
@@ -846,7 +865,7 @@ public class Builtins
     
     public final static Object __unique_2Did()
     {
-        return Symbol.createUnique();
+        return ValueTraits.createUniqueSymbol();
     }
 
     public final static Function
@@ -860,9 +879,8 @@ public class Builtins
     {
         return InputPort.create(
             new StringReader(
-				ValueTraits.toScmString(argument).getJavaString()
-            )
-        );
+				ScmString.toString(
+					ValueTraits.toScmString(argument))));
     }
 
 //  not very usefull yet ... needs GET-OUTPUT-STRING

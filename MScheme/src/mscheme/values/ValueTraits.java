@@ -7,14 +7,18 @@
 package mscheme.values;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import mscheme.Syntax;
-import mscheme.Value;
+import mscheme.code.Forceable;
+import mscheme.code.Literal;
 import mscheme.environment.Environment;
 import mscheme.environment.StaticEnvironment;
+import mscheme.exceptions.CantCompileException;
 import mscheme.exceptions.CharExpected;
 import mscheme.exceptions.EnvironmentExpected;
 import mscheme.exceptions.FunctionExpected;
@@ -76,6 +80,12 @@ public class ValueTraits
 				{
 					return m.invoke(null, null);
 				}
+				else if (Modifier.isStatic(m.getModifiers()))
+				{
+					return m.invoke(
+						null,
+						arguments.getArray());
+				}
 				else
 				{
 					return m.invoke(
@@ -127,15 +137,30 @@ public class ValueTraits
 		return
 			(fst instanceof Comparable)
 			? ((Comparable)fst).equal(snd)
-			: fst.equals(snd);
+			: isScmString(fst)
+			  ? ScmString.equals((char[])fst, snd)
+			  : isScmVector(fst)
+			    ? ScmVector.equals((Object[])fst, snd)
+			    : fst.equals(snd);
 	}
 
+
+	public static boolean isList(Object o)
+	{
+		return (o instanceof List) && ((List)o).isValid();
+	}
 
 	public static List toList(Object o)
 	throws ListExpected
 	{
-		try { return ((Value)o).toList(); }
-		catch (ClassCastException e) { throw new ListExpected(o); }
+		if (isList(o))
+		{
+			return (List)o;
+		}
+		else
+		{
+			throw new ListExpected(o);
+		}
 	}
 
 	public static Pair toPair(Object o)
@@ -152,10 +177,10 @@ public class ValueTraits
 		catch (ClassCastException e) { throw new InputPortExpected(o); }
 	}
 
-	public static Symbol toSymbol(Object o)
+	public static String toSymbol(Object o)
 	throws SymbolExpected
 	{
-		try	{ return (Symbol)o; }
+		try	{ return (String)o; }
 		catch (ClassCastException e) { throw new SymbolExpected(o); }
 	}
 
@@ -193,17 +218,17 @@ public class ValueTraits
 		return new Character(c);
 	}
 
-	public static ScmString toScmString(Object o)
+	public static char[] toScmString(Object o)
 	throws StringExpected
 	{
-		try	{ return (ScmString)o; }
+		try { return (char[])o; }
 		catch (ClassCastException e) { throw new StringExpected(o); }
 	}
 
-	public static ScmVector toScmVector(Object o)
+	public static Object[] toScmVector(Object o)
 	throws VectorExpected
 	{
-		try	{ return (ScmVector)o; }
+		try	{ return (Object[])o; }
 		catch (ClassCastException e) { throw new VectorExpected(o); }
 	}
 
@@ -228,11 +253,6 @@ public class ValueTraits
 		catch (ClassCastException e) { throw new EnvironmentExpected(o); }
 	}
 
-	public static boolean isList(Object o)
-	{
-		return (o instanceof Value) && ((Value)o).isList();
-	}
-
 	public static boolean isScmBoolean(Object o)
 	{
 		return o instanceof Boolean;
@@ -245,7 +265,7 @@ public class ValueTraits
 
 	public static boolean isSymbol(Object o)
 	{
-		return o instanceof Symbol;
+		return o instanceof String;
 	}
 
 	public static boolean isScmNumber(Object o)
@@ -260,60 +280,60 @@ public class ValueTraits
 
 	public static boolean isScmString(Object o)
 	{
-		return o instanceof ScmString;
+		return o instanceof char[];
 	}
 
 	public static boolean isScmVector(Object o)
 	{
-		return o instanceof ScmVector;
+		return o instanceof Object[];
 	}
 
 	public static boolean isPort(Object o)
 	{
-		return o instanceof Port;
+		return (o instanceof InputPort) || (o instanceof OutputPort);
 	}
 
 	public static boolean isFunction(Object o)
 	{
-		return o instanceof Function;
+		return (o instanceof Function) || (o instanceof Method) ;
 	}
 
 
-	public static void output(Writer destination, boolean doWrite, Object o) throws IOException
+	public static void output(Object o, Writer destination, boolean doWrite)
+	    throws IOException, SchemeException
 	{
-		if (isScmChar(o))
-		{
-            final char c = ((Character)o).charValue();
-
-            if (doWrite)
-            {
-                destination.write("#\\");
-                switch (c)
-                {
-                case ' ' :
-                    destination.write("space");
-                    break;
-
-                case '\n' :
-                    destination.write("newline");
-                    break;
-
-                default :
-                    destination.write(c);
-                    break;
-                }
-            }
-            else
-            {
-                destination.write(c);
-            }
-		}
-		else if (isScmBoolean(o))
+		if (isScmBoolean(o))
 		{
 			destination.write(
 				isTrue(o)
 				? "#t"
 				: "#f");
+		}
+		else if (isScmChar(o))
+		{
+            ScmChar.outputOn(
+            	toScmChar(o),
+            	destination,
+            	doWrite);
+		}
+		else if (isScmVector(o))
+		{
+			ScmVector.outputOn(
+				toScmVector(o),
+				destination,
+				doWrite);
+		}
+		else if (isScmString(o))
+		{
+			ScmString.outputOn(
+				toScmString(o),
+				destination,
+				doWrite);
+		}
+		else if (isSymbol(o))
+		{
+			destination.write(
+				o.toString());
 		}
 		else if (o instanceof Outputable)
 		{
@@ -332,42 +352,58 @@ public class ValueTraits
 		}
 	}
 
-	public static void display(Writer destination, Object o)
-	throws IOException
+	public static void display(Object o, Writer destination)
+	throws IOException, SchemeException
 	{
-		output(destination, false, o);
+		output(o, destination, false);
 	}
 
-	public static void write(Writer destination, Object o)
-	throws IOException
+	public static void write(Object o, Writer destination)
+	throws IOException, SchemeException
 	{
-		output(destination, true, o);
+		output(o, destination, true);
 	}
 
-	public static Object getConst(Object o)
+	public static String toString(Object value)
 	{
-		if (o instanceof Value)
-		{
-			return ((Value)o).getConst();
-		}
-		else
-		{
-			return o;
-		}
+		StringWriter buffer = new StringWriter();
+
+		try
+        { write(value, buffer); }
+        catch (IOException e)
+        { }
+        catch (SchemeException e)
+        { }
+
+		return buffer.toString();
 	}
 
-	public static Object getCompiled(
+
+	public static Forceable getForceable(
 		StaticEnvironment compilationEnv,
 		Object            object)
 	throws SchemeException
 	{
-		if (object instanceof Value)
+		if (isSymbol(object))
 		{
-			return ((Value)object).getCompiled(compilationEnv);
+			String symbol = toSymbol(object);
+
+			compilationEnv.setStateClosed();
+			return compilationEnv.getDelayedReferenceFor(symbol);
+		}
+		else if (isScmVector(object))
+		{
+			throw new CantCompileException(object);
+		}
+		else if (object instanceof Compileable)
+		{
+			return ((Compileable)object).getForceable(compilationEnv);
 		}
 		else
 		{
-			return object; 
+			compilationEnv.setStateClosed();
+
+			return Literal.create(object); 
 		}
 	}
 
@@ -376,13 +412,45 @@ public class ValueTraits
 		Object            object)
 	throws SchemeException
 	{
-		if (object instanceof Value)
+		if (isSymbol(object))
 		{
-			return ((Value)object).getSyntax(compilationEnv);
+			String symbol = toSymbol(object);
+			Syntax result = compilationEnv.getSyntaxFor(symbol);
+            
+            if (result != null)
+            {
+	            return result;
+            }
 		}
-		else
-		{
-			return ProcedureCall.create(object);
-		}
+
+		return ProcedureCall.create(object);
 	}
+
+
+	private static int i = 0;
+
+    public static String createUniqueSymbol()
+    {
+        return "#[id " + (i++) + "]";
+    }
+
+    public static Object getCopy(Object value) throws StringExpected, ListExpected, VectorExpected
+    {
+    	if (isScmString(value))
+    	{
+			return ScmString.copy(toScmString(value));
+    	}
+    	else if (isScmVector(value))
+    	{
+    		return ScmVector.copy(toScmVector(value));
+    	}
+    	else if (isList(value))
+    	{
+    		return toList(value).getCopy();
+    	}
+    	else
+    	{
+	        return value;
+		}
+    }
 }

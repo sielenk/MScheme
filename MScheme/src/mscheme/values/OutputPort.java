@@ -26,11 +26,11 @@ import java.io.Writer;
 
 import mscheme.exceptions.CloseException;
 import mscheme.exceptions.OpenException;
+import mscheme.exceptions.SchemeException;
 import mscheme.exceptions.WriteException;
 
 
 public class OutputPort
-	extends Port
 {
     public final static String id
     	= "$Id$";
@@ -47,12 +47,6 @@ public class OutputPort
     public static OutputPort create(Writer writer)
     {
         return new OutputPort(writer);
-    }
-
-    public static OutputPort create(ScmString filename)
-    throws OpenException
-    {
-        return create(filename.getJavaString());
     }
 
     public static OutputPort create(String filename)
@@ -122,11 +116,11 @@ public class OutputPort
     }
 
     public void write(Object datum)
-    throws WriteException
+    throws SchemeException
     {
         try
         {
-            ValueTraits.write(_writer, datum);
+            ValueTraits.write(datum, _writer);
             _writer.flush();
         }
         catch (IOException e)
@@ -136,11 +130,11 @@ public class OutputPort
     }
 
     public void display(Object datum)
-    throws WriteException
+    throws SchemeException
     {
         try
         {
-			ValueTraits.display(_writer, datum);
+			ValueTraits.display(datum, _writer);
             _writer.flush();
         }
         catch (IOException e)

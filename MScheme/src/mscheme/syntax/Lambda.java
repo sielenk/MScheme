@@ -23,6 +23,8 @@ package mscheme.syntax;
 import mscheme.Syntax;
 
 import mscheme.code.CompiledLambda;
+import mscheme.code.Forceable;
+import mscheme.code.Reduceable;
 
 import mscheme.environment.StaticEnvironment;
 
@@ -52,7 +54,7 @@ final class Lambda
     }
 
 
-    protected Object checkedTranslate(
+    protected Forceable  checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws SchemeException

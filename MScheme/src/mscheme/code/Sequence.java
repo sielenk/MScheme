@@ -27,60 +27,76 @@ import mscheme.syntax.SequenceTags;
 import mscheme.values.ValueTraits;
 
 
+final class ForceableSequence
+	implements Forceable
+{
+	private final int         _tag;
+	private final Forceable[] _sequence;
+
+	ForceableSequence(int tag, Forceable[] sequence)
+	{
+		_tag      = tag;
+		_sequence = sequence;
+	}
+
+	public Reduceable force()
+		throws CompileError
+	{
+		return new Sequence(
+			_tag,
+			CodeArray.force(
+				_sequence));
+	}
+}
+
 public final class Sequence
-    implements SequenceTags, Forceable, Reduceable
+    implements SequenceTags, Reduceable
 {
 	public final static String id
         = "$Id$";
 
 
-    private final int      _tag;
-    private final Object[] _sequence;
+    private final int          _tag;
+    private final Reduceable[] _sequence;
 
-    private Sequence(int tag, Object[] sequence)
+    Sequence(int tag, Reduceable[] sequence)
     {
         _tag      = tag;
         _sequence = sequence;
     }
 
-    public static Object create(int tag, Object[] sequence)
+    public static Forceable create(int tag, Forceable[] sequence)
     {
         switch (sequence.length)
         {
         case 0:
-            return Boolean.valueOf(tag == TAG_AND);
+            return Literal.create(
+            	Boolean.valueOf(tag == TAG_AND));
 
         case 1:
             return sequence[0];
 
         default:
-            return new Sequence(tag, sequence);
+            return new ForceableSequence(tag, sequence);
         }
     }
 
 
-    public static Object create(Object[] sequence)
+    public static Forceable create(Forceable[] sequence)
     {
         return create(TAG_BEGIN, sequence);
     }
 
-	public static Object createConj(Object[] sequence)
+	public static Forceable createConj(Forceable[] sequence)
 	{
 		return create(TAG_AND, sequence);
 	}
 
-	public static Object createDisj(Object[] sequence)
+	public static Forceable createDisj(Forceable[] sequence)
 	{
 		return create(TAG_OR, sequence);
 	}
 
-
-    public Object force()
-        throws CompileError
-    {
-        CodeArray.force(_sequence);
-        return this;
-    }
 
     public String toString()
     {

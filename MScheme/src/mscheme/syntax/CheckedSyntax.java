@@ -22,6 +22,7 @@ package mscheme.syntax;
 
 import mscheme.Syntax;
 
+import mscheme.code.Forceable;
 import mscheme.environment.StaticEnvironment;
 
 import mscheme.exceptions.SchemeException;
@@ -57,7 +58,7 @@ abstract class CheckedSyntax
         throw new SyntaxArityError(arguments, _arity);
     }
 
-    public final Object translate(
+    public final Forceable translate(
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws SchemeException
@@ -78,7 +79,7 @@ abstract class CheckedSyntax
         compilationEnv.setStateClosed();
     }
 
-    protected abstract Object checkedTranslate(
+    protected abstract Forceable checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws SchemeException;

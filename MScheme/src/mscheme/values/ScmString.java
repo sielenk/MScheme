@@ -22,172 +22,119 @@ package mscheme.values;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Arrays;
 
 import mscheme.exceptions.ImmutableException;
 import mscheme.exceptions.InvalidStringIndexException;
 
-
 public final class ScmString
-    extends Compound
-    implements Outputable
 {
-    public final static String id
-        = "$Id$";
+    public final static String id =
+        "$Id$";
 
-
-    private final char[]  _string;
-
-
-    private ScmString(boolean isConst, int size, char fill)
+    public static char[] create(int size, char fill)
     {
-        super(isConst);
-        _string = new char[size];
-        for (int i = 0; i < size; ++i)
-        {
-            _string[i] = fill;
-        }
+        char[] result = new char[size];
+
+        Arrays.fill(result, fill);
+
+        return result;
     }
 
-    private ScmString(boolean isConst, String value)
+    public static char[] create(String javaString)
     {
-        super(isConst);
-        _string = new char[value.length()];
-        value.getChars(
-            0,
-            value.length(),
-            _string,
-            0
-        );
+        return javaString.toCharArray();
     }
 
-    public static ScmString create(int size, char fill)
+    public static String toString(char[] s)
     {
-        return new ScmString(false, size, fill);
+        return new String(s);
     }
 
-    public static ScmString create(String javaString)
-    {
-        return new ScmString(false, javaString);
-    }
-
-    public static ScmString createConst(String javaString)
-    {
-        return new ScmString(true, javaString);
-    }
-
-    public static ScmString create(Symbol schemeSymbol)
-    {
-        return createConst(schemeSymbol.getJavaString());
-    }
-
-
-    public String getJavaString()
-    {
-        return new String(_string);
-    }
-
-
-    // specialisation of Value
-
-    public boolean isScmString()
-    {
-        return true;
-    }
-
-    public ScmString toScmString()
-    {
-        return this;
-    }
-
-
-    // implementation of Compound
-
-    protected Object getConstCopy()
-    {
-        return createConst(getJavaString());
-    }
-
+	public static char[] copy(char[] cs)
+	{
+		return (char[])cs.clone();
+	}
 
     // accessors
 
-    public int getLength()
+    public static int getLength(char[] s)
     {
-        return _string.length;
+        return s.length;
     }
 
-    public void set(int index, char c)
-    throws InvalidStringIndexException, ImmutableException
+    public static void set(char[] s, int index, char c)
+        throws InvalidStringIndexException, ImmutableException
     {
-        modify();
         try
         {
-            _string[index] = c;
+            s[index] = c;
         }
         catch (ArrayIndexOutOfBoundsException e)
         {
-            throw new InvalidStringIndexException(this, index);
+            throw new InvalidStringIndexException(s, index);
         }
     }
 
-    public char get(int index)
-    throws InvalidStringIndexException
+    public static char get(char[] s, int index)
+        throws InvalidStringIndexException
     {
         try
         {
-            return _string[index];
+            return s[index];
         }
         catch (ArrayIndexOutOfBoundsException e)
         {
-            throw new InvalidStringIndexException(this, index);
+            throw new InvalidStringIndexException(s, index);
         }
     }
 
-    public boolean equal(Object other)
+    public static boolean equals(char[] s, Object other)
     {
-        try
+        if (other instanceof char[])
         {
-            ScmString otherString = (ScmString)other;
+            char[] otherString = (char[])other;
 
-            return getJavaString().compareTo(
-                       otherString.getJavaString()
-                   ) == 0;
+            return toString(s).compareTo(toString(otherString))
+                == 0;
         }
-        catch (ClassCastException e)
-        { }
-
-        return false;
+        else
+        {
+            return false;
+        }
     }
 
-    public void outputOn(Writer destination, boolean doWrite) throws IOException
+    public static void outputOn(char[] s, Writer destination, boolean doWrite)
+        throws IOException
     {
-		final String str = getJavaString();
+        final String str = toString(s);
 
-		if (doWrite)
-		{
-			destination.write('"'); // "
-			for (int i = 0; i < str.length(); i++)
-			{
-				char c = str.charAt(i);
-				switch (c)
-				{
-				case '\n':
-					destination.write("\\n");
-					break;
+        if (doWrite)
+        {
+            destination.write('"'); // "
+            for (int i = 0; i < str.length(); i++)
+            {
+                char c = str.charAt(i);
+                switch (c)
+                {
+                    case '\n' :
+                        destination.write("\\n");
+                        break;
 
-				case '"': // "
-					destination.write("\\\"");
-					break;
+                    case '"' : // "
+                        destination.write("\\\"");
+                        break;
 
-				default:
-					destination.write(c);
-					break;
-				}
-			}
-			destination.write('"'); // "
-		}
-		else
-		{
-			destination.write(str);
-		}
+                    default :
+                        destination.write(c);
+                        break;
+                }
+            }
+            destination.write('"'); // "
+        }
+        else
+        {
+            destination.write(str);
+        }
     }
 }

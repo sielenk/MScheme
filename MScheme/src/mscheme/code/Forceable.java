@@ -18,6 +18,6 @@ public interface Forceable
 		= "$Id$";
 
 
-	Object force()
+	Reduceable force()
 		throws CompileError;
 }

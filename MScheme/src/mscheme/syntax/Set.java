@@ -23,7 +23,10 @@ package mscheme.syntax;
 import mscheme.Syntax;
 
 import mscheme.code.Assignment;
+import mscheme.code.Forceable;
+import mscheme.code.Reduceable;
 
+import mscheme.environment.DelayedReference;
 import mscheme.environment.Reference;
 import mscheme.environment.StaticEnvironment;
 
@@ -32,7 +35,6 @@ import mscheme.exceptions.SchemeException;
 import mscheme.util.Arity;
 
 import mscheme.values.List;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
 
@@ -50,23 +52,23 @@ final class Set
         super(Arity.exactly(2));
     }
 
-    protected Object checkedTranslate(
+    protected Forceable checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws SchemeException
     {
-        Symbol symbol = ValueTraits.toSymbol(arguments.getHead());
+		String symbol = ValueTraits.toSymbol(arguments.getHead());
         Object value  = arguments.getTail().getHead();
 
         return translate(
             compilationEnv.getDelayedReferenceFor(symbol),
-			ValueTraits.getCompiled(compilationEnv, value)
+			ValueTraits.getForceable(compilationEnv, value)
         );
     }
 
-    static Object translate(
-        Reference reference,
-        Object    code
+    static Forceable translate(
+        DelayedReference reference,
+        Forceable        code
     )
     {
         return Assignment.create(
