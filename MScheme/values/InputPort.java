@@ -112,9 +112,7 @@ public class InputPort
         throws ReadException, ParseException
     {
         try {
-            Value result = parseDatum();
-            result.setConst();
-            return result;
+            return parseDatum();
         }
         catch (IOException e) {
             throw new ReadException(this);
@@ -254,7 +252,7 @@ public class InputPort
 
             la = skipWSread();
             if (la == '.') {
-                Pair result = Pair.create(
+                Pair result = Pair.createConst(
                     head,
                     parseDatum()
                 );
@@ -269,7 +267,7 @@ public class InputPort
                 return result;
             } else {
                 _reader.unread(la);
-                return Pair.create(
+                return Pair.createConst(
                     head,
                     parseList()
                 );
@@ -287,7 +285,7 @@ public class InputPort
         
             switch (c) {
             case '"':
-                return ScmString.create(
+                return ScmString.createConst(
                     buf.toString()
                 );
                 
@@ -412,7 +410,7 @@ public class InputPort
                 return parseChar();
 
             case '(':
-                return ScmVector.create(parseVector(0));
+                return ScmVector.createConst(parseVector(0));
 
             default:
                 throw new ParseException(
