@@ -14,7 +14,7 @@ public abstract class Value
 {
     /** 
      */
-    public Value setLiteral() { return this; }
+    public Value setConst() { return this; }
 
     /** <code>true</code> only for the false singleton */
     public boolean isFalse() { return false; }

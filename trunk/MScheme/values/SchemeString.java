@@ -10,7 +10,7 @@ public final class SchemeString
     extends SelfEvaluatingValue
 {
     private String  _string;
-    private boolean _isLiteral = false;
+    private boolean _isConst = false;
 
     
     private SchemeString(String value)
@@ -22,13 +22,13 @@ public final class SchemeString
     public static SchemeString create(Symbol schemeSymbol)
     {
         SchemeString result = new SchemeString(schemeSymbol.getKey());
-        result._isLiteral = true;
+        result._isConst = true;
         return result;
     }
 
 
-    public Value setLiteral()
-    { _isLiteral = true; return this; }
+    public Value setConst()
+    { _isConst = true; return this; }
      
     public String getJavaString()
     { return _string; }
@@ -48,7 +48,7 @@ public final class SchemeString
     public void set(int index, char c)
         throws ImmutableException
     {
-        if (_isLiteral) {
+        if (_isConst) {
             throw new ImmutableException(this);
         }
     }
