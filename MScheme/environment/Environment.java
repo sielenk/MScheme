@@ -61,12 +61,28 @@ class CurrentEnvironment
 
     protected Code checkedCall(Registers state)
     {
-        return state
-            .getEnvironment()
-            .getLiteral();
+        return state.getEnvironment().getLiteral();
     }
 }
 
+class LastError
+    extends ValueThunk
+{
+    public final static String id
+        = "$Id$";
+
+
+    public final static LastError INSTANCE
+        = new LastError();
+
+    private LastError()
+    { }
+
+    protected Value checkedCall()
+    {
+        return Machine.getLastError();
+    }
+}
 
 public final class Environment
     extends ValueDefaultImplementations
@@ -219,6 +235,11 @@ public final class Environment
             _implementationEnvironment.define(
                 Symbol.create("spawn"),
                 SpawnFunction.INSTANCE
+            );
+
+            _implementationEnvironment.define(
+                Symbol.create("last-error"),
+                LastError.INSTANCE
             );
 
             _nullEnvironmentHook =
