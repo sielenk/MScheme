@@ -11,12 +11,11 @@ import MScheme.exceptions.*;
 
 
 public final class SchemeVector
-    extends Value
+    extends Compound
 {
     private final static SchemeVector _empty = new SchemeVector(0, null);
 
     private final Value[] _data;
-    private boolean       _isConst = false;
     
     private SchemeVector(int size, Value fill)
     {
@@ -55,10 +54,6 @@ public final class SchemeVector
     }
     
 
-    public Value setConst()
-    { _isConst = true; return this; }
-
-
     public int getLength()
     { return _data.length; }
 
@@ -83,9 +78,7 @@ public final class SchemeVector
     public void set(int index, Value value)
         throws InvalidVectorIndexException, ImmutableException
     {
-        if (_isConst) {
-            throw new ImmutableException(this);
-        }
+        modify();
 
         try {
             _data[index] = value;
@@ -164,4 +157,3 @@ public final class SchemeVector
         return result;
     }
 }
-
