@@ -70,10 +70,10 @@ public class TestEnvironment
 
     public void testTestPattern()
     {
-        assert("different symbols are equal (==)", sym1 != sym2);
-        assert("different symbols are equal (equals)", !sym1.equals(sym2));
-        assert("different entities are equal (==)", val1 != val2);
-        assert("different entities are equals (equals)", !val1.equals(val2));
+        assertTrue("different symbols are equal (==)", sym1 != sym2);
+        assertTrue("different symbols are equal (equals)", !sym1.equals(sym2));
+        assertTrue("different entities are equal (==)", val1 != val2);
+        assertTrue("different entities are equals (equals)", !val1.equals(val2));
     }
 
     public void testNormal()
@@ -97,14 +97,14 @@ public class TestEnvironment
 
         env.define(sym1, val1);
 
-        assert(
+        assertTrue(
             "lookup failed",
             env.lookup(sym1) == val1
         );
 
         env.assign(sym1, val2);
 
-        assert(
+        assertTrue(
             "assign failed",
             env.lookup(sym1) == val2
         );
@@ -115,14 +115,14 @@ public class TestEnvironment
     {
         Environment child  = env.newChild();
 
-        assert(child != env);
+        assertTrue(child != env);
 
         env  .define(sym1, val1);
         child.define(sym2, val2);
 
-        assert(child.lookup(sym1) == val1);
-        assert(child.lookup(sym2) == val2);
-        assert(env  .lookup(sym1) == val1);
+        assertTrue(child.lookup(sym1) == val1);
+        assertTrue(child.lookup(sym2) == val2);
+        assertTrue(env  .lookup(sym1) == val1);
 
         try
         {
@@ -133,8 +133,8 @@ public class TestEnvironment
         { }
 
         env.define(sym2, val1);
-        assert(child.lookup(sym2) == val2);
-        assert(env  .lookup(sym2) == val1);
+        assertTrue(child.lookup(sym2) == val2);
+        assertTrue(env  .lookup(sym2) == val1);
     }
 
     public void testSyntax()
@@ -161,7 +161,7 @@ public class TestEnvironment
         Syntax    token = SyntaxFactory.getBeginToken();
         env.defineSyntax(sym1, token);
 
-        assert(env.getSyntaxFor(sym1) == token);
+        assertTrue(env.getSyntaxFor(sym1) == token);
 
         try
         {
@@ -173,7 +173,7 @@ public class TestEnvironment
 
         Reference reference = env.define(sym2);
 
-        assert(env.getReferenceFor (sym2) == reference);
+        assertTrue(env.getReferenceFor (sym2) == reference);
     }
 
     public void testExtendedStatic()
@@ -191,7 +191,7 @@ public class TestEnvironment
 
         env.assign(sym1, val1);
 
-        assert(
+        assertTrue(
             env.lookup(sym1) == val1
         );
     }

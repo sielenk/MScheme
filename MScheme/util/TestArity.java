@@ -42,18 +42,18 @@ public class TestArity
         Arity arity1 = Arity.exactly(1);
         Arity arity2 = Arity.exactly(2);
 
-        assert( arity0.isValid(0));
-        assert(!arity0.isValid(1));
-        assert(!arity0.isValid(2));
+        assertTrue( arity0.isValid(0));
+        assertTrue(!arity0.isValid(1));
+        assertTrue(!arity0.isValid(2));
 
-        assert(!arity1.isValid(0));
-        assert( arity1.isValid(1));
-        assert(!arity1.isValid(2));
+        assertTrue(!arity1.isValid(0));
+        assertTrue( arity1.isValid(1));
+        assertTrue(!arity1.isValid(2));
 
-        assert(!arity2.isValid(0));
-        assert(!arity2.isValid(1));
-        assert( arity2.isValid(2));
-        assert(!arity2.isValid(3));
+        assertTrue(!arity2.isValid(0));
+        assertTrue(!arity2.isValid(1));
+        assertTrue( arity2.isValid(2));
+        assertTrue(!arity2.isValid(3));
     }
 
     public void testAtLeast()
@@ -62,28 +62,28 @@ public class TestArity
         Arity arity1 = Arity.atLeast(1);
         Arity arity2 = Arity.atLeast(2);
 
-        assert( arity0.isValid(0));
-        assert( arity0.isValid(1));
-        assert( arity0.isValid(2));
+        assertTrue( arity0.isValid(0));
+        assertTrue( arity0.isValid(1));
+        assertTrue( arity0.isValid(2));
 
-        assert(!arity1.isValid(0));
-        assert( arity1.isValid(1));
-        assert( arity1.isValid(2));
+        assertTrue(!arity1.isValid(0));
+        assertTrue( arity1.isValid(1));
+        assertTrue( arity1.isValid(2));
 
-        assert(!arity2.isValid(0));
-        assert(!arity2.isValid(1));
-        assert( arity2.isValid(2));
-        assert( arity2.isValid(3));
+        assertTrue(!arity2.isValid(0));
+        assertTrue(!arity2.isValid(1));
+        assertTrue( arity2.isValid(2));
+        assertTrue( arity2.isValid(3));
     }
 
     public void testInarity()
     {
         Arity arity = Arity.inRange(2, 3);
 
-        assert(!arity.isValid(0));
-        assert(!arity.isValid(1));
-        assert( arity.isValid(2));
-        assert( arity.isValid(3));
-        assert(!arity.isValid(4));
+        assertTrue(!arity.isValid(0));
+        assertTrue(!arity.isValid(1));
+        assertTrue( arity.isValid(2));
+        assertTrue( arity.isValid(3));
+        assertTrue(!arity.isValid(4));
     }
 }
