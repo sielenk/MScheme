@@ -1,4 +1,5 @@
 ; -*- scheme -*-
+; $Id$
 
 (begin
   ;procedure+: reduce <procedure> <initial> <list> 

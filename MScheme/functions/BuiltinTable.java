@@ -18,6 +18,9 @@ class BuiltinRaw
     extends    Function
     implements BuiltinTable
 {
+    public final static String id
+        = "$Id$";
+
     private final int    _id;
     private final String _name;
 
@@ -79,6 +82,9 @@ class BuiltinThunks
     extends    ValueThunk
     implements BuiltinTable
 {
+    public final static String id
+        = "$Id$";
+
     private final int    _id;
     private final String _name;
 
@@ -103,6 +109,9 @@ class BuiltinUnary
     extends    UnaryValueFunction
     implements BuiltinTable
 {
+    public final static String id
+        = "$Id$";
+
     private final int    _id;
     private final String _name;
 
@@ -259,6 +268,9 @@ class BuiltinBinary
     extends    BinaryValueFunction
     implements BuiltinTable
 {
+    public final static String id
+        = "$Id$";
+
     private final int    _id;
     private final String _name;
 
@@ -328,6 +340,9 @@ class BuiltinTernary
     extends    TernaryValueFunction
     implements BuiltinTable
 {
+    public final static String id
+        = "$Id$";
+
     private final int    _id;
     private final String _name;
 
@@ -351,6 +366,9 @@ class BuiltinTernary
 class BuiltinTableEntry
     implements BuiltinTable
 {
+    public final static String id
+        = "$Id$";
+
     private final Function _func;
     private final String   _name;
 
@@ -365,6 +383,9 @@ class BuiltinTableEntry
 
 public interface BuiltinTable
 {
+    String id
+        = "$Id$";
+
     String getName();
     Function getFunc();
 
