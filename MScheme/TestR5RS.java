@@ -516,6 +516,38 @@ public class TestR5RS
         check("(symbol->string (string->symbol \"Malvia\"))", "\"Malvia\"");
     }
     
+    
+    /// 6.3.5 Strings
+    public void test6_3_5()
+        throws SchemeException
+    {
+        eval("(define (f) (make-string 3 #\\*))");
+        eval("(define (g) \"***\"))");
+        
+        eval("(string-set! (f) 0 #\\?)");
+        
+        try { eval("(string-set! (g) 0 #\\?)"); fail(); }
+        catch (SchemeException e) { }
+
+        try {
+            eval("(string-set! (symbol->string 'immutable) 0 #\\?)");
+            fail();
+        }
+        catch (SchemeException e) { }
+    }
+
+    /// 6.3.6 Vectors
+    public void test6_3_6()
+        throws SchemeException
+    {
+        check("(vector-ref '#(1 1 2 3 5 8 13 21) 5)", "8");
+        check("(vector 'a 'b 'c)", "#(a b c)");
+        
+        check("(vector-length '#(1 2 3 4))", "4");
+        
+        
+    }
+
 
     /// 6.4 Control features
     public void test6_4_procedureq()
