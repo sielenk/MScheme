@@ -248,9 +248,6 @@
           (close-output-port port)
           result))
 
-      (define current-input-port  'dummy)
-      (define current-output-port 'dummy)
-
       (define with-input-from-file 'dummy)
       (define with-output-to-file  'dummy)
 
@@ -263,24 +260,18 @@
             [basic-write-char  write-char]
 
             [basic-null-environment          null-environment]
-            [basic-scheme-report-environment scheme-report-environment]
-
-            [cip initial-input-port]
-            [cop initial-output-port])
-
-        (define current-input-port  (lambda () cip))
-        (define current-output-port (lambda () cop))
+            [basic-scheme-report-environment scheme-report-environment])
 
         (define (wrap-cip func)
           (lambda args
             (if (null? args)
-              (func cip)
+              (func (current-input-port))
               (apply func args))))
 
         (define (wrap-cop func)
           (lambda (obj . args)
             (if (null? args)
-              (func obj cop)
+              (func obj (current-output-port))
               (apply func obj args))))
 
         (define read        (wrap-cip basic-read       ))
@@ -296,22 +287,22 @@
             (call-with-input-file
               filename
               (lambda (new-cip)
-                (let ([old-cip cip])
+                (let ([old-cip (current-input-port)])
                   (dynamic-wind
-                    (lambda () (set! cip new-cip))
+                    (lambda () (reset-input-port new-cip))
                     thunk
-                    (lambda () (set! cip old-cip))))))))
+                    (lambda () (reset-input-port old-cip))))))))
 
         (define with-output-to-file
           (lambda (filename thunk)
             (call-with-output-file
               filename
               (lambda (new-cop)
-                (let ([old-cop cop])
+                (let ([old-cop (current-output-port)])
                   (dynamic-wind
-                    (lambda () (set! cop new-cop))
+                    (lambda () (reset-output-port new-cop))
                     thunk
-                    (lambda () (set! cop old-cop))))))))
+                    (lambda () (reset-output-port old-cop))))))))
 
         (define (newline . args) (apply display #\newline args))
 
