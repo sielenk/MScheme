@@ -38,7 +38,7 @@ import MScheme.values.*;
 // *** let ***
 
 final class Let
-    extends CheckedSyntax
+    extends LetBase
 {
     public final static String id
         = "$Id$";
@@ -58,9 +58,6 @@ final class Let
     ) throws SchemeException
     {
         Symbol name;
-        List   bindings;
-        List   body;
-
         if (arguments.getHead().isSymbol())
         {
             if (arguments.getLength() < 3)
@@ -70,44 +67,18 @@ final class Let
             // named let
             // (let <var> ((<var> <init>) ...) <body>)
             name     = arguments.getHead().toSymbol();
-            bindings = arguments.getTail().getHead().toList();
-            body     = arguments.getTail().getTail();
+            arguments = arguments.getTail();
         }
         else
         {
             // (let ((<var> <init>) ...) <body>)
             name     = null;
-            bindings = arguments.getHead().toList();
-            body     = arguments.getTail();
         }
 
-        int  count   = 0;
-        List formals = Empty.create();
-        List inits   = Empty.create();
-
-        // parse the initializer list
-        while (!bindings.isEmpty())
-        {
-            List  binding = bindings.getHead().toList();
-
-            Value formal  = binding.getHead();
-            Value init    = binding.getTail().getHead();
-
-            ++count;
-            formals  = ListFactory.prepend(formal, formals);
-            inits    = ListFactory.prepend(init  , inits  );
-
-            bindings = bindings.getTail();
-        }
-        // If the closure is anonymous, the order of the
-        // arguments is irrelevant, as long as the inits
-        // and formals match. But if it can be called by
-        // the user the order has to match the definition
-        // order. And a named-let-closure can be called ...
-        // Since the parsing above reverses the lists,
-        // they have to be reversed again here.
-        formals = formals.getReversed();
-        inits   = inits  .getReversed();
+        List[] formalsInitsBody = splitArguments(arguments);
+        List formals = formalsInitsBody[0];
+        List inits   = formalsInitsBody[1];
+        List body    = formalsInitsBody[2];
 
         if (name != null)
         {
@@ -130,11 +101,11 @@ final class Let
             // argument, which is to be bound to the "curried"
             // closure -- the YCombinator does it's magic ...
             compiledProc = Application.create(
-                               CodeList.create(
-                                   YCombinator.INSTANCE.getLiteral(),
-                                   compiledProc
-                               )
-                           );
+                CodeList.create(
+                    YCombinator.INSTANCE.getLiteral(),
+                    compiledProc
+                )
+            );
         }
 
         return ProcedureCall.create(

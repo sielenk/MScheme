@@ -40,7 +40,7 @@ import MScheme.values.*;
 // *** letrec ***
 
 final class Letrec
-    extends CheckedSyntax
+    extends LetBase
 {
     public final static String id
         = "$Id$";
@@ -61,31 +61,16 @@ final class Letrec
     {
         // (letrec ((<var> <init>) ...) <body>)
 
-        List bindings = arguments.getHead().toList();
-        List body     = arguments.getTail();
-
-        List formals = Empty.create();
-        List inits   = Empty.create();
-
-        // split the bindings
-        while (!bindings.isEmpty())
-        {
-            List  binding = bindings.getHead().toList();
-
-            Value formal  = binding.getHead();
-            Value init    = binding.getTail().getHead();
-
-            formals  = ListFactory.prepend(formal, formals);
-            inits    = ListFactory.prepend(init  , inits  );
-
-            bindings = bindings.getTail();
-        }
+        List[] formalsInitsBody = splitArguments(arguments);
+        List formals = formalsInitsBody[0];
+        List inits   = formalsInitsBody[1];
+        List body    = formalsInitsBody[2];
 
         StaticEnvironment
-        bodyCompilationEnv = compilationEnv.newChild(formals);
+            bodyCompilationEnv = compilationEnv.newChild(formals);
 
         CodeList
-        compiledBody = body.getCodeList(bodyCompilationEnv);
+            compiledBody = body.getCodeList(bodyCompilationEnv);
 
         // prepend the initialisations to the body
         while (!formals.isEmpty())
@@ -106,13 +91,13 @@ final class Letrec
         }
 
         return Application.create(
-                   CodeList.create(
-                       CompiledLambda.create(
-                           Arity.exactly(0),
-                           bodyCompilationEnv,
-                           compiledBody
-                       )
-                   )
-               );
+            CodeList.create(
+                CompiledLambda.create(
+                    Arity.exactly(0),
+                    bodyCompilationEnv,
+                    compiledBody
+                )
+            )
+        );
     }
 }
