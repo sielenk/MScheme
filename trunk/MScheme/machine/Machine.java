@@ -51,21 +51,16 @@ public class Machine
     { _environment = newEnvironment; }
     
 
-    public Continuation getContinuation()
-    { return _continuation; }
+    public UnaryFunction getCurrentContinuation()
+    { return _continuation.getFunction(); }
 
     void setContinuation(Continuation newContinuation)
     { _continuation = newContinuation; }
+    
+    Continuation getContinuation()
+    { return _continuation; }
 
     
-    public Code handleDynamicWind(
-        Function before,
-        Function thunk,
-        Function after
-    ) throws RuntimeError, TypeError
-    { return WindContinuation.handle(this, before, thunk, after); }
-
-
     public Value execute(Code program)
         throws RuntimeError, TypeError
     {
