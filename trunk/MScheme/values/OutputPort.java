@@ -22,6 +22,10 @@ public class OutputPort
     public static OutputPort create(Writer writer)
     { return new OutputPort(writer); }
 
+    public static OutputPort create(SchemeString filename)
+        throws OpenException
+    { return create(filename.getJavaString()); }
+
     public static OutputPort create(String filename)
         throws OpenException
     {
