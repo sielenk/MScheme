@@ -68,23 +68,26 @@ public final class Environment
 
     // *******************************************************************
 
-    private final StaticEnvironment _bindings;
-    private final Vector[]          _frames;
+    private final  StaticEnvironment _bindings;
+    private final DynamicEnvironment _values;
 
     // *******************************************************************
 
     private Environment(
-        StaticEnvironment bindings,
-        Vector[]          frames
+        StaticEnvironment  bindings,
+        DynamicEnvironment values
     )
     {
         _bindings = bindings;
-        _frames   = frames;
+        _values   = values;
     }
- 
+
     private static Environment create()
     {
-        return create(new StaticEnvironment(), null);
+        return new Environment(
+             StaticEnvironment.create(),
+            DynamicEnvironment.create()
+        );
     }
 
     private static Environment create(
@@ -92,32 +95,19 @@ public final class Environment
         Environment       parent
     )
     {
-        int      level  = bindings.getLevel();
-        Vector[] frames = new Vector[level + 1];
-
-        if (level > 0)
+        if (parent._bindings != bindings.getParent())
         {
-            if (parent._bindings != bindings.getParent())
-            {
-                throw new RuntimeException(
-                   "consistency failure: StaticEnvironment parent"
-                );
-            }
-
-            System.arraycopy(
-                parent._frames, 0,
-                frames, 0,
-                level
+            throw new RuntimeException(
+                "consistency failure: StaticEnvironment parent"
             );
         }
 
-        {
-            Vector locations = new Vector();
-            locations.setSize(bindings.getSize());
-            frames[level] = locations;
-        }
-
-        return new Environment(bindings, frames);
+        return new Environment(
+            bindings,
+            parent._values.createChild(
+                bindings.getSize()
+            )
+        );
     }
 
     private static Environment create(
@@ -127,30 +117,20 @@ public final class Environment
         List               values
     ) throws PairExpected, ListExpected
     {
-        Environment result = create(bindings, parent);
-
-        Vector locations = result._frames[result._bindings.getLevel()];
-        List   rest      = values;
-
-        for (int i = 0; i < arity.getMin(); i++)
+        if (parent._bindings != bindings.getParent())
         {
-            locations.setElementAt(
-                rest.getHead(),
-                i
-            );
-
-            rest = rest.getTail();
-        }
-
-        if (arity.allowMore())
-        {
-            locations.setElementAt(
-                rest,
-                arity.getMin()
+            throw new RuntimeException(
+                "consistency failure: StaticEnvironment parent"
             );
         }
 
-        return result;
+        return new Environment(
+            bindings,
+            parent._values.createChild(
+                arity,
+                values
+            )
+        );
     }
 
 
@@ -248,9 +228,17 @@ public final class Environment
         return _bindings;
     }
 
+    public DynamicEnvironment getDynamic()
+    {
+        return _values;
+    }
+
     public Environment getParent()
     {
-        return new Environment(_bindings.getParent(), _frames);
+        return new Environment(
+            _bindings.getParent(),
+            _values  .getParent()
+        );
     }
 
     public Environment newChild()
@@ -290,21 +278,7 @@ public final class Environment
 
     public Value assign(Reference key, Value value)
     {
-        Vector locations = _frames[key.getLevel()];
-        int    index     = key.getIndex();
-
-        try
-        {
-            Value result = (Value)locations.elementAt(index);
-            locations.setElementAt(value, index);
-            return (result != null) ? result : value;
-        }
-        catch (ArrayIndexOutOfBoundsException e)
-        {
-            locations.setSize(index + 1);
-            locations.setElementAt(value, index);
-            return value;
-        }
+        return _values.assign(key, value);
     }
 
     public Value assign(Symbol key, Value value)
@@ -316,17 +290,7 @@ public final class Environment
 
     public Value lookupNoThrow(Reference ref)
     {
-        try
-        {
-            return 
-                (Value)
-                _frames   [ref.getLevel()]
-                .elementAt(ref.getIndex());
-        }
-        catch (ArrayIndexOutOfBoundsException e)
-        {
-            return null;
-        }
+        return _values.lookupNoThrow(ref);
     }
 
     public Value lookup(Reference ref)
