@@ -17,17 +17,16 @@ import junit.framework.TestSuite;
  */
 public class AllTests
 {
-	public final static String CVS_ID
-		= "$Id$";
+    public final static String CVS_ID = "$Id$";
 
-
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for mscheme.machine");
-		//$JUnit-BEGIN$
-		suite.addTest(new TestSuite(MachineTest.class));
-		suite.addTest(new TestSuite(StackPlainTest.class));
-		suite.addTest(new TestSuite(StackListTest.class));
-		//$JUnit-END$
-		return suite;
-	}
+    public static Test suite()
+    {
+        TestSuite suite = new TestSuite("Test for mscheme.machine");
+        //$JUnit-BEGIN$
+        suite.addTestSuite(StackListTest.class);
+        suite.addTestSuite(StackPlainTest.class);
+        suite.addTestSuite(MachineTest.class);
+        //$JUnit-END$
+        return suite;
+    }
 }

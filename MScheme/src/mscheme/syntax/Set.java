@@ -20,7 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.syntax;
 
-import mscheme.Syntax;
 
 import mscheme.code.Assignment;
 
@@ -31,19 +30,19 @@ import mscheme.exceptions.SchemeException;
 
 import mscheme.util.Arity;
 
-import mscheme.values.List;
+import mscheme.values.IList;
 import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
 
 final class Set
-    extends CheckedSyntax
+    extends CheckedTranslator
 {
     public final static String CVS_ID
        = "$Id$";
 
 
-    final static Syntax INSTANCE = new Set();
+    final static ITranslator INSTANCE = new Set();
 
     private Set()
     {
@@ -52,7 +51,7 @@ final class Set
 
     protected Object checkedTranslate(
         StaticEnvironment compilationEnv,
-        List              arguments
+        IList              arguments
     ) throws SchemeException
     {
         Symbol symbol = ValueTraits.toSymbol(arguments.getHead());

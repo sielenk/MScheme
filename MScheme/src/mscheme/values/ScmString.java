@@ -27,20 +27,52 @@ import mscheme.exceptions.ImmutableException;
 import mscheme.exceptions.InvalidStringIndexException;
 
 
-public final class ScmString
-    extends Compound
-    implements Outputable
+class ConstScmString
+	extends ScmString
 {
     public final static String CVS_ID
-        = "$Id$";
+    	= "$Id$";
 
-
-    private final char[]  _string;
-
-
-    private ScmString(boolean isConst, int size, char fill)
+    private final String _string;
+    
+    public ConstScmString(String javaString)
     {
-        super(isConst);
+        _string = javaString; 
+    }
+
+    public int getLength()
+    {
+        return _string.length();
+    }
+
+    public char get_(int index)
+    {
+        return _string.charAt(index);
+    }
+
+    public void set_(int index, char c)
+    	throws ImmutableException
+    {
+        throw new ImmutableException(this);
+    }
+
+    public String getJavaString()
+    {
+        return _string;
+    }
+}
+
+class MutableScmString
+	extends ScmString
+	implements IMutable
+{
+    public final static String CVS_ID
+    	= "$Id$";
+
+    private final char[] _string;
+
+    public MutableScmString(int size, char fill)
+    {
         _string = new char[size];
         for (int i = 0; i < size; ++i)
         {
@@ -48,31 +80,63 @@ public final class ScmString
         }
     }
 
-    private ScmString(boolean isConst, String value)
+    public MutableScmString(String javaString)
     {
-        super(isConst);
-        _string = new char[value.length()];
-        value.getChars(
-            0,
-            value.length(),
-            _string,
-            0
-        );
+        int size = javaString.length();
+        _string = new char[size];
+        javaString.getChars(0, size, _string, 0);
     }
 
+    public int getLength()
+    {
+        return _string.length;
+    }
+
+    public char get_(int index)
+    {
+        return _string[index];
+    }
+
+    public void set_(int index, char c)
+    {
+        _string[index] = c;
+    }
+
+    public Object getConst()
+    {
+        return new ConstScmString(getJavaString());
+    }
+
+    public String getJavaString()
+    {
+        return new String(_string);
+    }
+}
+
+
+public abstract class ScmString
+    implements IComparable, IOutputable
+{
+    public final static String CVS_ID
+        = "$Id$";
+
+
+    protected ScmString()
+    { }
+    
     public static ScmString create(int size, char fill)
     {
-        return new ScmString(false, size, fill);
+        return new MutableScmString(size, fill);
     }
 
     public static ScmString create(String javaString)
     {
-        return new ScmString(false, javaString);
+        return new MutableScmString(javaString);
     }
 
     public static ScmString createConst(String javaString)
     {
-        return new ScmString(true, javaString);
+        return new ConstScmString(javaString);
     }
 
     public static ScmString create(Symbol schemeSymbol)
@@ -81,93 +145,49 @@ public final class ScmString
     }
 
 
-    public String getJavaString()
-    {
-        return new String(_string);
-    }
-
-
-    // specialisation of Value
-
-    public boolean isScmString()
-    {
-        return true;
-    }
-
-    public ScmString toScmString()
-    {
-        return this;
-    }
-
-
-    // implementation of Compound
-
-    protected Object getConstCopy()
-    {
-        return createConst(getJavaString());
-    }
+    abstract public String getJavaString();
 
 
     // accessors
 
-    public int getLength()
+    private void validateIndex(int index)
+		throws InvalidStringIndexException
+	{
+	    if ((index < 0) || (getLength() <= index))
+	    {
+	        throw new InvalidStringIndexException(this, index);
+	    }        
+	}
+
+    public final void set(int index, char c)
+    	throws InvalidStringIndexException, ImmutableException
     {
-        return _string.length;
+        validateIndex(index);
+        set_(index, c);
     }
 
-    public void set(int index, char c)
-    throws InvalidStringIndexException, ImmutableException
-    {
-        modify();
-        try
-        {
-            _string[index] = c;
-        }
-        catch (ArrayIndexOutOfBoundsException e)
-        {
-            throw new InvalidStringIndexException(this, index);
-        }
+    public final char get(int index)
+		throws InvalidStringIndexException
+	{
+        validateIndex(index);
+        return get_(index);
     }
 
-    public char get(int index)
-    throws InvalidStringIndexException
-    {
-        try
-        {
-            return _string[index];
-        }
-        catch (ArrayIndexOutOfBoundsException e)
-        {
-            throw new InvalidStringIndexException(this, index);
-        }
-    }
+    abstract public int getLength();
+    
+    abstract protected void set_(int index, char c)
+    	throws ImmutableException;
 
-    public boolean equal(Object other)
-    {
-        try
-        {
-            ScmString otherString = (ScmString)other;
-
-            return getJavaString().compareTo(
-                       otherString.getJavaString()
-                   ) == 0;
-        }
-        catch (ClassCastException e)
-        { }
-
-        return false;
-    }
+    abstract protected char get_(int index);
 
     public void outputOn(Writer destination, boolean doWrite) throws IOException
     {
-		final String str = getJavaString();
-
 		if (doWrite)
 		{
 			destination.write('"'); // "
-			for (int i = 0; i < str.length(); i++)
+			for (int i = 0; i < getLength(); i++)
 			{
-				char c = str.charAt(i);
+				char c = get_(i);
 				switch (c)
 				{
 				case '\n':
@@ -187,7 +207,32 @@ public final class ScmString
 		}
 		else
 		{
-			destination.write(str);
+			destination.write(
+			    getJavaString());
 		}
+    }
+
+    public boolean eq(Object other)
+    {
+        return this == other;
+    }
+
+    public boolean eqv(Object other)
+    {
+        return this == other;
+    }
+
+    public boolean equals(Object other)
+    {
+        if (!(other instanceof ScmString))
+        {
+            return false;
+        }
+        
+        ScmString otherString = (ScmString)other;
+
+        return getJavaString().compareTo(
+                   otherString.getJavaString()
+               ) == 0;
     }
 }

@@ -20,18 +20,18 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.code;
 
-import mscheme.Code;
+import mscheme.ICode;
 
 import mscheme.environment.Reference;
 
 import mscheme.exceptions.CompileError;
 
-import mscheme.machine.Invokeable;
+import mscheme.machine.IInvokeable;
 import mscheme.machine.Registers;
 
 
 public final class Assignment
-    implements Forceable, Reduceable
+    implements IForceable, IReduceable
 {
 	public final static String CVS_ID
         = "$Id$";
@@ -49,7 +49,7 @@ public final class Assignment
 
     private Assignment(
         Reference binding,
-        Code      valueCalculation
+        ICode      valueCalculation
     )
     {
     	this(binding, (Object)valueCalculation);
@@ -67,7 +67,7 @@ public final class Assignment
         throws CompileError
     {
         _binding    = _binding.forceRef();        
-		_expression = Code.force(_expression);
+		_expression = ICode.force(_expression);
         return this;
     }
 
@@ -82,7 +82,7 @@ public final class Assignment
 	public Object reduce(Registers registers)
 	{
 		registers.push(
-			new Invokeable()
+			new IInvokeable()
 			{
 				public Object invoke(
 					Registers registers,

@@ -40,7 +40,7 @@ class BuiltinRaw
         );
     }
 
-    protected Object checkedCall(List args)
+    protected Object checkedCall(IList args)
         throws SchemeException
     {
         switch(_id) {
@@ -88,7 +88,7 @@ class BuiltinRaw
     protected Arity getArity()
     { return Arity.atLeast(0); }
 
-    public Object call(Registers state, List args)
+    public Object call(Registers state, IList args)
         throws SchemeException
     { return checkedCall(args); }
 }

@@ -20,7 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.syntax;
 
-import mscheme.Syntax;
 
 import mscheme.code.Application;
 
@@ -30,7 +29,7 @@ import mscheme.exceptions.SchemeException;
 
 import mscheme.util.Arity;
 
-import mscheme.values.List;
+import mscheme.values.IList;
 import mscheme.values.ListFactory;
 import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
@@ -47,7 +46,7 @@ final class Let
         = "$Id$";
 
 
-    final static Syntax INSTANCE = new Let();
+    final static ITranslator INSTANCE = new Let();
 
     private Let()
     {
@@ -57,7 +56,7 @@ final class Let
 
     protected Object checkedTranslate(
         StaticEnvironment compilationEnv,
-        List              arguments
+        IList              arguments
     ) throws SchemeException
     {
         Symbol name;
@@ -78,10 +77,10 @@ final class Let
             name     = null;
         }
 
-        List[] formalsInitsBody = splitArguments(arguments);
-        List formals = formalsInitsBody[0];
-        List inits   = formalsInitsBody[1];
-        List body    = formalsInitsBody[2];
+        IList[] formalsInitsBody = splitArguments(arguments);
+        IList formals = formalsInitsBody[0];
+        IList inits   = formalsInitsBody[1];
+        IList body    = formalsInitsBody[2];
 
         if (name != null)
         {

@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.exceptions;
 
-import mscheme.Value;
-
 
 public class SchemeIOException
     extends RuntimeError
@@ -29,7 +27,7 @@ public class SchemeIOException
     public final static String CVS_ID
         = "$Id$";
 
-    public SchemeIOException(Value cause)
+    public SchemeIOException(Object cause)
     {
         super(cause);
     }

@@ -22,7 +22,7 @@ public class StackListTest extends StackTest
 
 	private StackList _stack;
 
-	protected Stack createStack()
+	protected IStack createStack()
 	{
 		return _stack = new StackList();
 	}

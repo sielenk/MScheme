@@ -26,7 +26,7 @@ import mscheme.machine.Registers;
 import mscheme.util.Arity;
 
 import mscheme.values.Function;
-import mscheme.values.List;
+import mscheme.values.IList;
 
 
 public abstract class CheckedFunction
@@ -40,13 +40,13 @@ public abstract class CheckedFunction
 
     protected abstract Object checkedCall(
 		mscheme.machine.Registers state,
-        List                      args
+        IList                      args
     ) throws SchemeException;
 
 
     // implementation of Function
 
-    public final Object call(Registers state, List arguments)
+    public final Object call(Registers state, IList arguments)
         throws SchemeException
     {
         checkArguments(getArity(), arguments);

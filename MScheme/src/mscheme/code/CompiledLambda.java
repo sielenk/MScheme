@@ -23,7 +23,7 @@ package mscheme.code;
 import java.io.IOException;
 import java.io.Writer;
 
-import mscheme.Code;
+import mscheme.ICode;
 
 import mscheme.environment.StaticEnvironment;
 import mscheme.environment.DynamicEnvironment;
@@ -37,13 +37,13 @@ import mscheme.machine.Registers;
 
 import mscheme.util.Arity;
 
-import mscheme.values.List;
+import mscheme.values.IList;
 
 import mscheme.values.functions.CheckedFunction;
 
 
 public final class CompiledLambda
-    implements Forceable, Reduceable
+    implements IForceable, IReduceable
 {
     public final static String CVS_ID
         = "$Id$";
@@ -79,7 +79,7 @@ public final class CompiledLambda
 
     public static CompiledLambda create(
         Arity             arity,
-        List              body,
+        IList              body,
         StaticEnvironment env
     )
         throws SchemeException
@@ -122,7 +122,7 @@ public final class CompiledLambda
 
         protected Object checkedCall(
 			Registers state,
-            List      arguments
+            IList      arguments
         ) throws ListExpected, PairExpected
         {
             DynamicEnvironment newEnvironment =
@@ -141,7 +141,7 @@ public final class CompiledLambda
     public Object force()
         throws CompileError
     {
-        _compiledBody = Code.force(_compiledBody);
+        _compiledBody = ICode.force(_compiledBody);
         return this;
     }
 

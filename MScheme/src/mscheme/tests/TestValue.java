@@ -27,7 +27,6 @@ import mscheme.environment.Environment;
 
 import mscheme.exceptions.TypeError;
 
-import mscheme.values.Empty;
 import mscheme.values.InputPort;
 import mscheme.values.ListFactory;
 import mscheme.values.OutputPort;
@@ -142,14 +141,14 @@ public class TestValue
     public void testEmpty()
         throws Exception
     {
-        final Object empty = Empty.create();
+        final Object empty = ListFactory.create();
 
         assertTrue(ValueTraits.isTrue(empty));
 
         assertTrue(countTypes(empty) == 1); // List
         assertTrue(countCasts(empty) == 1);
 
-        assertTrue(empty instanceof Empty);
+        assertTrue(ValueTraits.isEmpty(empty));
 
         assertTrue(ValueTraits.isList(empty));
         assertTrue(ValueTraits.toList(empty) == empty);
@@ -369,8 +368,8 @@ public class TestValue
 
         assertTrue(
             eqHelper(
-                Empty.create(),
-                Empty.create()
+                ListFactory.create(),
+                ListFactory.create()
             ) == 3
         );
 

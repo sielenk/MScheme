@@ -25,7 +25,7 @@ import mscheme.machine.Registers;
 
 import mscheme.util.Arity;
 
-import mscheme.values.List;
+import mscheme.values.IList;
 
 
 public abstract class TernaryFunction
@@ -42,7 +42,7 @@ public abstract class TernaryFunction
 
     protected final Object checkedCall(
 		Registers state,
-        List      arguments
+        IList      arguments
     ) throws SchemeException
     {
         return checkedCall(

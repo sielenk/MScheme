@@ -26,17 +26,12 @@ import java.io.Writer;
 import mscheme.exceptions.AlreadyBound;
 import mscheme.exceptions.CompileError;
 import mscheme.exceptions.RuntimeError;
-
-import mscheme.syntax.SyntaxFactory;
-
+import mscheme.syntax.TranslatorFactory;
 import mscheme.values.Symbol;
-import mscheme.values.ValueDefaultImplementations;
-
 import mscheme.values.functions.BuiltinTable;
 
 
 public final class Environment
-    extends ValueDefaultImplementations
 {
     public final static String CVS_ID
         = "$Id$";
@@ -94,51 +89,51 @@ public final class Environment
 
             staticBindings.defineSyntax(
                 Symbol.create("quote"),
-                SyntaxFactory.getQuoteToken()
+                TranslatorFactory.getQuoteToken()
             );
             staticBindings.defineSyntax(
                 Symbol.create("if"),
-                SyntaxFactory.getIfToken()
+                TranslatorFactory.getIfToken()
             );
             staticBindings.defineSyntax(
                 Symbol.create("begin"),
-                SyntaxFactory.getBeginToken()
+                TranslatorFactory.getBeginToken()
             );
             staticBindings.defineSyntax(
                 Symbol.create("and"),
-                SyntaxFactory.getAndToken()
+                TranslatorFactory.getAndToken()
             );
             staticBindings.defineSyntax(
                 Symbol.create("or"),
-                SyntaxFactory.getOrToken()
+                TranslatorFactory.getOrToken()
             );
             staticBindings.defineSyntax(
                 Symbol.create("lambda"),
-                SyntaxFactory.getLambdaToken()
+                TranslatorFactory.getLambdaToken()
             );
             staticBindings.defineSyntax(
                 Symbol.create("let"),
-                SyntaxFactory.getLetToken()
+                TranslatorFactory.getLetToken()
             );
             staticBindings.defineSyntax(
                 Symbol.create("let*"),
-                SyntaxFactory.getLetStarToken()
+                TranslatorFactory.getLetStarToken()
             );
             staticBindings.defineSyntax(
                 Symbol.create("letrec"),
-                SyntaxFactory.getLetrecToken()
+                TranslatorFactory.getLetrecToken()
             );
             staticBindings.defineSyntax(
                 Symbol.create("define"),
-                SyntaxFactory.getDefineToken()
+                TranslatorFactory.getDefineToken()
             );
             staticBindings.defineSyntax(
                 Symbol.create("set!"),
-                SyntaxFactory.getSetToken()
+                TranslatorFactory.getSetToken()
             );
             staticBindings.defineSyntax(
                 Symbol.create("define-syntax"),
-                SyntaxFactory.getDefineSyntaxToken()
+                TranslatorFactory.getDefineSyntaxToken()
             );
         }
         catch (AlreadyBound e)

@@ -1,12 +1,13 @@
 /*
- * Created on 03.01.2004
+ * Created on 02.01.2004
  *
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package mscheme.machine;
+package mscheme.code;
 
-import mscheme.environment.DynamicEnvironment;
+import mscheme.exceptions.SchemeException;
+import mscheme.machine.Registers;
 
 /**
  * @author sielenk
@@ -14,17 +15,10 @@ import mscheme.environment.DynamicEnvironment;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-class StackFrame
+public interface IReduceable
 {
 	public final static String CVS_ID
-	    = "$Id$";
+		= "$Id$";
 
-	final DynamicEnvironment environment;
-	final IInvokeable         invokeable;
-
-	StackFrame(DynamicEnvironment e, IInvokeable i)
-	{
-		environment = e;
-		invokeable  = i;
-	}
+	Object reduce(Registers state) throws SchemeException;
 }

@@ -20,8 +20,8 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.environment;
 
-import mscheme.code.Forceable;
-import mscheme.code.Reduceable;
+import mscheme.code.IForceable;
+import mscheme.code.IReduceable;
 import mscheme.exceptions.RuntimeError;
 import mscheme.exceptions.CompileError;
 
@@ -31,7 +31,7 @@ import mscheme.values.Symbol;
 
 
 public abstract class Reference
-    implements Forceable, Reduceable
+    implements IForceable, IReduceable
 {
     public final static String CVS_ID
         = "$Id$";

@@ -1,4 +1,4 @@
-/* The interface required by Scheme syntax forms.
+/* The numeric tags to distinguish 'begin', 'and' and 'or'.
    Copyright (C) 2001  Marvin H. Sielenkemper
 
 This file is part of MScheme.
@@ -18,29 +18,15 @@ along with MScheme; see the file COPYING. If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
 
-package mscheme;
-
-import mscheme.environment.StaticEnvironment;
-
-import mscheme.exceptions.SchemeException;
-
-import mscheme.values.List;
+package mscheme.syntax;
 
 
-/**
- * This interface is used to compile lists. Due to the special
- * nature of syntactic keywords in Scheme - they are not reserved -
- * their bindings are stored in the static environment.
- */
-public interface Syntax
+public interface ISequenceTags
 {
-    /** The CVS id of the file containing this class. */
     String CVS_ID
         = "$Id$";
 
-
-    Object translate(
-        StaticEnvironment compilationEnv,
-        List              arguments
-    ) throws SchemeException;
+    int TAG_BEGIN = 0;
+    int TAG_AND   = 1;
+    int TAG_OR    = 2;
 }

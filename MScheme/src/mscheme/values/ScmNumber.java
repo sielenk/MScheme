@@ -27,8 +27,7 @@ import java.math.BigInteger;
 
 
 public class ScmNumber
-    extends ValueDefaultImplementations
-    implements Outputable
+    implements IComparable, IOutputable
 {
     public final static String CVS_ID
         = "$Id$";
@@ -56,28 +55,26 @@ public class ScmNumber
         );
     }
 
-    // implementation of Value
+    // implementation of Compareable
 
-    public boolean isScmNumber()
+    public boolean eq(Object other)
     {
-        return true;
-    }
-
-    public ScmNumber toScmNumber()
-    {
-        return this;
+        return this == other;
     }
 
     public boolean eqv(Object other)
     {
-        try
+        if (!(other instanceof ScmNumber))
         {
-            return isEqualTo((ScmNumber)other);
+            return false;
         }
-        catch (ClassCastException e)
-        { }
 
-        return false;
+        return isEqualTo((ScmNumber)other);
+     }
+
+    public boolean equals(Object other)
+    {
+        return eqv(other);
     }
 
 

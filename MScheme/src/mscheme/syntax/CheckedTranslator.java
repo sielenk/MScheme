@@ -1,4 +1,4 @@
-/* The translation function for Scheme's function call.
+/* A partial implementation of Syntax with argument check.
    Copyright (C) 2001  Marvin H. Sielenkemper
 
 This file is part of MScheme.
@@ -21,46 +21,64 @@ Boston, MA  02111-1307, USA. */
 package mscheme.syntax;
 
 
-import mscheme.code.Application;
-
 import mscheme.environment.StaticEnvironment;
 
 import mscheme.exceptions.SchemeException;
+import mscheme.exceptions.SyntaxArityError;
+
+import mscheme.util.Arity;
 
 import mscheme.values.IList;
-import mscheme.values.ValueTraits;
 
 
-public final class ProcedureCall
+abstract class CheckedTranslator
     implements ITranslator
 {
     public final static String CVS_ID
         = "$Id$";
 
+    private final Arity _arity;
 
-    private final Object _head;
-
-    private ProcedureCall(Object head)
+    protected CheckedTranslator(Arity arity)
     {
-        _head = head;
+        _arity = arity;
     }
 
-    public static ProcedureCall create(Object head)
+    protected static void arityError(IList arguments, Arity arity)
+        throws SyntaxArityError
     {
-        return new ProcedureCall(head);
+        throw new SyntaxArityError(arguments, arity);
     }
 
-    public Object translate(
+    protected void arityError(IList arguments)
+        throws SyntaxArityError
+    {
+        throw new SyntaxArityError(arguments, _arity);
+    }
+
+    public final Object translate(
         StaticEnvironment compilationEnv,
         IList              arguments
     ) throws SchemeException
     {
-        compilationEnv.setStateClosed();
+        int len = arguments.getLength();
 
-        Object[] compiledList = arguments.getCompiledArray(compilationEnv, 1);
+        if (!_arity.isValid(len))
+        {
+            arityError(arguments);
+        }
 
-        compiledList[0] = ValueTraits.getCompiled(compilationEnv, _head);
-
-        return Application.create(compiledList);
+        preTranslate(compilationEnv);
+        return checkedTranslate(compilationEnv, arguments);
     }
+
+    protected void preTranslate(StaticEnvironment compilationEnv)
+    {
+        compilationEnv.setStateClosed();
+    }
+
+    protected abstract Object checkedTranslate(
+        StaticEnvironment compilationEnv,
+        IList              arguments
+    ) throws SchemeException;
 }

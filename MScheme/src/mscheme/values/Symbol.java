@@ -23,17 +23,13 @@ package mscheme.values;
 import java.io.IOException;
 import java.io.Writer;
 
-import mscheme.Syntax;
-
 import mscheme.environment.StaticEnvironment;
-
-import mscheme.exceptions.SchemeException;
 import mscheme.exceptions.SymbolNotFoundException;
 import mscheme.exceptions.UnexpectedSyntax;
 
 
 public final class Symbol
-    extends ValueDefaultImplementations
+	implements ICompileable, IComparable
 {
     public final static String CVS_ID
         = "$Id$";
@@ -72,31 +68,27 @@ public final class Symbol
 
     // specialisation/implementation of Value
 
-    public boolean isSymbol()
-    {
-        return true;
-    }
-
-    public Symbol toSymbol()
-    {
-        return this;
-    }
-
-
     public boolean eq(Object other)
     {
-        try
+        if (!(other instanceof Symbol))
         {
-            Symbol otherSymbol = (Symbol)other;
-
-            return getJavaString() == otherSymbol.getJavaString();
+            return false;
         }
-        catch (ClassCastException e)
-        { }
 
-        return false;
+        Symbol otherSymbol = (Symbol)other;
+
+        return getJavaString() == otherSymbol.getJavaString();
     }
 
+    public boolean eqv(Object other)
+    {
+        return eq(other);
+    }
+
+    public boolean equals(Object other)
+    {
+        return eq(other);
+    }
 
     public void writeOn(Writer destination)
         throws IOException
@@ -110,18 +102,5 @@ public final class Symbol
     {
         env.setStateClosed();
         return env.getDelayedReferenceFor(this);
-    }
-
-    public Syntax getSyntax(StaticEnvironment env)
-        throws SchemeException
-    {
-        Syntax result = env.getSyntaxFor(this);
-
-        if (result == null)
-        {
-            result = super.getSyntax(env);
-        }
-
-        return result;
     }
 }

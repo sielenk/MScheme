@@ -1,4 +1,4 @@
-/* The numeric tags to distinguish 'begin', 'and' and 'or'.
+/* The interface required for for Scheme values.
    Copyright (C) 2001  Marvin H. Sielenkemper
 
 This file is part of MScheme.
@@ -18,15 +18,23 @@ along with MScheme; see the file COPYING. If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
 
-package mscheme.syntax;
+package mscheme.values;
+
+import mscheme.environment.StaticEnvironment;
+import mscheme.exceptions.SchemeException;
 
 
-public interface SequenceTags
+public interface ICompileable
 {
+    /** The CVS id of the file containing this class. */
     String CVS_ID
         = "$Id$";
 
-    int TAG_BEGIN = 0;
-    int TAG_AND   = 1;
-    int TAG_OR    = 2;
+    // compilation functions
+
+    /**
+     * Compiles a value as normal code.
+     */
+    Object getCompiled(StaticEnvironment compilationEnv)
+        throws SchemeException;
 }

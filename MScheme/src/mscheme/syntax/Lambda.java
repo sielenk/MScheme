@@ -20,31 +20,25 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.syntax;
 
-import mscheme.Syntax;
 
 import mscheme.code.CompiledLambda;
-
 import mscheme.environment.StaticEnvironment;
-
 import mscheme.exceptions.SchemeException;
-
 import mscheme.util.Arity;
-
-import mscheme.values.Empty;
-import mscheme.values.List;
+import mscheme.values.IList;
 import mscheme.values.ListFactory;
-import mscheme.values.Pair;
+import mscheme.values.IPair;
 import mscheme.values.ValueTraits;
 
 
 final class Lambda
-    extends CheckedSyntax
+    extends CheckedTranslator
 {
     public final static String CVS_ID
         = "$Id$";
 
 
-    final static Syntax INSTANCE = new Lambda();
+    final static ITranslator INSTANCE = new Lambda();
 
     private Lambda()
     {
@@ -54,13 +48,13 @@ final class Lambda
 
     protected Object checkedTranslate(
         StaticEnvironment compilationEnv,
-        List              arguments
+        IList              arguments
     ) throws SchemeException
     {
         Object rawFormals = arguments.getHead();
-        List   body       = arguments.getTail();
+        IList   body       = arguments.getTail();
 
-        final List  formals;
+        final IList  formals;
         final Arity arity;
 
         if (ValueTraits.isList(rawFormals))
@@ -83,11 +77,11 @@ final class Lambda
 
             Object current = rawFormals;
             int    minArity = 0;
-            List   result  = Empty.create();
+            IList   result  = ListFactory.create();
 
             while (ValueTraits.isPair(current))
             {
-                Pair currentPair = ValueTraits.toPair(current);
+                IPair currentPair = ValueTraits.toPair(current);
 
                 ++minArity;
                 result  = ListFactory.prepend(currentPair.getFirst(), result);

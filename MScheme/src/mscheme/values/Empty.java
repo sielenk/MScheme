@@ -26,27 +26,23 @@ import java.io.Writer;
 import mscheme.environment.StaticEnvironment;
 
 import mscheme.exceptions.CantCompileException;
+import mscheme.exceptions.ListExpected;
 import mscheme.exceptions.PairExpected;
 
 
 public final class Empty
-    extends ValueDefaultImplementations
-    implements List, Outputable
+    implements IList, IOutputable, ICompileable
 {
     public final static String CVS_ID
         = "$Id$";
 
 
-    private final static Empty    INSTANCE = new Empty();
+    public final static Empty INSTANCE = new Empty();
+
     private final static Object[] ARRAY    = new Object[0];
 
     private Empty()
     { }
-
-    public static Empty create()
-    {
-        return INSTANCE;
-    }
 
 
     // specialisation of ValueImplementation
@@ -56,7 +52,7 @@ public final class Empty
         return true;
     }
 
-    public List toList()
+    public IList toList()
     {
         return this;
     }
@@ -64,12 +60,22 @@ public final class Empty
 
     // implementation of List
 
+    public boolean isValid()
+    {
+        return true;
+    }
+
+    public IList validate() throws ListExpected
+    {
+        return this;
+    }
+
     public boolean isEmpty()
     {
         return true;
     }
 
-    public List getCopy()
+    public IList getCopy()
     {
         return this;
     }
@@ -79,7 +85,7 @@ public final class Empty
         return 0;
     }
 
-    public List getReversed()
+    public IList getReversed()
     {
         return this;
     }
@@ -90,7 +96,7 @@ public final class Empty
         throw new PairExpected(this);
     }
 
-    public List getTail()
+    public IList getTail()
         throws PairExpected
     {
         throw new PairExpected(this);

@@ -1,4 +1,4 @@
-/* A base class for compound Scheme objects which handles constness.
+/* The interface required by Scheme syntax forms.
    Copyright (C) 2001  Marvin H. Sielenkemper
 
 This file is part of MScheme.
@@ -18,42 +18,29 @@ along with MScheme; see the file COPYING. If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
 
-package mscheme.values;
+package mscheme.syntax;
 
-import mscheme.exceptions.ImmutableException;
+import mscheme.environment.StaticEnvironment;
+
+import mscheme.exceptions.SchemeException;
+
+import mscheme.values.IList;
 
 
 /**
- * 
+ * This interface is used to compile lists. Due to the special
+ * nature of syntactic keywords in Scheme - they are not reserved -
+ * their bindings are stored in the static environment.
  */
-abstract class Compound
-    extends ValueDefaultImplementations
+public interface ITranslator
 {
     /** The CVS id of the file containing this class. */
-    public final static String CVS_ID
+    String CVS_ID
         = "$Id$";
 
 
-    private final boolean _isConst;
-
-    protected Compound(boolean isConst)
-    {
-        _isConst = isConst;
-    }
-
-    protected final void modify()
-        throws ImmutableException
-    {
-        if (_isConst)
-        {
-            throw new ImmutableException(this);
-        }
-    }
-
-    protected abstract Object getConstCopy();
-
-    public final Object getConst()
-    {
-        return _isConst ? this : getConstCopy();
-    }
+    Object translate(
+        StaticEnvironment compilationEnv,
+        IList              arguments
+    ) throws SchemeException;
 }

@@ -33,7 +33,7 @@ public abstract class Function
         = "$Id$";
 
 
-    public final static int checkArguments(Arity arity, List arguments)
+    public final static int checkArguments(Arity arity, IList arguments)
         throws SchemeException
     {
         int len = arguments.getLength();
@@ -48,6 +48,6 @@ public abstract class Function
 
 
     // abstract function interface
-    public abstract Object call(Registers state, List arguments)
+    public abstract Object call(Registers state, IList arguments)
 		throws SchemeException;
 }

@@ -20,25 +20,24 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.syntax;
 
-import mscheme.Syntax;
 import mscheme.environment.Reference;
 import mscheme.environment.StaticEnvironment;
 import mscheme.exceptions.SchemeException;
 import mscheme.util.Arity;
-import mscheme.values.List;
+import mscheme.values.IList;
 import mscheme.values.ListFactory;
 import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
 
 final class Define
-    extends CheckedSyntax
+    extends CheckedTranslator
 {
     public final static String CVS_ID
         = "$Id$";
 
 
-    final static Syntax INSTANCE = new Define();
+    final static ITranslator INSTANCE = new Define();
 
     private Define()
     {
@@ -51,7 +50,7 @@ final class Define
 
     protected Object checkedTranslate(
         StaticEnvironment compilationEnv,
-        List              arguments
+        IList              arguments
     ) throws SchemeException
     {
         if (ValueTraits.isPair(arguments.getHead()))
@@ -60,7 +59,7 @@ final class Define
             // -> (define f (lambda (x y) (+ x y)))
             Symbol symbol  = ValueTraits.toSymbol(ValueTraits.toPair(arguments.getHead()).getFirst ());
             Object formals = ValueTraits.toPair(arguments.getHead()).getSecond();
-            List   body    = arguments.getTail();
+            IList   body    = arguments.getTail();
 
             Reference ref = compilationEnv.define(symbol);
             compilationEnv.setStateDefinitionBody(symbol);

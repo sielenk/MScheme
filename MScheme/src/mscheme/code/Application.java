@@ -23,17 +23,16 @@ package mscheme.code;
 import mscheme.exceptions.SchemeException;
 import mscheme.exceptions.CompileError;
 
-import mscheme.machine.Invokeable;
+import mscheme.machine.IInvokeable;
 import mscheme.machine.Registers;
 
-import mscheme.values.Empty;
-import mscheme.values.List;
+import mscheme.values.IList;
 import mscheme.values.ListFactory;
 import mscheme.values.ValueTraits;
 
 
 public final class Application
-    implements Forceable, Reduceable
+    implements IForceable, IReduceable
 {
     public final static String CVS_ID
         = "$Id$";
@@ -70,13 +69,13 @@ public final class Application
 	{
 		return prepareNext(
 			registers,
-			Empty.create(),
+			ListFactory.create(),
 			_application.length - 1);
 	}
 	
-	public static Invokeable createCall(final List done)
+	public static IInvokeable createCall(final IList done)
 	{
-		return new Invokeable()
+		return new IInvokeable()
 		{
 			public final static String CVS_ID
 				= "$Id$";
@@ -90,11 +89,11 @@ public final class Application
 		};		
 	}
 
-	private Invokeable createPush(
-		final List done,
+	private IInvokeable createPush(
+		final IList done,
 		final int  index)
 	{
-		return new Invokeable()
+		return new IInvokeable()
 		{
 			public final static String CVS_ID
 				= "$Id$";
@@ -113,7 +112,7 @@ public final class Application
 
 	private Object prepareNext(
 		Registers  registers,
-		final List done,
+		final IList done,
 		final int  index
 	)
 	{
