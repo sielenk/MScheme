@@ -13,11 +13,11 @@ import MScheme.exceptions.*;
 
 
 public final class Empty
-            extends ValueDefaultImplementations
-            implements List
+    extends ValueDefaultImplementations
+    implements List
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     private final static Empty INSTANCE = new Empty();
@@ -34,7 +34,7 @@ public final class Empty
     // specialisation of ValueImplementation
 
     public void write(Writer destination)
-    throws IOException
+        throws IOException
     {
         destination.write("()");
     }
@@ -68,19 +68,19 @@ public final class Empty
     }
 
     public Value getHead()
-    throws PairExpected
+        throws PairExpected
     {
         throw new PairExpected(this);
     }
 
     public List getTail()
-    throws PairExpected
+        throws PairExpected
     {
         throw new PairExpected(this);
     }
 
     public Code getCode(StaticEnvironment compilationEnv)
-    throws CantCompileException
+        throws CantCompileException
     {
         throw new CantCompileException(this);
     }

@@ -18,10 +18,10 @@ import MScheme.exceptions.InvalidVectorIndexException;
 
 
 class EofValue
-            extends ValueDefaultImplementations
+    extends ValueDefaultImplementations
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     public final static EofValue INSTANCE = new EofValue();
@@ -30,7 +30,7 @@ class EofValue
     { }
 
     public void write(Writer dest)
-    throws IOException
+        throws IOException
     {
         dest.write("[eof]");
     }
@@ -38,10 +38,10 @@ class EofValue
 
 
 public class InputPort
-            extends ValueDefaultImplementations
+    extends ValueDefaultImplementations
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     public final static int   EOF       = -1;
@@ -66,13 +66,13 @@ public class InputPort
     }
 
     public static InputPort create(ScmString filename)
-    throws OpenException
+        throws OpenException
     {
         return create(filename.getJavaString());
     }
 
     public static InputPort create(String filename)
-    throws OpenException
+        throws OpenException
     {
         try
         {
@@ -95,7 +95,7 @@ public class InputPort
     // specialisation of Port
 
     public void write(Writer destination)
-    throws IOException
+        throws IOException
     {
         destination.write("[input port]");
     }
@@ -112,7 +112,7 @@ public class InputPort
 
 
     public void close()
-    throws CloseException
+        throws CloseException
     {
         try
         {
@@ -128,7 +128,7 @@ public class InputPort
     // input port
 
     public Value read()
-    throws ReadException, ParseException
+        throws ReadException, ParseException
     {
         try
         {
@@ -156,7 +156,7 @@ public class InputPort
     }
 
     private int skipWSread()
-    throws IOException
+        throws IOException
     {
         boolean inComment = false;
 
@@ -191,7 +191,7 @@ public class InputPort
     }
 
     private char readNoEof()
-    throws IOException, ParseException
+        throws IOException, ParseException
     {
         int c = _reader.read();
         if (c == EOF)
@@ -205,7 +205,7 @@ public class InputPort
     }
 
     private ScmChar parseChar()
-    throws IOException, ParseException
+        throws IOException, ParseException
     {
         int c = readNoEof();
 
@@ -258,7 +258,7 @@ public class InputPort
     }
 
     private Value[] parseVector(int index)
-    throws IOException, ParseException
+        throws IOException, ParseException
     {
         int la = skipWSread();
 
@@ -287,7 +287,7 @@ public class InputPort
     }
 
     private Value parseList()
-    throws IOException, ParseException
+        throws IOException, ParseException
     {
         int la = skipWSread();
 
@@ -337,7 +337,7 @@ public class InputPort
     }
 
     private ScmString parseString()
-    throws IOException, ParseException
+        throws IOException, ParseException
     {
         StringBuffer buf = new StringBuffer();
 
@@ -393,7 +393,7 @@ public class InputPort
 
 
     private Value parseNumOrSym(char initial)
-    throws IOException, ParseException
+        throws IOException, ParseException
     {
         StringBuffer buf = new StringBuffer();
         initial = Character.toLowerCase(initial);
@@ -479,7 +479,7 @@ checkNumber:
     }
 
     private Value parseDatum()
-    throws IOException, ParseException
+        throws IOException, ParseException
     {
         int la1 = skipWSread();
 
@@ -561,7 +561,7 @@ checkNumber:
 
 
     public int readChar()
-    throws ReadException
+        throws ReadException
     {
         try
         {
@@ -574,7 +574,7 @@ checkNumber:
     }
 
     public Value readScmChar()
-    throws ReadException
+        throws ReadException
     {
         int c = readChar();
 
@@ -585,7 +585,7 @@ checkNumber:
     }
 
     public int peekChar()
-    throws ReadException
+        throws ReadException
     {
         try
         {
@@ -603,7 +603,7 @@ checkNumber:
     }
 
     public Value peekScmChar()
-    throws ReadException
+        throws ReadException
     {
         int c = peekChar();
 
