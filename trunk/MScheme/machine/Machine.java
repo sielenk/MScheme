@@ -141,101 +141,7 @@ public class Machine
     }
 
     public Machine()
-    {
-        this(DynamicEnvironment.getEmpty());
-
-        DynamicEnvironment dynamicBindings
-            = getEnvironment();
-
-        StaticEnvironment staticBindings
-            = getEnvironment().getStatic();
-
-        try {
-            dynamicBindings.define(
-                ValueFactory.createSymbol("car"),
-                ValueFactory.createFunction("Car")
-            );
-            dynamicBindings.define(
-                ValueFactory.createSymbol("cdr"),
-                ValueFactory.createFunction("Cdr")
-            );
-            dynamicBindings.define(
-                ValueFactory.createSymbol("cons"),
-                ValueFactory.createFunction("Cons")
-            );
-            dynamicBindings.define(
-                ValueFactory.createSymbol(">"),
-                ValueFactory.createFunction("NumberGT")
-            );
-            dynamicBindings.define(
-                ValueFactory.createSymbol(">="),
-                ValueFactory.createFunction("NumberGE")
-            );
-            dynamicBindings.define(
-                ValueFactory.createSymbol("<="),
-                ValueFactory.createFunction("NumberLE")
-            );
-            dynamicBindings.define(
-                ValueFactory.createSymbol("<"),
-                ValueFactory.createFunction("NumberLT")
-            );
-            dynamicBindings.define(
-                ValueFactory.createSymbol("+"),
-                ValueFactory.createFunction("Plus")
-            );
-            dynamicBindings.define(
-                ValueFactory.createSymbol("-"),
-                ValueFactory.createFunction("Minus")
-            );
-            dynamicBindings.define(
-                ValueFactory.createSymbol("*"),
-                ValueFactory.createFunction("Times")
-            );
-
-            staticBindings.defineSyntax(
-                ValueFactory.createSymbol("quote"),
-                SyntaxFactory.getQuoteToken()
-            );
-            staticBindings.defineSyntax(
-                ValueFactory.createSymbol("cond"),
-                SyntaxFactory.getCondToken()
-            );
-            staticBindings.defineSyntax(
-                ValueFactory.createSymbol("if"),
-                SyntaxFactory.getIfToken()
-            );
-            staticBindings.defineSyntax(
-                ValueFactory.createSymbol("begin"),
-                SyntaxFactory.getBeginToken()
-            );
-            staticBindings.defineSyntax(
-                ValueFactory.createSymbol("lambda"),
-                SyntaxFactory.getLambdaToken()
-            );
-            staticBindings.defineSyntax(
-                ValueFactory.createSymbol("let"),
-                SyntaxFactory.getLetToken()
-            );
-            staticBindings.defineSyntax(
-                ValueFactory.createSymbol("define"),
-                SyntaxFactory.getDefineToken()
-            );
-            staticBindings.defineSyntax(
-                ValueFactory.createSymbol("set!"),
-                SyntaxFactory.getSetToken()
-            );
-        }
-        catch (SyntaxException e) {
-            throw new RuntimeException(
-                "unexpected SyntaxException in Machine.Machine()"
-            );
-        }
-        catch (FunctionNotFoundException e) {
-            throw new RuntimeException(
-                "unexpected FunctionNotFoundException in Machine.Machine()"
-            );
-        }
-    }
+    { this(DynamicEnvironment.getSchemeReportEnvironment()); }
 
 
     public DynamicEnvironment getEnvironment()
@@ -255,6 +161,13 @@ public class Machine
     { return _continuation.getFunction(); }
     
     
+    public Code handleDynamicWind(
+        Function before,
+        Function thunk,
+        Function after
+    ) throws SchemeException
+    { return WindContinuation.handle(this, before, thunk, after); }
+
     public Code handleApplication(CodeList application)
     { return PushContinuation.handle(this, application); }
     
