@@ -37,7 +37,7 @@ abstract class CheckedSyntax
     implements Syntax
 {
     public final static String id
-        = "$Id";
+        = "$Id$";
 
     private final Arity _arity;
 
