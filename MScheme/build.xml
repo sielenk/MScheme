@@ -1,0 +1,91 @@
+<project name="MScheme" default="all">
+  <property file="${basedir}/build.properties"/>
+  <property name="srcdir"      value="${basedir}/.."          />
+  <property name="classdir"    value="${basedir}/classes"     />
+  <property name="docdir"      value="${basedir}/doc/javadoc" />
+  <property name="schemedir"   value="${basedir}"             />
+  <property name="jarname"     value="MScheme.jar"            />
+
+  <target name="init">
+    <uptodate property="uptodate.Init"
+              targetfile="${srcdir}/MScheme/Init.java">
+      <srcfiles dir="${schemedir}" includes="*.scm"/>
+    </uptodate>
+
+    <uptodate property="uptodate.BuiltinTable"
+              targetfile="${srcdir}/MScheme/values/functions/BuiltinTable.java">
+      <srcfiles dir="${srcdir}/MScheme/values/functions" 
+                includes="ParseBuiltins.java,Builtins.java"/>
+    </uptodate>
+  </target>
+
+  <target name="updateInit" depends="init" unless="uptodate.Init">
+    <exec executable="mkinit.pl" output="${srcdir}/MScheme/Init.java">
+      <arg value="bootstrap.scm"/>
+      <arg value="rep.scm"/>
+    </exec>
+    <delete file="${classdir}/MScheme/Init.class"/>
+  </target>
+
+  <target name="updateBuiltin" depends="init" unless="uptodate.BuiltinTable">
+    <copy
+      file="${srcdir}/MScheme/values/functions/BuiltinTable.java.empty"
+      tofile="${srcdir}/MScheme/values/functions/BuiltinTable.java"
+      overwrite="yes"/>
+  </target>
+
+  <target name="compileMScheme" depends="init,updateInit,updateBuiltin">
+    <mkdir dir="${classdir}"/>
+    <javac srcdir="${srcdir}"
+           destdir="${classdir}"
+           classpath="${classdir}"
+           includes="MScheme/**/*.java"
+           debug="on"/>
+  </target>
+
+  <target name="compileBuiltin" depends="compileMScheme" unless="uptodate.BuiltinTable">
+    <java classname="MScheme.values.functions.ParseBuiltins"
+          classpath="${classdir}"
+          output="${srcdir}/MScheme/values/functions/BuiltinTable.java"/>
+    <delete file="${classdir}/MScheme/values/functions/BuiltinTable.class"/>
+    <javac srcdir="${srcdir}"
+           destdir="${classdir}"
+           classpath="${classdir}"
+           includes="MScheme/values/functions/BuiltinTable.java"
+           debug="on"/>
+  </target>
+
+  <target name="compile" depends="compileMScheme,compileBuiltin"/>
+
+  <target name="check" depends="compile">
+    <junit>
+      <classpath>
+        <pathelement location="${classdir}"/>
+        <pathelement path="${java.class.path}"/>
+      </classpath>
+
+      <formatter type="plain"/>
+
+      <test name="MScheme.util.TestArity"/>
+
+      <test name="MScheme.values.TestList"/>
+      <test name="MScheme.values.TestInputPort"/>
+
+      <test name="MScheme.environment.TestEnvironment"/>
+
+      <test name="MScheme.tests.TestR5RS"/>
+      <test name="MScheme.tests.TestMachine"/>
+      <test name="MScheme.tests.TestValue"/>
+      <test name="MScheme.tests.TestBugs"/>
+    </junit>
+  </target>
+
+  <target name="jar" depends="compile">
+    <jar jarfile="${classdir}/${jarname}"
+         basedir="${classdir}/MScheme"
+         excludes="**/Test*.class"
+    />
+  </target>
+
+  <target name="all" depends="compile,check,jar"/>
+</project>

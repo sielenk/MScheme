@@ -27,8 +27,7 @@ import MScheme.values.ScmBoolean;
 
 import MScheme.syntax.SequenceTags;
 
-import MScheme.exceptions.SymbolNotFoundException;
-import MScheme.exceptions.UnexpectedSyntax;
+import MScheme.exceptions.CompileError;
 
 import MScheme.machine.Continuation;
 import MScheme.machine.Registers;
@@ -67,7 +66,7 @@ public final class Sequence
 
     public static Code create(Code[] sequence)
     {
-    	return create(TAG_BEGIN, sequence);
+        return create(TAG_BEGIN, sequence);
     }
 
 
@@ -139,7 +138,7 @@ public final class Sequence
     }
 
     public Code force()
-        throws SymbolNotFoundException, UnexpectedSyntax
+        throws CompileError
     {
         CodeArray.force(_sequence);
         return this;

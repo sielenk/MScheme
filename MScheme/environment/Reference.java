@@ -24,6 +24,7 @@ import MScheme.Code;
 import MScheme.Value;
 
 import MScheme.exceptions.RuntimeError;
+import MScheme.exceptions.CompileError;
 import MScheme.exceptions.SymbolNotFoundException;
 import MScheme.exceptions.UnexpectedSyntax;
 
@@ -47,9 +48,13 @@ public abstract class Reference
         _symbol = symbol;
     }
 
-    static Reference create(Symbol key, StaticEnvironment env)
+    static Reference create(
+        Symbol            key,
+        StaticEnvironment env,
+        boolean           restricted
+    )
     {
-        return new DelayedReference(key, env);
+        return new DelayedReference(key, env, restricted);
     }
 
     static Reference create(Symbol key, int level, int index)
@@ -72,10 +77,10 @@ public abstract class Reference
     abstract int getIndex();
 
     public abstract Reference forceRef()
-        throws SymbolNotFoundException, UnexpectedSyntax;
+        throws CompileError;
 
     public final Code force()
-        throws SymbolNotFoundException, UnexpectedSyntax
+        throws CompileError
     {
         return forceRef();
     }
@@ -98,12 +103,18 @@ final class DelayedReference
 
 
     private final StaticEnvironment _env;
+    private final boolean           _restricted;
 
 
-    DelayedReference(Symbol key, StaticEnvironment env)
+    DelayedReference(
+        Symbol            key,
+        StaticEnvironment env,
+        boolean           restricted
+    )
     {
         super(key);
-        _env = env;
+        _env        = env;
+        _restricted = restricted;
     }
 
 
@@ -123,9 +134,9 @@ final class DelayedReference
 
 
     public Reference forceRef()
-        throws SymbolNotFoundException, UnexpectedSyntax
+        throws CompileError
     {
-        return _env.getReferenceFor(getSymbol());
+        return _env.getReferenceFor(getSymbol(), _restricted);
     }
 }
 

@@ -61,10 +61,15 @@ public class StaticEnvironment
 
     // ***********************************************************************
 
+    private final static int OPEN     = 0;
+    private final static int DEF_BODY = 1;
+    private final static int CLOSED   = 2;
+
     private StaticEnvironment _parent;
     private Hashtable         _bindings;
     private int               _level;
     private int               _numberOfReferences;
+    private int               _state;
 
     // *** constructors ******************************************************
 
@@ -79,6 +84,7 @@ public class StaticEnvironment
         _bindings = new Hashtable();
         _level    = (parent == null) ? 0 : (parent.getLevel() + 1);
         _numberOfReferences = 0;
+        _state              = OPEN;
     }
 
 
@@ -146,9 +152,71 @@ public class StaticEnvironment
 
     // *** instance access ***************************************************
 
+    public void setStateOpen(Value v)
+        throws CompileError
+    {
+        switch (_state)
+        {
+        case OPEN:
+            throw new CompileError(
+                v,
+                "no nested definitions"
+            );
+
+        case DEF_BODY:
+            _state = OPEN;
+            break;
+
+        case CLOSED:
+            throw new CompileError(
+                v,
+                "environment already closed (1)"
+            );
+        }
+    }
+
+    public void setStateDefinitionBody(Value v)
+        throws CompileError
+    {
+        switch (_state)
+        {
+        case OPEN:
+            _state = DEF_BODY;
+            break;
+
+        case DEF_BODY:
+            throw new CompileError(
+                v,
+                "no nested definitions"
+            );
+
+        case CLOSED:
+            throw new CompileError(
+                v,
+                "environment already closed (2)"
+            );
+        }
+    }
+
+    public void setStateClosed()
+    {
+        if ((_state == OPEN) && (getLevel() > 0))
+        {
+            _state = CLOSED;
+        }
+    }
+
     public Reference define(Symbol symbol)
         throws CompileError
     {
+        if (_state != OPEN)
+        {
+            throw new CompileError(
+                symbol,
+                "environment already closed (3)"
+            );
+        }
+
         try
         {
             String    key = symbol.getJavaString();
@@ -225,7 +293,7 @@ public class StaticEnvironment
 
         if ((result == null) || (result instanceof Reference))
         {
-            return Reference.create(key, this);
+            return Reference.create(key, this, _state == DEF_BODY);
         }
 
         return result;
@@ -268,17 +336,34 @@ public class StaticEnvironment
         }
     }
 
-    public Reference getReferenceFor(Symbol key)
-        throws SymbolNotFoundException, UnexpectedSyntax
+    public Reference getReferenceFor(Symbol key, boolean restricted)
+        throws CompileError
     {
         try
         {
-            return (Reference)lookup(key);
+            Reference result = (Reference)lookup(key);
+
+            if (
+                restricted
+                && (result.getLevel() == getLevel())
+                && (getLevel() > 0) // and again: global is special
+            )
+            {
+                throw new CompileError(key, "may not be used here");
+            }
+
+            return result;
         }
         catch (ClassCastException e)
         {
             throw new UnexpectedSyntax(key);
         }
+    }
+
+    public Reference getReferenceFor(Symbol key)
+        throws CompileError
+    {
+        return getReferenceFor(key, false);
     }
 
     public boolean isBound(Symbol key)

@@ -57,6 +57,8 @@ public final class ProcedureCall
         List              arguments
     ) throws SchemeException
     {
+        compilationEnv.setStateClosed();
+
         Code[] compiledList = arguments.getCompiledArray(compilationEnv, 1);
 
         compiledList[0] = _head.getCompiled(compilationEnv);

@@ -92,8 +92,8 @@ final class ContinuationFunction
         final int numberOfLeaveThunks = leaveSp - leaveStart;
         final int numberOfEnterThunks = enterStart - enterSp;
 
-	Code[] resultSequence = new Code[
-		numberOfLeaveThunks + numberOfEnterThunks + 1
+        Code[] resultSequence = new Code[
+            numberOfLeaveThunks + numberOfEnterThunks + 1
         ];
 
         System.arraycopy(

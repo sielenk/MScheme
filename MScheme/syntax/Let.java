@@ -69,7 +69,7 @@ final class Let
             }
             // named let
             // (let <var> ((<var> <init>) ...) <body>)
-            name     = arguments.getHead().toSymbol();
+            name      = arguments.getHead().toSymbol();
             arguments = arguments.getTail();
         }
         else

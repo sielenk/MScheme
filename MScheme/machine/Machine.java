@@ -148,7 +148,7 @@ public final class Machine
             _environment.define(
                 Symbol.create("current-input-port"),
                 new ValueThunk()
-		        { protected Value checkedCall() { return _stdin; } }
+                { protected Value checkedCall() { return _stdin; } }
             );
 
             _environment.define(
@@ -168,13 +168,13 @@ public final class Machine
             _environment.define(
                 Symbol.create("current-output-port"),
                 new ValueThunk()
-		        { protected Value checkedCall() { return _stdout; } }
+                { protected Value checkedCall() { return _stdout; } }
             );
 
             _environment.define(
                 Symbol.create("reset-output-port"),
                 new UnaryValueFunction()
-	            {
+                {
                     protected Value checkedCall(Value argument)
                         throws TypeError
                     {
@@ -188,37 +188,37 @@ public final class Machine
             _environment.define(
                 Symbol.create("current-error-handler"),
                 new ValueThunk()
-		        {
-			        protected Value checkedCall()
-				    {
+                {
+                    protected Value checkedCall()
+                    {
                         if (_errorHandler != null)
-	                    {
-	                        return _errorHandler;
-		                }
-		                return ScmBoolean.createFalse();
-				    }
-				}
-			);
+                        {
+                            return _errorHandler;
+                        }
+                        return ScmBoolean.createFalse();
+                    }
+                }
+            );
 
             _environment.define(
                 Symbol.create("reset-error-handler"),
                 new UnaryValueFunction()
-		        {
+                {
                     protected Value checkedCall(Value argument)
                         throws TypeError
                     {
                         Value oldErrorHandler = _errorHandler;
 
-		                _errorHandler =
-				            argument.isTrue()
-			                ? argument.toFunction()
-					        : null;
+                        _errorHandler =
+                            argument.isTrue()
+                            ? argument.toFunction()
+                            : null;
 
                         if (oldErrorHandler != null)
-	                    {
-	                        return oldErrorHandler;
-		                }
-		                return ScmBoolean.createFalse();
+                        {
+                            return oldErrorHandler;
+                        }
+                        return ScmBoolean.createFalse();
                     }
                 }
             );
@@ -231,14 +231,14 @@ public final class Machine
             _environment.define(
                 Symbol.create("ticker"),
                 new ValueThunk()
-		        {
-			        protected Value checkedCall() 
+                {
+                    protected Value checkedCall() 
                     {
-			            int t = _ticker;
-				        _ticker = 0;
-			            return ScmNumber.create(t);
-				    }
-				}
+                        int t = _ticker;
+                        _ticker = 0;
+                        return ScmNumber.create(t);
+                    }
+                }
             );
 
             evaluate(
@@ -306,7 +306,7 @@ public final class Machine
             catch (SchemeException error)
             {
                 if (_errorHandler != null)
-		        {
+                {
                     List errorValue = 
                         ListFactory.create(
                             error.getCauseValue(),
@@ -318,23 +318,23 @@ public final class Machine
                         );
 
                     // Avoid endless loop if the
-		            // handler is buggy:
+                    // handler is buggy:
                     Function handler = _errorHandler;
-		            _errorHandler = null;
+                    _errorHandler = null;
 
                     current = handler.call(
-		                state,
-				        ListFactory.create(
-					        errorValue
-					    )
-				    );
-			    }
-			    else
-			    {
-			        throw error;
-		        }
+                        state,
+                        ListFactory.create(
+                            errorValue
+                        )
+                    );
+                }
+                else
+                {
+                    throw error;
+                }
             }
-	        ++_ticker;
+            ++_ticker;
         }
 
         return stop.getResult();

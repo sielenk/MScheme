@@ -372,6 +372,7 @@ public abstract class ValueDefaultImplementations
     public Code getCompiled(StaticEnvironment compilationEnv)
         throws SchemeException
     {
+        compilationEnv.setStateClosed();
         return getConst();
     }
 

@@ -41,12 +41,14 @@ public final class ApplyContinuation
 
     private final List _arguments;
 
+
     private ApplyContinuation(
         Registers state,
         List      arguments
     )
     {
         super(state);
+//      setEnvironment(null); // Evlis Tail Recursion [Cli:1998]
         _arguments = arguments;
     }
 

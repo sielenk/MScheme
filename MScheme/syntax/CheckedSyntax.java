@@ -46,6 +46,12 @@ abstract class CheckedSyntax
         _arity = arity;
     }
 
+    protected static void arityError(List arguments, Arity arity)
+        throws SyntaxArityError
+    {
+        throw new SyntaxArityError(arguments, arity);
+    }
+
     protected void arityError(List arguments)
         throws SyntaxArityError
     {
@@ -64,7 +70,13 @@ abstract class CheckedSyntax
             arityError(arguments);
         }
 
+        preTranslate(compilationEnv);
         return checkedTranslate(compilationEnv, arguments);
+    }
+
+    protected void preTranslate(StaticEnvironment compilationEnv)
+    {
+        compilationEnv.setStateClosed();
     }
 
     protected abstract Code checkedTranslate(

@@ -54,12 +54,12 @@ abstract class Reducer
         else
         {
             Value result = list.getHead();
-	    
-	        for (
+        
+            for (
                 List tail = list.getTail();
                 !tail.isEmpty();
                 tail   = tail.getTail()
-		    )
+            )
             {
                 result = combine(result, tail.getHead());
             }
@@ -72,12 +72,12 @@ abstract class Reducer
         throws RuntimeError, TypeError
     {
         Value result = _initial;
-	
-	    for (
+    
+        for (
             List tail = list;
             !tail.isEmpty();
             tail   = tail.getTail()
-	    )
+        )
         {
             result = combine(result, tail.getHead());
         }

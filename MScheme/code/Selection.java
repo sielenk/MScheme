@@ -23,8 +23,7 @@ package MScheme.code;
 import MScheme.Code;
 import MScheme.Value;
 
-import MScheme.exceptions.SymbolNotFoundException;
-import MScheme.exceptions.UnexpectedSyntax;
+import MScheme.exceptions.CompileError;
 
 import MScheme.machine.Continuation;
 import MScheme.machine.Registers;
@@ -66,7 +65,7 @@ public final class Selection
         new Continuation(state)
         {
             public final static String id
-            = "$Id$";
+                = "$Id$";
 
 
             protected Code executionStep(
@@ -88,7 +87,7 @@ public final class Selection
     }
 
     public Code force()
-        throws SymbolNotFoundException, UnexpectedSyntax
+        throws CompileError
     {
         _test    = _test   .force();
         _onTrue  = _onTrue .force();

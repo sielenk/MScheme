@@ -26,34 +26,34 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public final class AwtMain
-	implements WindowListener
+    implements WindowListener
 {
     public final static String id
         = "$Id$";
 
 
-	public void windowDeiconified(WindowEvent e) { }
-	public void windowIconified  (WindowEvent e) { }
+    public void windowDeiconified(WindowEvent e) { }
+    public void windowIconified  (WindowEvent e) { }
 
-	public void windowActivated  (WindowEvent e) { }
-	public void windowDeactivated(WindowEvent e) { }
+    public void windowActivated  (WindowEvent e) { }
+    public void windowDeactivated(WindowEvent e) { }
 
-	public void windowOpened(WindowEvent e) { }
-	public void windowClosed(WindowEvent e) 
-	{
-		System.exit(0);
-	}
+    public void windowOpened(WindowEvent e) { }
+    public void windowClosed(WindowEvent e) 
+    {
+        System.exit(0);
+    }
 
-	public void windowClosing(WindowEvent e) 
-	{ }
+    public void windowClosing(WindowEvent e) 
+    { }
 
 
-	public static void main(String argv[])
-		throws Exception
-	{
+    public static void main(String argv[])
+        throws Exception
+    {
         final StdioFrame frame = new StdioFrame();
 
         frame.addWindowListener(new AwtMain());
         frame.show();
-	}
+    }
 }

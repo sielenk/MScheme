@@ -21,8 +21,7 @@ Boston, MA  02111-1307, USA. */
 package MScheme;
 
 import MScheme.exceptions.SchemeException;
-import MScheme.exceptions.SymbolNotFoundException;
-import MScheme.exceptions.UnexpectedSyntax;
+import MScheme.exceptions.CompileError;
 
 import MScheme.machine.Registers;
 
@@ -63,5 +62,5 @@ public interface Code
      * Does the final Symbol lookup.
      */
     Code force()
-        throws SymbolNotFoundException, UnexpectedSyntax;
+        throws CompileError;
 }

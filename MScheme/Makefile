@@ -132,23 +132,23 @@ SRC_TEST =	TestMScheme.java	\
 		values/TestInputPort.java	\
 		values/TestList.java
 
-PACKAGES =	MScheme			\
-		MScheme.code		\
-		MScheme.environment	\
-		MScheme.exceptions	\
-		MScheme.functions	\
-		MScheme.machine		\
-		MScheme.syntax		\
-		MScheme.util		\
-		MScheme.values		\
+PACKAGES =	MScheme				\
+		MScheme.values			\
+		MScheme.values.functions	\
+		MScheme.machine			\
+		MScheme.util			\
+		MScheme.exceptions		\
+		MScheme.environment		\
+		MScheme.syntax			\
+		MScheme.code			\
 		MScheme.tests
 
-JAVAC=javac -g
-# JAVAC=jikes -bootclasspath /usr/lib/java/jre/lib/rt.jar +P
-# JAVAC = $(GCJ) -W -Wall -C
+# JAVAC=javac -g
+JAVAC=jikes +P -bootclasspath /usr/lib/jdk1.1/lib/classes.zip
+# JAVAC=gcj -v -W -Wall -C
 
 run: all
-	time java -server MScheme.TestMScheme
+	time java MScheme.TestMScheme
 
 all: Init.java values/functions/BuiltinTable.java
 	$(JAVAC) `find . -name "*.java"`

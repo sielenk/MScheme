@@ -20,6 +20,10 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.tests;
 
+import junit.extensions.ExceptionTestCase;
+import junit.framework.TestCase;
+import junit.framework.TestSuite;
+
 import MScheme.exceptions.CompileError;
 import MScheme.exceptions.SchemeException;
 
@@ -66,24 +70,81 @@ public class TestBugs
         { }
     }
 
-    public void test_todo01()
+    public void test_2002_04_15a()
         throws SchemeException
     {
         // Internal definitions are not allowed after the
         // first expression.
+
+
         try {
             eval("(let () 1 (define x 2) x)");
             fail();
         }
         catch (CompileError e)
         { }
+
+        try {
+            eval("(let () 'a (define x 2) x)");
+            fail();
+        }
+        catch (CompileError e)
+        { }
+
+        try {
+            eval("(let ((a 1)) a (define x 2) x)");
+            fail();
+        }
+        catch (CompileError e)
+        { }
+
+        try {
+            eval("(let () (if 1 1 1) (define x 2) x)");
+            fail();
+        }
+        catch (CompileError e)
+        { }
     }
 
-    public void test_todo02()
+    public void test_2002_04_15ba()
         throws SchemeException
     {
-        // This still compiles. Calling f causes a
-        // runtime error if called ...
+        // no nested definitions
+        try {
+            eval("(define x (define y 3))");
+            fail();
+        }
+        catch (CompileError e)
+        { }
+    }
+
+    public void test_2002_04_15bb()
+        throws SchemeException
+    {
+        // no nested definitions
+        try {
+            eval("(lambda () (cons (define a 1) 2))");
+            fail();
+        }
+        catch (CompileError e)
+        { }
+    }
+
+    public void test_2002_04_15c()
+        throws SchemeException
+    {
+        try {
+            eval("(define (f)\n" +
+                 "  (define y 2)\n" +
+                 "  (define g (+ y 1))\n" +
+                 "  g\n" +
+                 "  y))"
+            );
+            fail();
+        }
+        catch (CompileError e)
+        { }
+
         try {
             eval("(define (f)\n" +
                  "  (define g (+ y 1))\n" +
@@ -91,6 +152,29 @@ public class TestBugs
                  "  g\n" +
                  "  y))"
             );
+            fail();
+        }
+        catch (CompileError e)
+        { }
+
+        try {
+            eval("(define (f)\n" +
+                 "  (define y 2)\n" +
+                 "  (define g (set! y 1))\n" +
+                 "  g\n" +
+                 "  y))"
+            );
+            fail();
+        }
+        catch (CompileError e)
+        { }
+    }
+
+    public void test_todo01()
+        throws SchemeException
+    {
+        try {
+            eval("(cons (define a 1) 2)");
             fail();
         }
         catch (CompileError e)

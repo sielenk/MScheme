@@ -29,10 +29,6 @@
                       (user-eval (list 'define sym val))))
        (user-load   (user-eval 'load)))
 
-  (define (cadr   x) (car (cdr           x  )))
-  (define (caddr  x) (car (cdr (cdr      x ))))
-  (define (cadddr x) (car (cdr (cdr (cdr x)))))
-
   (define error->cause        car)
   (define error->message      cadr)
   (define error->continuation caddr)

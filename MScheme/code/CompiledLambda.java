@@ -32,8 +32,7 @@ import MScheme.environment.DynamicEnvironment;
 import MScheme.exceptions.ListExpected;
 import MScheme.exceptions.PairExpected;
 import MScheme.exceptions.SchemeException;
-import MScheme.exceptions.SymbolNotFoundException;
-import MScheme.exceptions.UnexpectedSyntax;
+import MScheme.exceptions.CompileError;
 
 import MScheme.machine.Registers;
 import MScheme.machine.Result;
@@ -147,7 +146,7 @@ public final class CompiledLambda
     }
 
     public Code force()
-        throws SymbolNotFoundException, UnexpectedSyntax
+        throws CompileError
     {
         _compiledBody = _compiledBody.force();
         return this;
