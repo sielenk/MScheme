@@ -53,6 +53,14 @@ public abstract class ValueDefaultImplementations
         return false;
     }
 
+    /**
+     * @return <code>false</code>
+     */
+    public boolean isEmpty()
+    {
+        return false;
+    }
+
 
     // disjoint types (as in R5RS, 3.2)
 
