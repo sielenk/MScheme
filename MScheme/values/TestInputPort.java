@@ -82,13 +82,13 @@ public class TestInputPort
         );
         InputPort in = ValueFactory.createInputPort(source);
         
-        assert(in.read().eqv(ValueFactory.createCharacter('#')));
-        assert(in.read().eqv(ValueFactory.createCharacter('\\')));
-        assert(in.read().eqv(ValueFactory.createCharacter('"')));
-        assert(in.read().eqv(ValueFactory.createCharacter(' ')));
-        assert(in.read().eqv(ValueFactory.createCharacter('\n')));
-        assert(in.read().eqv(ValueFactory.createCharacter(' ')));
-        assert(in.read().eqv(ValueFactory.createCharacter('a')));
+        assert(in.read().eqv(ValueFactory.createChar('#')));
+        assert(in.read().eqv(ValueFactory.createChar('\\')));
+        assert(in.read().eqv(ValueFactory.createChar('"')));
+        assert(in.read().eqv(ValueFactory.createChar(' ')));
+        assert(in.read().eqv(ValueFactory.createChar('\n')));
+        assert(in.read().eqv(ValueFactory.createChar(' ')));
+        assert(in.read().eqv(ValueFactory.createChar('a')));
         assert(in.readChar() == InputPort.EOF);
     }
 
