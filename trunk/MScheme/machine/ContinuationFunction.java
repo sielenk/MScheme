@@ -15,7 +15,7 @@ import MScheme.functions.UnaryFunction;
  * Continuations are first class objects in scheme. They
  * seem to behave like unary functions. But if such a
  * function is called, continuations waiting to be invoked
- * are instead skipped.
+ * are skipped.
  */
 final class ContinuationFunction
     extends UnaryFunction
@@ -78,7 +78,7 @@ final class ContinuationFunction
     // implementation of UnaryFunction
 
     /**
-     *
+     * 
      *
      * @returns  the code created during the stack unwinding.
      */
