@@ -10,26 +10,23 @@ import MScheme.code.CodeList;
 import MScheme.exceptions.*;
 
 
-public abstract class Pair
+public final class Pair
     extends List
 {
     public final static String id
         = "$Id$";
 
 
-    protected Pair()
-    { }
-
     public static Pair create(Value first, Value second)
-    { return new MutablePair(first, second); }
+    { return new Pair(false, first, second); }
 
     public static Pair createConst(Value first, Value second)
-    { return new ConstPair(first.getConst(), second.getConst()); }
+    { return new Pair(true, first.getConst(), second.getConst()); }
 
 
     public final boolean isPair()
     { return true; }
-    
+
     public final Pair toPair()
     { return this; }
 
@@ -44,13 +41,19 @@ public abstract class Pair
                 (getSecond().equal(otherPair.getSecond()));
         }
         catch (ClassCastException e) { }
-        
+
         return false;
     }
-    
+
+
+    // implementation of Compound
+
+    public Value getConst()
+    { return isConst() ? this : createConst(getFirst(), getSecond()); }
+
 
     // implementation of List
-    
+
     public final boolean isEmpty()
     { return false; }
 
@@ -60,7 +63,7 @@ public abstract class Pair
     public final int safeGetLength()
     {
         int   result = 1;
-        
+
         Value tail = getSecond();
         for (
             ;
@@ -75,7 +78,7 @@ public abstract class Pair
 
     public final Value getHead()
     { return getFirst(); }
-    
+
     public final List getTail()
         throws ListExpected
     { return getSecond().toList(); }
@@ -102,92 +105,37 @@ public abstract class Pair
     }
 
 
-    // abstract interface of Pair
-    
-    public abstract Value getFirst();
-    
-    public abstract void setFirst(Value first)
-        throws ImmutableException;
-    
-    public abstract Value getSecond();
-
-    public abstract void setSecond(Value second)
-        throws ImmutableException;
-}
-
-
-final class ConstPair
-    extends Pair
-{
-    public final static String id
-        = "$Id";
-
-
-    private final Value _first;
-    private final Value _second;
-
-
-    ConstPair(Value first, Value second)
-    {
-        _first  = first;
-        _second = second;
-    }
-
-
     // implementation of Pair
-    
-    public Value getFirst()
-    { return _first; }
-    
-    public void setFirst(Value first)
-        throws ImmutableException
-    { throw new ImmutableException(this); }
-    
-    public Value getSecond()
-    { return _second; }    
-
-    public void setSecond(Value second)
-        throws ImmutableException
-    { throw new ImmutableException(this); }
-}
-
-
-final class MutablePair
-    extends Pair
-{
-    public final static String id
-        = "$Id$";
-
 
     private Value _first;
     private Value _second;
 
 
-    MutablePair(Value first, Value second)
+    private Pair(boolean isConst, Value first, Value second)
     {
+        super(isConst);
+
         _first  = first;
         _second = second;
     }
-
-
-    // specialisation of Value
-
-    public Value getConst()
-    { return createConst(_first, _second); }
-
-
-    // implementation of Pair
 
     public Value getFirst()
     { return _first; }
 
     public void setFirst(Value first)
         throws ImmutableException
-    { _first = first; }
+    {
+        modify();
+        _first = first;
+    }
 
     public Value getSecond()
     { return _second; }
 
     public void setSecond(Value second)
-    { _second = second; }
+        throws ImmutableException
+    {
+        modify();
+        _second = second;
+    }
 }
