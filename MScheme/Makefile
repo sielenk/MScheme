@@ -145,7 +145,7 @@ JAVAC=jikes -bootclasspath /usr/lib/java/jre/lib/rt.jar +P
 
 all: values/functions/BuiltinTable.java
 	$(JAVAC) `find . -name "*.java"`
-	time java junit.textui.TestRunner MScheme.TestMScheme
+	time java MScheme.TestMScheme
 
 values/functions/BuiltinTable.java: values/functions/ParseBuiltins.class values/functions/Builtins.class
 	java MScheme.values.functions.ParseBuiltins > values/functions/BuiltinTable.java
