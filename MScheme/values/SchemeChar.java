@@ -9,10 +9,13 @@ public final class SchemeChar
 {
     private char _character;
     
-    public SchemeChar(char c)
+    private SchemeChar(char c)
     { _character = c; }
-    
-    public char getChar()
+
+    public static SchemeChar create(char c)
+    { return new SchemeChar(c); }
+
+    public char getJavaChar()
     { return _character; }
 
     // specialisation of Value
@@ -40,7 +43,7 @@ public final class SchemeChar
         throws IOException
     {
         destination.write("#\\");
-        switch (getChar()) {
+        switch (getJavaChar()) {
         case ' ':
             destination.write("space");
             break;
@@ -50,13 +53,13 @@ public final class SchemeChar
             break;
             
         default:
-            destination.write(getChar());
+            destination.write(getJavaChar());
             break;
         }
     }
 
     public void display(Writer destination)
         throws IOException
-    { destination.write(getChar()); }
+    { destination.write(getJavaChar()); }
 }
 
