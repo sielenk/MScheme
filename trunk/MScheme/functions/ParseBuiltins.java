@@ -282,7 +282,12 @@ public class ParseBuiltins
     {
         Writer out = new OutputStreamWriter(System.out);
 
-        parseClass(Builtins.class, out);
+        parseClass(
+            argv.length > 0
+            ? Object.class
+            : Builtins.class,
+            out
+        );
 
         out.flush();
     }
