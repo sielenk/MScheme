@@ -22,6 +22,7 @@ package MScheme.syntax;
 
 import MScheme.Code;
 import MScheme.Syntax;
+import MScheme.Value;
 
 import MScheme.code.Application;
 
@@ -39,14 +40,14 @@ public final class ProcedureCall
         = "$Id$";
 
 
-    private final Code _head;
+    private final Value _head;
 
-    private ProcedureCall(Code head)
+    private ProcedureCall(Value head)
     {
         _head = head;
     }
 
-    public static ProcedureCall create(Code head)
+    public static ProcedureCall create(Value head)
     {
         return new ProcedureCall(head);
     }
@@ -56,18 +57,10 @@ public final class ProcedureCall
         List              arguments
     ) throws SchemeException
     {
-        Code[] argArray    = arguments.getCodeArray(compilationEnv);
-        Code[] application = new Code[argArray.length + 1];
-        
-        application[0] = _head;
-        System.arraycopy(
-            argArray,
-            0,
-            application,
-            1,
-            argArray.length
-        );
+        Code[] compiledList = arguments.getCodeArray(compilationEnv, 1);
 
-        return Application.create(application);
+        compiledList[0] = _head.getCode(compilationEnv);
+
+        return Application.create(compiledList);
     }
 }
