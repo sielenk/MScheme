@@ -80,7 +80,7 @@ public final class CompiledLambda
     public static CompiledLambda create(
         Arity             arity,
         StaticEnvironment compiledFormals,
-        CodeList          compiledBody
+        Code[]            compiledBody
     )
     {
         return create(arity, compiledFormals, Sequence.create(compiledBody));
@@ -92,14 +92,14 @@ public final class CompiledLambda
         List              body
     ) throws SchemeException
     {
-        return create(arity, compiledFormals, body.getCodeList(compiledFormals));
+        return create(arity, compiledFormals, body.getCodeArray(compiledFormals));
     }
 
     final class Closure
-                extends CheckedFunction
+        extends CheckedFunction
     {
         public final static String id
-        = "$Id$";
+            = "$Id$";
 
 
         private final Environment _enclosingEnvironment;

@@ -52,17 +52,25 @@ final class ContinuationFunction
         _continuation = continuation;
     }
 
-    private static CodeList dynamicWind(
+    private static Code dynamicWind(
         Continuation source,
         Continuation destination,
-        CodeList     tail
+        Value        result
     )
     {
-        CodeList       sequence = tail;
-        Continuation   from     = source;
-        Continuation   to       = destination;
-        Continuation[] stack    = new Continuation[Continuation.getLevel(from)];
-        int            sp       = 0;
+        // this leave stack grown up, since first encountered frames are
+        // left first
+        final int      leaveStart = 0;
+        int            leaveSp    = leaveStart;
+        Code[]         leaveStack = new Code[Continuation.getLevel(source)];
+        Continuation   from       = source;
+
+        // This enter stack grows down, since first encountered frames are
+        // entered last
+        final int      enterStart = Continuation.getLevel(destination);
+        int            enterSp    = enterStart;
+        Code[]         enterStack = new Code[Continuation.getLevel(destination)];
+        Continuation   to         = destination;
 
         while (from != to)
         {
@@ -71,23 +79,44 @@ final class ContinuationFunction
 
             if (fromLevel >= toLevel)
             {
-                stack[sp++] = from;
-                from        = from.getParent();
+                leaveSp = from.dynamicWindLeave(leaveStack, leaveSp);
+                from    = from.getParent();
             }
 
             if (toLevel >= fromLevel)
             {
-                sequence = to.dynamicWindEnter(sequence);
-                to       = to.getParent();
+                enterSp = to.dynamicWindEnter(enterStack, enterSp);
+                to      = to.getParent();
             }
         }
 
-        while (sp > 0)
-        {
-            sequence = stack[--sp].dynamicWindLeave(sequence);
-        }
+        final int numberOfLeaveThunks = leaveSp - leaveStart;
+        final int numberOfEnterThunks = enterStart - enterSp;
 
-        return sequence;
+	Code[] resultSequence = new Code[
+		numberOfLeaveThunks + numberOfEnterThunks + 1
+        ];
+
+        System.arraycopy(
+            leaveStack, 
+            leaveStart, 
+            resultSequence, 
+            0, 
+            numberOfLeaveThunks
+        );
+
+        System.arraycopy(
+            enterStack,
+            enterSp,
+            resultSequence,
+            numberOfLeaveThunks,
+            numberOfEnterThunks
+        );
+        
+        resultSequence[numberOfLeaveThunks + numberOfEnterThunks]
+            = result.getLiteral();
+
+        return Sequence.create(resultSequence);
     }
 
 
@@ -126,14 +155,10 @@ final class ContinuationFunction
 
         state.setContinuation(destination);
 
-        return Sequence.create(
-            dynamicWind(
-                source,
-                destination,
-                CodeList.create(
-                    argument.getLiteral()
-                )
-            )
+        return dynamicWind(
+            source,
+            destination,
+            argument
         );
     }
 }
