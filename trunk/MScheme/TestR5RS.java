@@ -652,6 +652,15 @@ public class TestR5RS
     {
         check("(apply + (list 3 4))", "7");
         check("(apply + 1 2 '(3 4))", "10");
+        
+        check(
+            "(let ((l (list 1 2)))" +
+            "  (apply" +
+            "    (lambda x (set-car! x 3))" +
+            "    l)" +
+            "  l)",
+            "(1 2)"
+        );
     }
 
     public void test6_4_map()
