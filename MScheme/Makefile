@@ -7,11 +7,11 @@ SRC =	Code.java	\
 	Init.java	\
 	code/Application.java	\
 	code/Assignment.java	\
-	code/CodeList.java	\
 	code/CompiledLambda.java	\
 	code/Literal.java	\
 	code/Selection.java	\
 	code/Sequence.java	\
+	code/CodeArray.java	\
 	environment/Environment.java	\
 	environment/Reference.java	\
 	environment/StaticEnvironment.java	\
