@@ -1,6 +1,7 @@
 package MScheme.values;
 
 import java.io.Writer;
+import java.io.StringWriter;
 import java.io.IOException;
 
 import MScheme.environment.StaticEnvironment;
@@ -77,6 +78,15 @@ public abstract class Value
     
     public boolean equal(Value other)
     { return eqv(other); }
+
+    public final boolean equals(Object other)
+    {
+        if (!(other instanceof Value)) {
+            return false;
+        }
+    
+        return equal((Value)other);
+    }
     
     
     // io functions
@@ -87,6 +97,17 @@ public abstract class Value
     public void display(Writer destination)
         throws IOException
     { write(destination); }
+
+
+    public final String toString()
+    {
+        StringWriter out = new StringWriter();
+
+        try { write(out); }
+        catch (IOException e) { }
+
+        return out.toString();
+    }
 
 
     // compilation functions

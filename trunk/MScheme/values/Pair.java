@@ -54,7 +54,7 @@ public final class Pair
     
     public Code getCode(StaticEnvironment e)
         throws SchemeException
-    { return getHead().getCode(e).transform(e, getTail()); }
+    { return getHead().getCode(e).translateArguments(e, getTail()); }
 
     public CodeList getCodeList(StaticEnvironment e)
         throws SchemeException
