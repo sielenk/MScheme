@@ -76,6 +76,9 @@ class ContinuationFunction
 
         dynamicWind(machine, source, destination);
 
+        // this null will end up in a CallThunkContinuation
+        // created by dynamicWind or in the ValueContinuation
+        // created above ... both ignore the given value
         return machine.handleResult(null);
     }
 }
@@ -127,4 +130,3 @@ abstract class Continuation
     final public UnaryFunction getFunction()
     { return new ContinuationFunction(this); }
 }
-
