@@ -127,7 +127,7 @@ public class TestValue
     public void testPair()
     throws Exception
     {
-        final Value pair = Pair.create(
+        final Value pair = ListFactory.createPair(
                                ScmBoolean.createTrue(),
                                ScmBoolean.createTrue()
                            );
@@ -397,8 +397,8 @@ public class TestValue
 
         assert(
             eqHelper(
-                Pair.create(v, v),
-                Pair.create(v, v)
+                ListFactory.createPair(v, v),
+                ListFactory.createPair(v, v)
             ) == 1
         );
 

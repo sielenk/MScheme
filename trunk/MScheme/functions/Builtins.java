@@ -312,7 +312,7 @@ public class Builtins
 
     public final static Value cons(Value fst, Value snd)
     {
-        return Pair.create(fst, snd);
+        return ListFactory.createPair(fst, snd);
     }
 
     public final static Value car(Value argument)

@@ -132,8 +132,8 @@ public class TestInputPort
                               );
         InputPort in = InputPort.create(source);
 
-        assert(in.read().equal(Empty.create()));
-        assert(in.read().equal(Pair.create(one, two)));
+        assert(in.read().equal(ListFactory.create()));
+        assert(in.read().equal(ListFactory.createPair(one, two)));
         assert(in.read().equal(ListFactory.create(one, two, three)));
         assert(in.read().equal(ListFactory.create(one, two, three)));
     }

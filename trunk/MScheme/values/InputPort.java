@@ -307,7 +307,7 @@ public class InputPort
             la = skipWSread();
             if (la == '.')
             {
-                Pair result = Pair.createConst(
+                Pair result = ListFactory.createConstPair(
                                   head,
                                   parseDatum()
                               );
@@ -325,7 +325,7 @@ public class InputPort
             else
             {
                 _reader.unread(la);
-                return Pair.createConst(
+                return ListFactory.createConstPair(
                            head,
                            parseList(closeToken)
                        );
