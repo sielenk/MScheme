@@ -17,7 +17,7 @@ public class ValuesFactory
     }
 
 
-    public void prepend(SExpr sexpr)
+    public ValuesFactory prepend(SExpr sexpr)
     {
         ValuePair pair = new ValuePair(sexpr);
 
@@ -28,10 +28,12 @@ public class ValuesFactory
         }
         _first = pair;
         _length++;
+
+        return this;
     }
 
 
-    public void append(SExpr sexpr)
+    public ValuesFactory append(SExpr sexpr)
     {
         ValuePair pair = new ValuePair(sexpr);
 
@@ -42,6 +44,8 @@ public class ValuesFactory
         }
         _last = pair;
         _length++;
+
+        return this;
     }
 
 
