@@ -13,10 +13,10 @@ import MScheme.exceptions.*;
 
 
 public abstract class Pair
-            extends Compound
+    extends Compound
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     public static Pair create(Value first, Value second)
@@ -33,7 +33,7 @@ public abstract class Pair
     // specialisation of ValueImplementation
 
     private final void put(Writer destination, boolean doDisplay)
-    throws IOException
+        throws IOException
     {
         destination.write('(');
 
@@ -82,13 +82,13 @@ public abstract class Pair
     }
 
     public final void write(Writer destination)
-    throws IOException
+        throws IOException
     {
         put(destination, false);
     }
 
     public final void display(Writer destination)
-    throws IOException
+        throws IOException
     {
         put(destination, true);
     }
@@ -175,7 +175,7 @@ public abstract class Pair
     }
 
     public final void setFirst(Value first)
-    throws ImmutableException
+        throws ImmutableException
     {
         modify();
         _first = first;
@@ -187,7 +187,7 @@ public abstract class Pair
     }
 
     public final void setSecond(Value second)
-    throws ImmutableException
+        throws ImmutableException
     {
         modify();
         _second = second;
