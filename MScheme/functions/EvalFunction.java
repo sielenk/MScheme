@@ -11,10 +11,10 @@ import MScheme.exceptions.*;
 
 
 public final class EvalFunction
-            extends BinaryFunction
+    extends BinaryFunction
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     public final static EvalFunction INSTANCE = new EvalFunction();

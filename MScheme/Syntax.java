@@ -1,53 +1,25 @@
 package MScheme;
 
-import java.io.Writer;
-import java.io.IOException;
-
-import MScheme.util.Arity;
-
 import MScheme.values.List;
 
 import MScheme.environment.StaticEnvironment;
 
 import MScheme.exceptions.SchemeException;
-import MScheme.exceptions.SyntaxArityError;
 
 
-public abstract class Syntax
-    implements Translator
+/**
+ * This interface is used to compile lists. Due to the special
+ * nature of syntactic keywords in Scheme - they are not reserved -
+ * their bindings are stored in the static environment.
+ */
+public interface Syntax
 {
-    public final static String id
+    /** The CVS id of the file containing this class. */
+    String id
         = "$Id$";
 
-    private final Arity _arity;
 
-    protected Syntax(Arity arity)
-    {
-        _arity = arity;
-    }
-
-    protected void arityError(List arguments)
-        throws SyntaxArityError
-    {
-        throw new SyntaxArityError(arguments, _arity);
-    }
-
-    public final Code translate(
-        StaticEnvironment compilationEnv,
-        List              arguments
-    ) throws SchemeException
-    {
-        int len = arguments.getLength();
-
-        if (!_arity.isValid(len))
-        {
-            arityError(arguments);
-        }
-
-        return checkedTranslate(compilationEnv, arguments);
-    }
-
-    protected abstract Code checkedTranslate(
+    Code translate(
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws SchemeException;

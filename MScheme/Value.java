@@ -256,6 +256,6 @@ public interface Value
      * A symbol at the head of a list can be a syntactic
      * keyword which needs special treatment.
      */
-    Translator getTranslator(StaticEnvironment compilationEnv)
+    Syntax getSyntax(StaticEnvironment compilationEnv)
         throws SchemeException;
 }

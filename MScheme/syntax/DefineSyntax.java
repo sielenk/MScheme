@@ -27,7 +27,7 @@ import MScheme.exceptions.*;
 
 
 final class Macro
-    extends Syntax
+    implements Syntax
 {
     public final static String id
         = "$Id$";
@@ -41,12 +41,11 @@ final class Macro
 
     Macro(Code transformer, StaticEnvironment definitionEnv)
     {
-        super(Arity.atLeast(0));
         _transformer   = transformer;
         _definitionEnv = definitionEnv;
     }
 
-    protected Code checkedTranslate(
+    public Code translate(
         StaticEnvironment usageEnv,
         List              arguments
     ) throws SchemeException
@@ -80,7 +79,7 @@ final class Macro
 }
 
 final class DefineSyntax
-    extends Syntax
+    extends CheckedSyntax
 {
     public final static String id
     = "$Id$";

@@ -1,7 +1,7 @@
 package MScheme.syntax;
 
+import MScheme.Syntax;
 import MScheme.Code;
-import MScheme.Translator;
 
 import MScheme.values.List;
 
@@ -16,7 +16,7 @@ import MScheme.exceptions.SchemeException;
 
 
 public final class ProcedureCall
-    implements Translator
+    implements Syntax
 {
     public final static String id
         = "$Id$";

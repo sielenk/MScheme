@@ -7,9 +7,8 @@ import java.io.IOException;
 import MScheme.util.Arity;
 
 import MScheme.Value;
-import MScheme.Code;
 import MScheme.Syntax;
-import MScheme.Translator;
+import MScheme.Code;
 
 import MScheme.syntax.ProcedureCall;
 
@@ -211,7 +210,7 @@ public class StaticEnvironment
         return result;
     }
 
-    public Translator getTranslatorFor(Symbol key)
+    public Syntax getSyntaxFor(Symbol key)
         throws SymbolNotFoundException
     {
         Object result = lookup(key);
@@ -219,7 +218,7 @@ public class StaticEnvironment
         return 
             (result instanceof Reference)
             ? ProcedureCall.create((Reference)result)
-            : (Translator)result;
+            : (Syntax)result;
     }
 
     public Reference getReferenceFor(Symbol key)
