@@ -66,7 +66,7 @@ public final class Application
                 private final List _done  = done;
                 private final int  _index = index;
 
-                protected Code execute(Registers innerState, Value value)
+                protected Code executionStep(Registers innerState, Value value)
                     throws SchemeException
                 {
                     return prepareNext(

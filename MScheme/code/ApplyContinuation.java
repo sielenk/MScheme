@@ -58,7 +58,7 @@ public final class ApplyContinuation
         new ApplyContinuation(state, arguments);
     }
 
-    protected Code execute(Registers state, Value value)
+    protected Code executionStep(Registers state, Value value)
         throws SchemeException
     {
         return value.toFunction().call(
