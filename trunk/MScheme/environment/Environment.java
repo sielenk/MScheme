@@ -149,15 +149,6 @@ public final class Environment
     }
 
 
-    private static Environment
-        _implementationEnvironment = getSchemeReportEnvironment();
-
-    public static Environment getImplementationEnvironment()
-    {
-        return _implementationEnvironment;
-    }
-
-
     public static Environment getEmpty()
     {
         return create();
