@@ -49,7 +49,7 @@ final class Macro
             return new Machine(
 	            DynamicEnvironment.getImplementationEnvironment()
 	        ).execute(
-	            new Application(
+	            Application.create(
 		            CodeList.prepend(
 			            _apply,
     		            CodeList.prepend(
