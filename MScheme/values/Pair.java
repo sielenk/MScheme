@@ -119,7 +119,7 @@ public final class Pair
     
     public Code getCode(StaticEnvironment env)
         throws CompileError, TypeError
-    { return getHead().getToken(env).translate(env, getTail()); }
+    { return getHead().getTranslator(env).translate(env, getTail()); }
 
     public CodeList getCodeList(StaticEnvironment env)
         throws CompileError, TypeError

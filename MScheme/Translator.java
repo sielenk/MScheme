@@ -9,7 +9,7 @@ import MScheme.exceptions.TypeError;
 import MScheme.exceptions.CompileError;
 
 
-public interface Token
+public interface Translator
 {
     Code translate(
         StaticEnvironment e,

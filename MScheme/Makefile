@@ -18,7 +18,7 @@ SRC =	values/Function.java	\
 	machine/Literal.java	\
 	machine/Machine.java	\
 	machine/Registers.java	\
-	Token.java	\
+	Translator.java	\
 	functions/CheckedFunction.java	\
 	functions/Reducer.java	\
 	functions/MemvFunction.java	\
