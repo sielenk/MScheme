@@ -105,9 +105,10 @@ final class Lambda
         bodyCompilationEnv = compilationEnv.newChild(formals);
 
         return CompiledLambda.create(
-                   arity,
-                   bodyCompilationEnv,
-                   body
-               );
+            arity,
+            body.getCodeArray(
+                bodyCompilationEnv
+            )
+        );
     }
 }
