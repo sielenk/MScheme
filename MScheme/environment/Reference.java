@@ -65,6 +65,14 @@ public abstract class Reference
     abstract int getLevel();
     abstract int getIndex();
 
+    public abstract Reference forceRef()
+        throws SymbolNotFoundException, UnexpectedSyntax;
+
+    public final Code force()
+        throws SymbolNotFoundException, UnexpectedSyntax
+    {
+        return forceRef();
+    }
 
     public final String toString()
     {
@@ -94,23 +102,28 @@ final class DelayedReference
 
 
     protected Value getValue(Registers state)
-        throws RuntimeError
     {
-        throw new RuntimeError(getSymbol(), "delayed reference");
+        throw new RuntimeException(
+            getSymbol().toString() + " delayed reference"
+        );
     }
 
     int getLevel()
     {
-        return -1;
+        throw new RuntimeException(
+            getSymbol().toString() + " delayed reference"
+        );
     }
     
     int getIndex()
     {
-        return -1;
+        throw new RuntimeException(
+            getSymbol().toString() + " delayed reference"
+        );
     }
 
 
-    public Code force()
+    public Reference forceRef()
         throws SymbolNotFoundException, UnexpectedSyntax
     {
         return _env.getReferenceFor(getSymbol());
@@ -151,9 +164,8 @@ final class ForcedReference
         return state.getEnvironment().lookup(this);
     }
 
-    public Code force()
+    public Reference forceRef()
     {
         return this;
     }
 }
- 
