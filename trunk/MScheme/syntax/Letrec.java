@@ -68,7 +68,7 @@ final class Letrec
             Value  init   = inits  .getHead();
 
             compiledBody = CodeList.prepend(
-                new Assignment(
+                Set.translate(
                     formal.getReference(bodyCompilationEnv),
                     init  .getCode     (bodyCompilationEnv)
                 ),
