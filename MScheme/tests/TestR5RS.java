@@ -227,13 +227,49 @@ public class TestR5RS
 
     /// 4.1.6 Assignments
 
-    public void test4_1_6()
+    public void test4_1_6a()
         throws SchemeException
     {
         eval("(define x 2)");
         check("(+ x 1)", "3");
         eval("(set! x 4)");
         check("(+ x 1)", "5");
+    }
+
+    public void test4_1_6b()
+        throws SchemeException
+    {
+        // This failed, because set! didn't use delayed
+        // references, MHS 2002-19-03
+        check("(begin\n" +
+              "  (define (f)\n" +
+              "    (define (g)\n" +
+              "      (set! x 1)\n" +
+              "      x)\n" +
+              "    (define x 2)\n" +
+              "    (g)\n" +
+              "    x)\n" +
+              "  (f))",
+              "1"
+        );
+    }
+
+    public void test4_1_6c()
+        throws SchemeException
+    {
+        // This still compiles. Calling f causes a
+        // runtime error if called ...
+        try {
+            eval("(define (f)\n" +
+                 "  (define g (+ y 1))\n" +
+                 "  (define y 2)\n" +
+                 "  g\n" +
+                 "  y))"
+            );
+            fail();
+        }
+        catch (CompileError e)
+        { }
     }
 
 
