@@ -140,6 +140,64 @@ public class Machine
         _continuation = null;
     }
 
+    public Machine()
+    {
+        this(DynamicEnvironment.getEmpty());
+
+        DynamicEnvironment dynamicBindings
+            = getEnvironment();
+
+        StaticEnvironment staticBindings
+            = getEnvironment().getStatic();
+
+        try {
+            dynamicBindings.define(
+                ValueFactory.createSymbol("+"),
+                ValueFactory.createFunction("Plus")
+            );
+
+            dynamicBindings.define(
+                ValueFactory.createSymbol("*"),
+                ValueFactory.createFunction("Times")
+            );
+
+            staticBindings.defineSyntax(
+                ValueFactory.createSymbol("quote"),
+                SyntaxFactory.getQuoteToken()
+            );
+            staticBindings.defineSyntax(
+                ValueFactory.createSymbol("if"),
+                SyntaxFactory.getIfToken()
+            );
+            staticBindings.defineSyntax(
+                ValueFactory.createSymbol("begin"),
+                SyntaxFactory.getBeginToken()
+            );
+            staticBindings.defineSyntax(
+                ValueFactory.createSymbol("lambda"),
+                SyntaxFactory.getLambdaToken()
+            );
+            staticBindings.defineSyntax(
+                ValueFactory.createSymbol("define"),
+                SyntaxFactory.getDefineToken()
+            );
+            staticBindings.defineSyntax(
+                ValueFactory.createSymbol("set!"),
+                SyntaxFactory.getSetToken()
+            );
+        }
+        catch (SyntaxException e) {
+            throw new RuntimeException(
+                "unexpected SyntaxException in Machine.Machine()"
+            );
+        }
+        catch (FunctionNotFoundException e) {
+            throw new RuntimeException(
+                "unexpected FunctionNotFoundException in Machine.Machine()"
+            );
+        }
+    }
+
 
     public DynamicEnvironment getEnvironment()
     { return _environment; }
