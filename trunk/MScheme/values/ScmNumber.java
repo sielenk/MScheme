@@ -20,6 +20,8 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values;
 
+import java.math.BigInteger;
+
 import java.io.Writer;
 import java.io.IOException;
 
@@ -33,16 +35,26 @@ public class ScmNumber
     = "$Id$";
 
 
-    private int _value;
+    private BigInteger _value;
 
-    private ScmNumber(int v)
+    private ScmNumber(BigInteger v)
     {
         _value = v;
     }
 
     public static ScmNumber create(int v)
     {
-        return new ScmNumber(v);
+        return new ScmNumber(
+            BigInteger.valueOf(v)
+        );
+    }
+
+    public static ScmNumber create(String v)
+        throws NumberFormatException
+    {
+        return new ScmNumber(
+            new BigInteger(v)
+        );
     }
 
     // implementation of Value
@@ -80,38 +92,43 @@ public class ScmNumber
 
     public int getInteger()
     {
-        return _value;
+        return _value.intValue();
     }
 
 
     public boolean isLessThan(ScmNumber other)
     {
-        return _value < other._value;
+        return _value.compareTo(other._value) < 0;
     }
 
     public boolean isEqualTo(ScmNumber other)
     {
-        return _value == other._value;
+        return _value.equals(other._value);
     }
 
 
     public ScmNumber negated()
     {
-        return new ScmNumber(-_value);
+        return new ScmNumber(_value.negate());
     }
 
     public ScmNumber plus(ScmNumber other)
     {
-        return new ScmNumber(_value + other._value);
+        return new ScmNumber(_value.add(other._value));
     }
 
     public ScmNumber minus(ScmNumber other)
     {
-        return new ScmNumber(_value - other._value);
+        return new ScmNumber(_value.subtract(other._value));
     }
 
     public ScmNumber times(ScmNumber other)
     {
-        return new ScmNumber(_value * other._value);
+        return new ScmNumber(_value.multiply(other._value));
+    }
+
+    public ScmNumber divide(ScmNumber other)
+    {
+        return new ScmNumber(_value.divide(other._value));
     }
 }
