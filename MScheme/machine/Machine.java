@@ -7,19 +7,22 @@ import MScheme.exceptions.SException;
 
 public class Machine
 {
-    public static Values evaluate(
+    public static SExpr evaluate(
         Environment environment,
         SExpr       sexpr
     ) throws SException {
         ContinuationStack stack = new ContinuationStack(environment);
         Values            accu  = new Values(sexpr);
 
-        stack.push(EvalFunc.INSTANCE);
+        stack.push(
+            environment,
+            EvalFunc.INSTANCE
+        );
 
         while (!stack.isEmpty()) {
             accu = stack.getTop().invoke(stack, accu);
         }
 
-        return accu;
+        return accu.at(0);
     }
 }
