@@ -125,14 +125,8 @@ public final class ScmVector
             catch (PairExpected e)
             {
                 throw new RuntimeException(
-                          "unexpected PairExpected"
-                      );
-            }
-            catch (ListExpected e)
-            {
-                throw new RuntimeException(
-                          "unexpected ListExpected"
-                      );
+                    "unexpected PairExpected"
+                );
             }
         }
     }
@@ -145,7 +139,7 @@ public final class ScmVector
 
 
     public Value get(int index)
-    throws VectorException
+        throws VectorException
     {
         try
         {
@@ -158,7 +152,7 @@ public final class ScmVector
     }
 
     public void set(int index, Value value)
-    throws InvalidVectorIndexException, ImmutableException
+        throws InvalidVectorIndexException, ImmutableException
     {
         modify();
 
@@ -221,7 +215,7 @@ public final class ScmVector
     }
 
     private void put(Writer destination, boolean doDisplay)
-    throws IOException
+        throws IOException
     {
         destination.write("#(");
         for (int i = 0; i < getLength(); i++)
@@ -243,20 +237,20 @@ public final class ScmVector
     }
 
     public void write(Writer destination)
-    throws IOException
+        throws IOException
     {
         put(destination, false);
     }
 
     public void display(Writer destination)
-    throws IOException
+        throws IOException
     {
         put(destination, true);
     }
 
 
     public Code getCode(StaticEnvironment e)
-    throws CantCompileException
+        throws CantCompileException
     {
         throw new CantCompileException(this);
     }
