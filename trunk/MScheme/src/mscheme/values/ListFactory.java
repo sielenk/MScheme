@@ -89,7 +89,7 @@ public abstract class ListFactory
         return PairOrList.create(fst, snd);
     }
  
-    public static IConstPair createConstPair(Object fst, Object snd)
+    public static IPair createConstPair(Object fst, Object snd)
     {
         return PairOrList.createConst(fst, snd);
     }

@@ -116,9 +116,9 @@ public abstract class ScmVector
 	
         int     i = 0;
         Object l = list;
-        while (l instanceof IConstPair)
+        while (l instanceof IPair)
         {
-            IConstPair p = (IConstPair)l;
+            IPair p = (IPair)l;
 
             result._data[i++] = p.getFirst();
             l                 = p.getSecond();

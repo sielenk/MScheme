@@ -23,7 +23,7 @@ package mscheme.values.functions;
 import mscheme.exceptions.ListExpected;
 import mscheme.exceptions.PairExpected;
 
-import mscheme.values.IConstPair;
+import mscheme.values.IPair;
 import mscheme.values.IList;
 import mscheme.values.ValueTraits;
 
@@ -47,7 +47,7 @@ abstract class AssocBase
             tail = tail.getTail()
         )
         {
-            IConstPair pair = ValueTraits.toConstPair(tail.getHead());
+            IPair pair = ValueTraits.toConstPair(tail.getHead());
 
             if (equal(key, pair.getFirst()))
             {

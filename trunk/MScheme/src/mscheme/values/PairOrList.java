@@ -111,7 +111,7 @@ class ListEnumerator
     ListEnumerator(Object o)
     {
         _tortoise = o;
-        _hare = (o instanceof IConstPair) ? ((IConstPair) o).getSecond() : o;
+        _hare = (o instanceof IPair) ? ((IPair) o).getSecond() : o;
     }
 
     public boolean hasMoreElements()
@@ -121,7 +121,7 @@ class ListEnumerator
 
     public boolean isCyclic()
     {
-        return _tortoise instanceof IConstPair;
+        return _tortoise instanceof IPair;
     }
 
     public boolean isValid()
@@ -131,14 +131,14 @@ class ListEnumerator
 
     public Object nextElement()
     {
-        if (_tortoise instanceof IConstPair)
+        if (_tortoise instanceof IPair)
         {
-            if (_hare instanceof IConstPair)
-                _hare = ((IConstPair) _hare).getSecond();
-            if (_hare instanceof IConstPair)
-                _hare = ((IConstPair) _hare).getSecond();
+            if (_hare instanceof IPair)
+                _hare = ((IPair) _hare).getSecond();
+            if (_hare instanceof IPair)
+                _hare = ((IPair) _hare).getSecond();
 
-            IConstPair pair = (IConstPair) _tortoise;
+            IPair pair = (IPair) _tortoise;
             _tortoise = pair.getSecond();
             return pair.getFirst();
         }
@@ -148,7 +148,7 @@ class ListEnumerator
 }
 
 public abstract class PairOrList
-        implements IConstPair, IList, ICompileable, IComparable, IOutputable
+        implements IPair, IList, ICompileable, IComparable, IOutputable
 {
     public final static String CVS_ID = "$Id$";
 
@@ -170,7 +170,7 @@ public abstract class PairOrList
         return new MutablePairOrList(first, second);
     }
 
-    public static IConstPair createConst(Object first, Object second)
+    public static IPair createConst(Object first, Object second)
     {
         return new ConstPairOrList(first, second);
     }
@@ -257,17 +257,17 @@ public abstract class PairOrList
         Object tortoise = hare;
         do
         {
-            if (hare instanceof IConstPair)
-                hare = ((IConstPair) hare).getSecond();
+            if (hare instanceof IPair)
+                hare = ((IPair) hare).getSecond();
             else
                 return (hare instanceof Empty);
 
-            if (hare instanceof IConstPair)
-                hare = ((IConstPair) hare).getSecond();
+            if (hare instanceof IPair)
+                hare = ((IPair) hare).getSecond();
             else
                 return (hare instanceof Empty);
 
-            tortoise = ((IConstPair) tortoise).getSecond();
+            tortoise = ((IPair) tortoise).getSecond();
         }
         while (hare != tortoise);
 

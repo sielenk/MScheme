@@ -134,15 +134,15 @@ public class ValueTraits
 
     public static boolean isPair(Object o)
     {
-        return o instanceof IConstPair;
+        return o instanceof IPair;
     }
 
-    public static IConstPair toConstPair(Object o)
+    public static IPair toConstPair(Object o)
             throws PairExpected
     {
-        if (o instanceof IConstPair)
+        if (o instanceof IPair)
         {
-            return (IConstPair) o;
+            return (IPair) o;
         }
         else
         {
@@ -159,7 +159,7 @@ public class ValueTraits
         }
         else
         {
-            if (!(o instanceof IConstPair))
+            if (!(o instanceof IPair))
                 throw new PairExpected(o);
             else
                 throw new ImmutableException(o);

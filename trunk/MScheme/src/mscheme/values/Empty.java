@@ -28,7 +28,6 @@ import mscheme.exceptions.CantCompileException;
 import mscheme.exceptions.ListExpected;
 import mscheme.exceptions.PairExpected;
 
-
 public final class Empty
         implements IList, IOutputable, ICompileable
 {
