@@ -9,7 +9,6 @@ SRC =	Code.java	\
 	code/ApplyContinuation.java	\
 	code/Assignment.java	\
 	code/CompiledLambda.java	\
-	code/Literal.java	\
 	code/Selection.java	\
 	code/Sequence.java	\
 	code/CodeArray.java	\
@@ -143,7 +142,7 @@ PACKAGES =	MScheme			\
 		MScheme.values		\
 		MScheme.tests
 
-GCJ=gcj -W -Wall
+GCJ=gcj -W -Wall -ggdb
 JAVAC=jikes -bootclasspath /usr/lib/java/jre/lib/rt.jar +P
 # JAVAC = $(GCJ) -W -Wall -C
 
