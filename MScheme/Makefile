@@ -147,6 +147,9 @@ functions/Builtins.class: functions/Builtins.java
 main: $(OBJ)
 	gcj -ggdb --main=MScheme.Main -o main $^
 
+depend:
+	touch depend
+
 clean:
 	rm -f $(OBJ)
 
