@@ -5,7 +5,8 @@ import MScheme.Code;
 
 import MScheme.machine.Registers;
 import MScheme.machine.Continuation;
-import MScheme.values.ValueFactory;
+
+import MScheme.values.ListFactory;
 import MScheme.values.List;
 import MScheme.values.Empty;
 
@@ -57,7 +58,7 @@ final class PushContinuation
         } else {
             return prepareNext(
                 state,
-                List.prepend(value, _done),
+                ListFactory.prepend(value, _done),
                 _todo
             );
         }

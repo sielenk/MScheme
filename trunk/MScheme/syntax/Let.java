@@ -68,8 +68,8 @@ final class Let
             Value init    = binding.getTail().getHead();
 
             ++count;
-            formals  = List.prepend(formal, formals);
-            inits    = List.prepend(init  , inits  );
+            formals  = ListFactory.prepend(formal, formals);
+            inits    = ListFactory.prepend(init  , inits  );
 
             bindings = bindings.getTail();
         }
@@ -88,13 +88,13 @@ final class Let
             // closure gets a name to be recursively callable.
             // to ensure this names uniqueness, it is prepended to
             // the formals list.
-            formals = List.prepend(name, formals);
+            formals = ListFactory.prepend(name, formals);
         }
 
         Code compiledProc =
             Lambda.INSTANCE.translate(
                 compilationEnv,
-                List.prepend(formals, body)
+                ListFactory.prepend(formals, body)
             );
 
         if (name != null) {
