@@ -231,6 +231,11 @@
 
   (define (newline . args) (apply display #\newline args))
 
+  (define (eval-func . args)
+    (if (= (length args) 2)
+        (apply eval          args)
+        (apply extended-eval args)))
+
   (define (make-load env)
     (lambda (filename)
       (let ((port (open-input-file filename)))
@@ -259,6 +264,7 @@
     (list 'define 'display               display)
     (list 'define 'write-char            write-char)
     (list 'define 'newline               newline)
+    (list 'define 'eval                  eval-func)
     (list 'define 'load
       (list make-load
         (list current-environment)))))

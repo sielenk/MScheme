@@ -66,7 +66,7 @@ final class PushContinuation
 
 
     protected String debugString()
-    { return "push[" + _done + ", " + _todo + "]"; }
+    { return "push[" + _todo.getReversed() + " | " + _done + "]"; }
 }
 
 
@@ -96,5 +96,5 @@ public final class Application
 
 
     public String toString()
-    { return _permutedApplication.toString(); }
+    { return "APPLY[" + _permutedApplication.getReversed().toString() + ']'; }
 }

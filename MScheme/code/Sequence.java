@@ -71,5 +71,5 @@ public final class Sequence
 
 
     public String toString()
-    { return "(BEGIN " + _sequence.toString() + ")"; }
+    { return "SEQ[" + _sequence.toString() + ']'; }
 }

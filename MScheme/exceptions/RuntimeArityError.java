@@ -4,7 +4,7 @@ import MScheme.util.Arity;
 import MScheme.List;
 
 
-public class RuntimeArityError
+public final class RuntimeArityError
     extends RuntimeError
 {
     public final static String id
@@ -27,4 +27,3 @@ public class RuntimeArityError
 	        super.toString();
     }
 }
-

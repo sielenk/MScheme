@@ -43,12 +43,19 @@ public abstract class CodeList
     )
     { return prepend(first, create(second, third)); }
 
+    public static CodeList create(
+        Code first,
+        Code second,
+        Code third,
+        Code fourth
+    )
+    { return prepend(first, create(second, third, fourth)); }
+
 
     public String toString()
     {
         StringBuffer buffer = new StringBuffer();
         
-        buffer.append('(');
         for (CodeList current = this;;) {
             buffer.append(current.getHead().toString());
             current = current.getTail();
@@ -57,7 +64,6 @@ public abstract class CodeList
             }
             buffer.append(' ');
         }
-        buffer.append(')');
 
         return buffer.toString();
     }

@@ -3,9 +3,28 @@
 
 (define user-env
   (scheme-report-environment 5))
-        
+
+(define (error-func is-compile-error cause message)
+  (call-with-current-continuation
+    (lambda (error-continuation)
+      (display
+        (if is-compile-error
+          "Syntax error: "
+          "Runtime error: "))
+      (display message)
+      (newline)
+      (if (not is-compile-error)
+        (begin
+          (display error-continuation)
+          (newline)))
+      (display "Caused by '")
+      (write cause)
+      (display #\')
+      (newline)
+      'error-tag)))
+
 (define (user-eval expr)
-  (eval expr user-env))
+  (eval expr user-env error-func))
 
 (define (user-define sym val)
   (user-eval (list 'define sym val)))

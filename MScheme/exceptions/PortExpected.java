@@ -3,12 +3,12 @@ package MScheme.exceptions;
 import MScheme.Value;
 
 
-public class PortExpected
+public abstract class PortExpected
     extends TypeError
 {
     public final static String id
         = "$Id$";
 
-    public PortExpected(Value cause)
-    { super(cause); }
+    public PortExpected(Value cause, String message)
+    { super(cause, message); }
 }

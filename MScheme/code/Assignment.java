@@ -55,5 +55,5 @@ public final class Assignment
 
 
     public String toString()
-    { return "(SET! " + _binding + ' ' + _valueCalculation + ")"; }
+    { return "SET[" + _binding + ' ' + _valueCalculation + ']'; }
 }

@@ -9,6 +9,6 @@ public class CompileError
     public final static String id
         = "$Id$";
 
-    public CompileError(Value cause)
-    { super(cause); }
+    public CompileError(Value cause, String message)
+    { super(cause, message); }
 }

@@ -5,6 +5,7 @@ import MScheme.values.ScmBoolean;
 import MScheme.List;
 
 import MScheme.exceptions.ListExpected;
+import MScheme.exceptions.PairExpected;
 
 
 abstract class MemberBase
@@ -19,7 +20,7 @@ abstract class MemberBase
     protected final Value checkedCall(
         Value key,
         Value values
-    ) throws ListExpected
+    ) throws ListExpected, PairExpected
     {
         List tail = values.toList();
 

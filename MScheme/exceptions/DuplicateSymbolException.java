@@ -3,15 +3,12 @@ package MScheme.exceptions;
 import MScheme.Value;
 
 
-public class DuplicateSymbolException
+public final class DuplicateSymbolException
     extends CompileError
 {
     public final static String id
         = "$Id$";
 
     public DuplicateSymbolException(Value cause)
-    {
-        super(cause);
-    }
+    { super(cause, "duplicate symbol"); }
 }
-

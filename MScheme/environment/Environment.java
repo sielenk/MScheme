@@ -10,14 +10,20 @@ import MScheme.Code;
 import MScheme.Syntax;
 
 import MScheme.util.Arity;
+
 import MScheme.machine.Machine;
 import MScheme.machine.Registers;
+
 import MScheme.values.*;
+
 import MScheme.syntax.SyntaxFactory;
+
 import MScheme.functions.BuiltinTable;
 import MScheme.functions.Thunk;
 import MScheme.functions.ValueThunk;
+import MScheme.functions.TernaryValueFunction;
 import MScheme.functions.YCombinator;
+
 import MScheme.exceptions.*;
 
 
@@ -87,7 +93,7 @@ public final class Environment
         Environment        parent,
         Arity              arity,
         List               values
-    ) throws ListExpected
+    ) throws PairExpected, ListExpected
     {
         this(bindings, parent);
 
@@ -152,6 +158,28 @@ public final class Environment
 
                     protected Code checkedCall(Registers state)
                     { return state.getEnvironment().getLiteral(); }
+                }
+            );
+
+            _implementationEnvironment.define(
+                Symbol.create("extended-eval"),
+                new TernaryValueFunction() {
+                    public final static String id
+                        = "$Id$";
+
+                    protected Value checkedCall(
+                        Value fst,
+                        Value snd,
+                        Value trd
+                    ) throws SchemeException
+                    {
+                        return new Machine(
+                            snd.toEnvironment()
+                        ).evaluate(
+                            fst,
+                            trd.toFunction()
+                        );
+                    }
                 }
             );
 
@@ -312,7 +340,7 @@ public final class Environment
         StaticEnvironment newFrame,
         Arity             arity,
         List              values
-    ) throws ListExpected
+    ) throws ListExpected, PairExpected
     { return new Environment(newFrame, this, arity, values); }
 
     // *** Envrionment access ************************************************

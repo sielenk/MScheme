@@ -63,23 +63,33 @@ public final class ScmVector
     { return (size == 0) ? _empty : new ScmVector(false, size, fill); }
 
     public static ScmVector create(List list)
-        throws ListExpected
     { return createHelper(list, 0); }
 
     private static ScmVector createHelper(List list, int index)
-        throws ListExpected
     {
         if (list.isEmpty()) {
             return create(index, null);
         } else {
-            ScmVector result = createHelper(
-                list.getTail(),
-                index + 1
-            );
+            try {
+                ScmVector result = createHelper(
+                    list.getTail(),
+                    index + 1
+                );
 
-            result._data[index] = list.getHead();
+                result._data[index] = list.getHead();
 
-            return result;
+                return result;
+            }
+            catch (PairExpected e) {
+                throw new RuntimeException(
+                    "unexpected PairExpected"
+                );
+            }
+            catch (ListExpected e) {
+                throw new RuntimeException(
+                    "unexpected ListExpected"
+                );
+            }
         }
     }
 

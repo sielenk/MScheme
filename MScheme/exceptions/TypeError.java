@@ -3,12 +3,12 @@ package MScheme.exceptions;
 import MScheme.Value;
 
 
-public class TypeError
+public abstract class TypeError
     extends SchemeException
 {
     public final static String id
         = "$Id$";
 
-    public TypeError(Value cause)
-    { super(cause); }
+    public TypeError(Value cause, String message)
+    { super(cause, message + " expected"); }
 }

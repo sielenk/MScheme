@@ -72,7 +72,13 @@ final class ContinuationFunction
 
     public void write(Writer destination)
         throws IOException
-    { destination.write("[continuation]"); }
+    {
+        destination.write(
+            "[continuation\n"
+            + _continuation.toString()
+            + "]"
+        );
+    }
 
 
     // implementation of UnaryFunction

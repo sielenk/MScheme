@@ -3,7 +3,7 @@ package MScheme.exceptions;
 import MScheme.Value;
 
 
-public class OpenException
+public final class OpenException
     extends SchemeIOException
 {
     public final static String id
@@ -12,4 +12,3 @@ public class OpenException
     public OpenException(Value cause)
     { super(cause); }
 }
-
