@@ -8,7 +8,7 @@ public class Environment {
 
     SExpr lookup(SSymbol symbol)
         throws SSymbolNotFoundException
-    { 
+    {
         throw new SSymbolNotFoundException(symbol);
     }
 }

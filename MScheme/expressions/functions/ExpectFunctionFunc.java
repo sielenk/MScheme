@@ -10,23 +10,23 @@ import MScheme.environment.Environment;
 public class ExpectFunctionFunc extends Function
 {
     private SValues _arguments;
-    
+
     public ExpectFunctionFunc(
-	SValues arguments
+        SValues arguments
     ) {
-	_arguments = arguments;
+        _arguments = arguments;
     }
-    
+
     public SExpr call(
-	ContinuationStack stack,
-	Environment       environment,
-	SExpr             sexpr
+        ContinuationStack stack,
+        Environment       environment,
+        SExpr             sexpr
     ) throws SExpectedFunctionException {
-	try {
-	    stack.push((Function)sexpr);
-	    return _arguments;
-	} catch (ClassCastException e) {
-	    throw new SExpectedFunctionException(sexpr);
-	}
+        try {
+            stack.push((Function)sexpr);
+            return _arguments;
+        } catch (ClassCastException e) {
+            throw new SExpectedFunctionException(sexpr);
+        }
     }
 }

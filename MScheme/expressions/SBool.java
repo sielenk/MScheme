@@ -7,4 +7,3 @@ public class SBool extends SExpr
 
     private SBool() { }
 }
-

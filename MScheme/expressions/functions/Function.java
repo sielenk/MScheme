@@ -9,8 +9,8 @@ public abstract class Function extends SExpr
 {
 
     abstract public SExpr call(
-	ContinuationStack stack,
-	Environment environment,
-	SExpr sexpr
+        ContinuationStack stack,
+        Environment environment,
+        SExpr sexpr
     ) throws SException;
 }
