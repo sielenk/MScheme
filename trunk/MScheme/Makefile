@@ -1,4 +1,5 @@
-SRC =	values/Function.java	\
+SRC =	values/ValueImplementation.java	\
+	values/Function.java	\
 	values/ScmChar.java	\
 	values/Compound.java	\
 	values/ScmString.java	\
@@ -18,7 +19,6 @@ SRC =	values/Function.java	\
 	machine/Literal.java	\
 	machine/Machine.java	\
 	machine/Registers.java	\
-	Translator.java	\
 	functions/CheckedFunction.java	\
 	functions/Reducer.java	\
 	functions/MemvFunction.java	\
@@ -56,7 +56,6 @@ SRC =	values/Function.java	\
 	syntax/Define.java	\
 	syntax/Let.java	\
 	syntax/If.java	\
-	Main.java	\
 	environment/StaticEnvironment.java	\
 	environment/Reference.java	\
 	environment/Environment.java	\
@@ -67,8 +66,6 @@ SRC =	values/Function.java	\
 	code/Assignment.java	\
 	code/CompiledLambda.java	\
 	util/Arity.java	\
-	Value.java	\
-	Code.java	\
 	exceptions/FunctionExpected.java	\
 	exceptions/ImmutableException.java	\
 	exceptions/SymbolExpected.java	\
@@ -108,6 +105,11 @@ SRC =	values/Function.java	\
 	exceptions/RuntimeArityError.java	\
 	exceptions/InvalidVectorIndexException.java	\
 	exceptions/InputPortExpected.java	\
+	Translator.java	\
+	Main.java	\
+	Value.java	\
+	List.java	\
+	Code.java	\
 	Syntax.java
 
 OBJ =	$(SRC:.java=.o)

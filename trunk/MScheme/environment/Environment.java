@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Vector;
 
 import MScheme.Value;
+import MScheme.List;
 import MScheme.Code;
 import MScheme.Syntax;
 
@@ -21,7 +22,7 @@ import MScheme.exceptions.*;
 
 
 public final class Environment
-    extends Value
+    extends ValueImplementation
 {
     public final static String id
         = "$Id$";

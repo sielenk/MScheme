@@ -4,6 +4,7 @@ import java.io.Writer;
 import java.io.IOException;
 
 import MScheme.Value;
+import MScheme.List;
 import MScheme.Code;
 
 import MScheme.environment.StaticEnvironment;
@@ -12,7 +13,8 @@ import MScheme.exceptions.*;
 
 
 public final class Empty
-    extends List
+    extends ValueImplementation
+    implements List
 {
     public final static String id
         = "$Id$";
@@ -21,20 +23,23 @@ public final class Empty
     private final static Empty INSTANCE = new Empty();
 
     private Empty()
-    { super(true); }
+    { }
 
     public static Empty create()
     { return INSTANCE; }
 
 
-    // implementation of Compound
+    // specialisation of ValueImplementation
+    
+    public void write(Writer destination)
+        throws IOException
+    { destination.write("()"); }
 
-     protected Value getConstCopy()
-     {
-        throw new RuntimeException(
-            "unexpected call of Empty.getConstCopy()"
-        );
-    }
+    public boolean isList()
+    { return true; }
+
+    public List toList()
+    { return this; }
 
 
     // implementation of List
@@ -42,24 +47,24 @@ public final class Empty
     public boolean isEmpty()
     { return true; }
     
-    public boolean isList()
-    { return true; }
-
-    public int safeGetLength()
+    public int getLength()
     { return 0; }
-    
+
+    public List getReversed()
+    { return this; }
+
     public Value getHead()
         throws PairExpected
     { throw new PairExpected(this);  }
-    
+
     public List getTail()
         throws PairExpected
     { throw new PairExpected(this); }
-    
-    public Code getCode(StaticEnvironment e)
+
+    public Code getCode(StaticEnvironment compilationEnv)
         throws CantCompileException
     { throw new CantCompileException(this); }
-    
-    public CodeList getCodeList(StaticEnvironment e)
+
+    public CodeList getCodeList(StaticEnvironment compilationEnv)
     { return CodeList.create(); }
 }

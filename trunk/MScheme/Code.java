@@ -4,8 +4,8 @@ import MScheme.code.CodeList;
 import MScheme.code.Application;
 
 import MScheme.machine.Registers;
+
 import MScheme.environment.StaticEnvironment;
-import MScheme.values.List;
 
 import MScheme.exceptions.TypeError;
 import MScheme.exceptions.CompileError;

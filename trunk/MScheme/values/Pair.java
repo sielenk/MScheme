@@ -1,6 +1,10 @@
 package MScheme.values;
 
+import java.io.Writer;
+import java.io.IOException;
+
 import MScheme.Value;
+import MScheme.List;
 import MScheme.Code;
 
 import MScheme.machine.Machine;
@@ -10,18 +14,69 @@ import MScheme.code.CodeList;
 import MScheme.exceptions.*;
 
 
-public final class Pair
-    extends List
+public abstract class Pair
+    extends Compound
 {
     public final static String id
         = "$Id$";
 
 
     public static Pair create(Value first, Value second)
-    { return new Pair(false, first, second); }
+    { return PairOrList.create(first, second); }
 
     public static Pair createConst(Value first, Value second)
-    { return new Pair(true, first.getConst(), second.getConst()); }
+    { return PairOrList.createConst(first, second); }
+
+
+    // specialisation of ValueImplementation
+
+    private final void put(Writer destination, boolean doDisplay)
+        throws IOException
+    {
+        destination.write('(');
+
+        Value current = this;
+        while (current instanceof Pair) {
+            // 'this' is the first element of the list
+            // and needs no leading space
+            // (the opening parenthesis is a delimiter)
+            if (current != this) {
+                destination.write(' ');
+            }
+
+            Pair currentPair = (Pair)current;
+
+            if (doDisplay) {
+                currentPair.getFirst().display(destination);
+            } else {
+                currentPair.getFirst().write(destination);
+            }
+
+            current = currentPair.getSecond();
+        }
+
+        if (current != Empty.create()) {
+            // 'this' is an improper list
+
+            destination.write(" . ");
+
+            if (doDisplay) {
+                current.display(destination);
+            } else {
+                current.write(destination);
+            }
+        }
+
+        destination.write(')');
+    }
+
+    public final void write(Writer destination)
+        throws IOException
+    { put(destination, false); }
+
+    public final void display(Writer destination)
+        throws IOException
+    { put(destination, true); }
 
 
     public final boolean isPair()
@@ -45,64 +100,14 @@ public final class Pair
         return false;
     }
 
+    public abstract Code getCode(StaticEnvironment compilationEnv)
+        throws CompileError, TypeError;
+
 
     // implementation of Compound
 
     protected Value getConstCopy()
     { return createConst(getFirst(), getSecond()); }
-
-
-    // implementation of List
-
-    public final boolean isEmpty()
-    { return false; }
-
-    public final boolean isList()
-    { return getSecond().isList(); }
-
-    public final int safeGetLength()
-    {
-        int   result = 1;
-
-        Value tail = getSecond();
-        for (
-            ;
-            tail instanceof Pair;
-            tail = ((Pair)tail).getSecond()
-        ) {
-            ++result;
-        }
-
-        return tail.isList() ? result : -result;
-    }
-
-    public final Value getHead()
-    { return getFirst(); }
-
-    public final List getTail()
-        throws ListExpected
-    { return getSecond().toList(); }
-
-    public final Code getCode(StaticEnvironment compilationEnv)
-        throws CompileError, TypeError
-    {
-        return
-            getHead()
-            .getTranslator(compilationEnv)
-            .translate(
-                compilationEnv,
-                getTail()
-            );
-    }
-
-    public final CodeList getCodeList(StaticEnvironment compilationEnv)
-        throws CompileError, TypeError
-    {
-        return CodeList.prepend(
-            getHead().getCode    (compilationEnv),
-            getTail().getCodeList(compilationEnv)
-        );
-    }
 
 
     // implementation of Pair
@@ -111,7 +116,7 @@ public final class Pair
     private Value _second;
 
 
-    private Pair(boolean isConst, Value first, Value second)
+    protected Pair(boolean isConst, Value first, Value second)
     {
         super(isConst);
 

@@ -4,8 +4,8 @@ import java.io.Writer;
 import java.io.IOException;
 
 import MScheme.util.Arity;
+
 import MScheme.environment.StaticEnvironment;
-import MScheme.values.List;
 
 import MScheme.exceptions.TypeError;
 import MScheme.exceptions.CompileError;

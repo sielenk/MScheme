@@ -7,18 +7,19 @@ import java.io.IOException;
 import MScheme.util.Arity;
 
 import MScheme.Value;
+import MScheme.List;
 import MScheme.Code;
 import MScheme.Syntax;
 import MScheme.Translator;
 
+import MScheme.values.ValueImplementation; 
 import MScheme.values.Symbol;
-import MScheme.values.List;
 
 import MScheme.exceptions.*;
 
 
 public class StaticEnvironment
-    extends Value
+    extends ValueImplementation
 {
     public final static String id
         = "$Id$";
