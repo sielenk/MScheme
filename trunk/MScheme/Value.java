@@ -36,6 +36,11 @@ public interface Value
      */
     boolean isList();
 
+    /**
+     * Returns <code>true</code> for the empty list.
+     */
+    boolean isEmpty();
+
 
     // disjoint types (as in R5RS, 3.2)
 
@@ -239,7 +244,7 @@ public interface Value
      * Compiles a value as normal code.
      */
     Code getCode(StaticEnvironment compilationEnv)
-    throws SchemeException;
+        throws SchemeException;
 
     /**
      * Compiles a value as list head.
@@ -247,5 +252,5 @@ public interface Value
      * keyword which needs special treatment.
      */
     Translator getTranslator(StaticEnvironment compilationEnv)
-    throws SchemeException;
+        throws SchemeException;
 }
