@@ -1,12 +1,15 @@
 package MScheme.machine;
 
+
 import MScheme.expressions.functions.Function;
 import MScheme.environment.Environment;
+
 
 public class ContinuationStack
 {
     private Continuation _halt;
     private Continuation _continuation;
+
 
     protected ContinuationStack(
         Environment environment
@@ -18,33 +21,28 @@ public class ContinuationStack
         );
     }
 
+
     protected void setTop(Continuation continuation)
     {
         _continuation = continuation;
     }
+
 
     protected Continuation getTop()
     {
         return _continuation;
     }
 
+
     protected boolean isEmpty()
     {
         return _halt == _continuation;
     }
 
-    public void push(Function function)
-    {
-        new Continuation(
-            this,
-            getTop().getEnvironment(),
-            function
-        );
-    }
 
     public void push(
-        Function    function,
-        Environment environment
+        Environment environment,
+        Function    function
     ) {
         new Continuation(
             this,
