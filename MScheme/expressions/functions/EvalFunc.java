@@ -2,8 +2,10 @@ package MScheme.expressions.functions;
 
 import MScheme.expressions.SExpr;
 import MScheme.expressions.SSymbol;
+import MScheme.expressions.SList;
 import MScheme.expressions.SPair;
 import MScheme.expressions.SVector;
+import MScheme.expressions.SValues;
 
 import MScheme.exceptions.SException;
 import MScheme.machine.ContinuationStack;
@@ -25,16 +27,19 @@ public class EvalFunc extends Function
 	    return environment.lookup((SSymbol)sexpr);
 	} else if (sexpr instanceof SPair) {
 	    SPair pair = (SPair)sexpr;
-		
-            stack.push(
-		new ExpectFunctionFunc(
-		    pair.getCdr()
-		)
-	    );
 
-            stack.push(INSTANCE);
-	    return pair.getCar();
+	    try {
+		stack.push(
+		    new ExpectFunctionFunc(
+			((SList)pair.getCdr()).toValues()
+		    )
+		);
 
+		stack.push(INSTANCE);
+		return pair.getCar();
+	    } catch (ClassCastException e) {
+		throw new SException(pair.getCdr());
+	    }
 	} else if (sexpr instanceof SVector) {
 	    throw new SException(sexpr);
 	} else {
