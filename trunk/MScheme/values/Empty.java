@@ -16,7 +16,8 @@ public final class Empty
 
     // implementation of List
     
-    public boolean isList() { return true; }
+    public boolean isList()
+    { return true; }
 
 
     // specialisation of Value
