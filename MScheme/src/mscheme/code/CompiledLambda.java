@@ -45,7 +45,7 @@ import mscheme.values.functions.CheckedFunction;
 public final class CompiledLambda
     implements Forceable, Reduceable
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -98,7 +98,7 @@ public final class CompiledLambda
     final class Closure
         extends CheckedFunction
     {
-        public final static String id
+        public final static String CVS_ID
             = "$Id$";
 
 

@@ -26,7 +26,7 @@ import java.awt.event.WindowListener;
 public final class AwtMain
     implements WindowListener
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

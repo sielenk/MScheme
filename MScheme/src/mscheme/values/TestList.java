@@ -27,7 +27,7 @@ import mscheme.exceptions.PairExpected;
 public class TestList
             extends junit.framework.TestCase
 {
-    public final static String id
+    public final static String CVS_ID
     = "$Id$";
 
 

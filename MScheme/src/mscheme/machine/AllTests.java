@@ -17,7 +17,7 @@ import junit.framework.TestSuite;
  */
 public class AllTests
 {
-	public final static String id
+	public final static String CVS_ID
 		= "$Id$";
 
 

@@ -32,7 +32,7 @@ import mscheme.exceptions.WriteException;
 public class OutputPort
 	extends Port
 {
-    public final static String id
+    public final static String  CVS_ID
     	= "$Id$";
 
 

@@ -26,7 +26,7 @@ import mscheme.values.ScmVector;
 public class InvalidVectorIndexException
     extends VectorException
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
     public InvalidVectorIndexException(

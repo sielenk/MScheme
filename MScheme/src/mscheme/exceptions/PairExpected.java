@@ -24,7 +24,7 @@ package mscheme.exceptions;
 public final class PairExpected
     extends TypeError
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
     public PairExpected(Object cause)

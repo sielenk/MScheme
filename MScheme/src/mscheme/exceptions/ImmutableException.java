@@ -26,7 +26,7 @@ import mscheme.Value;
 public final class ImmutableException
     extends RuntimeError
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
     public ImmutableException(Value cause)

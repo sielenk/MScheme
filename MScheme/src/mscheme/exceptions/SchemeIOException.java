@@ -26,7 +26,7 @@ import mscheme.Value;
 public class SchemeIOException
     extends RuntimeError
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
     public SchemeIOException(Value cause)

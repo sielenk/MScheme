@@ -33,7 +33,7 @@ public final class Empty
     extends ValueDefaultImplementations
     implements List, Outputable
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

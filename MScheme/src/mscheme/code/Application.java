@@ -35,7 +35,7 @@ import mscheme.values.ValueTraits;
 public final class Application
     implements Forceable, Reduceable
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -78,7 +78,7 @@ public final class Application
 	{
 		return new Invokeable()
 		{
-			public final static String id
+			public final static String CVS_ID
 				= "$Id$";
 
 			public Object invoke(
@@ -96,7 +96,7 @@ public final class Application
 	{
 		return new Invokeable()
 		{
-			public final static String id
+			public final static String CVS_ID
 				= "$Id$";
 	
 			public Object invoke(

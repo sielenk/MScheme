@@ -35,7 +35,7 @@ final class PairOrList
     extends Compound
     implements List, Pair, Outputable, Comparable
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

@@ -31,7 +31,7 @@ import mscheme.values.List;
 public abstract class BinaryFunction
             extends CheckedFunction
 {
-    public final static String id
+    public final static String CVS_ID
 	    = "$Id$";
 
 

@@ -26,7 +26,7 @@ import mscheme.exceptions.SchemeException;
 public abstract class TernaryValueFunction
     extends TernaryFunction
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

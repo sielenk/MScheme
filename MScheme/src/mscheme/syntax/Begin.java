@@ -37,7 +37,7 @@ final class Begin
     extends    CheckedSyntax
     implements SequenceTags
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
     private final int _tag;

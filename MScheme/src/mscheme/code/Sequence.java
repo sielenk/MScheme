@@ -30,7 +30,7 @@ import mscheme.values.ValueTraits;
 public final class Sequence
     implements SequenceTags, Forceable, Reduceable
 {
-	public final static String id
+	public final static String CVS_ID
         = "$Id$";
 
 
@@ -120,7 +120,7 @@ public final class Sequence
 			registers.push(
 			    new Invokeable()
 			    {
-					public final static String id
+					public final static String CVS_ID
 						= "$Id$";
  
  

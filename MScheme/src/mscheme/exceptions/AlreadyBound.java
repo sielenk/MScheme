@@ -26,7 +26,7 @@ import mscheme.values.Symbol;
 public final class AlreadyBound
     extends CompileError
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
     public AlreadyBound(Symbol cause)

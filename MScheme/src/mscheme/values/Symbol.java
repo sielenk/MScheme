@@ -35,7 +35,7 @@ import mscheme.exceptions.UnexpectedSyntax;
 public final class Symbol
     extends ValueDefaultImplementations
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

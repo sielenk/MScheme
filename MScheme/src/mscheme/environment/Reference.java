@@ -33,7 +33,7 @@ import mscheme.values.Symbol;
 public abstract class Reference
     implements Forceable, Reduceable
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -95,7 +95,7 @@ public abstract class Reference
 final class DelayedReference
     extends Reference
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -141,7 +141,7 @@ final class DelayedReference
 final class ForcedReference
     extends Reference
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

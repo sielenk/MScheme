@@ -26,7 +26,7 @@ import mscheme.values.ScmString;
 public class InvalidStringIndexException
     extends StringException
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
     public InvalidStringIndexException(

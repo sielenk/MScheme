@@ -26,7 +26,7 @@ import mscheme.Value;
 public final class OpenException
     extends SchemeIOException
 {
-    public final static String id
+    public final static String  CVS_ID
         = "$Id$";
 
     public OpenException(Value cause)

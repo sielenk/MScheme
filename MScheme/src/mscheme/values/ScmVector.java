@@ -36,11 +36,11 @@ public final class ScmVector
     extends Compound
     implements Outputable
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
-    private final static ScmVector _empty = new ScmVector(false, 0, null);
+    private final static ScmVector EMPTY = new ScmVector(false, 0, null);
 
     private final Object[] _data;
 
@@ -77,22 +77,22 @@ public final class ScmVector
 
     public static ScmVector create()
     {
-        return _empty;
+        return EMPTY;
     }
 
     public static ScmVector create(Object[] data)
     {
-        return (data.length == 0) ? _empty : new ScmVector(false, data);
+        return (data.length == 0) ? EMPTY : new ScmVector(false, data);
     }
 
     public static ScmVector createConst(Object[] data)
     {
-        return (data.length == 0) ? _empty : new ScmVector(true, data);
+        return (data.length == 0) ? EMPTY : new ScmVector(true, data);
     }
 
     public static ScmVector create(int size, Object fill)
     {
-        return (size == 0) ? _empty : new ScmVector(false, size, fill);
+        return (size == 0) ? EMPTY : new ScmVector(false, size, fill);
     }
 
     public static ScmVector create(List list)

@@ -28,7 +28,7 @@ import mscheme.values.List;
 public final class RuntimeArityError
     extends RuntimeError
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
     public RuntimeArityError(List arguments, Arity expected)

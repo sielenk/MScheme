@@ -24,7 +24,7 @@ package mscheme.exceptions;
 public abstract class PortExpected
     extends TypeError
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
     public PortExpected(Object cause, String message)

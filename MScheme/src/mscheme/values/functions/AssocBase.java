@@ -30,7 +30,7 @@ import mscheme.values.ValueTraits;
 abstract class AssocBase
 	extends BinaryValueFunction
 {
-    public final static String id
+    public final static String CVS_ID
     	= "$Id$";
 
 

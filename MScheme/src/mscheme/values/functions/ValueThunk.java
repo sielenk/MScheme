@@ -27,7 +27,7 @@ import mscheme.machine.Registers;
 public abstract class ValueThunk
     extends Thunk
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

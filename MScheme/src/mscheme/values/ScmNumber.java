@@ -30,7 +30,7 @@ public class ScmNumber
     extends ValueDefaultImplementations
     implements Outputable
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

@@ -50,7 +50,7 @@ import mscheme.values.functions.ValueThunk;
 public final class Machine
     implements Runnable
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -203,7 +203,7 @@ public final class Machine
             evaluate(
                 InputPort.create(
                     new StringReader(
-                        Init.bootstrap
+                        Init.BOOTSTRAP
                     )
                 ).read()
             );
@@ -222,7 +222,7 @@ public final class Machine
         return evaluate(
             InputPort.create(
                 new StringReader(
-                    Init.rep
+                    Init.REP
                 )
             ).read()
         );

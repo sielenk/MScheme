@@ -58,7 +58,7 @@ import mscheme.values.ValueTraits;
 
 final class Order
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 
@@ -137,7 +137,7 @@ final class Order
 
 public class Builtins
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

@@ -31,7 +31,7 @@ import mscheme.values.ValueTraits;
 public final class EvalFunction
     extends BinaryFunction
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

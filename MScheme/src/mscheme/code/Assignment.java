@@ -33,7 +33,7 @@ import mscheme.machine.Registers;
 public final class Assignment
     implements Forceable, Reduceable
 {
-	public final static String id
+	public final static String CVS_ID
         = "$Id$";
 
 

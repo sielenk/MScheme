@@ -27,7 +27,7 @@ import mscheme.Value;
 public class TestInputPort
             extends junit.framework.TestCase
 {
-    public final static String id
+    public final static String CVS_ID
     = "$Id$";
 
 

@@ -33,7 +33,7 @@ import mscheme.values.List;
 
 public final class DynamicEnvironment
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
 

@@ -20,7 +20,7 @@ import mscheme.values.functions.UnaryFunction;
 public class Controller
 	extends UnaryFunction
 {
-	public final static String id
+	public final static String CVS_ID
 		= "$Id$";
 
 

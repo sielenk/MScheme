@@ -39,7 +39,7 @@ import mscheme.values.ValueTraits;
 final class Set
     extends CheckedSyntax
 {
-    public final static String id
+    public final static String CVS_ID
        = "$Id$";
 
 

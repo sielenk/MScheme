@@ -26,7 +26,7 @@ import mscheme.Value;
 public class ParseException
     extends RuntimeError
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
     private final String _message;

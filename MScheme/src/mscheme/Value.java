@@ -33,7 +33,7 @@ import mscheme.values.Pair;
 public interface Value
 {
     /** The CVS id of the file containing this class. */
-    String id
+    String CVS_ID
         = "$Id$";
 
     /**

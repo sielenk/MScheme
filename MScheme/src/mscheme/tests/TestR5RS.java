@@ -33,7 +33,7 @@ import mscheme.values.ScmVector;
 public class TestR5RS
     extends TestSchemeBase
 {
-    public final static String id
+    public final static String CVS_ID
         = "$Id$";
 
     public TestR5RS(String name)
