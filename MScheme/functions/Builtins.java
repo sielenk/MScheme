@@ -1,7 +1,91 @@
 package MScheme.functions;
 
+import MScheme.util.Arity;
 import MScheme.exceptions.*;
 import MScheme.values.*;
+
+
+class Adder
+    extends Reducer
+{
+    protected Value initial()
+    { return ValueFactory.createNumber(0); }
+
+    protected Value combine(Value fst, Value snd)
+        throws NumberExpectedException
+    { return fst.toNumber().plus(snd.toNumber()); }
+}
+
+
+class Multiplier
+    extends Reducer
+{
+    protected Value initial()
+    { return ValueFactory.createNumber(1); }
+
+    protected Value combine(Value fst, Value snd)
+        throws NumberExpectedException
+    { return fst.toNumber().times(snd.toNumber()); }
+}
+
+
+class Order {
+    private final static Arity _arity = Arity.atLeast(2);
+
+    public final static int LT = -2;
+    public final static int LE = -1;
+    public final static int EQ =  0;
+    public final static int GE =  1;
+    public final static int GT =  2;
+
+    public static boolean check(List arguments, int mode)
+        throws SchemeException
+    {
+        int len = arguments.getLength();
+        
+        if (!_arity.isValid(len)) {
+            throw new ArityException(arguments, _arity);
+        }
+
+        SchemeNumber curr = arguments.getHead().toNumber();
+        List         tail = arguments.getTail();
+
+        boolean rising   = true;
+        boolean strictly = true;
+        boolean falling  = true;
+
+        do {
+            SchemeNumber next = tail.getHead().toNumber();
+                         tail = tail.getTail();
+
+            if (curr.isEqualTo(next)) {
+                strictly = false;
+            } else {
+                if (curr.isLessThan(next)) {
+                    falling = false;
+                } else {
+                    rising  = false;
+                }
+
+                if (!rising & !falling) {
+                    return false;
+                }
+            }
+
+            curr = next;
+        } while (!tail.isEmpty());
+
+        switch (mode) {
+        case LT: return strictly & rising;
+        case LE: return rising;
+        case EQ: return rising & falling;
+        case GE: return falling;
+        case GT: return strictly & falling;
+        }
+
+        return false; // unknown mode ...
+    }
+}
 
 
 public class Builtins
@@ -44,6 +128,39 @@ public class Builtins
     public static Value inexact_3F(Value argument)
     { return SchemeBoolean.False; }
 
+
+    public static Value _3C(List arguments) // <
+        throws SchemeException
+    { return SchemeBoolean.create(Order.check(arguments, Order.LT)); }
+
+    public static Value _3C_3D(List arguments) // <=
+        throws SchemeException
+    { return SchemeBoolean.create(Order.check(arguments, Order.LE)); }
+
+    public static Value _3D(List arguments) // =
+        throws SchemeException
+    { return SchemeBoolean.create(Order.check(arguments, Order.EQ)); }
+
+    public static Value _3E_3D(List arguments) // >=
+        throws SchemeException
+    { return SchemeBoolean.create(Order.check(arguments, Order.GE)); }
+
+    public static Value _3E(List arguments) // >
+        throws SchemeException
+    { return SchemeBoolean.create(Order.check(arguments, Order.GT)); }
+
+
+    private final static Adder ADDER = new Adder();
+
+    public static Value _2B(List arguments) // +
+        throws SchemeException
+    { return ADDER.foldLeft(arguments); }
+
+    private final static Multiplier MULTIPLITER = new Multiplier();
+
+    public static Value _2A(List arguments) // *
+        throws SchemeException
+    { return MULTIPLITER.foldLeft(arguments); }
 
     // 6.3 Other data types
 
@@ -165,6 +282,46 @@ public class Builtins
     public static Value vector_3F(Value argument) // vector?
     { return SchemeBoolean.create(argument.isVector()); }
 
+
+    // 6.4 Control features
+
+    public static Value procedure_3F(Value argument) // procedure?
+    { return SchemeBoolean.create(argument.isFunction()); }
+
+
+    // 6.6 Input and output
+
+    // 6.6.1 Ports
+
+    public static Value port_3F(Value argument) // port?
+    { return SchemeBoolean.create(argument.isPort()); }
+
+    public static Value input_2Dport_3F(Value argument) // input-port?
+        throws PortExpectedException
+    { return SchemeBoolean.create(argument.isPort() && argument.toPort().isInput()); }
+
+    public static Value output_2Dport_3F(Value argument) // output-port?
+        throws PortExpectedException
+    { return SchemeBoolean.create(argument.isPort() && argument.toPort().isOutput()); }
+
+
+    public static Value open_2Dinput_2Dfile(Value argument)
+        throws StringExpectedException, OpenException
+    { return InputPort.create(argument.toScmString()); }
+
+    public static Value open_2Doutput_2Dfile(Value argument)
+        throws StringExpectedException, OpenException
+    { return OutputPort.create(argument.toScmString()); }
+
+
+    public static Value close_2Dinput_2Dport(Value argument)
+        throws PortExpectedException, CloseException
+    { argument.toPort().toInput().close(); return argument; }
+    
+    public static Value close_2Doutput_2Dport(Value argument)
+        throws PortExpectedException, CloseException
+    { argument.toPort().toOutput().close(); return argument; }
+    
 
     // 6.6.2 Input
 
