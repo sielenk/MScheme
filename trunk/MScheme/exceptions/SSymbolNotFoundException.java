@@ -4,7 +4,7 @@ import MScheme.expressions.SSymbol;
 
 public class SSymbolNotFoundException extends SException
 {
-    SSymbolNotFoundException(SSymbol symbol)
+    public SSymbolNotFoundException(SSymbol symbol)
     {
         super(symbol);
     }

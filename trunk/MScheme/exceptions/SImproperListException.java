@@ -4,7 +4,7 @@ import MScheme.expressions.SExpr;
 
 public class SImproperListException extends SException
 {
-    SImproperListException(SExpr sexpr)
+    public SImproperListException(SExpr sexpr)
     {
         super(sexpr);
     }
