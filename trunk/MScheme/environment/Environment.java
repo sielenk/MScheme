@@ -185,29 +185,6 @@ public final class Environment
             );
 
             _implementationEnvironment.define(
-                Symbol.create("extended-eval"),
-                new TernaryValueFunction()
-                {
-                    public final static String id
-                    = "$Id$";
-
-                    protected Value checkedCall(
-                        Value fst,
-                        Value snd,
-                        Value trd
-                    ) throws SchemeException
-                    {
-                        return new Machine(
-                                   snd.toEnvironment()
-                               ).evaluate(
-                                   fst,
-                                   trd.toFunction()
-                               );
-                    }
-                }
-            );
-
-            _implementationEnvironment.define(
                 Symbol.create("y"),
                 YCombinator.INSTANCE
             );
