@@ -54,19 +54,14 @@
       (display-nl stack)
       (display-nl "--- end of stack ---")))
 
-  (define (on-error f)
-    (lambda ()
-      (let ((error (last-error)))
-        (if error
-          (begin
-            (print-error error)
-            (f error))))))
-
   (define (try-with-error-handler try-thunk error-handler)
-    (dynamic-wind
-      (lambda () 'nop)
-      try-thunk
-      (on-error error-handler)))
+    (let* ((old-handler (reset-error-handler
+                          (lambda (error)
+                            (print-error   error)
+                            (error-handler error))))
+		   (result (try-thunk)))
+      (reset-error-handler old-handler)
+      result))
 
   (define (create-label)
     (call-with-current-continuation
@@ -75,13 +70,10 @@
         label)))
 
   (define (retry-on-error thunk)
-    (define retry 'dummy)
+    (define retry (create-label))
     (try-with-error-handler
-      (lambda ()
-        (set! retry (create-label))
-        (thunk))
-      (lambda (error)
-        (retry))))
+      thunk
+      (lambda (error) (retry))))
 
   (define (REP-read depth prompt quit-thunk)
     (let* ((query
