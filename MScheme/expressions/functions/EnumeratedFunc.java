@@ -4,10 +4,6 @@ package MScheme.expressions.functions;
 import MScheme.expressions.SExpr;
 import MScheme.expressions.SBool;
 
-import MScheme.machine.Values;
-import MScheme.machine.ContinuationStack;
-import MScheme.environment.Environment;
-
 
 abstract public class EnumeratedFunc extends Function
 {
