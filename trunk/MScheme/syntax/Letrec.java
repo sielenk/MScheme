@@ -73,7 +73,7 @@ final class Letrec
             inits   = inits  .getTail();
         }
 
-        return new Application(
+        return Application.create(
             CodeList.create(
                 new CompiledLambda(
                     Arity.exactly(0),

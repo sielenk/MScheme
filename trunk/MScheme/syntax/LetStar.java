@@ -38,7 +38,7 @@ final class LetStar
             // special handling because the helper wouldn't
             // create a new environment in this case
 
-            return new Application(
+            return Application.create(
                 CodeList.create(
                     new CompiledLambda(
                         Arity.exactly(0),
@@ -89,7 +89,7 @@ final class LetStarHelper
                 innerBody
             );
 
-            return new Application(
+            return Application.create(
                 CodeList.create(
                     lambda,
                     init.getCode(outerEnvironment)

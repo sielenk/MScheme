@@ -100,7 +100,7 @@ final class Let
 			);
 	    }
 
-        return new Application(
+        return Application.create(
             CodeList.prepend(
 		        compiledProc,
 		        inits.getCodeList(environment)

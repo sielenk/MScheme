@@ -60,8 +60,11 @@ final public class Application
 {
     final private CodeList _permutedApplication;
 
-    public Application(CodeList application)
+    private Application(CodeList application)
     { _permutedApplication = application.getReversed(); }
+    
+    public static Code create(CodeList application)
+    { return new Application(application); }
     
     public Code executionStep(Machine machine)
     {

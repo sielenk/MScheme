@@ -21,7 +21,7 @@ public abstract class Code
         List              arguments
     ) throws CompileError, TypeError
     {
-        return new Application(
+        return Application.create(
             CodeList.prepend(
                 this,
                 arguments.getCodeList(e)
