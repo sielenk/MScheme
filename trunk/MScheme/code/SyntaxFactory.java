@@ -85,11 +85,11 @@ final class Assigner
     )
         throws SchemeException
     {
-        if (arguments.getHead().isList()) {
+        if (arguments.getHead().isPair()) {
             //    (define (f x y) (+ x y))
             // -> (define f (lambda (x y) (+ x y)))
-            Value symbol  = arguments.getHead().toList().getHead();
-            Value formals = arguments.getHead().toList().getTail();
+            Value symbol  = arguments.getHead().toPair().getFirst();
+            Value formals = arguments.getHead().toPair().getSecond();
             Value body    = arguments.getTail();
             
             return create(
