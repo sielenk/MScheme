@@ -24,11 +24,10 @@ class YWrappedFunction
     private final Function _f;
 
     YWrappedFunction(Function f)
-        throws RuntimeArityError
     { _f = f; }
 
     public Code call(Registers state, List arguments)
-        throws RuntimeError, TypeError
+        throws SchemeException
     {
         return _f.call(
             state,
@@ -50,6 +49,6 @@ public final class YCombinator
     public final static YCombinator INSTANCE = new YCombinator();
 
     protected Value checkedCall(Value fst)
-        throws RuntimeArityError, TypeError
+        throws TypeError
     { return new YWrappedFunction(fst.toFunction()); }
 }
