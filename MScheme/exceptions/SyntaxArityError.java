@@ -12,6 +12,6 @@ public final class SyntaxArityError
 
     public SyntaxArityError(List arguments, Arity expected)
     {
-        super(arguments, "expected " + expected.toString() + " arguments");
+        super(arguments, "expected " + expected.toString() + " argument(s)");
     }
 }
