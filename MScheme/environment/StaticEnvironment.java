@@ -27,7 +27,10 @@ public class StaticEnvironment
 
     public void write(Writer destination)
         throws IOException
-    { destination.write("[environment]"); }
+    { destination.write("[static environment]"); }
+    
+    public StaticEnvironment toStaticEnvironment()
+    { return this; }
 
     // ***********************************************************************
 
