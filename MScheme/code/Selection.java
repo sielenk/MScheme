@@ -49,8 +49,16 @@ public final class Selection
             ) {
                 return evaluatedTest.isTrue() ? _onTrue : _onFalse; 
             }
+
+
+            protected String debugString()
+            { return "select[" + _onTrue + ", " + _onFalse + "]"; }
         };
 
         return _test;
     }
+
+
+    public String toString()
+    { return "(IF " + _test + ' ' + _onTrue + ' ' + _onFalse + ')'; }
 }
