@@ -9,7 +9,7 @@ import MScheme.exceptions.CloseException;
 
 
 public abstract class Port
-    extends SelfEvaluatingValue
+    extends Value
 {
     // specialisation of Value
     

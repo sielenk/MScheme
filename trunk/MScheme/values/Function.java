@@ -11,7 +11,7 @@ import MScheme.exceptions.*;
 
 
 public abstract class Function
-    extends SelfEvaluatingValue
+    extends Value
 {
     // specialisation of Value
 

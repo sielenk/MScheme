@@ -5,7 +5,7 @@ import java.io.IOException;
 
 
 public final class SchemeBoolean
-    extends SelfEvaluatingValue
+    extends Value
 {
     private final static SchemeBoolean TRUE  = new SchemeBoolean();
     private final static SchemeBoolean FALSE = new SchemeBoolean();
