@@ -69,45 +69,42 @@ final class Let
 
             bindings = bindings.getTail();
         }
+        // If the closure is anonymous, the order of the
+        // arguments is irrelevant, as long as the inits
+        // and formals match. But if it can be called by
+        // the user the order has to match the definition
+        // order. And a named-let-closure can be called ...
+        // Since the parsing above reverses the lists,
+        // they have to be reversed again here.
+        formals = formals.getReversed();
+        inits   = inits  .getReversed();
 
         if (name != null) {
             // for the named let, the usually anonymous
             // closure gets a name to be recursively callable.
-            // to ensure this names uniqueness, it is added to
+            // to ensure this names uniqueness, it is prepended to
             // the formals list.
             formals = ValueFactory.prepend(name, formals);
-
-            // if the closure is anonymous, the order of the
-            // arguments is irrelevant, if the inits and formals
-            // match. But if it can be called by the user the
-            // order has to match the definition order.
-            // And since the parsing above reverses the lists,
-            // they have to be reversed again here.
-            formals = formals.getReversed();
-            inits   = inits  .getReversed();
         }
 
-        StaticEnvironment innerEnvironment =
-            environment.newChild(formals);
-
-        CompiledLambda compiledProc =
-            new CompiledLambda(
-                Arity.exactly(count),
-                innerEnvironment,
-                body
+        Code compiledProc =
+            Lambda.INSTANCE.translate(
+                environment,
+                ValueFactory.prepend(formals.toValue(), body)
             );
 
         if (name != null) {
-            compiledProc.setSelf(
-                innerEnvironment.getReferenceFor(name)
+            // the "raw" closure of a named-let has one additional
+            // argument, which is to be bound to the "curried"
+            // closure -- the YCombinator does it's magic ...
+            compiledProc = Application.create(
+                CodeList.create(
+                    YCombinator.INSTANCE.getLiteral(),
+                    compiledProc
+                )
             );
         }
 
-        return Application.create(
-            CodeList.prepend(
-                compiledProc,
-                inits.getCodeList(environment)
-            )
-        );
+        return compiledProc.translate(environment, inits);
     }
 }
