@@ -107,13 +107,13 @@ final class Let
             compiledProc = Application.create(
                 new Code[]
                 {
-                    YCombinator.INSTANCE.getLiteral(),
+                    YCombinator.INSTANCE,
                     compiledProc
                 }
             );
         }
 
-	Code[] compiledLet = inits.getCodeArray(compilationEnv, 1);
+        Code[] compiledLet = inits.getCompiledArray(compilationEnv, 1);
 
         compiledLet[0] = compiledProc;
 
