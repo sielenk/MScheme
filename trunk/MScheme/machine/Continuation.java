@@ -91,20 +91,15 @@ class ContinuationFunction
 
 public abstract class Continuation
 {
-    final private int          _level;
-    final private Continuation _capturedContinuation;
-    final private Environment  _capturedEnvironment;
+    final private int       _level;
+    final private Registers _capturedRegisters;
 
 
     protected Continuation(Registers registers)
     {
-        _capturedContinuation = registers.getContinuation();
-        _capturedEnvironment  = registers.getEnvironment();
+        _capturedRegisters = new Registers(registers);
 
-        _level =
-            (_capturedContinuation != null)
-            ? _capturedContinuation._level + 1
-            : 0;
+        _level = (getParent() != null) ? getParent()._level + 1 : 0;
 
         registers.setContinuation(this);
     }
@@ -113,7 +108,7 @@ public abstract class Continuation
     { return _level; }
 
     final Continuation getParent()
-    { return _capturedContinuation; }
+    { return _capturedRegisters.getContinuation(); }
 
     final UnaryFunction getFunction()
     { return new ContinuationFunction(this); }
@@ -121,8 +116,7 @@ public abstract class Continuation
     final Code invoke(Registers registers, Value value)
         throws RuntimeError, TypeError
     {
-        registers.setContinuation(_capturedContinuation);
-        registers.setEnvironment (_capturedEnvironment );
+        registers.assign(_capturedRegisters);
         return execute(registers, value);
     }
 
