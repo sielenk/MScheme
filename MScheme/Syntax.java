@@ -37,7 +37,7 @@ public abstract class Syntax
         List              arguments
     ) throws CompileError, TypeError
     {
-        int len = arguments.safeGetLength();
+        int len = arguments.getLength();
 
         if (!_arity.isValid(len)) {
             arityError(arguments);
