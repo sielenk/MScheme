@@ -9,7 +9,9 @@ import MScheme.Syntax;
 
 import MScheme.util.Arity;
 import MScheme.machine.Machine;
-import MScheme.code.*;
+import MScheme.code.CodeList;
+import MScheme.code.CompiledLambda;
+import MScheme.code.Application;
 import MScheme.environment.*;
 import MScheme.exceptions.*;
 import MScheme.functions.*;
