@@ -25,9 +25,9 @@ import mscheme.exceptions.ImmutableException;
 import mscheme.exceptions.SchemeException;
 import mscheme.exceptions.SyntaxArityError;
 import mscheme.values.Function;
-import mscheme.values.IPair;
 import mscheme.values.ScmString;
 import mscheme.values.ScmVector;
+import mscheme.values.ValueTraits;
 
 
 public class TestR5RS
@@ -78,7 +78,7 @@ public class TestR5RS
 
         try
         {
-            ((IPair)eval("'(1 . 2)")).setFirst(quote("a"));
+            ValueTraits.toMutablePair(eval("'(1 . 2)")).setFirst(quote("a"));
             fail();
         }
         catch (ImmutableException e)

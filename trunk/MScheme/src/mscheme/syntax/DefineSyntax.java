@@ -29,7 +29,7 @@ import mscheme.machine.Machine;
 import mscheme.util.Arity;
 import mscheme.values.IList;
 import mscheme.values.ListFactory;
-import mscheme.values.IPair;
+import mscheme.values.IConstPair;
 import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 import mscheme.values.functions.ApplyFunction;
@@ -66,7 +66,7 @@ final class Macro
     {
         // (apply tranformer def_env use_env args)
 
-        IPair result = (IPair)MACHINE.execute(
+        IConstPair result = (IConstPair)MACHINE.execute(
             Application.create(
                 new Object[]
                 {

@@ -357,26 +357,26 @@ public class Builtins
     public final static Object car(Object argument)
     throws PairExpected
     {
-        return ValueTraits.toPair(argument).getFirst();
+        return ValueTraits.toConstPair(argument).getFirst();
     }
 
     public final static Object cdr(Object argument)
     throws PairExpected
     {
-        return ValueTraits.toPair(argument).getSecond();
+        return ValueTraits.toConstPair(argument).getSecond();
     }
 
     public final static Object set_2Dcar_21(Object fst, Object snd) // set-car!
     throws PairExpected, ImmutableException
     {
-		ValueTraits.toPair(fst).setFirst(snd);
+		ValueTraits.toMutablePair(fst).setFirst(snd);
         return snd;
     }
 
     public final static Object set_2Dcdr_21(Object fst, Object snd) // set-car!
     throws PairExpected, ImmutableException
     {
-		ValueTraits.toPair(fst).setSecond(snd);
+		ValueTraits.toMutablePair(fst).setSecond(snd);
         return snd;
     }
 

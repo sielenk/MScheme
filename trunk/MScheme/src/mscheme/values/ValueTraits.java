@@ -14,6 +14,7 @@ import mscheme.environment.StaticEnvironment;
 import mscheme.exceptions.CharExpected;
 import mscheme.exceptions.EnvironmentExpected;
 import mscheme.exceptions.FunctionExpected;
+import mscheme.exceptions.ImmutableException;
 import mscheme.exceptions.InputPortExpected;
 import mscheme.exceptions.ListExpected;
 import mscheme.exceptions.NumberExpected;
@@ -26,14 +27,14 @@ import mscheme.exceptions.SymbolExpected;
 import mscheme.exceptions.VectorExpected;
 import mscheme.machine.Registers;
 
-
 /**
  * @author sielenk
- * 
+ *  
  */
 public class ValueTraits
 {
-    public final static Boolean TRUE  = Boolean.TRUE;
+    public final static Boolean TRUE = Boolean.TRUE;
+
     public final static Boolean FALSE = Boolean.FALSE;
 
     public static boolean isTrue(Object o)
@@ -47,11 +48,11 @@ public class ValueTraits
     }
 
     public static Object apply(Registers state, Object function, IList arguments)
-        throws SchemeException
+            throws SchemeException
     {
         if (function instanceof Method)
         {
-            Method m = (Method)function;
+            Method m = (Method) function;
 
             try
             {
@@ -80,7 +81,7 @@ public class ValueTraits
         }
         else if (function instanceof Function)
         {
-            return ((Function)function).call(state, arguments);
+            return ((Function) function).call(state, arguments);
         }
         else
         {
@@ -90,9 +91,8 @@ public class ValueTraits
 
     public static boolean eq(Object fst, Object snd)
     {
-        return (fst instanceof IComparable)
-        	? ((IComparable)fst).eq(snd)
-            : (fst == snd);
+        return (fst instanceof IComparable) ? ((IComparable) fst).eq(snd)
+                : (fst == snd);
     }
 
     public static boolean eqv(Object fst, Object snd)
@@ -103,29 +103,28 @@ public class ValueTraits
         }
         else
         {
-            return (fst instanceof IComparable)
-            	? ((IComparable)fst).eqv(snd)
-                : (fst == snd);
+            return (fst instanceof IComparable) ? ((IComparable) fst).eqv(snd)
+                    : (fst == snd);
         }
     }
 
     public static boolean equal(Object fst, Object snd)
     {
-        return (fst instanceof IComparable)
-        	? ((IComparable)fst).equals(snd)
-        	: fst.equals(snd);
+        return (fst instanceof IComparable) ? ((IComparable) fst).equals(snd)
+                : fst.equals(snd);
     }
 
     public static boolean isList(Object o)
     {
-        return (o instanceof IList) && ((IList)o).isValid();
+        return (o instanceof IList) && ((IList) o).isValid();
     }
 
-    public static IList toList(Object o) throws ListExpected
+    public static IList toList(Object o)
+            throws ListExpected
     {
         if (o instanceof IList)
         {
-            return ((IList)o).validate();
+            return ((IList) o).validate();
         }
         else
         {
@@ -135,14 +134,15 @@ public class ValueTraits
 
     public static boolean isPair(Object o)
     {
-        return o instanceof IPair;
+        return o instanceof IConstPair;
     }
 
-    public static IPair toPair(Object o) throws PairExpected
+    public static IConstPair toConstPair(Object o)
+            throws PairExpected
     {
-        if (o instanceof IPair)
+        if (o instanceof IConstPair)
         {
-            return (IPair)o;
+            return (IConstPair) o;
         }
         else
         {
@@ -150,11 +150,28 @@ public class ValueTraits
         }
     }
 
-    public static InputPort toInputPort(Object o) throws InputPortExpected
+    public static IMutablePair toMutablePair(Object o)
+            throws PairExpected, ImmutableException
+    {
+        if (o instanceof IMutablePair)
+        {
+            return (IMutablePair) o;
+        }
+        else
+        {
+            if (!(o instanceof IConstPair))
+                throw new PairExpected(o);
+            else
+                throw new ImmutableException(o);
+        }
+    }
+
+    public static InputPort toInputPort(Object o)
+            throws InputPortExpected
     {
         if (o instanceof InputPort)
         {
-            return (InputPort)o;
+            return (InputPort) o;
         }
         else
         {
@@ -162,11 +179,12 @@ public class ValueTraits
         }
     }
 
-    public static Symbol toSymbol(Object o) throws SymbolExpected
+    public static Symbol toSymbol(Object o)
+            throws SymbolExpected
     {
         if (o instanceof Symbol)
         {
-            return (Symbol)o;
+            return (Symbol) o;
         }
         else
         {
@@ -184,11 +202,12 @@ public class ValueTraits
         return Boolean.valueOf(isTrue(o));
     }
 
-    public static ScmNumber toScmNumber(Object o) throws NumberExpected
+    public static ScmNumber toScmNumber(Object o)
+            throws NumberExpected
     {
         if (o instanceof ScmNumber)
         {
-            return (ScmNumber)o;
+            return (ScmNumber) o;
         }
         else
         {
@@ -201,11 +220,12 @@ public class ValueTraits
         return ScmNumber.create(i);
     }
 
-    public static Character toScmChar(Object o) throws CharExpected
+    public static Character toScmChar(Object o)
+            throws CharExpected
     {
         if (o instanceof Character)
         {
-            return (Character)o;
+            return (Character) o;
         }
         else
         {
@@ -218,11 +238,12 @@ public class ValueTraits
         return new Character(c);
     }
 
-    public static ScmString toScmString(Object o) throws StringExpected
+    public static ScmString toScmString(Object o)
+            throws StringExpected
     {
         if (o instanceof ScmString)
         {
-            return (ScmString)o;
+            return (ScmString) o;
         }
         else
         {
@@ -230,11 +251,12 @@ public class ValueTraits
         }
     }
 
-    public static ScmVector toScmVector(Object o) throws VectorExpected
+    public static ScmVector toScmVector(Object o)
+            throws VectorExpected
     {
         if (o instanceof ScmVector)
         {
-            return (ScmVector)o;
+            return (ScmVector) o;
         }
         else
         {
@@ -242,11 +264,12 @@ public class ValueTraits
         }
     }
 
-    public static OutputPort toOutputPort(Object o) throws OutputPortExpected
+    public static OutputPort toOutputPort(Object o)
+            throws OutputPortExpected
     {
         if (o instanceof OutputPort)
         {
-            return (OutputPort)o;
+            return (OutputPort) o;
         }
         else
         {
@@ -255,11 +278,11 @@ public class ValueTraits
     }
 
     public static Environment toEnvironment(Object o)
-        throws EnvironmentExpected
+            throws EnvironmentExpected
     {
         if (o instanceof Environment)
         {
-            return (Environment)o;
+            return (Environment) o;
         }
         else
         {
@@ -268,11 +291,11 @@ public class ValueTraits
     }
 
     public static StaticEnvironment toStaticEnvironment(Object o)
-        throws EnvironmentExpected
+            throws EnvironmentExpected
     {
         if (o instanceof StaticEnvironment)
         {
-            return (StaticEnvironment)o;
+            return (StaticEnvironment) o;
         }
         else
         {
@@ -321,11 +344,11 @@ public class ValueTraits
     }
 
     public static void output(Writer destination, boolean doWrite, Object o)
-        throws IOException
+            throws IOException
     {
         if (o instanceof Character)
         {
-            final char c = ((Character)o).charValue();
+            final char c = ((Character) o).charValue();
 
             if (doWrite)
             {
@@ -356,7 +379,7 @@ public class ValueTraits
         }
         else if (o instanceof IOutputable)
         {
-            ((IOutputable)o).outputOn(destination, doWrite);
+            ((IOutputable) o).outputOn(destination, doWrite);
         }
         else
         {
@@ -371,12 +394,14 @@ public class ValueTraits
         }
     }
 
-    public static void display(Writer destination, Object o) throws IOException
+    public static void display(Writer destination, Object o)
+            throws IOException
     {
         output(destination, false, o);
     }
 
-    public static void write(Writer destination, Object o) throws IOException
+    public static void write(Writer destination, Object o)
+            throws IOException
     {
         output(destination, true, o);
     }
@@ -385,7 +410,7 @@ public class ValueTraits
     {
         if (o instanceof IMutable)
         {
-            return ((IMutable)o).getConst();
+            return ((IMutable) o).getConst();
         }
         else
         {
