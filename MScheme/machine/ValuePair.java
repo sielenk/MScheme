@@ -4,12 +4,15 @@ package MScheme.machine;
 import MScheme.expressions.SExpr;
 
 
-final class ValuePair
+public final class ValuePair
 {
-    SExpr     head;
-    ValuePair tail;
+    public SExpr     head;
+    public ValuePair tail;
 
 
-    ValuePair(SExpr h)
+    public ValuePair(SExpr h)
     { head = h; }
+
+    public ValuePair(SExpr h, ValuePair t)
+    { head = h; tail = t; }
 }
