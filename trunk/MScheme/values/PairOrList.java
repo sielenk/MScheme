@@ -43,11 +43,6 @@ final class PairOrList
 
     // implementation of List
 
-    public boolean isEmpty()
-    {
-        return false;
-    }
-
     public boolean isList()
     {
         return getSecond().isList();
