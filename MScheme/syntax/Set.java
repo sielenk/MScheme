@@ -20,5 +20,5 @@ final class Set
         StaticEnvironment syntax,
         Symbol            symbol
     ) throws CompileError
-    { return syntax.getCodeFor(symbol); }
+    { return symbol.getReference(syntax); }
 }

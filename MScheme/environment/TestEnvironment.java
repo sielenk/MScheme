@@ -128,7 +128,7 @@ public class TestEnvironment
         assert(env.getTranslatorFor(sym1) == token);
         
         try {
-            env.getCodeFor(sym1);
+            env.getReferenceFor(sym1);
             fail("expected UnexpectedSyntax");
         }
         catch (UnexpectedSyntax e) { }
@@ -136,7 +136,7 @@ public class TestEnvironment
         Reference reference = env.define(sym2);
 
         assert(env.getTranslatorFor(sym2) == reference);
-        assert(env.getCodeFor (sym2) == reference);
+        assert(env.getReferenceFor (sym2) == reference);
     }
     
     public void testExtendedStatic()

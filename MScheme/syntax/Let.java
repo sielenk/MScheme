@@ -99,7 +99,7 @@ final class Let
 
         if (name != null) {
             compiledProc.setSelf(
-                innerEnvironment.getCodeFor(name)
+                innerEnvironment.getReferenceFor(name)
             );
         }
 

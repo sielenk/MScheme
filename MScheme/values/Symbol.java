@@ -10,6 +10,7 @@ import MScheme.Value;
 import MScheme.Translator;
 import MScheme.Code;
 
+import MScheme.environment.Reference;
 import MScheme.environment.StaticEnvironment;
 
 import MScheme.exceptions.*;
@@ -20,14 +21,14 @@ public final class Symbol
 {
     final private static WeakHashMap _map = new WeakHashMap();
 
-    final private String _key;
+    final private String _javaString;
 
     private Symbol(String javaString)
-    { _key = javaString; }
+    { _javaString = javaString; }
 
-    public static Symbol create(String key)
+    public static Symbol create(String javaString)
     {
-        final WeakReference ref   = (WeakReference)_map.get(key);
+        final WeakReference ref   = (WeakReference)_map.get(javaString);
         Symbol              value = (ref != null) ? (Symbol)ref.get() : null;
 
         // value might be null, even if ref isn't.
@@ -35,9 +36,9 @@ public final class Symbol
         // but it's map entry is still in place.
 
         if (value == null) {
-            value = new Symbol(key);
+            value = new Symbol(javaString);
             //        v-  and  -^ have to be the same ...
-            _map.put(key, new WeakReference(value));
+            _map.put(javaString, new WeakReference(value));
             // ... to ensure the collection of the wealky referenced
             // value before it's map entry
         }
@@ -53,8 +54,8 @@ public final class Symbol
     { return create("[" + _index++ + "]"); }
 
 
-    public String getKey()
-    { return _key; }
+    public String getJavaString()
+    { return _javaString; }
 
 
     // specialisation/implementation of Value
@@ -68,12 +69,16 @@ public final class Symbol
 
     public void write(Writer destination)
         throws IOException
-    { destination.write(getKey()); }
+    { destination.write(getJavaString()); }
 
+
+    public Reference getReference(StaticEnvironment env)
+        throws SymbolNotFoundException, UnexpectedSyntax
+    { return env.getReferenceFor(this); }
 
     public Code getCode(StaticEnvironment env)
         throws SymbolNotFoundException, UnexpectedSyntax
-    { return env.getCodeFor(this); }
+    { return getReference(env); }
 
     public Translator getTranslator(StaticEnvironment env)
         throws SymbolNotFoundException

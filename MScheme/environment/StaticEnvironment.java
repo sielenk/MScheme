@@ -99,7 +99,7 @@ public class StaticEnvironment
         throws AlreadyBound
     {
         try {
-            String    key = symbol.getKey();
+            String    key = symbol.getJavaString();
             Reference ref = (Reference)_bindings.get(key);
 
             // if ref is != null
@@ -112,7 +112,7 @@ public class StaticEnvironment
                     getLevel(),
                     getSize()
                 );
-                
+
                 _bindings.put(key, ref);
                 _numberOfReferences++;
             }
@@ -128,7 +128,7 @@ public class StaticEnvironment
     public void defineSyntax(Symbol symbol, Syntax value)
         throws AlreadyBound
     {
-        String  key = symbol.getKey();
+        String  key = symbol.getJavaString();
 
         {
             Object o = _bindings.get(key);
@@ -141,7 +141,7 @@ public class StaticEnvironment
     }
 
 
-    private Translator safeGetTranslatorFor(Symbol symbol)
+    private Translator safeGetTranslatorFor(Symbol key)
     {
         for (
             StaticEnvironment current = this;
@@ -149,7 +149,7 @@ public class StaticEnvironment
             current = current._parent
         ) {
             Translator result
-                = (Translator)current._bindings.get(symbol.getKey());
+                = (Translator)current._bindings.get(key.getJavaString());
 
             if (result != null) {
                 return result;
@@ -159,19 +159,19 @@ public class StaticEnvironment
         return null;
     }
 
-    public Translator getTranslatorFor(Symbol symbol)
+    public Translator getTranslatorFor(Symbol key)
         throws SymbolNotFoundException
     {
-        Translator result = safeGetTranslatorFor(symbol);
+        Translator result = safeGetTranslatorFor(key);
 
         if (result != null) {
             return result;
         } else {
-            throw new SymbolNotFoundException(symbol);
+            throw new SymbolNotFoundException(key);
         }
     }
 
-    public Reference getCodeFor(Symbol key)
+    public Reference getReferenceFor(Symbol key)
         throws SymbolNotFoundException, UnexpectedSyntax
     {
         try {
