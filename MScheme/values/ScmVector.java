@@ -85,12 +85,12 @@ public final class ScmVector
 
     public static ScmVector create(Value[] data)
     {
-        return new ScmVector(false, data);
+        return (data.length == 0) ? _empty : new ScmVector(false, data);
     }
 
     public static ScmVector createConst(Value[] data)
     {
-        return new ScmVector(true, data);
+        return (data.length == 0) ? _empty : new ScmVector(true, data);
     }
 
     public static ScmVector create(int size, Value fill)
