@@ -1,7 +1,10 @@
 package MScheme.functions;
 
 import MScheme.machine.Machine;
+import MScheme.machine.WindContinuation;
 import MScheme.code.Code;
+import MScheme.code.CodeList;
+import MScheme.code.Application;
 import MScheme.values.ValueFactory;
 import MScheme.values.Value;
 import MScheme.values.Function;
@@ -23,11 +26,21 @@ public class DynamicWindFunction
         Value   trd
     ) throws RuntimeError, TypeError
     {
-        Function before = fst.toFunction();
-        Function thunk  = snd.toFunction();
-        Function after  = trd.toFunction();
+        Code before = createCall(fst);
+        Code thunk  = createCall(snd);
+        Code after  = createCall(trd);
 
-        return machine.handleDynamicWind(before, thunk, after);
+        return WindContinuation.create(machine, before, thunk, after);
+    }
+    
+    private static Code createCall(Value v)
+        throws FunctionExpected
+    {
+        return Application.create(
+	        CodeList.create(
+		        v.toFunction().getLiteral()
+			)
+	    );
     }
 }
 
