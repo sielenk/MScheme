@@ -757,4 +757,49 @@ public class TestR5RS
             "20"
         );
     }
+
+
+
+    /// additional stuff
+    
+    public void testSpawn()
+        throws Exception
+    {
+        check("(spawn (lambda (c) 7))", "7");
+        check(
+            "(cons " +
+              "1 "+
+              "(spawn "+
+                "(lambda (c) "+
+                  "(cons "+
+                    "2 "+
+                    "(c "+
+                      "(lambda (k) "+
+                        "(cons "+
+                          "3 "+
+                          "(k '()))))))))",
+            "(1 3 2)"
+        );
+
+        try {
+            eval("((spawn (lambda (c) c)) (lambda (k) k))");
+            fail();
+        }
+        catch (SchemeException e) { }
+
+        try {
+            eval("(spawn (lambda (c) " +
+                          "(c (lambda (k) " +
+                               "(c (lambda (k) k))))))");
+            fail();
+        }
+        catch (SchemeException e) { }
+        
+        eval("(define id " +
+               "(spawn (lambda (c) " +
+                        "(c (c (lambda (k) " +
+                                "(k (lambda (k) k))))))))");
+        check("(id  45)", "45");
+        check("(id '())", "()");
+    }
 }
