@@ -24,7 +24,6 @@ public final class CompiledLambda
     private final Arity             _arity;
     private final StaticEnvironment _compiledFormals;
     private final Code              _compiledBody;
-    private       Reference         _self = null;
     
     public CompiledLambda(
         Arity             arity,
@@ -50,9 +49,6 @@ public final class CompiledLambda
         List              body
     ) throws CompileError, TypeError
     { this(arity, compiledFormals, body.getCodeList(compiledFormals)); }
-
-    public void setSelf(Reference self)
-    { _self = self; }
 
     final class Closure
         extends CheckedFunction
@@ -83,13 +79,6 @@ public final class CompiledLambda
                 );
 
             registers.setEnvironment(newEnvironment);
-
-            if (_self != null) {
-	            newEnvironment.assign(
-		            _self,
-			        this
-		        );
-	        }
 
             return _compiledBody;
         }
