@@ -5,7 +5,6 @@ import MScheme.machine.WindContinuation;
 import MScheme.Code;
 import MScheme.code.CodeList;
 import MScheme.code.Application;
-import MScheme.values.ValueFactory;
 import MScheme.Value;
 import MScheme.values.Function;
 
