@@ -67,46 +67,6 @@ final class CallContinuation
 }
 
 
-final class PushContinuation
-    extends Continuation
-{
-    public final static String id
-        = "$Id$";
-
-
-    private final List     _done;
-    private final CodeList _todo;
-
-
-    PushContinuation(
-        Registers state,
-        List      done,
-        CodeList  todo
-    )
-    {
-        super(state);
-        _done = done;
-        _todo = todo;
-    }
-
-    protected Code execute(Registers state, Value value)
-        throws SchemeException
-    {
-        return Application.prepareNext(
-            state,
-            ListFactory.prepend(value, _done),
-            _todo
-        );
-    }
-
-
-    protected String debugString()
-    {
-        return "push[" + _todo.getReversed() + " | " + _done + "]";
-    }
-}
-
-
 public final class Application
     implements Code
 {
@@ -114,15 +74,13 @@ public final class Application
         = "$Id$";
 
 
-    static Code prepareNext(
-        Registers state,
-        List      done,
-        CodeList  todo
+    Code prepareNext(
+        Registers  state,
+        final List done,
+        final int  index
     )
     {
-        CodeList newTail = todo.getTail();
-
-        if (newTail.isEmpty())
+        if (index == 0)
         {
             new CallContinuation(
                 state,
@@ -131,25 +89,50 @@ public final class Application
         }
         else
         {
-            new PushContinuation(
-                state,
-                done,
-                newTail
-            );
+            new Continuation(state)
+            {
+                public final static String id
+                    = "$Id$";
+
+
+                private final List _done  = done;
+                private final int  _index = index;
+
+                protected Code execute(Registers innerState, Value value)
+                    throws SchemeException
+                {
+                    return prepareNext(
+                        innerState,
+                        ListFactory.prepend(value, _done),
+                        _index - 1
+                    );
+                }
+
+
+                protected String debugString()
+                {
+                    return 
+                        "push:<"
+                        + CodeArray.printTuple(
+                              _application, 0, index
+                          )
+                        + ">, " + _done + '>';
+                }
+            };
         }
 
-        return todo.getHead();
+        return _application[index];
     }
 
 
-    private final CodeList _permutedApplication;
+    private final Code[] _application;
 
-    private Application(CodeList application)
+    private Application(Code[] application)
     {
-        _permutedApplication = application.getReversed();
+        _application = application;
     }
 
-    public static Code create(CodeList application)
+    public static Code create(Code[] application)
     {
         return new Application(application);
     }
@@ -159,13 +142,13 @@ public final class Application
         return prepareNext(
             state,
             Empty.create(),
-            _permutedApplication
+            _application.length - 1
         );
     }
 
 
     public String toString()
     {
-        return "app:<" + _permutedApplication.getReversed().toString() + '>';
+        return "app:" + CodeArray.printTuple(_application);
     }
 }
