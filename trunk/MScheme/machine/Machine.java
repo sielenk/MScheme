@@ -3,6 +3,7 @@ package MScheme.machine;
 import MScheme.Value;
 import MScheme.Code;
 
+import MScheme.values.Symbol;
 import MScheme.values.ListFactory;
 import MScheme.values.ScmBoolean;
 import MScheme.values.Function;
@@ -79,18 +80,18 @@ public final class Machine
     }
 
 
-    public Value execute(Code program)
-    throws SchemeException
-    {
-        return execute(program, null);
-    }
+    private final static Symbol errorTag
+        = Symbol.create("error-tag");
 
-    public Value execute(Code program, Function errorFunction)
-    throws SchemeException
+    public Value execute(Code program)
+        throws SchemeException
     {
         Code              next  = program;
         Registers         state = new Registers(getEnvironment());
         AbortContinuation abort = new AbortContinuation(state);
+
+        SchemeException   lastError      = null;
+        Value             lastErrorValue = null;
 
         while (!abort.hasResult())
         {
@@ -100,66 +101,44 @@ public final class Machine
             }
             catch (SchemeException error)
             {
-                if (errorFunction != null)
-                {
-                    next = errorFunction.call(
-                               state,
-                               ListFactory.create(
-                                   ScmBoolean.createFalse(),
-                                   error.getCauseValue(),
-                                   error.getMessageValue()
-                               )
-                           );
-                }
-                else
-                {
-                    throw error;
-                }
+                lastError      = error;
+                lastErrorValue = 
+                    ListFactory.create(
+                        errorTag,
+                        error.getCauseValue(),
+                        error.getMessageValue()
+                    );
+
+                next = new ContinuationFunction(
+                    abort
+                ).call(
+                    state,
+                    ListFactory.create(
+                        lastErrorValue
+                    )
+                );
             }
         }
 
-        return abort.getResult();
+        Value result = abort.getResult();
+        
+        if (result == lastErrorValue) 
+        {
+            throw lastError;
+        }
+        else
+        {
+            return result;
+        }
     }
 
     public Value evaluate(Value evaluatee)
-    throws SchemeException
+        throws SchemeException
     {
-        return evaluate(evaluatee, null);
-    }
-
-    public Value evaluate(Value evaluatee, Function errorFunction)
-    throws SchemeException
-    {
-        Code program;
-
-        try
-        {
-            program = evaluatee.getCode(
-                          getEnvironment().getStatic()
-                      );
-        }
-        catch (SchemeException error)
-        {
-            if (errorFunction != null)
-            {
-                program = Application.create(
-                              CodeList.create(
-                                  errorFunction.getLiteral(),
-                                  ScmBoolean.createTrue().getLiteral(),
-                                  error.getCauseValue().getLiteral(),
-                                  error.getMessageValue().getLiteral()
-                              )
-                          );
-            }
-            else
-            {
-                throw error;
-            }
-        }
-
         return execute(
-                   program,
-                   errorFunction
-               );
+            evaluatee.getCode(
+                getEnvironment().getStatic()
+            )
+        );
     }
 }
