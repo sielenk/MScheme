@@ -6,7 +6,7 @@ import MScheme.exceptions.SchemeException;
 
 
 public class DisplayFunction
-    extends BinaryFunction
+    extends BinaryValueFunction
 {
     public final static DisplayFunction INSTANCE
         = new DisplayFunction();

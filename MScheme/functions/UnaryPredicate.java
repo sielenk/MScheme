@@ -7,7 +7,7 @@ import MScheme.exceptions.SchemeException;
 
 
 abstract class UnaryPredicate
-    extends UnaryFunction
+    extends UnaryValueFunction
 {
     protected abstract boolean test(
         Value fst
@@ -18,4 +18,3 @@ abstract class UnaryPredicate
     ) throws SchemeException
     { return ValueFactory.createBool(test(fst)); }
 }
-

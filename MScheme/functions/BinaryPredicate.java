@@ -7,7 +7,7 @@ import MScheme.exceptions.SchemeException;
 
 
 abstract class BinaryPredicate
-    extends BinaryFunction
+    extends BinaryValueFunction
 {
     protected abstract boolean test(
         Value fst,
@@ -20,4 +20,3 @@ abstract class BinaryPredicate
     ) throws SchemeException
     { return ValueFactory.createBool(test(fst, snd)); }
 }
-

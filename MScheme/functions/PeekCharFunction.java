@@ -6,7 +6,7 @@ import MScheme.exceptions.SchemeException;
 
 
 public class PeekCharFunction
-    extends UnaryFunction
+    extends UnaryValueFunction
 {
     public final static PeekCharFunction INSTANCE
         = new PeekCharFunction();
@@ -24,4 +24,3 @@ public class PeekCharFunction
         }
     }
 }
-

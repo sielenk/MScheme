@@ -5,7 +5,7 @@ import MScheme.values.ValueFactory;
 
 
 public class ConsFunction
-    extends BinaryFunction
+    extends BinaryValueFunction
 {
     public final static ConsFunction INSTANCE
         = new ConsFunction();

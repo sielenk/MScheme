@@ -8,7 +8,7 @@ import MScheme.exceptions.ListExpectedException;
 
 
 public class LengthFunction
-    extends UnaryFunction
+    extends UnaryValueFunction
 {
     public final static LengthFunction INSTANCE
         = new LengthFunction();

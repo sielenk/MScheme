@@ -6,7 +6,7 @@ import MScheme.exceptions.SchemeException;
 
 
 public class WriteFunction
-    extends BinaryFunction
+    extends BinaryValueFunction
 {
     public final static WriteFunction INSTANCE
         = new WriteFunction();

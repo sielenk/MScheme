@@ -16,4 +16,3 @@ public class IsCharReadyFunction
         throws PortExpectedException
     { return value.toPort().toInput().isReady(); }
 }
-

@@ -7,7 +7,7 @@ import MScheme.exceptions.SchemeException;
 
 
 public class SetCarFunction
-    extends BinaryFunction
+    extends BinaryValueFunction
 {
     public final static SetCarFunction INSTANCE
         = new SetCarFunction();

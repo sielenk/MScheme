@@ -1,23 +1,24 @@
 package MScheme.functions;
 
-import MScheme.values.*;
+import MScheme.values.ValueFactory;
+import MScheme.values.Value;
+import MScheme.values.SchemeString;
 
-import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.StringExpectedException;
 
 
 public class StringToSymbolFunction
-    extends UnaryFunction
+    extends UnaryValueFunction
 {
     public final static StringToSymbolFunction INSTANCE
         = new StringToSymbolFunction();
     
     protected Value checkedCall(
         Value argument
-    ) throws SchemeException
+    ) throws StringExpectedException
     {
         return ValueFactory.createString(
             argument.toScmString().getString()
         );
     }
 }
-
