@@ -96,6 +96,12 @@ public abstract class Pair
     }
 
 
+    public abstract boolean isList();
+    
+//  public abstract List toList()
+//  throws ListExpected;
+
+
     public final boolean isPair()
     {
         return true;
@@ -123,13 +129,14 @@ public abstract class Pair
         return false;
     }
 
+
     public abstract Code getCode(StaticEnvironment compilationEnv)
-    throws SchemeException;
+        throws SchemeException;
 
 
     // implementation of Compound
 
-    protected Value getConstCopy()
+    protected final Value getConstCopy()
     {
         return createConst(getFirst(), getSecond());
     }
@@ -149,24 +156,24 @@ public abstract class Pair
         _second = second;
     }
 
-    public Value getFirst()
+    public final Value getFirst()
     {
         return _first;
     }
 
-    public void setFirst(Value first)
+    public final void setFirst(Value first)
     throws ImmutableException
     {
         modify();
         _first = first;
     }
 
-    public Value getSecond()
+    public final Value getSecond()
     {
         return _second;
     }
 
-    public void setSecond(Value second)
+    public final void setSecond(Value second)
     throws ImmutableException
     {
         modify();
