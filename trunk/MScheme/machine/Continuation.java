@@ -1,64 +1,52 @@
 package MScheme.machine;
 
+
 import MScheme.machine.Values;
 import MScheme.exceptions.SException;
 import MScheme.environment.Environment;
 import MScheme.expressions.SFunction;
 
 
-class Context
-{
-    private Continuation _continuation;
-    private Environment  _environment;
-
-
-    protected Context(
-        ContinuationStack stack,
-        Environment       environment
-    ) {
-        _continuation = stack.getTop();
-        _environment  = environment;
-    }
-
-    public Continuation getContinuation()
-    {
-        return _continuation;
-    }
-
-    public Environment getEnvironment()
-    {
-        return _environment;
-    }
-}
-
-
 class Continuation extends Context
 {
+    private int       _depth;
     private SFunction _function;
 
-    /** push a new continuation on the given machine
-     */
+
+    public final static Continuation HALT
+        = new Continuation();
+
+
+    private Continuation()
+    {
+        super(null, null);
+        _depth    = 0;
+        _function = null;
+    }
+
+
     Continuation(
-        ContinuationStack stack,
-        Environment       environment,
-        SFunction         function
+        Continuation continuation,
+        Environment  environment,
+        SFunction    function
     ) {
-        super(stack, environment);
-        stack.setTop(this);
+        super(
+            continuation,
+            environment
+        );
+        _depth    = continuation._depth + 1;
         _function = function;
     }
 
 
-    /** pop the current continuation and call its associated function */
     Values invoke(
-        ContinuationStack stack,
-        Values            arguments
+        Machine machine,
+        Values  arguments
     ) throws SException {
-        stack.setTop(getContinuation());
+        System.err.print("[" + _depth + "] ");
 
         return _function.call(
-            stack,
-            getEnvironment(),
+            machine,
             arguments
         );
     }
