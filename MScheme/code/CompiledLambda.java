@@ -36,7 +36,7 @@ public final class CompiledLambda
     private final StaticEnvironment _compiledFormals;
     private final Code              _compiledBody;
 
-    public CompiledLambda(
+    private CompiledLambda(
         Arity             arity,
         StaticEnvironment compiledFormals,
         Code              compiledBody
@@ -47,22 +47,31 @@ public final class CompiledLambda
         _compiledBody    = compiledBody;
     }
 
-    public CompiledLambda(
+    public static CompiledLambda create(
+        Arity             arity,
+        StaticEnvironment compiledFormals,
+        Code              compiledBody
+    )
+    {
+        return new CompiledLambda(arity, compiledFormals, compiledBody);
+    }
+
+    public static CompiledLambda create(
         Arity             arity,
         StaticEnvironment compiledFormals,
         CodeList          compiledBody
     )
     {
-        this(arity, compiledFormals, Sequence.create(compiledBody));
+        return create(arity, compiledFormals, Sequence.create(compiledBody));
     }
 
-    public CompiledLambda(
+    public static CompiledLambda create(
         Arity             arity,
         StaticEnvironment compiledFormals,
         List              body
     ) throws SchemeException
     {
-        this(arity, compiledFormals, body.getCodeList(compiledFormals));
+        return create(arity, compiledFormals, body.getCodeList(compiledFormals));
     }
 
     final class Closure
