@@ -850,9 +850,6 @@ public class Builtins
     public final static Function
         __y_2Dcombinator = YCombinator.INSTANCE;
     
-    public final static Function
-        __current_2Denvironment = CurrentEnvironment.INSTANCE;
-
     public final static Value __open_2Dinput_2Dstring(Value argument)
         throws TypeError
     {
