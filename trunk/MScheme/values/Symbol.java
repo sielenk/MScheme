@@ -22,6 +22,10 @@ public final class Symbol
     public static Symbol create(String javaString)
     { return new Symbol(javaString); }
 
+    private static int _index = 0;
+	public static Symbol createUnique()
+    { return new Symbol("[" + _index++ + "]"); }
+
     public static Symbol create(ScmString schemeString)
     { return create(schemeString.getJavaString()); }
 
