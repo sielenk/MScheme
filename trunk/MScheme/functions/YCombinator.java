@@ -30,7 +30,7 @@ class YWrappedFunction
     {
         return _f.call(
             state,
-            ValueFactory.prepend(
+            List.prepend(
                 this,
                 arguments
             )
