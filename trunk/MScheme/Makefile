@@ -92,6 +92,7 @@ SRC =	Code.java	\
 	syntax/DefineSyntax.java	\
 	syntax/If.java	\
 	syntax/Lambda.java	\
+	syntax/LetBase.java	\
 	syntax/Let.java	\
 	syntax/LetStar.java	\
 	syntax/Letrec.java	\
@@ -106,6 +107,7 @@ SRC =	Code.java	\
 	values/InputPort.java	\
 	values/ListFactory.java	\
 	values/List.java	\
+	values/ExtendedList.java	\
 	values/OutputPort.java	\
 	values/Pair.java	\
 	values/PairOrList.java	\
