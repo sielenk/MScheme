@@ -38,15 +38,20 @@ public class ClosureFunc extends Function
         Values            arguments
     ) {
         stack.push(
-            SyntaxFunc.BEGIN_FUNC,
-            EnvironmentFactory.fill(
-                _stub,
+            _stub.fill(
                 getMinArity(),
                 (getMaxArity() == -1),
                 arguments
-            )
+            ),
+            SyntaxFunc.BEGIN_FUNC
         );
 
         return _body;
+    }
+
+
+    protected String defaultString()
+    {
+        return "[closure]";
     }
 }

@@ -30,11 +30,23 @@ public class ExpectFunctionFunc extends Function
         SExpr sexpr = arguments.at(0);
 
         try {
-            stack.push((Function)sexpr);
+            stack.push(
+                environment,
+                (Function)sexpr
+            );
         } catch (ClassCastException e) {
             throw new SExpectedFunctionException(sexpr);
         }
 
         return _arguments;
+    }
+
+
+    protected String defaultString()
+    {
+        return
+            "[arguments "
+            + _arguments.toList()
+            + "]";
     }
 }

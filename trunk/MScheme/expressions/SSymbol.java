@@ -16,4 +16,10 @@ public class SSymbol extends SExpr
     {
         return _key;
     }
+
+
+    protected String defaultString()
+    {
+        return _symbol;
+    }
 }

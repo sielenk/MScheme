@@ -61,4 +61,9 @@ abstract public class EnumeratedFunc extends Function
         return SBool.FALSE;
     }
 
+
+    protected String defaultString()
+    {
+        return "[" + id() + ": "+ name() + "]";
+    }
 }

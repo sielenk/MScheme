@@ -27,4 +27,10 @@ public class ConstFunc extends Function
     ) {
         return _value;
     }
+
+
+    protected String defaultString()
+    {
+        return "[const " + _value.at(0) + "]";
+    }
 }

@@ -19,10 +19,12 @@ public class EvalFunc extends Function
 {
     public final static Function INSTANCE = new EvalFunc();
 
+
     private EvalFunc()
     {
         super(1, 1);
     }
+
 
     protected Values _call(
         ContinuationStack stack,
@@ -39,12 +41,16 @@ public class EvalFunc extends Function
 
             try {
                 stack.push(
+                    environment,
                     new ExpectFunctionFunc(
                         ((SList)(pair.getCdr())).toValues()
                     )
                 );
 
-                stack.push(INSTANCE);
+                stack.push(
+                    environment,
+                    INSTANCE
+                );
                 sexpr = pair.getCar();
             } catch (ClassCastException e) {
                 throw new SExpectedListException(pair.getCdr());
@@ -54,5 +60,11 @@ public class EvalFunc extends Function
         }
 
         return new Values(sexpr);
+    }
+
+
+    protected String defaultString()
+    {
+        return "[eval]";
     }
 }
