@@ -140,10 +140,8 @@ public abstract class Continuation
     final Code invoke(Registers state, Value result)
         throws SchemeException
     {
-        Registers buffer = new Registers(this);
-        Code      next   = execute(buffer, result);
-        state.assign(buffer);
-        return next;
+        state.assign(this);
+        return execute(state, result);
     }
 
     /**
