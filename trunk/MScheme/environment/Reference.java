@@ -51,6 +51,6 @@ public final class Reference
 
     public String toString()
     {
-        return "[" + _symbol.toString() + "]@" + _level + '.' + _index;
+        return "[" + _symbol.toString() + '@' + _level + '.' + _index + ']';
     }
 }
