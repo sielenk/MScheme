@@ -56,7 +56,7 @@ final class LetToken
             .translate(
                 syntax,
                 ValueFactory.prepend(
-                    formals,
+                    formals.toValue(),
                     body
                 )
             )

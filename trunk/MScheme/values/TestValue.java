@@ -47,7 +47,7 @@ public class TestValue
         throws Exception
     {
         Pair.create(null, null).toPair();
-        List.with().toList();
+        Empty.create().toList();
         ValueFactory.createNumber(0).toNumber();
         ValueFactory.createChar('a').toChar();
         ValueFactory.createString("").toScmString();
@@ -85,7 +85,7 @@ public class TestValue
     public void testEmpty()
         throws Exception
     {
-        final Value empty = List.with();
+        final Value empty = Empty.create();
         
         assert(!empty.isFalse());
         

@@ -235,13 +235,13 @@ public class Builtins
 
 
     public final static Value null_3F(Value argument) // pair?
-    { return SchemeBoolean.create(argument.eq(List.with())); }
+    { return SchemeBoolean.create(argument.eq(Empty.create())); }
 
     public final static Value list_3F(Value argument) // list?
     { return SchemeBoolean.create(argument.isList()); }
 
     public final static Value list(List argument) // list?
-    { return argument; }
+    { return argument.toValue(); }
 
     public final static Value length(Value argument)
         throws ListExpected
@@ -251,7 +251,7 @@ public class Builtins
 
     public final static Value reverse(Value argument)
         throws ListExpected
-    { return argument.toList().getReversed(); }
+    { return argument.toList().getReversed().toValue(); }
 
     public final static Function memq   = MemqFunction.INSTANCE;
     public final static Function memv   = MemvFunction.INSTANCE;
@@ -334,7 +334,7 @@ public class Builtins
 
     public final static Value vector_2D_3Elist(Value argument) // vector->list
         throws VectorExpected
-    { return argument.toVector().getList(); }
+    { return argument.toVector().getList().toValue(); }
 
     public final static Value list_2D_3Evector(Value argument) // list->vector
         throws ListExpected

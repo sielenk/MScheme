@@ -11,7 +11,7 @@ public class SyntaxArityError
     
     public SyntaxArityError(List arguments, Arity expected)
     {
-        super(arguments);
+        super(arguments.toValue());
         _expected = expected;
     }
 }

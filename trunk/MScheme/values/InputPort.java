@@ -266,7 +266,7 @@ public class InputPort
                 return result;
             } else {
                 _reader.unread(la1);
-                return Pair.create(
+                return ValueFactory.prepend(
                     head,
                     parseList()
                 );
@@ -420,7 +420,7 @@ public class InputPort
         } // break;
                 
         case '(':
-            return parseList();
+            return parseList().toValue();
             
         case '"':
             return parseString();

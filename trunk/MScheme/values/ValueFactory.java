@@ -21,20 +21,20 @@ public abstract class ValueFactory
     { return SchemeBoolean.create(flag); }
 
 
-    public static List prepend(Value head, List tail)
-    { return List.prepend(head, tail); }
-    
-    public static List createList()
-    { return List.with(); }
+    public static Pair prepend(Value head, List tail)
+    { return Pair.create(head, tail.toValue()); }
 
-    public static List createList(Value first)
-    { return List.with(first); }
+    public static Empty createList()
+    { return Empty.create(); }
 
-    public static List createList(Value first, Value second)
-    { return List.with(first, second); }
+    public static Pair createList(Value first)
+    { return prepend(first, createList()); }
 
-    public static List createList(Value first, Value second, Value third)
-    { return List.with(first, second, third); }
+    public static Pair createList(Value first, Value second)
+    { return prepend(first, createList(second)); }
+
+    public static Pair createList(Value first, Value second, Value third)
+    { return prepend(first, createList(second, third)); }
 
     
     public static Symbol createSymbol(String javaString)
