@@ -2,7 +2,6 @@ package MScheme.values;
 
 import MScheme.Value;
 
-import MScheme.machine.Machine;
 import MScheme.environment.StaticEnvironment;
 import MScheme.code.*;
 

@@ -4,7 +4,6 @@ import MScheme.Value;
 import MScheme.List;
 import MScheme.Code;
 
-import MScheme.machine.Machine;
 import MScheme.environment.StaticEnvironment;
 import MScheme.code.CodeList;
 
