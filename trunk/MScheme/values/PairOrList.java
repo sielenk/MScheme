@@ -78,15 +78,20 @@ final class PairOrList
     {
         destination.write('(');
 
-        Value current = this;
+        Value   current = this;
+        Value   delayed = this;
+        boolean advance = false;
+        boolean first   = true;
+
         while (current instanceof Pair)
         {
-            // 'this' is the first element of the list
-            // and needs no leading space
-            // (the opening parenthesis is a delimiter)
-            if (current != this)
+            if (!first)
             {
                 destination.write(' ');
+            }
+            else
+            {
+                first = false;
             }
 
             Pair currentPair = (Pair)current;
@@ -101,6 +106,18 @@ final class PairOrList
             }
 
             current = currentPair.getSecond();
+
+            if (advance)
+            {
+                delayed = ((Pair)delayed).getSecond();
+                
+                if (delayed == current)
+                {
+                    destination.write(" . [ cyclic ])");
+                    return;
+                }
+            }
+            advance ^= true;
         }
 
         if (!current.isEmpty())
@@ -158,7 +175,7 @@ final class PairOrList
             .getSyntax(compilationEnv)
             .translate(
                 compilationEnv,
-                getTail()
+                toList().getTail()
             );
     }
 
@@ -230,7 +247,34 @@ final class PairOrList
 
     public boolean isList()
     {
-        return getSecond().isList();
+        try {
+            Value tortoise = getSecond();
+            Value hare     = tortoise;
+
+            while (!hare.isEmpty())
+            {
+                tortoise = ((Pair)tortoise).getSecond();
+                hare     = ((Pair)hare    ).getSecond();
+
+                if (hare.isEmpty())
+                {
+                    return true;
+                }
+
+                hare = ((Pair)hare).getSecond();
+
+                if (hare == tortoise)
+                {
+                    return false; // cyclic list
+                }
+            }
+
+            return true;
+        }
+        catch (ClassCastException e)
+        {
+            return false; // improper list
+        }
     }
 
     public List toList()
@@ -245,13 +289,11 @@ final class PairOrList
     }
 
     public List getTail()
-        throws ListExpected
     {
-        return getSecond().toList();
+        return (List)getSecond();
     }
 
     public int getLength()
-        throws ListExpected
     {
         try
         {
@@ -271,13 +313,12 @@ final class PairOrList
         catch (PairExpected e)
         {
             throw new RuntimeException(
-                      "unexpected PairExpected"
-                  );
+                "unexpected PairExpected"
+            );
         }
     }
 
     public final List getReversed()
-        throws ListExpected
     {
         try
         {
@@ -323,5 +364,49 @@ final class PairOrList
         result[index] = compiledHead;
         
         return result;
+    }
+
+
+    static int saveLength(Value l)
+    {
+        try {
+            Value tortoise = l;
+            Value hare     = l;
+
+            int length = 0;
+
+            while (!hare.isEmpty())
+            {
+                Value newTortoise = ((Pair)tortoise).getSecond();
+                Value newHare     = ((Pair)hare    ).getSecond();
+
+                ++length;
+
+                if (newHare.isEmpty())
+                {
+                    break;
+                }
+                else
+                {
+                    Value newerHare = ((Pair)newHare).getSecond();
+
+                    ++length;
+
+                    if (newerHare == newTortoise)
+                    {
+                        return -1;
+                    }
+
+                    tortoise =   newTortoise;
+                    hare     = newerHare;
+                }
+            }
+
+            return length;
+        }
+        catch (ClassCastException e)
+        {
+            return -2;
+        }
     }
 }

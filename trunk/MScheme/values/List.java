@@ -38,10 +38,10 @@ public interface List
         = "$Id$";
 
 
-    int   getLength  () throws ListExpected;
-    List  getReversed() throws ListExpected;
+    int   getLength  ();
+    List  getReversed();
     Value getHead    () throws PairExpected;
-    List  getTail    () throws PairExpected, ListExpected;
+    List  getTail    () throws PairExpected;
 
     Code[] getCodeArray(StaticEnvironment compilationEnv)
         throws SchemeException;
