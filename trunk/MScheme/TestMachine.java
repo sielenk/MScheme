@@ -14,6 +14,9 @@ import MScheme.exceptions.*;
 public class TestMachine
     extends TestCase
 {
+    public final static String id
+        = "$Id$";
+
     private Machine machine;
     
     private Symbol      _sym1;

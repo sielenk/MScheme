@@ -11,6 +11,9 @@ import MScheme.exceptions.CompileError;
 
 public interface Translator
 {
+    String id
+        = "$Id$";
+
     Code translate(
         StaticEnvironment e,
         List              arguments

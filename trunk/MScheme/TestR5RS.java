@@ -13,6 +13,9 @@ import MScheme.exceptions.*;
 public class TestR5RS
     extends TestCase
 {
+    public final static String id
+        = "$Id$";
+
     private Machine machine;
 
 

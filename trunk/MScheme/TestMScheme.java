@@ -6,6 +6,9 @@ import junit.framework.*;
 public class TestMScheme
     extends TestSuite
 {
+    public final static String id
+        = "$Id$";
+
     public TestMScheme(String name)
     {
         super(name);
