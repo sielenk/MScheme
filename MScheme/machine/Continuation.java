@@ -14,7 +14,7 @@ import MScheme.exceptions.RuntimeError;
 import MScheme.exceptions.TypeError;
 
 
-abstract class Continuation
+public abstract class Continuation
     extends UnaryFunction
 {
     final private int                _level;
@@ -22,7 +22,7 @@ abstract class Continuation
     final private Continuation       _capturedContinuation;
 
 
-    Continuation(Machine machine)
+    protected Continuation(Machine machine)
     {
         _capturedEnvironment  = machine.getEnvironment();
         _capturedContinuation = machine.getContinuation();
@@ -50,13 +50,13 @@ abstract class Continuation
         machine.setEnvironment (_capturedEnvironment);
         machine.setContinuation(_capturedContinuation);
         
-        return internalInvoke(machine, value);
+        return execute(machine, value);
     }
  
 
-    abstract protected Code internalInvoke(
+    abstract protected Code execute(
         Machine machine,
-        Value value
+        Value   value
     ) throws RuntimeError, TypeError;
         
         
@@ -117,6 +117,6 @@ abstract class Continuation
         // this null will end up in a CallThunkContinuation
         // created by dynamicWind or in the ValueContinuation
         // created above ... both ignore the given value
-        return machine.handleResult(null);
+        return new Literal(null);
     }
 }

@@ -15,7 +15,7 @@ abstract public class UnaryValueFunction
         Machine machine,
         Value   fst
     ) throws RuntimeError, TypeError
-    { return machine.handleResult(checkedCall(fst)); }
+    { return checkedCall(fst).getLiteral(); }
 
     abstract protected Value checkedCall(Value fst)
         throws RuntimeError, TypeError;

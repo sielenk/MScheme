@@ -9,15 +9,14 @@ import MScheme.exceptions.*;
 class ValueContinuation
     extends Continuation
 {
-    final private Value _value;
+    final private Code _literal;
 
     ValueContinuation(Machine machine, Value value)
-    { super(machine); _value = value; }
+    { super(machine); _literal = value.getLiteral(); }
 
-    protected Code internalInvoke(
+    protected Code execute(
         Machine machine,
         Value   value
     ) throws RuntimeError, TypeError
-    { return machine.handleResult(_value); }
+    { return _literal; }
 }
-

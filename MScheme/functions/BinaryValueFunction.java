@@ -16,7 +16,7 @@ abstract public class BinaryValueFunction
         Value   fst,
         Value   snd
     ) throws RuntimeError, TypeError
-    { return machine.handleResult(checkedCall(fst, snd)); }
+    { return checkedCall(fst, snd).getLiteral(); }
 
     abstract protected Value checkedCall(Value fst, Value snd)
         throws RuntimeError, TypeError;

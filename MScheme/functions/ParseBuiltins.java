@@ -226,7 +226,7 @@ public class ParseBuiltins
             .append("\n")
             .append("    public Code call(Machine machine, List args)\n")
             .append("        throws RuntimeError, TypeError\n")
-            .append("    { return machine.handleResult(checkedCall(args)); }\n")
+            .append("    { return checkedCall(args).getLiteral(); }\n")
             .append("}\n\n");
 
         table.append("    };\n");

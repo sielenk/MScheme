@@ -14,7 +14,7 @@ abstract public class ValueThunk
     final protected Code checkedCall(
         Machine machine
     ) throws RuntimeError, TypeError
-    { return machine.handleResult(checkedCall()); }
+    { return checkedCall().getLiteral(); }
 
     abstract protected Value checkedCall()
         throws RuntimeError, TypeError;

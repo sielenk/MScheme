@@ -1,6 +1,8 @@
 package MScheme.code;
 
+import MScheme.values.Value;
 import MScheme.machine.Machine;
+import MScheme.machine.Continuation;
 
 
 final public class CompiledSelector
@@ -20,10 +22,20 @@ final public class CompiledSelector
         _onTrue  = onTrue;
         _onFalse = onFalse;
     }
+
+    class SelectContinuation
+        extends Continuation
+    {
+        SelectContinuation(Machine machine)
+        { super(machine); }
+
+        protected Code execute(Machine machine, Value evaluationResult)
+        { return evaluationResult.isFalse() ? _onFalse : _onTrue; }
+    }
     
     public Code executionStep(Machine machine)
     {
-        machine.select(_onTrue, _onFalse);
+        new SelectContinuation(machine);
         return _flag;
     }
 }
