@@ -18,10 +18,14 @@ public final class ScmVector
     public final static String id
         = "$Id$";
 
+
     private final static ScmVector _empty = new ScmVector(0, null);
 
     private final Value[] _data;
     
+    private ScmVector(Value[] data)
+    { _data = data; }
+
     private ScmVector(int size, Value fill)
     {
         _data = new Value[size];
@@ -31,16 +35,19 @@ public final class ScmVector
         }
     }
 
+    public static ScmVector create(Value[] data)
+    { return new ScmVector(data); }
+
     public static ScmVector create(int size)
     { return create(size, null); }
-    
+
     public static ScmVector create(int size, Value fill)
     { return (size == 0) ? _empty : new ScmVector(size, fill); }
-    
+
     public static ScmVector create(List list)
         throws ListExpected
     { return createHelper(list, 0); }
-    
+
     private static ScmVector createHelper(List list, int index)
         throws ListExpected
     {
@@ -57,7 +64,7 @@ public final class ScmVector
             return result;
         }
     }
-    
+
 
     public int getLength()
     { return _data.length; }
@@ -68,11 +75,11 @@ public final class ScmVector
     {
         try {
             Value result = _data[index];
-        
+
             if (result == null) {
                 throw new UninitializedVectorException(this, index);
             }
-            
+
             return result;
         }
         catch (ArrayIndexOutOfBoundsException e) {
@@ -93,33 +100,33 @@ public final class ScmVector
         }
     }
 
-    
+
     // specialisation of Value
-    
+
     public boolean isScmVector()
     { return true; }
-    
+
     public ScmVector toScmVector()
     { return this; }
 
-    
+
     public boolean equal(Value other)
     {
         try {
             ScmVector otherVector = (ScmVector)other;
-        
+
             if (_data.length == otherVector._data.length) {
                 for (int i = 0; i < _data.length; i++) {
                     if (!_data[i].equal(otherVector._data[i])) {
                         return false;
                     }
                 }
-                
+
                 return true;
             }
         }
         catch (ClassCastException e) { }
-        
+
         return false;
     }
 
