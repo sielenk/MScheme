@@ -4,6 +4,7 @@ SRC =	Code.java	\
 	Main.java	\
 	Syntax.java	\
 	Value.java	\
+	Init.java	\
 	code/Application.java	\
 	code/Assignment.java	\
 	code/CodeList.java	\
@@ -50,6 +51,7 @@ SRC =	Code.java	\
 	exceptions/VectorException.java	\
 	exceptions/VectorExpected.java	\
 	exceptions/WriteException.java	\
+	values/functions/CurrentEnvironment.java	\
 	values/functions/AppendFunction.java	\
 	values/functions/ApplyFunction.java	\
 	values/functions/AssocBase.java	\
@@ -143,9 +145,11 @@ GCJ=gcj -W -Wall
 JAVAC=jikes -bootclasspath /usr/lib/java/jre/lib/rt.jar +P
 # JAVAC = $(GCJ) -W -Wall -C
 
-all: values/functions/BuiltinTable.java
-	$(JAVAC) `find . -name "*.java"`
+run: all
 	time java MScheme.TestMScheme
+
+all: values/functions/BuiltinTable.java Init.java
+	$(JAVAC) `find . -name "*.java"`
 
 values/functions/BuiltinTable.java: values/functions/ParseBuiltins.class values/functions/Builtins.class
 	java MScheme.values.functions.ParseBuiltins > values/functions/BuiltinTable.java
@@ -158,11 +162,16 @@ values/functions/ParseBuiltins.class: values/functions/ParseBuiltins.java
 values/functions/Builtins.class: values/functions/Builtins.java
 	$(JAVAC) values/functions/Builtins.java
 
+machine/Machine.class: Init.class
+
+Init.java: bootstrap.scm rep.scm
+	mkinit.pl $^ > $@
+
 %.o: %.java
 	$(GCJ) -o $@ -c $<
 
-main: $(OBJ)
-	$(GCJ) --main=MScheme.Main -o main $^
+main: all $(OBJ)
+	$(GCJ) --main=MScheme.Main -o main $(OBJ)
 
 depend:
 	touch depend
