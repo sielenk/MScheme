@@ -101,5 +101,16 @@ public class TestR5RS
         }
         catch (SyntaxException e) { }
     }
+
+    public void test4_1_4()
+        throws SchemeException
+    {
+        assert(eval( "(lambda (x) (+ x x))"   ).isFunction());
+        assert(eval("((lambda (x) (+ x x)) 4)").equal(quote("8")));
+
+        assert(eval("((lambda x x) 3 4 5 6)").equal(quote("(3 4 5 6)")));
+        assert(eval("((lambda (x y .z) z) 3 4 5 6)")
+                .equal(quote("(5 6)")));
+    }
 }
 
