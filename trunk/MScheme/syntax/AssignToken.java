@@ -16,7 +16,7 @@ abstract class AssignToken
     extends Syntax
 {
     protected AssignToken()
-    { super(Arity.exactly(2)); }
+    { super(Arity.atLeast(2)); }
 
     abstract protected Reference getReference(
         StaticEnvironment syntax,
@@ -25,9 +25,14 @@ abstract class AssignToken
 
     protected Code checkedTranslate(
         StaticEnvironment syntax,
+	    int               len,
         List              arguments
     ) throws CompileError, TypeError
     {
+        if (len > 2) {
+	        arityError(arguments);
+	    }
+	    
         Symbol symbol = arguments.getHead().toSymbol();
         Value  value  = arguments.getTail().getHead();
 
