@@ -1,9 +1,10 @@
 package MScheme.machine;
 
-import MScheme.expressions.SExpr;
+import MScheme.machine.Values;
 import MScheme.exceptions.SException;
 import MScheme.environment.Environment;
 import MScheme.expressions.functions.Function;
+
 
 class Context
 {
@@ -49,15 +50,16 @@ class Continuation extends Context
 
 
     /** pop the current continuation and call its associated function */
-    SExpr invoke(ContinuationStack stack, SExpr sexpr)
-        throws SException
-    {
+    Values invoke(
+        ContinuationStack stack,
+        Values            arguments
+    ) throws SException {
         stack.setTop(getContinuation());
 
         return _function.call(
             stack,
             getEnvironment(),
-            sexpr
+            arguments
         );
     }
 }

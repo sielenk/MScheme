@@ -5,29 +5,34 @@ import MScheme.expressions.SSymbol;
 import MScheme.expressions.SList;
 import MScheme.expressions.SPair;
 import MScheme.expressions.SVector;
-import MScheme.expressions.SValues;
 
 import MScheme.exceptions.SException;
 import MScheme.exceptions.SExpectedListException;
 import MScheme.exceptions.SCantEvaluateException;
 
+import MScheme.machine.Values;
 import MScheme.machine.ContinuationStack;
+
 import MScheme.environment.Environment;
 
 public class EvalFunc extends Function
 {
     public final static Function INSTANCE = new EvalFunc();
 
-    private EvalFunc() { }
+    private EvalFunc()
+    {
+        super(1, 1);
+    }
 
-
-    public SExpr call(
+    protected Values _call(
         ContinuationStack stack,
-        Environment environment,
-        SExpr sexpr
+        Environment       environment,
+        Values            arguments
     ) throws SException {
+        SExpr sexpr = arguments.getFirst();
+
         if (sexpr instanceof SSymbol) {
-            return environment.lookup((SSymbol)sexpr);
+            sexpr = environment.lookup((SSymbol)sexpr);
             // throws SSymbolNotFoundException
         } else if (sexpr instanceof SPair) {
             SPair pair = (SPair)sexpr;
@@ -40,14 +45,14 @@ public class EvalFunc extends Function
                 );
 
                 stack.push(INSTANCE);
-                return pair.getCar();
+                sexpr = pair.getCar();
             } catch (ClassCastException e) {
                 throw new SExpectedListException(pair.getCdr());
             }
         } else if (sexpr instanceof SVector) {
             throw new SCantEvaluateException(sexpr);
-        } else {
-            return sexpr;
         }
+
+        return new Values(sexpr);
     }
 }

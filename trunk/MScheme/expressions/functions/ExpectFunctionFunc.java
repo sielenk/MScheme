@@ -1,32 +1,40 @@
 package MScheme.expressions.functions;
 
+
 import MScheme.expressions.SExpr;
-import MScheme.expressions.SValues;
 
 import MScheme.exceptions.SExpectedFunctionException;
+
+import MScheme.machine.Values;
 import MScheme.machine.ContinuationStack;
+
 import MScheme.environment.Environment;
+
 
 public class ExpectFunctionFunc extends Function
 {
-    private SValues _arguments;
+    private Values _arguments;
 
     public ExpectFunctionFunc(
-        SValues arguments
+        Values arguments
     ) {
+        super(1, 1);
         _arguments = arguments;
     }
 
-    public SExpr call(
+    protected Values _call(
         ContinuationStack stack,
         Environment       environment,
-        SExpr             sexpr
+        Values            arguments
     ) throws SExpectedFunctionException {
+        SExpr sexpr = arguments.getFirst();
+
         try {
             stack.push((Function)sexpr);
-            return _arguments;
         } catch (ClassCastException e) {
             throw new SExpectedFunctionException(sexpr);
         }
+
+        return _arguments;
     }
 }
