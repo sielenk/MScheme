@@ -34,7 +34,7 @@ import MScheme.exceptions.PairExpected;
 
 public final class Empty
     extends ValueDefaultImplementations
-    implements ExtendedList
+    implements List
 {
     public final static String id
         = "$Id$";

@@ -37,7 +37,7 @@ import MScheme.exceptions.SchemeException;
 
 final class PairOrList
     extends Compound
-    implements ExtendedList, Pair
+    implements List, Pair
 {
     public final static String id
         = "$Id$";
@@ -315,8 +315,7 @@ final class PairOrList
         throws SchemeException
     {
         Code         compiledHead = getHead().getCode(compilationEnv);
-        ExtendedList tail         = (ExtendedList)getTail();
-        Code[]       result       = tail.getCodeArray(
+        Code[]       result       = getTail().getCodeArray(
                                         compilationEnv,
                                         index + 1
                                     );

@@ -45,4 +45,7 @@ public interface List
 
     Code[] getCodeArray(StaticEnvironment compilationEnv)
         throws SchemeException;
+
+    Code[] getCodeArray(StaticEnvironment compilationEnv, int index)
+        throws SchemeException;
 }
