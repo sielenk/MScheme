@@ -495,6 +495,7 @@ public class TestR5RS
         check("(assq  (list 'a) '(((a)) ((b)) ((c))))", "#f");
         check("(assoc (list 'a) '(((a)) ((b)) ((c))))", "((a))");
         check("(assv 5 '((2 3) (5 7) (11 13)))", "(5 7)");
+        check("(assq 'b '((a . 1) (b . 2)))", "(b . 2)");
     }
 
     /// 6.3.3 Symbols
