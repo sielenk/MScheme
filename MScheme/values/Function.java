@@ -18,6 +18,7 @@ public abstract class Function
     public final static String id
         = "$Id$";
 
+
     // specialisation of Value
 
     public final boolean isFunction()
@@ -46,8 +47,6 @@ public abstract class Function
 
     // abstract function interface
     
-    public abstract Arity getArity();
-
     public abstract Code call(Registers state, List arguments)
         throws RuntimeError, TypeError;
 }
