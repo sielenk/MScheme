@@ -8,50 +8,64 @@ import MScheme.expressions.SEmpty;
 import MScheme.expressions.SSymbol;
 
 import MScheme.exceptions.SSymbolNotFoundException;
+import MScheme.exceptions.SDuplicateSymbolException;
 
 import MScheme.machine.Values;
 
 
 class EnvironmentImpl
-    extends    EnvironmentStubImpl
     implements Environment
 {
     // ***********************************************************************
 
+    private Names    _names;
     private Vector[] _data;
 
     // ***********************************************************************
 
-    private Vector initData()
-    {
-        int level = getLevel();
+    private EnvironmentImpl(
+        Names    names,
+        Vector[] parentData
+    ) {
+        int level = (_names = names).getLevel();
 
         _data = new Vector[level + 1];
 
         if (level > 0) {
-            System.arraycopy(getParentImpl()._data, 0, _data, 0, level);
+            System.arraycopy(
+                parentData, 0,
+                _data, 0,
+                level
+            );
         }
 
-        return _data[level] = new Vector(getSize());
+        (_data[level] = new Vector()).setSize(names.getSize());
     }
 
 
     protected EnvironmentImpl(
         EnvironmentImpl parent
     ) {
-        super(parent);
-        initData();
+        this(
+            new Names(parent._names),
+            parent._data
+        );
     }
 
 
     protected EnvironmentImpl(
-        EnvironmentStubImpl stub,
-        int                 minArity,
-        boolean             allowMore,
-        Values              values
+        Names    names,
+        Vector[] parentData,
+        int      minArity,
+        boolean  allowMore,
+        Values   values
     ) {
-        super(stub);
-        Vector data = initData();
+        this(
+            names,
+            parentData
+        );
+
+        Vector data = _data[_names.getLevel()];
 
         for (int i = 0; i < minArity; i++) {
             data.setElementAt(
@@ -69,6 +83,24 @@ class EnvironmentImpl
     }
 
 
+    public EnvironmentImpl()
+    {
+        this(
+             new Names(null),
+             null
+        );
+    }
+
+
+    public Environment getParent()
+    {
+        return new EnvironmentImpl(
+            _names.getParent(),
+            _data
+        );
+    }
+
+
     public Environment newChild()
     {
         return new EnvironmentImpl(this);
@@ -77,25 +109,25 @@ class EnvironmentImpl
 
     public EnvironmentStub newChildStub(
         Values symbols
-    ) {
-        EnvironmentStubImpl stub = new EnvironmentStubImpl(this);
-        int                 len  = symbols.getLength();
-
-        for (int i = 0; i < len; i++) {
-            stub.define(
-                (SSymbol)symbols.at(i)
-            );
-        }
-
-        return stub;
+    ) throws SDuplicateSymbolException {
+        return new EnvironmentStubImpl(
+            new Names(_names, symbols),
+            _data
+        );
     }
 
     // *** Envrionment access ************************************************
 
+    public boolean defined(SSymbol symbol)
+    {
+        return _names.defined(symbol);
+    }
+
+
     public void define(SSymbol symbol, SExpr value)
     {
-        int    index = define(symbol);
-        Vector data  = _data[getLevel()];
+        int    index = _names.define(symbol);
+        Vector data  = _data[_names.getLevel()];
 
         if (index == data.size()) {
             data.addElement(value);
@@ -108,7 +140,7 @@ class EnvironmentImpl
     public void set(SSymbol symbol, SExpr value)
         throws SSymbolNotFoundException
     {
-        Reference ref = resolve(symbol);
+        Reference ref = _names.resolve(symbol);
 
         _data[
             ref.getLevel()
@@ -122,7 +154,7 @@ class EnvironmentImpl
     public SExpr get(SSymbol symbol)
         throws SSymbolNotFoundException
     {
-        Reference ref  = resolve(symbol);
+        Reference ref  = _names.resolve(symbol);
 
         return (SExpr)_data[
             ref.getLevel()
