@@ -34,7 +34,7 @@ public abstract class Value
     public boolean isPair()     { return false; }
     public boolean isSymbol()   { return false; }
     public boolean isNumber()   { return false; }
-    public boolean isChar()     { return false; }
+    public boolean isScmChar()  { return false; }
     public boolean isString()   { return false; }
     public boolean isVector()   { return false; }
     public boolean isPort()     { return false; }
@@ -55,7 +55,7 @@ public abstract class Value
     public SchemeNumber toNumber   () throws   NumberExpected
     { throw new NumberExpected(this); }
 
-    public ScmChar      toChar     () throws     CharExpected
+    public ScmChar      toScmChar  () throws     CharExpected
     { throw new CharExpected(this); }
 
     public SchemeString toScmString() throws   StringExpected

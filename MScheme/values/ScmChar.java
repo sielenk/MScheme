@@ -20,10 +20,10 @@ public final class ScmChar
 
     // specialisation of Value
 
-    public boolean isChar()
+    public boolean isScmChar()
     { return true; }
 
-    public ScmChar toChar()
+    public ScmChar toScmChar()
     { return this; }
 
 
