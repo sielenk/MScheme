@@ -26,4 +26,7 @@ public abstract class SyntaxFactory
     
     public static Syntax getQuoteToken()
     { return QuoteToken.INSTANCE; }
+
+    public static Syntax getQuasiquoteToken()
+    { return QuasiquoteToken.INSTANCE; }
 }
