@@ -26,45 +26,13 @@ import MScheme.Code;
 import MScheme.machine.Registers;
 import MScheme.machine.Continuation;
 
+import MScheme.environment.StaticEnvironment;
+
 import MScheme.values.ListFactory;
 import MScheme.values.List;
 import MScheme.values.Empty;
 
 import MScheme.exceptions.*;
-
-
-final class CallContinuation
-    extends Continuation
-{
-    public final static String id
-        = "$Id$";
-
-    private final List _arguments;
-
-    CallContinuation(
-        Registers state,
-        List      arguments
-    )
-    {
-        super(state);
-        _arguments = arguments;
-    }
-
-    protected Code execute(Registers state, Value value)
-        throws SchemeException
-    {
-        return value.toFunction().call(
-            state,
-            _arguments
-        );
-    }
-
-
-    protected String debugString()
-    {
-        return "call[" + _arguments + "]";
-    }
-}
 
 
 public final class Application
@@ -82,7 +50,7 @@ public final class Application
     {
         if (index == 0)
         {
-            new CallContinuation(
+            new ApplyContinuation(
                 state,
                 done
             );
@@ -146,6 +114,13 @@ public final class Application
         );
     }
 
+    public Code force(StaticEnvironment global)
+        throws SymbolNotFoundException, UnexpectedSyntax
+    {
+        return create(
+            CodeArray.force(_application, global)
+        );
+    }
 
     public String toString()
     {
