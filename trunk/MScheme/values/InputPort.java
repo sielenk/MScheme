@@ -318,7 +318,7 @@ public class InputPort
             la = skipWSread();
             if (la == '.')
             {
-                Pair result = ListFactory.createConstPair(
+                Pair result = ListFactory.createPair(
                                   head,
                                   parseDatum()
                               );
@@ -336,7 +336,7 @@ public class InputPort
             else
             {
                 _reader.unread(la);
-                return ListFactory.createConstPair(
+                return ListFactory.createPair(
                            head,
                            parseList(closeToken)
                        );
@@ -356,7 +356,7 @@ public class InputPort
             switch (c)
             {
             case '"':  // "
-                return ScmString.createConst(
+                return ScmString.create(
                            buf.toString()
                        );
 
@@ -507,7 +507,7 @@ checkNumber:
                     return parseChar();
 
                 case '(':
-                    return ScmVector.createConst(parseVector(0));
+                    return ScmVector.create(parseVector(0));
 
                 default:
                     throw new ParseException(
