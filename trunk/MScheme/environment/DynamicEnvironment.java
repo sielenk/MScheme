@@ -1,6 +1,7 @@
 package MScheme.environment;
 
-import java.lang.reflect.*;
+import java.io.Writer;
+import java.io.IOException;
 import java.util.Vector;
 
 import MScheme.util.Arity;
@@ -13,7 +14,17 @@ import MScheme.exceptions.*;
 
 
 public class DynamicEnvironment
+    extends SelfEvaluatingValue
 {
+    // *******************************************************************
+
+    public void write(Writer destination)
+        throws IOException
+    { destination.write("[environment]"); }
+
+    public DynamicEnvironment toEnvironment()
+    { return this; }
+
     // *******************************************************************
 
     private StaticEnvironment _bindings;
@@ -103,6 +114,10 @@ public class DynamicEnvironment
             staticBindings.defineSyntax(
                 ValueFactory.createSymbol("quote"),
                 SyntaxFactory.getQuoteToken()
+            );
+            staticBindings.defineSyntax(
+                ValueFactory.createSymbol("quasiquote"),
+                SyntaxFactory.getQuasiquoteToken()
             );
             staticBindings.defineSyntax(
                 ValueFactory.createSymbol("cond"),
