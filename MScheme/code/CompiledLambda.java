@@ -26,8 +26,7 @@ import java.io.Writer;
 import MScheme.Code;
 import MScheme.Value;
 
-import MScheme.environment.Environment;
-import MScheme.environment.StaticEnvironment;
+import MScheme.environment.DynamicEnvironment;
 
 import MScheme.exceptions.ListExpected;
 import MScheme.exceptions.PairExpected;
@@ -49,49 +48,35 @@ public final class CompiledLambda
     extends Result
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
-    private final Arity             _arity;
-    private final StaticEnvironment _compiledFormals;
-    private final Code              _compiledBody;
+    private final Arity _arity;
+    private       Code  _compiledBody;
 
     private CompiledLambda(
-        Arity             arity,
-        StaticEnvironment compiledFormals,
-        Code              compiledBody
+        Arity arity,
+        Code  compiledBody
     )
     {
-        _arity           = arity;
-        _compiledFormals = compiledFormals;
-        _compiledBody    = compiledBody;
+        _arity        = arity;
+        _compiledBody = compiledBody;
     }
 
     public static CompiledLambda create(
-        Arity             arity,
-        StaticEnvironment compiledFormals,
-        Code              compiledBody
+        Arity arity,
+        Code  compiledBody
     )
     {
-        return new CompiledLambda(arity, compiledFormals, compiledBody);
+        return new CompiledLambda(arity, compiledBody);
     }
 
     public static CompiledLambda create(
-        Arity             arity,
-        StaticEnvironment compiledFormals,
-        Code[]            compiledBody
+        Arity  arity,
+        Code[] compiledBody
     )
     {
-        return create(arity, compiledFormals, Sequence.create(compiledBody));
-    }
-
-    public static CompiledLambda create(
-        Arity             arity,
-        StaticEnvironment compiledFormals,
-        List              body
-    ) throws SchemeException
-    {
-        return create(arity, compiledFormals, body.getCodeArray(compiledFormals));
+        return create(arity, Sequence.create(compiledBody));
     }
 
     final class Closure
@@ -101,9 +86,9 @@ public final class CompiledLambda
             = "$Id$";
 
 
-        private final Environment _enclosingEnvironment;
+        private final DynamicEnvironment _enclosingEnvironment;
 
-        public Closure(Environment enclosingEnvironment)
+        public Closure(DynamicEnvironment enclosingEnvironment)
         {
             _enclosingEnvironment = enclosingEnvironment;
         }
@@ -121,13 +106,11 @@ public final class CompiledLambda
 
         protected Code checkedCall(
             Registers state,
-            int       length,
             List      arguments
         ) throws ListExpected, PairExpected
         {
-            Environment newEnvironment =
-                _enclosingEnvironment.newChild(
-                    _compiledFormals,
+            DynamicEnvironment newEnvironment =
+                _enclosingEnvironment.createChild(
                     getArity(),
                     arguments
                 );
@@ -146,11 +129,8 @@ public final class CompiledLambda
     public Code force()
         throws SymbolNotFoundException, UnexpectedSyntax
     {
-        return create(
-            _arity,
-            _compiledFormals,
-            _compiledBody.force()
-        );
+        _compiledBody = _compiledBody.force();
+        return this;
     }
 
     public String toString()
