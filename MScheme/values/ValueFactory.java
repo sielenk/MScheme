@@ -12,6 +12,9 @@ import MScheme.exceptions.FunctionNotFoundException;
 
 public abstract class ValueFactory
 {
+    public final static String id
+        = "$Id$";
+
     public static Pair prepend(Value head, List tail)
     { return Pair.create(head, tail.toValue()); }
 

@@ -9,6 +9,9 @@ import MScheme.Value;
 public final class ScmBoolean
     extends Value
 {
+    public final static String id
+        = "$Id$";
+
     private final static ScmBoolean TRUE  = new ScmBoolean();
     private final static ScmBoolean FALSE = new ScmBoolean();
     

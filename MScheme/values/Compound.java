@@ -12,6 +12,9 @@ import MScheme.exceptions.*;
 public abstract class Compound
     extends Value
 {
+    public final static String id
+        = "$Id$";
+
     private boolean _isMutable = true;
 
     public void setConst()

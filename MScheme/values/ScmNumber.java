@@ -9,6 +9,9 @@ import MScheme.Value;
 public class ScmNumber
     extends Value
 {
+    public final static String id
+        = "$Id$";
+
     private int _value;
     
     private ScmNumber(int v)

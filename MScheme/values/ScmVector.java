@@ -15,6 +15,9 @@ import MScheme.exceptions.*;
 public final class ScmVector
     extends Compound
 {
+    public final static String id
+        = "$Id$";
+
     private final static ScmVector _empty = new ScmVector(0, null);
 
     private final Value[] _data;

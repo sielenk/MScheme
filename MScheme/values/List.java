@@ -10,6 +10,9 @@ import MScheme.exceptions.*;
 
 public interface List
 {
+    String id
+        = "$Id$";
+
     Value toValue();
     Pair  toPair () throws PairExpected;
     

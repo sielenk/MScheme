@@ -15,6 +15,9 @@ import MScheme.exceptions.*;
 public abstract class Function
     extends Value
 {
+    public final static String id
+        = "$Id$";
+
     // specialisation of Value
 
     final public boolean isFunction()

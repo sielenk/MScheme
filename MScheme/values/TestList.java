@@ -8,6 +8,9 @@ import MScheme.Value;
 public class TestList
     extends junit.framework.TestCase
 {
+    public final static String id
+        = "$Id$";
+
     Value firstElement;
     Value secondElement;
     Value lastElement;
@@ -156,4 +159,3 @@ public class TestList
         // ...
     }
 }
-

@@ -17,6 +17,9 @@ public final class Pair
     extends    Compound
     implements List
 {
+    public final static String id
+        = "$Id$";
+
     private Value   _first;
     private Value   _second;
 

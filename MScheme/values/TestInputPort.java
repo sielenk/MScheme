@@ -8,6 +8,9 @@ import MScheme.Value;
 public class TestInputPort
     extends junit.framework.TestCase
 {
+    public final static String id
+        = "$Id$";
+
     public TestInputPort(String name)
     { super(name); }
 

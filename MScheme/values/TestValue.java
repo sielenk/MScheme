@@ -7,23 +7,24 @@ import MScheme.Value;
 public class TestValue
     extends junit.framework.TestCase
 {
+    public final static String id
+        = "$Id$";
+
     public TestValue(String name)
     { super(name); }
-    
+
     protected void setUp()
         throws Exception
-    {
-    }
-    
+    { }
+
     protected void tearDown()
-    {
-    }
-    
+    { }
+
 
     private int countTypes(Value v)
     {
         int count = 0;
-    
+
         if (v.isScmBoolean()) count++;
         if (v.isPair      ()) count++;
         if (v.isSymbol    ()) count++;
@@ -33,10 +34,10 @@ public class TestValue
         if (v.isScmVector ()) count++;
         if (v.isPort      ()) count++;
         if (v.isFunction  ()) count++;
-        
+
         return count;
     }
-    
+
     private void checkNotAList(Value v)
     {
         assert(!v.isList());
@@ -62,40 +63,40 @@ public class TestValue
         final Value True  = ScmBoolean.createTrue();
 
         assert(True.isTrue());
-        
+
         assert(True.isScmBoolean());
         assert(countTypes(True) == 1);
-        
+
         checkNotAList(True);
     }
-    
+
     public void testFalse()
         throws Exception
     {
         final Value False = ScmBoolean.createFalse();
 
         assert(!False.isTrue());
-        
+
         assert(False.isScmBoolean());
         assert(countTypes(False) == 1);
-        
+
         checkNotAList(False);
     }
-    
+
     public void testEmpty()
         throws Exception
     {
         final Value empty = Empty.create();
-        
+
         assert(empty.isTrue());
-        
+
         assert(countTypes(empty) == 0);
-        
+
         assert(empty.isList());
-    
+
         assert(empty.toList() == empty);
     }
-        
+
     public void testPair()
         throws Exception
     {       
@@ -103,9 +104,9 @@ public class TestValue
             ScmBoolean.createTrue(),
             ScmBoolean.createTrue()
         );
-        
+
         assert(pair.isTrue());
-        
+
         assert(pair.isPair());
         assert(countTypes(pair) == 1);
 
@@ -113,36 +114,36 @@ public class TestValue
 
         assert(pair.toPair() == pair);
     }
-    
+
     public void testList()
         throws Exception
     {
         final Value list = ValueFactory.createList(
             ScmBoolean.createTrue()
         );
-        
+
         assert(list.isTrue());
-        
+
         assert(list.isPair());
         assert(countTypes(list) == 1);
-        
+
         assert(list.isList());
 
         assert(list.toList() == list);
     }
-    
+
     public void testSymbol()
         throws Exception
     {
         final Value symbol = Symbol.create("test");
-        
+
         assert(symbol.isTrue());
 
         assert(symbol.isSymbol());
         assert(countTypes(symbol) == 1);
-        
+
         checkNotAList(symbol);
-        
+
         assert(symbol.toSymbol() == symbol);
     }
 
@@ -150,17 +151,17 @@ public class TestValue
         throws Exception
     {
         final Value function = ValueFactory.createFunction("CallCC");
-        
+
         assert(function.isTrue());
-    
+
         assert(function.isFunction());
         assert(countTypes(function) == 1);
-        
+
         checkNotAList(function);
-        
+
         assert(function.toFunction() == function);
     }
-    
+
 
     private void commonLiteralTests(Value literal)
         throws Exception
@@ -169,51 +170,51 @@ public class TestValue
         assert(countTypes(literal) == 1);
         checkNotAList(literal);
     }
-    
+
     public void testNumber()
         throws Exception
     {
         final Value number = ScmNumber.create(49875);
-    
+
         commonLiteralTests(number);
         assert(number.isScmNumber());
     }
-    
+
     public void testChar()
         throws Exception
     {
         final Value character = ScmChar.create('a');
-    
+
         commonLiteralTests(character);
         assert(character.isScmChar());
     }
-    
+
     public void testString()
         throws Exception
     {
         final Value string = ScmString.create("Hallo !");
-    
+
         commonLiteralTests(string);
         assert(string.isScmString());
     }
-    
+
     public void testVector()
         throws Exception
     {
         final Value vector = ScmVector.create(0);
-    
+
         commonLiteralTests(vector);
         assert(
             vector.isScmVector()
         );
     }
-    
+
     public void testPort()
         throws Exception
     {
         final Value portI = InputPort.create();
         final Value portO = OutputPort.create();
-    
+
         commonLiteralTests(portI);
         assert(portI.isPort());
 
@@ -255,47 +256,47 @@ public class TestValue
             return 0;
         }
     }
-    
+
     public void testEq()
         throws Exception
     {
         Value u = Symbol.create("u");
         Value v = Symbol.create("v");
-        
+
         // eq equivalent values
-        
+
         assert(
             eqHelper(v, v) == 3
         );
-        
+
         assert(
             eqHelper(
                 ScmBoolean.createTrue(),
                 ScmBoolean.createTrue()
             ) == 3
         );
-        
+
         assert(
             eqHelper(
                 ScmBoolean.createFalse(),
                 ScmBoolean.createFalse()
             ) == 3
         );
-        
+
         assert(
             eqHelper(
                 Symbol.create("a"),
                 Symbol.create("a")
             ) == 3
         );
-        
+
         assert(
             eqHelper(
                 Empty.create(),
                 Empty.create()
             ) == 3
         );
-        
+
         assert(
             eqHelper(
                 ValueFactory.createFunction("CallCC"),
@@ -305,14 +306,14 @@ public class TestValue
 
 
         // eqv equivalent values
-    
+
         assert(
             eqHelper(
                 ScmNumber.create(7123645),
                 ScmNumber.create(7123645)
             ) >= 2
         );
-        
+
         assert(
             eqHelper(
                 ScmChar.create('u'),
@@ -329,7 +330,7 @@ public class TestValue
                 ScmVector.create(0)
             ) >= 1
         );
-        
+
         assert(
             eqHelper(
                 ScmVector.create(5, v),
@@ -370,7 +371,7 @@ public class TestValue
                 ScmBoolean.createFalse()
             ) == 0
         );
-        
+
         assert(
             eqHelper(
                 Symbol.create("u"),
