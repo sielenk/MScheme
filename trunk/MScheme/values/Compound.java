@@ -12,15 +12,15 @@ import MScheme.exceptions.*;
 public abstract class Compound
     extends Value
 {
-    private boolean _isConst = false;
+    private boolean _isMutable = true;
 
     public void setConst()
-    { _isConst = true; }
+    { _isMutable = false; }
 
     protected void modify()
         throws ImmutableException
     {
-        if (_isConst) {
+        if (!_isMutable) {
             throw new ImmutableException(this);
         }                                    
     }
