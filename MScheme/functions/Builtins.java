@@ -199,7 +199,7 @@ public class Builtins
     private final static Arity AT_LEAST_1 = Arity.atLeast(1);
 
     public final static Value _2D(List arguments) // -
-        throws RuntimeError, TypeError
+        throws SchemeException
     {
         int len = Function.checkArguments(AT_LEAST_1, arguments);
 
@@ -443,15 +443,8 @@ public class Builtins
     // 6.5 Eval
 
     public final static Value eval(Value fst, Value snd)
-        throws RuntimeError, TypeError
-    {
-        try {
-            return new Machine(snd.toEnvironment()).evaluate(fst);
-        }
-        catch (CompileError e) {
-            throw new RuntimeError(fst);
-        }
-    }
+        throws SchemeException
+    { return new Machine(snd.toEnvironment()).evaluate(fst); }
 
     public final static Value scheme_2Dreport_2Denvironment(Value fst)
         throws RuntimeError, TypeError
