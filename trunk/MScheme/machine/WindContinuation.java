@@ -45,6 +45,19 @@ final public class WindContinuation
         );
     }
 
+    protected Code execute(
+        Registers registers,
+        Value     value
+    ) throws RuntimeError, TypeError
+    {
+        return Sequence.create(
+            CodeList.create(
+                _after,
+                value.getLiteral()
+            )
+        );
+    }
+
 
     protected CodeList dynamicWindLeave(CodeList sequence)
     {
@@ -62,20 +75,6 @@ final public class WindContinuation
             _before,
             super.dynamicWindEnter(
                 sequence
-            )
-        );
-    }
-
-
-    protected Code execute(
-        Registers registers,
-        Value     value
-    ) throws RuntimeError, TypeError
-    {
-        return Sequence.create(
-            CodeList.create(
-                _after,
-                value.getLiteral()
             )
         );
     }
