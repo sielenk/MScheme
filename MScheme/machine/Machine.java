@@ -28,6 +28,25 @@ class AbortContinuation
 }
 
 
+class AssignmentContinuation
+    extends Continuation
+{
+    private final Reference _binding;
+
+    AssignmentContinuation(Machine machine, Reference binding)
+    {
+        super(machine);
+        _binding = binding;
+    }
+
+    protected Code internalInvoke(Machine machine, Value evaluationResult)
+    {
+        machine.getEnvironment().assign(_binding, evaluationResult);
+        return machine.handleResult(evaluationResult);
+    }
+}
+
+
 class SequenceContinuation
     extends Continuation
 {
@@ -175,10 +194,12 @@ public class Machine
     { return SequenceContinuation.handle(this, sequence); }
     
     public static Code handleResult(Value result)
-        throws SchemeException
     { return new Literal(result); }
     
-    
+    public void storeValueAt(Reference binding)
+    { new AssignmentContinuation(this, binding); }
+
+
     public Value evaluate(Value evaluatee)
         throws SchemeException
     {

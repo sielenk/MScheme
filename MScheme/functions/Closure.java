@@ -8,7 +8,6 @@ import MScheme.machine.Machine;
 import MScheme.environment.DynamicEnvironment;
 import MScheme.environment.StaticEnvironment;
 import MScheme.code.Code;
-import MScheme.code.CodeList;
 import MScheme.values.List;
 
 import MScheme.exceptions.ListExpectedException;
@@ -19,13 +18,13 @@ final public class Closure
 {
     private final DynamicEnvironment _dynamicParent;
     private final StaticEnvironment  _compiledFormals;
-    private final CodeList           _compiledBody;
+    private final Code               _compiledBody;
     
     public Closure(
         Arity              arity,
         DynamicEnvironment dynamicParent,
         StaticEnvironment  compiledFormals,
-        CodeList           compiledBody
+        Code               compiledBody
     )
     {
         super(arity, false);
@@ -49,7 +48,7 @@ final public class Closure
             )
         );
         
-        return machine.handleSequence(_compiledBody);
+        return _compiledBody;
     }
 }
 

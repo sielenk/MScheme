@@ -17,5 +17,12 @@ public abstract class Code
         StaticEnvironment e,
         List              arguments
     ) throws SchemeException
-    { return CodeList.prepend(this, arguments.getCodeList(e)); }
+    {
+        return new CompiledApplication(
+            CodeList.prepend(
+                this,
+                arguments.getCodeList(e)
+            )
+        );
+    }
 }

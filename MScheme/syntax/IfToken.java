@@ -40,9 +40,9 @@ final class IfToken
             onFalse.getCode(syntax)
         );
 
-        return CodeList.create(
-            selector.getCode(syntax),
-            flag    .getCode(syntax)
+        return selector.getCode(syntax).translateArguments(
+            syntax,
+            List.with(flag)
         );
     }
 }

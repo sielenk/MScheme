@@ -59,8 +59,12 @@ final class LambdaToken
 
         StaticEnvironment
             compiledFormals = syntax.newChild(formals);
-        CodeList
-            compiledBody    = body.getCodeList(compiledFormals);
+
+        Code compiledBody =
+            BeginToken.INSTANCE.translateArguments(
+                compiledFormals,
+                body
+            );
                     
         return new CompiledLambda(
             arity,
