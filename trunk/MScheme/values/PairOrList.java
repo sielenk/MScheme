@@ -120,7 +120,7 @@ final class PairOrList
             advance ^= true;
         }
 
-        if (!current.isEmpty())
+        if (!(current instanceof Empty))
         {
             // 'this' is an improper list
 
@@ -235,28 +235,31 @@ final class PairOrList
     public boolean isList()
     {
         try {
-            Value tortoise = getSecond();
-            Value hare     = tortoise;
+            Value hare = getSecond();
 
-            while (!hare.isEmpty())
+            if (hare instanceof Empty)
             {
-                tortoise = ((Pair)tortoise).getSecond();
-                hare     = ((Pair)hare    ).getSecond();
+                return true;
+            }
 
-                if (hare.isEmpty())
+            Value tortoise = hare;
+            do {
+                hare = ((Pair)hare).getSecond();
+                if (hare instanceof Empty)
                 {
                     return true;
                 }
 
                 hare = ((Pair)hare).getSecond();
-
-                if (hare == tortoise)
+                if (hare instanceof Empty)
                 {
-                    return false; // cyclic list
+                    return true;
                 }
-            }
 
-            return true;
+                tortoise = ((Pair)tortoise).getSecond();
+            } while (hare != tortoise);
+
+            return false;
         }
         catch (ClassCastException e)
         {
@@ -268,6 +271,11 @@ final class PairOrList
         throws ListExpected
     {
         return isList() ? this : super.toList();
+    }
+
+    public boolean isEmpty()
+    {
+        return false;
     }
 
     public List getCopy()
@@ -390,39 +398,34 @@ final class PairOrList
     static int saveLength(Value l)
     {
         try {
-            Value tortoise = l;
-            Value hare     = l;
+            Value hare = l;
 
-            int length = 0;
-
-            while (!hare.isEmpty())
+            if (hare instanceof Empty)
             {
-                Value newTortoise = ((Pair)tortoise).getSecond();
-                Value newHare     = ((Pair)hare    ).getSecond();
-
-                ++length;
-
-                if (newHare.isEmpty())
-                {
-                    break;
-                }
-                else
-                {
-                    Value newerHare = ((Pair)newHare).getSecond();
-
-                    ++length;
-
-                    if (newerHare == newTortoise)
-                    {
-                        return -1;
-                    }
-
-                    tortoise =   newTortoise;
-                    hare     = newerHare;
-                }
+                return 0;
             }
 
-            return length;
+            int   length   = 1;
+            Value tortoise = hare;
+            do {
+                hare = ((Pair)hare).getSecond();
+                if (hare instanceof Empty)
+                {
+                    return length;
+                }
+               ++length;
+
+                hare = ((Pair)hare).getSecond();
+                if (hare instanceof Empty)
+                {
+                    return length;
+                }
+                ++length;
+
+                tortoise = ((Pair)tortoise).getSecond();
+            } while (hare != tortoise);
+
+            return -1;
         }
         catch (ClassCastException e)
         {
