@@ -39,6 +39,7 @@ import MScheme.values.InputPort;
 import MScheme.values.OutputPort;
 
 import MScheme.values.functions.ValueThunk;
+import MScheme.values.functions.UnaryValueFunction;
 
 import MScheme.code.Application;
 
@@ -49,7 +50,7 @@ import MScheme.exceptions.*;
 
 
 final class StopContinuation
-            extends Continuation
+    extends Continuation
 {
     public final static String id
         = "$Id$";
@@ -101,19 +102,57 @@ public final class Machine
             }
         };
 
+    private final Value _getInputFunc =
+        new ValueThunk() {
+            protected Value checkedCall()
+            {
+                return _stdin;
+            }
+        };
+
+    private final Value _resetInputFunc =
+        new UnaryValueFunction() {
+            protected Value checkedCall(Value argument)
+                throws TypeError
+            {
+                Value result = _stdin;
+                _stdin = argument.toInputPort();
+                return result;
+            }
+        };
+
+    private final Value _getOutputFunc =
+        new ValueThunk() {
+            protected Value checkedCall()
+            {
+                return _stdout;
+            }
+        };
+
+    private final Value _resetOutputFunc =
+        new UnaryValueFunction() {
+            protected Value checkedCall(Value argument)
+                throws TypeError
+            {
+                Value result = _stdout;
+                _stdout = argument.toOutputPort();
+                return result;
+            }
+        };
+
     private final Environment _environment;
 
     private static boolean initializing = false;
 
-    private Reader _stdin;
-    private Writer _stdout;
+    private InputPort  _stdin;
+    private OutputPort _stdout;
 
 
     public Machine()
     {
         _environment = Environment.getSchemeReportEnvironment();
-        _stdin       = new InputStreamReader (System.in );
-        _stdout      = new OutputStreamWriter(System.out);
+        _stdin       = InputPort .create(new InputStreamReader (System.in ));
+        _stdout      = OutputPort.create(new OutputStreamWriter(System.out));
         init();
     }
 
@@ -123,8 +162,8 @@ public final class Machine
     )
     {
         _environment = Environment.getSchemeReportEnvironment();
-        _stdin       = stdin;
-        _stdout      = stdout;
+        _stdin       = InputPort .create(stdin );
+        _stdout      = OutputPort.create(stdout);
         init();
     }
 
@@ -133,8 +172,8 @@ public final class Machine
     )
     {
         _environment = environment;
-        _stdin       = new InputStreamReader (System.in );
-        _stdout      = new OutputStreamWriter(System.out);
+        _stdin       = InputPort .create(new InputStreamReader (System.in ));
+        _stdout      = OutputPort.create(new OutputStreamWriter(System.out));
     }
 
     public Machine(
@@ -144,8 +183,8 @@ public final class Machine
     )
     {
         _environment = environment;
-        _stdin       = stdin;
-        _stdout      = stdout;
+        _stdin       = InputPort .create(stdin );
+        _stdout      = OutputPort.create(stdout);
     }
 
     private void init()
@@ -165,13 +204,23 @@ public final class Machine
             );
 
             _environment.define(
-                Symbol.create("initial-input-port"),
-                InputPort.create(_stdin)
+                Symbol.create("current-input-port"),
+                _getInputFunc
             );
 
             _environment.define(
-                Symbol.create("initial-output-port"),
-                OutputPort.create(_stdout)
+                Symbol.create("reset-input-port"),
+                _resetInputFunc
+            );
+
+            _environment.define(
+                Symbol.create("current-output-port"),
+                _getOutputFunc
+            );
+
+            _environment.define(
+                Symbol.create("reset-output-port"),
+                _resetOutputFunc
             );
 
             evaluate(
@@ -218,6 +267,15 @@ public final class Machine
         return _environment;
     }
 
+    public InputPort getInputPort()
+    {
+        return _stdin;
+    }
+
+    public OutputPort getOutputPort()
+    {
+        return _stdout;
+    }
 
 
     private SchemeException   lastError      = null;
