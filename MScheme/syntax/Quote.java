@@ -29,9 +29,5 @@ final class Quote
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws TypeError
-    {
-        Value v = arguments.getHead();
-        v.setConst();
-        return v.getLiteral();
-    }
+    { return arguments.getHead().getConst().getLiteral(); }
 }
