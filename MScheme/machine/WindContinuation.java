@@ -16,25 +16,25 @@ final public class WindContinuation
     final private Code _after;
 
     private WindContinuation(
-        State state,
-        Code  before,
-        Code  after
+        Registers registers,
+        Code      before,
+        Code      after
     )
     {
-        super(state);
+        super(registers);
         _before = before;
         _after  = after;
     }
 
 
     static public Code create(
-        State state,
-        Code  before,
-        Code  thunk,
-        Code  after
+        Registers registers,
+        Code      before,
+        Code      thunk,
+        Code      after
     ) throws RuntimeError, TypeError
     {
-        new WindContinuation(state, before, after);
+        new WindContinuation(registers, before, after);
 	
 	    return Sequence.create(
 	        CodeList.create(
@@ -67,8 +67,8 @@ final public class WindContinuation
 
 
     protected Code execute(
-        State state,
-        Value value
+        Registers registers,
+        Value     value
     ) throws RuntimeError, TypeError
     {
 	    return Sequence.create(

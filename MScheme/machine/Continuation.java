@@ -69,12 +69,12 @@ class ContinuationFunction
 
     // implementation of UnaryFunction
     
-    protected Code checkedCall(State state, Value argument)
+    protected Code checkedCall(Registers registers, Value argument)
     {
-        Continuation source      = state.getContinuation();
+        Continuation source      = registers.getContinuation();
         Continuation destination = _continuation;
         
-        state.setContinuation(destination);
+        registers.setContinuation(destination);
 
         return Sequence.create(
             dynamicWind(
@@ -96,17 +96,17 @@ public abstract class Continuation
     final private Environment  _capturedEnvironment;
 
 
-    protected Continuation(State state)
+    protected Continuation(Registers registers)
     {
-        _capturedContinuation = state.getContinuation();
-        _capturedEnvironment  = state.getEnvironment();
+        _capturedContinuation = registers.getContinuation();
+        _capturedEnvironment  = registers.getEnvironment();
 
         _level =
             (_capturedContinuation != null)
             ? _capturedContinuation._level + 1
             : 0;
 
-        state.setContinuation(this);
+        registers.setContinuation(this);
     }
 
     final int getLevel()
@@ -118,18 +118,18 @@ public abstract class Continuation
     final UnaryFunction getFunction()
     { return new ContinuationFunction(this); }
 
-    final Code invoke(State state, Value value)
+    final Code invoke(Registers registers, Value value)
         throws RuntimeError, TypeError
     {
-        state.setContinuation(_capturedContinuation);
-        state.setEnvironment (_capturedEnvironment );
-        return execute(state, value);
+        registers.setContinuation(_capturedContinuation);
+        registers.setEnvironment (_capturedEnvironment );
+        return execute(registers, value);
     }
 
 
     abstract protected Code execute(
-        State state,
-        Value value
+        Registers registers,
+        Value     value
     ) throws RuntimeError, TypeError;
 
     protected CodeList dynamicWindLeave(CodeList sequence)

@@ -4,7 +4,7 @@ import java.io.Writer;
 import java.io.IOException;
 
 import MScheme.util.Arity;
-import MScheme.machine.State;
+import MScheme.machine.Registers;
 import MScheme.environment.Reference;
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Environment;
@@ -68,9 +68,9 @@ public final class CompiledLambda
         { return _arity; }
 
         protected Code checkedCall(
-            State state,
-            int   length,
-            List  arguments
+            Registers registers,
+            int       length,
+            List      arguments
         ) throws ListExpected
         {
 	        Environment newEnvironment = 
@@ -80,7 +80,7 @@ public final class CompiledLambda
                     arguments
                 );
 
-            state.setEnvironment(newEnvironment);
+            registers.setEnvironment(newEnvironment);
 
             if (_self != null) {
 	            newEnvironment.assign(
@@ -93,6 +93,6 @@ public final class CompiledLambda
         }
     }
 
-    public Code executionStep(State state)
-    { return new Closure(state.getEnvironment()).getLiteral(); }
+    public Code executionStep(Registers registers)
+    { return new Closure(registers.getEnvironment()).getLiteral(); }
 }

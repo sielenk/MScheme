@@ -1,6 +1,6 @@
 package MScheme.functions;
 
-import MScheme.machine.State;
+import MScheme.machine.Registers;
 import MScheme.code.Code;
 import MScheme.values.Value;
 
@@ -12,7 +12,7 @@ abstract public class ValueThunk
     extends Thunk
 {
     final protected Code checkedCall(
-        State state
+        Registers registers
     ) throws RuntimeError, TypeError
     { return checkedCall().getLiteral(); }
 

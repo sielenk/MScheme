@@ -4,7 +4,7 @@ import java.io.Writer;
 import java.io.IOException;
 
 import MScheme.util.Arity;
-import MScheme.machine.State;
+import MScheme.machine.Registers;
 import MScheme.code.Code;
 
 import MScheme.exceptions.*;
@@ -41,6 +41,6 @@ public abstract class Function
 
     // abstract function interface
     
-    abstract public Code call(State state, List arguments)
+    abstract public Code call(Registers registers, List arguments)
         throws RuntimeError, TypeError;
 }
