@@ -103,8 +103,8 @@ public final class Machine
     }
 
 
-    private final static Symbol errorTag
-        = Symbol.create("error-tag");
+    private static SchemeException   lastError      = null;
+    private static Value             lastErrorValue = null;
 
     public static Value execute(
         Code        program,
@@ -116,8 +116,8 @@ public final class Machine
         Registers         state = new Registers(executionEnv);
         AbortContinuation abort = new AbortContinuation(state);
 
-        SchemeException   lastError      = null;
-        Value             lastErrorValue = null;
+        lastError      = null;
+        lastErrorValue = null;
 
         while (!abort.hasResult())
         {
@@ -136,9 +136,9 @@ public final class Machine
                 lastError      = error;
                 lastErrorValue = 
                     ListFactory.create(
-                        errorTag,
                         error.getCauseValue(),
-                        error.getMessageValue()
+                        error.getMessageValue(),
+                        state.getCurrentContinuation()
                     );
 
                 // collect dynamic-wind thunks
@@ -178,5 +178,18 @@ public final class Machine
             ),
             executionEnv
         );
+    }
+
+
+    public static Value getLastError()
+    {
+        Value result = 
+            (lastErrorValue != null)
+            ? lastErrorValue
+            : ScmBoolean.createFalse();
+        
+        lastErrorValue = null;
+        
+        return result;
     }
 }
