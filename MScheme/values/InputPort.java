@@ -93,9 +93,7 @@ public class InputPort
         throws ReadException, ParseException
     {
         try {
-            Value result = parseDatum();
-            result.setLiteral();
-            return result;
+            return parseDatum().setLiteral();
         }
         catch (IOException e) {
             throw new ReadException(this);
@@ -473,6 +471,17 @@ public class InputPort
         }
     }
     
+    public Value readScmChar()
+        throws ReadException
+    {
+        int c = readChar();
+
+        return
+            (c == EOF)
+            ? EOF_VALUE
+            : SchemeChar.create((char)c);
+    }
+    
     public int peekChar()
         throws ReadException
     {
@@ -486,6 +495,17 @@ public class InputPort
         catch (IOException e) {
             throw new ReadException(this);
         }
+    }
+
+    public Value peekScmChar()
+        throws ReadException
+    {
+        int c = peekChar();
+
+        return
+            (c == EOF)
+            ? EOF_VALUE
+            : SchemeChar.create((char)c);
     }
     
     public boolean isReady()
