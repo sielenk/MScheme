@@ -4,9 +4,11 @@ import java.io.Writer;
 import java.io.StringWriter;
 import java.io.IOException;
 
+import MScheme.environment.DynamicEnvironment;
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Token;
 import MScheme.code.Code;
+import MScheme.machine.Literal;
 import MScheme.exceptions.*;
 
 
@@ -68,6 +70,9 @@ public abstract class Value
     public Function     toFunction () throws FunctionExpected
     { throw new FunctionExpected(this); }
 
+    public DynamicEnvironment toEnvironment() throws EnvironmentExpected
+    { throw new EnvironmentExpected(this); }
+
 
     // equivalence predicates (as in R5RS, 6.1)
     
@@ -112,12 +117,15 @@ public abstract class Value
 
 
     // compilation functions
+
+    public final Code getLiteral()
+    { return new Literal(this); }
     
-    public abstract Code getCode(StaticEnvironment e)
-        throws CompileError, TypeError;
+    public Code getCode(StaticEnvironment e)
+        throws CompileError, TypeError
+    { return getLiteral(); }
 
     public Token getToken(StaticEnvironment e)
         throws CompileError, TypeError
     { return getCode(e); }
 }
- 
