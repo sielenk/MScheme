@@ -49,6 +49,7 @@ import MScheme.util.Arity;
 import MScheme.values.Function;
 import MScheme.values.InputPort;
 import MScheme.values.List;
+import MScheme.values.Empty;
 import MScheme.values.ListFactory;
 import MScheme.values.OutputPort;
 import MScheme.values.Pair;
@@ -73,7 +74,7 @@ final class Order
     public final static int GT =  2;
 
     public final static boolean check(List arguments, int mode)
-    throws RuntimeError, TypeError
+        throws RuntimeError, TypeError
     {
         final Arity arity = Arity.atLeast(2);
         int len = arguments.getLength();
@@ -385,7 +386,7 @@ public class Builtins
 
     public final static Value null_3F(Value argument) // null?
     {
-        return ScmBoolean.create(argument.isEmpty());
+        return ScmBoolean.create(argument instanceof Empty);
     }
 
     public final static Value list_3F(Value argument) // list?
@@ -394,6 +395,7 @@ public class Builtins
     }
 
     public final static Value list(List argument)
+        throws ListExpected
     {
         // Without first-class continuations, it would be save to
         // omit the call to getCopy(). But multiple returns have to
@@ -402,7 +404,7 @@ public class Builtins
     }
 
     public final static Value length(Value argument)
-    throws ListExpected
+        throws ListExpected
     {
         return ScmNumber.create(argument.toList().getLength());
     }
@@ -410,7 +412,7 @@ public class Builtins
     public final static Function append = AppendFunction.INSTANCE;
 
     public final static Value reverse(Value argument)
-    throws ListExpected
+        throws ListExpected
     {
         return argument.toList().getReversed();
     }
