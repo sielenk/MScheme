@@ -43,7 +43,6 @@ public abstract class CheckedFunction
 
     protected abstract Code checkedCall(
         Registers state,
-        int       len,
         List      args
     ) throws SchemeException;
 
@@ -53,10 +52,8 @@ public abstract class CheckedFunction
     public final Code call(Registers state, List arguments)
         throws SchemeException
     {
-        return checkedCall(
-            state,
-            checkArguments(getArity(), arguments),
-            arguments
-        );
+        checkArguments(getArity(), arguments);
+
+        return checkedCall(state, arguments);
     }
 }

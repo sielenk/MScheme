@@ -46,14 +46,13 @@ public abstract class UnaryFunction
 
     protected final Code checkedCall(
         Registers state,
-        int       len,
         List      arguments
     ) throws SchemeException
     {
         return checkedCall(
-                   state,
-                   arguments.getHead()
-               );
+            state,
+            arguments.getHead()
+        );
     }
 
     protected abstract Code checkedCall(

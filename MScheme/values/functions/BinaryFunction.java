@@ -46,7 +46,6 @@ public abstract class BinaryFunction
 
     protected final Code checkedCall(
         Registers state,
-        int       len,
         List      arguments
     ) throws SchemeException
     {

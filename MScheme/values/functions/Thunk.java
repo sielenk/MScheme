@@ -45,7 +45,6 @@ public abstract class Thunk
 
     protected final Code checkedCall(
         Registers state,
-        int       len,
         List      arguments
     ) throws SchemeException
     {

@@ -52,7 +52,6 @@ public class ApplyFunction
 
     protected Code checkedCall(
         Registers state,
-        int       length,
         List      arguments
     ) throws SchemeException
     {
@@ -65,7 +64,7 @@ public class ApplyFunction
         // (f 0 1 (2 3)) is changed to (f 0 1 2 3)
 
         List toBeModified = arguments;
-        for (int i = length - 2; i > 0; i--)
+        for (int i = toBeModified.getLength() - 2; i > 0; i--)
         {
             toBeModified = toBeModified.getTail();
         }
