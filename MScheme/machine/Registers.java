@@ -20,7 +20,7 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.machine;
 
-import MScheme.environment.Environment;
+import MScheme.environment.DynamicEnvironment;
 
 import MScheme.values.functions.UnaryFunction;
 
@@ -35,12 +35,12 @@ public class Registers
     = "$Id$";
 
 
-    private Continuation _continuation;
-    private Environment  _environment;
+    private Continuation       _continuation;
+    private DynamicEnvironment _environment;
 
 
     /** */
-    Registers(Environment environment)
+    Registers(DynamicEnvironment environment)
     {
         _continuation = null;
         _environment  = environment;
@@ -83,13 +83,13 @@ public class Registers
     }
 
     /** Returns the current environment. */
-    public Environment getEnvironment()
+    public DynamicEnvironment getEnvironment()
     {
         return _environment;
     }
 
     /** Changes the current environment. */
-    public void setEnvironment(Environment newEnvironment)
+    public void setEnvironment(DynamicEnvironment newEnvironment)
     {
         _environment = newEnvironment;
     }
