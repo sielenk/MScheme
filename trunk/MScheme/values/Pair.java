@@ -64,7 +64,7 @@ public abstract class Pair
             current = currentPair.getSecond();
         }
 
-        if (current != Empty.create())
+        if (!current.isEmpty())
         {
             // 'this' is an improper list
 
