@@ -65,31 +65,14 @@ public abstract class CodeList
     }
 
 
-    public String toString()
-    {
-        StringBuffer buffer = new StringBuffer();
-
-        for (CodeList current = this;;)
-        {
-            buffer.append(current.getHead().toString());
-            current = current.getTail();
-            if (current.isEmpty())
-            {
-                break;
-            }
-            buffer.append(' ');
-        }
-
-        return buffer.toString();
-    }
-
-
     // abstract interface
 
     public abstract boolean  isEmpty();
     public abstract Code     getHead();
     public abstract CodeList getTail();
     public abstract CodeList getReversed();
+
+    public abstract String toString();
 }
 
 
@@ -146,6 +129,24 @@ final class CodeListPair
 
         return result;
     }
+
+    public String toString()
+    {
+        StringBuffer buffer = new StringBuffer();
+
+        for (CodeList current = this;;)
+        {
+            buffer.append(current.getHead().toString());
+            current = current.getTail();
+            if (current.isEmpty())
+            {
+                break;
+            }
+            buffer.append(' ');
+        }
+
+        return buffer.toString();
+    }
 }
 
 
@@ -190,5 +191,10 @@ final class CodeListEmpty
     public CodeList getReversed()
     {
         return this;
+    }
+
+    public String toString()
+    {
+        return "()";
     }
 }
