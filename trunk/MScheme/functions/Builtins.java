@@ -163,6 +163,11 @@ public class Builtins
     { return ScmBoolean.create(Order.check(arguments, Order.GT)); }
 
 
+    public final static Value zero_3F(Value argument) // zero?
+        throws TypeError
+    { return ScmBoolean.create(argument.toScmNumber().getInteger() == 0); }
+
+
     private final static Adder ADDER = new Adder();
 
     public final static Value _2B(List arguments) // +
