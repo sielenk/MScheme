@@ -44,6 +44,24 @@ public abstract class CodeList
     { return prepend(first, create(second, third)); }
 
 
+    public String toString()
+    {
+        StringBuffer buffer = new StringBuffer();
+        
+        buffer.append('(');
+        for (CodeList current = this;;) {
+            buffer.append(current.getHead().toString());
+            current = current.getTail();
+            if (current.isEmpty()) {
+                break;
+            }
+            buffer.append(' ');
+        }
+        buffer.append(')');
+
+        return buffer.toString();
+    }
+
     // abstract interface
 
     public abstract boolean  isEmpty();
