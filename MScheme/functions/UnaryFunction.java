@@ -12,10 +12,5 @@ abstract public class UnaryFunction
 {
     protected UnaryFunction()
     { super(1); }
-
-    abstract protected Code checkedCall(
-        Machine machine,
-        Value   first
-    ) throws SchemeException;
 }
 
