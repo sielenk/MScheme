@@ -10,13 +10,17 @@ public class Main
     public final static void main(String[] argv)
         throws Exception
     {
-        InputPort  in      = InputPort.create();
-        OutputPort out     = OutputPort.create();
-        Machine    machine = new Machine();
-        
-        out.write(machine.evaluate(in.read()));
-        
-        out.writeChar('\n');
+        Machine machine = new Machine();
+
+        for (int i = 0; i < argv.length; i++) {
+		    InputPort in = InputPort.create(argv[i]);
+
+   	        System.out.println("parsing " + argv[i]);
+
+            Value v;
+		    while ((v = in.read()) != in.EOF_VALUE) {
+    	        machine.evaluate(v);
+		    }
+	    }
     }
 }
-
