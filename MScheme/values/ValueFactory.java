@@ -12,33 +12,29 @@ import MScheme.exceptions.FunctionNotFoundException;
 public abstract class ValueFactory
 {
     public static SchemeBoolean createTrue()
-    { return SchemeBoolean.True; }
+    { return SchemeBoolean.createTrue(); }
 
     public static SchemeBoolean createFalse()
-    { return SchemeBoolean.False; }
+    { return SchemeBoolean.createFalse(); }
     
     public static SchemeBoolean createBool(boolean flag)
     { return SchemeBoolean.create(flag); }
 
 
-    public static Pair createPair(Value first, Value second)
-    { return Pair.create(first, second); }
-
-
     public static List prepend(Value head, List tail)
-    { return Pair.create(head, tail); }
+    { return List.prepend(head, tail); }
     
     public static List createList()
-    { return List.EMPTY; }
+    { return List.with(); }
 
     public static List createList(Value first)
-    { return prepend(first, createList()); }
+    { return List.with(first); }
 
     public static List createList(Value first, Value second)
-    { return prepend(first, createList(second)); }
+    { return List.with(first, second); }
 
     public static List createList(Value first, Value second, Value third)
-    { return prepend(first, createList(second, third)); }
+    { return List.with(first, second, third); }
 
     
     public static Symbol createSymbol(String javaString)

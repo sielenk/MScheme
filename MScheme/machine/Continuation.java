@@ -13,16 +13,53 @@ import MScheme.functions.UnaryFunction;
 import MScheme.exceptions.SchemeException;
 
 
-class ContinuationFunction
+abstract class Continuation
     extends UnaryFunction
 {
-    private final Continuation _continuation;
+    final private int                _level;
+    final private DynamicEnvironment _capturedEnvironment;
+    final private Continuation       _capturedContinuation;
+
+
+    Continuation(Machine machine)
+    {
+        _capturedEnvironment  = machine.getEnvironment();
+        _capturedContinuation = machine.getContinuation();
+
+        _level =
+            (_capturedContinuation != null)
+            ? _capturedContinuation._level + 1
+            : 0;
+
+        machine.setContinuation(this);
+    }
+
+    final int getLevel()
+    { return _level; }
+
+    final Continuation getParent()
+    { return _capturedContinuation; }
     
-    ContinuationFunction(Continuation continuation)
-    { _continuation = continuation; }
+    protected void leave(Machine machine) { }
+    protected void enter(Machine machine) { }
 
+    final public Code invoke(Machine machine, Value value)
+        throws SchemeException
+    {
+        machine.setEnvironment (_capturedEnvironment);
+        machine.setContinuation(_capturedContinuation);
+        
+        return internalInvoke(machine, value);
+    }
+ 
 
-    private void dynamicWind(
+    abstract protected Code internalInvoke(
+        Machine machine,
+        Value value
+    ) throws SchemeException;
+        
+        
+    private static void dynamicWind(
         Machine      machine,
         Continuation source,
         Continuation destination
@@ -69,7 +106,7 @@ class ContinuationFunction
         throws SchemeException
     {
         Continuation source      = machine.getContinuation();
-        Continuation destination = _continuation;
+        Continuation destination = this;
         
         machine.setContinuation(destination);
         new ValueContinuation(machine, argument);
@@ -81,52 +118,4 @@ class ContinuationFunction
         // created above ... both ignore the given value
         return machine.handleResult(null);
     }
-}
-
-
-abstract class Continuation
-{
-    final private int                _level;
-    final private DynamicEnvironment _capturedEnvironment;
-    final private Continuation       _capturedContinuation;
-
-
-    Continuation(Machine machine)
-    {
-        _capturedEnvironment  = machine.getEnvironment();
-        _capturedContinuation = machine.getContinuation();
-
-        _level =
-            (_capturedContinuation != null)
-            ? _capturedContinuation._level + 1
-            : 0;
-
-        machine.setContinuation(this);
-    }
-
-    final int getLevel()
-    { return _level; }
-
-    final Continuation getParent()
-    { return _capturedContinuation; }
-    
-    protected void leave(Machine machine) { }
-    protected void enter(Machine machine) { }
-
-    final public Code invoke(Machine machine, Value value)
-        throws SchemeException
-    {
-        machine.setEnvironment (_capturedEnvironment);
-        machine.setContinuation(_capturedContinuation);
-        
-        return internalInvoke(machine, value);
-    }
- 
-
-    abstract Code internalInvoke(Machine machine, Value value)
-        throws SchemeException;
-        
-        
-    final public UnaryFunction getFunction()
-    { return new ContinuationFunction(this); }
 }

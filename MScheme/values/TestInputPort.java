@@ -124,10 +124,10 @@ public class TestInputPort
         );
         InputPort in = ValueFactory.createInputPort(source);
         
-        assert(in.read().equal(ValueFactory.createList()));
-        assert(in.read().equal(ValueFactory.createPair(one, two)));
-        assert(in.read().equal(ValueFactory.createList(one, two, three)));
-        assert(in.read().equal(ValueFactory.createList(one, two, three)));
+        assert(in.read().equal(List.with()));
+        assert(in.read().equal(Pair.create(one, two)));
+        assert(in.read().equal(List.with(one, two, three)));
+        assert(in.read().equal(List.with(one, two, three)));
     }
 
     public void testVector()

@@ -5,7 +5,7 @@ import java.io.StringWriter;
 import java.io.IOException;
 
 import MScheme.environment.StaticEnvironment;
-import MScheme.code.Token;
+import MScheme.environment.Token;
 import MScheme.code.Code;
 import MScheme.exceptions.*;
 

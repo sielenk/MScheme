@@ -1,7 +1,8 @@
-package MScheme.code;
+package MScheme.environment;
 
-import MScheme.environment.StaticEnvironment;
+import MScheme.code.Code;
 import MScheme.values.List;
+
 import MScheme.exceptions.SchemeException;
 
 

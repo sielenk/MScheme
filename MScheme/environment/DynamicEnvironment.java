@@ -6,8 +6,8 @@ import java.util.Vector;
 import MScheme.util.Arity;
 import MScheme.values.*;
 import MScheme.code.Code;
-import MScheme.code.Syntax;
-import MScheme.code.SyntaxFactory;
+import MScheme.syntax.Syntax;
+import MScheme.syntax.SyntaxFactory;
 import MScheme.exceptions.*;
 
 

@@ -251,7 +251,7 @@ public class InputPort
             
             int la1 = skipWSread();
             if (la1 == '.') {
-                List result = ValueFactory.createPair(
+                List result = Pair.create(
                     head,
                     parseDatum()
                 );
@@ -266,7 +266,7 @@ public class InputPort
                 return result;
             } else {
                 _reader.unread(la1);
-                return ValueFactory.createPair(
+                return Pair.create(
                     head,
                     parseList()
                 );

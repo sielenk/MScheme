@@ -158,7 +158,7 @@ public class Machine
     { _continuation = newContinuation; }
 
     public UnaryFunction getCurrentContinuation()
-    { return _continuation.getFunction(); }
+    { return _continuation; }
     
     
     public Code handleDynamicWind(

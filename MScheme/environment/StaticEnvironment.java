@@ -7,9 +7,8 @@ import MScheme.util.Arity;
 import MScheme.values.Symbol;
 import MScheme.values.List;
 
-import MScheme.code.Token;
 import MScheme.code.Code;
-import MScheme.code.Syntax;
+import MScheme.syntax.Syntax;
 
 import MScheme.exceptions.*;
 

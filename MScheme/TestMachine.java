@@ -6,6 +6,7 @@ import junit.framework.*;
 import MScheme.machine.Machine;
 import MScheme.environment.*;
 import MScheme.code.*;
+import MScheme.syntax.SyntaxFactory;
 import MScheme.values.*;
 import MScheme.exceptions.*;
 
@@ -164,7 +165,7 @@ public class TestMachine
         try {
             assert(
                 machine.evaluate(
-                    ValueFactory.createPair(_val1, _val2)
+                    Pair.create(_val1, _val2)
                 ) != null
             );
             fail("expected ListExpectedException");
@@ -371,17 +372,17 @@ public class TestMachine
     {
         Function func = evaluate("(lambda x x)").toFunction();
 
-        Pair pair2 = ValueFactory.createPair(
+        Pair pair2 = Pair.create(
             _val2,
             ValueFactory.createList()
         );
-        Pair pair1 = ValueFactory.createPair(
+        Pair pair1 = Pair.create(
             _val1,
             pair2
         );
     
         Value result = machine.evaluate(
-            ValueFactory.createPair(func, pair1)
+            Pair.create(func, pair1)
         );
 
         assert(result.equal(pair1));

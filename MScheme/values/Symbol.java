@@ -4,8 +4,9 @@ import java.io.Writer;
 import java.io.IOException;
 
 import MScheme.environment.StaticEnvironment;
+import MScheme.environment.Token;
 import MScheme.code.Code;
-import MScheme.code.Token;
+
 import MScheme.exceptions.SymbolNotFoundException;
 import MScheme.exceptions.SyntaxException;
 

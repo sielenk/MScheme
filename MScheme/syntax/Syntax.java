@@ -1,14 +1,16 @@
-package MScheme.code;
+package MScheme.syntax;
 
 import java.io.Writer;
 import java.io.IOException;
 
 import MScheme.util.Arity;
-import MScheme.machine.Machine;
-import MScheme.environment.*;
-import MScheme.exceptions.*;
-import MScheme.functions.*;
-import MScheme.values.*;
+import MScheme.environment.Token;
+import MScheme.environment.StaticEnvironment;
+import MScheme.code.Code;
+import MScheme.values.List;
+
+import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.ArityException;
 
 
 public abstract class Syntax
