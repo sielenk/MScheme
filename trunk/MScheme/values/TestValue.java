@@ -13,6 +13,7 @@ public class TestValue
     public final static String id
         = "$Id$";
 
+
     public TestValue(String name)
     { super(name); }
 
@@ -411,4 +412,3 @@ public class TestValue
         );
     }
 }
-

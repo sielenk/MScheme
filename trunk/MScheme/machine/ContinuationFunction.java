@@ -24,6 +24,7 @@ final class ContinuationFunction
     public final static String id
         = "$Id$";
 
+
     private final Continuation _continuation;
 
     ContinuationFunction(Continuation continuation)

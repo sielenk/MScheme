@@ -14,6 +14,7 @@ public final class Assignment
     public final static String id
         = "$Id$";
 
+
     private final Reference _binding;
     private final Code      _valueCalculation;
 
@@ -36,6 +37,7 @@ public final class Assignment
         new Continuation(state) {
             public final static String id
                 = "$Id$";
+
 
             protected Code execute(Registers regs, Value evaluationResult)
             {

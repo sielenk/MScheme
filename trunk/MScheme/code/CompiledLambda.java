@@ -26,6 +26,7 @@ public final class CompiledLambda
     public final static String id
         = "$Id$";
 
+
     private final Arity             _arity;
     private final StaticEnvironment _compiledFormals;
     private final Code              _compiledBody;
@@ -60,6 +61,7 @@ public final class CompiledLambda
     {
         public final static String id
             = "$Id$";
+
 
         private final Environment _enclosingEnvironment;
     

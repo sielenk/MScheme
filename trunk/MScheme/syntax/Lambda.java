@@ -20,6 +20,7 @@ final class Lambda
     public final static String id
         = "$Id$";
 
+
     final static Syntax INSTANCE = new Lambda();
     
     private Lambda()

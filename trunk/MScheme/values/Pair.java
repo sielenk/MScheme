@@ -20,6 +20,7 @@ public final class Pair
     public final static String id
         = "$Id$";
 
+
     private Value   _first;
     private Value   _second;
 

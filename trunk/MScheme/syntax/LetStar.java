@@ -24,6 +24,7 @@ final class LetStar
     public final static String id
         = "$Id$";
 
+
     final static Syntax INSTANCE = new LetStar();
     
     private LetStar()
@@ -65,6 +66,7 @@ final class LetStarHelper
 {
     public final static String id
         = "$Id$";
+
 
     private final List _body;
 

@@ -8,6 +8,7 @@ public class Arity
     public final static String id
         = "$Id$";
 
+
     private final int _minArity;
     private final int _maxArity;
 

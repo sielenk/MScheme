@@ -15,6 +15,7 @@ public abstract class Compound
     public final static String id
         = "$Id$";
 
+
     private boolean _isMutable = true;
 
     public void setConst()

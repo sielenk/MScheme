@@ -24,6 +24,7 @@ final class Let
     public final static String id
         = "$Id$";
 
+
     final static Syntax INSTANCE = new Let();
     
     private Let()

@@ -19,6 +19,7 @@ final class Quote
     public final static String id
         = "$Id$";
 
+
     final static Syntax INSTANCE = new Quote();
     
     private Quote()

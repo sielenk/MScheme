@@ -25,6 +25,7 @@ public final class Environment
     public final static String id
         = "$Id$";
 
+
     // *******************************************************************
 
     public void write(Writer destination)

@@ -16,6 +16,7 @@ public final class WindContinuation
     public final static String id
         = "$Id$";
 
+
     private final Code _before;
     private final Code _after;
 

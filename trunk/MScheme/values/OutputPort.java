@@ -18,6 +18,7 @@ public class OutputPort
     public final static String id
         = "$Id$";
 
+
     private final Writer _writer;
 
     private OutputPort(Writer writer)

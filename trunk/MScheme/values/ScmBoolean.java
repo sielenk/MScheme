@@ -12,6 +12,7 @@ public final class ScmBoolean
     public final static String id
         = "$Id$";
 
+
     private final static ScmBoolean TRUE  = new ScmBoolean();
     private final static ScmBoolean FALSE = new ScmBoolean();
     
@@ -45,4 +46,3 @@ public final class ScmBoolean
         }
     }
 }
-

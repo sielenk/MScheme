@@ -13,6 +13,7 @@ final class SequenceContinuation
     public final static String id
         = "$Id$";
 
+
     private final CodeList _todo;
 
     private SequenceContinuation(
@@ -45,6 +46,7 @@ public final class Sequence
 {
     public final static String id
         = "$Id$";
+
 
     private final CodeList _sequence;
 

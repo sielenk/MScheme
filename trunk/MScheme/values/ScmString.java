@@ -14,6 +14,7 @@ public final class ScmString
     public final static String id
         = "$Id$";
 
+
     private char[] _string;
 
 
