@@ -209,6 +209,11 @@ public final class Machine
                 _resetOutputFunc
             );
 
+            _environment.define(
+                Symbol.create("machine-environment"),
+                _environment
+            );
+
             evaluate(
                 InputPort.create(
                     new StringReader(
@@ -284,7 +289,7 @@ public final class Machine
     ) throws SchemeException
     {
         Code             current = program;
-        Registers        state   = new Registers(getEnvironment());
+        Registers        state   = new Registers(getEnvironment().getDynamic());
         StopContinuation stop    = new StopContinuation(state);
 
         _lastError      = null;
