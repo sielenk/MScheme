@@ -30,7 +30,7 @@ public final class ScmString
 
     public static ScmString create(Symbol schemeSymbol)
     {
-        ScmString result = new ScmString(schemeSymbol.getKey());
+        ScmString result = create(schemeSymbol.getJavaString());
         result.setConst();
         return result;
     }

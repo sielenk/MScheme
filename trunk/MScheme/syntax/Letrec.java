@@ -66,8 +66,8 @@ final class Letrec
 
             compiledBody = CodeList.prepend(
                 new Assignment(
-                    newEnvironment.getCodeFor(formal),
-                    init.getCode(newEnvironment)
+                    formal.getReference(newEnvironment),
+                    init  .getCode     (newEnvironment)
                 ),
                 compiledBody
             );
