@@ -21,6 +21,7 @@ Boston, MA  02111-1307, USA. */
 package mscheme.syntax;
 
 import mscheme.code.Application;
+import mscheme.compiler.Compiler;
 import mscheme.environment.Environment;
 import mscheme.environment.StaticEnvironment;
 import mscheme.exceptions.SchemeException;
@@ -78,7 +79,7 @@ final class Macro
             )
         );
 
-        return ValueTraits.getCompiled(
+        return Compiler.getForceable(
         	ValueTraits.toStaticEnvironment(result.getFirst()),
         	result.getSecond());
     }

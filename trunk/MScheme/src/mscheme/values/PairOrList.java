@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 
+import mscheme.compiler.Compiler;
 import mscheme.environment.StaticEnvironment;
 import mscheme.exceptions.ImmutableException;
 import mscheme.exceptions.ListExpected;
@@ -238,13 +239,13 @@ public abstract class PairOrList
 	    return ProcedureCall.create(this);
 	}
 
-    public Object getCompiled(StaticEnvironment compilationEnv)
+    public Object getForceable(StaticEnvironment compilationEnv)
         throws SchemeException
     {
         IList list = validate();
 
         return
-			ValueTraits.getTranslator(
+			Compiler.getTranslator(
 				compilationEnv,
 				list.getHead())
             .translate(
@@ -424,7 +425,7 @@ public abstract class PairOrList
     public Object[] getCompiledArray(StaticEnvironment compilationEnv, int index)
         throws SchemeException
     {
-        Object   compiledHead = ValueTraits.getCompiled(compilationEnv, getHead());
+        Object   compiledHead = Compiler.getForceable(compilationEnv, getHead());
         Object[] result       = getTail().getCompiledArray(
                                     compilationEnv,
                                     index + 1);

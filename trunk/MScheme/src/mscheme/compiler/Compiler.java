@@ -24,30 +24,17 @@ import mscheme.values.ValueTraits;
  */
 public class Compiler
 {
-    public static ITranslator getTranslator(
-        StaticEnvironment compilationEnv,
-        Object            object)
-    throws SchemeException
+    public static Object force(Object o)
+        throws CompileError
     {
-        if (object instanceof Symbol)
-        {
-            Symbol symbol = (Symbol)object;
-            
-            ITranslator result = compilationEnv.getSyntaxFor(symbol);
-            
-            if (result != null)
-            {
-                return result;
-            }
-        }
-    
-        return ProcedureCall.create(object);
+    	return
+    		(o instanceof IForceable)
+    		? ((IForceable)o).force()
+    		: o;
     }
 
-    public static Object getForceable(
-        StaticEnvironment compilationEnv,
-        Object object)
-    throws SchemeException
+    public static Object getForceable(StaticEnvironment compilationEnv,
+        Object object) throws SchemeException
     {
         if (ValueTraits.isScmVector(object))
         {
@@ -64,16 +51,22 @@ public class Compiler
         }
     }
 
-    /**
-     * Does the final Symbol lookup.
-     */
-    public static Object force(Object o)
-        throws CompileError
+    public static ITranslator getTranslator(StaticEnvironment compilationEnv,
+        Object object) throws SchemeException
     {
-    	return
-    		(o instanceof IForceable)
-    		? ((IForceable)o).force()
-    		: o;
+        if (object instanceof Symbol)
+        {
+            Symbol symbol = (Symbol)object;
+            
+            ITranslator result = compilationEnv.getSyntaxFor(symbol);
+            
+            if (result != null)
+            {
+                return result;
+            }
+        }
+    
+        return ProcedureCall.create(object);
     }
 
     public static Object compile(

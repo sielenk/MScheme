@@ -22,6 +22,7 @@ package mscheme.syntax;
 
 
 import mscheme.code.Assignment;
+import mscheme.compiler.Compiler;
 
 import mscheme.environment.Reference;
 import mscheme.environment.StaticEnvironment;
@@ -59,7 +60,7 @@ final class Set
 
         return translate(
             compilationEnv.getDelayedReferenceFor(symbol),
-			ValueTraits.getCompiled(compilationEnv, value)
+			Compiler.getForceable(compilationEnv, value)
         );
     }
 

@@ -97,7 +97,7 @@ public final class Symbol
     }
 
 
-    public Object getCompiled(StaticEnvironment env)
+    public Object getForceable(StaticEnvironment env)
         throws SymbolNotFoundException, UnexpectedSyntax
     {
         env.setStateClosed();

@@ -20,8 +20,7 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.code;
 
-import mscheme.ICode;
-
+import mscheme.compiler.Compiler;
 import mscheme.exceptions.CompileError;
 
 
@@ -67,7 +66,7 @@ class CodeArray
     {
         for (int i = 0; i < array.length; ++i)
         {
-            array[i] = ICode.force(array[i]);
+            array[i] = Compiler.force(array[i]);
         }
     }
 }

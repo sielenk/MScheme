@@ -22,15 +22,11 @@ package mscheme.syntax;
 
 
 import mscheme.code.Selection;
-
+import mscheme.compiler.Compiler;
 import mscheme.environment.StaticEnvironment;
-
 import mscheme.exceptions.SchemeException;
-
 import mscheme.util.Arity;
-
 import mscheme.values.IList;
-import mscheme.values.ValueTraits;
 
 
 final class If
@@ -61,8 +57,8 @@ final class If
             : arguments.getTail().getTail().getHead();
 
         return Selection.create(
-			ValueTraits.getCompiled(compilationEnv, flag   ),
-			ValueTraits.getCompiled(compilationEnv, onTrue ),
-			ValueTraits.getCompiled(compilationEnv, onFalse));
+			Compiler.getForceable(compilationEnv, flag   ),
+			Compiler.getForceable(compilationEnv, onTrue ),
+			Compiler.getForceable(compilationEnv, onFalse));
     }
 }

@@ -23,6 +23,7 @@ package mscheme.tests;
 import java.io.StringReader;
 
 import junit.framework.TestCase;
+import mscheme.compiler.Compiler;
 import mscheme.environment.Environment;
 import mscheme.exceptions.CantCompileException;
 import mscheme.exceptions.CompileError;
@@ -89,15 +90,15 @@ public class TestMachine extends TestCase
     {
         try
         {
-            assertTrue(ValueTraits
-                    .getCompiled(_environment.getStatic(), _unval) != null);
+            assertTrue(Compiler
+                    .getForceable(_environment.getStatic(), _unval) != null);
             fail("expected CantCompileException");
         }
         catch (CantCompileException e)
         {}
 
-        assertTrue(ValueTraits.getCompiled(_environment.getStatic(), _val1) != null);
-        assertTrue(ValueTraits.getCompiled(_environment.getStatic(), _val2) != null);
+        assertTrue(Compiler.getForceable(_environment.getStatic(), _val1) != null);
+        assertTrue(Compiler.getForceable(_environment.getStatic(), _val2) != null);
     }
 
     public void testEnvironment()

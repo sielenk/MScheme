@@ -24,6 +24,7 @@ package mscheme.syntax;
 import mscheme.code.Application;
 import mscheme.code.CompiledLambda;
 import mscheme.code.Sequence;
+import mscheme.compiler.Compiler;
 
 import mscheme.environment.StaticEnvironment;
 
@@ -137,7 +138,7 @@ final class LetStarHelper
                 new Object[]
                 {
                     lambda,
-					ValueTraits.getCompiled(outerEnvironment, init)
+					Compiler.getForceable(outerEnvironment, init)
                 }
             );
         }

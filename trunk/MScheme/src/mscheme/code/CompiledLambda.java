@@ -23,22 +23,17 @@ package mscheme.code;
 import java.io.IOException;
 import java.io.Writer;
 
-import mscheme.ICode;
-
-import mscheme.environment.StaticEnvironment;
+import mscheme.compiler.Compiler;
+import mscheme.compiler.IForceable;
 import mscheme.environment.DynamicEnvironment;
-
+import mscheme.environment.StaticEnvironment;
+import mscheme.exceptions.CompileError;
 import mscheme.exceptions.ListExpected;
 import mscheme.exceptions.PairExpected;
 import mscheme.exceptions.SchemeException;
-import mscheme.exceptions.CompileError;
-
 import mscheme.machine.Registers;
-
 import mscheme.util.Arity;
-
 import mscheme.values.IList;
-
 import mscheme.values.functions.CheckedFunction;
 
 
@@ -141,7 +136,7 @@ public final class CompiledLambda
     public Object force()
         throws CompileError
     {
-        _compiledBody = ICode.force(_compiledBody);
+        _compiledBody = Compiler.force(_compiledBody);
         return this;
     }
 
