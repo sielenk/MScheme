@@ -4,22 +4,22 @@ import java.io.Writer;
 import java.io.IOException;
 
 
-public final class SchemeBoolean
+public final class ScmBoolean
     extends Value
 {
-    private final static SchemeBoolean TRUE  = new SchemeBoolean();
-    private final static SchemeBoolean FALSE = new SchemeBoolean();
+    private final static ScmBoolean TRUE  = new ScmBoolean();
+    private final static ScmBoolean FALSE = new ScmBoolean();
     
-    private SchemeBoolean() { }
+    private ScmBoolean() { }
 
 
-    public static SchemeBoolean create(boolean flag)
+    public static ScmBoolean create(boolean flag)
     { return flag ? TRUE : FALSE; }
 
-    public static SchemeBoolean createFalse()
+    public static ScmBoolean createFalse()
     { return FALSE; }
 
-    public static SchemeBoolean createTrue()
+    public static ScmBoolean createTrue()
     { return TRUE; }
 
 

@@ -11,14 +11,14 @@ import MScheme.exceptions.FunctionNotFoundException;
 
 public abstract class ValueFactory
 {
-    public static SchemeBoolean createTrue()
-    { return SchemeBoolean.createTrue(); }
+    public static ScmBoolean createTrue()
+    { return ScmBoolean.createTrue(); }
 
-    public static SchemeBoolean createFalse()
-    { return SchemeBoolean.createFalse(); }
+    public static ScmBoolean createFalse()
+    { return ScmBoolean.createFalse(); }
     
-    public static SchemeBoolean createBool(boolean flag)
-    { return SchemeBoolean.create(flag); }
+    public static ScmBoolean createBool(boolean flag)
+    { return ScmBoolean.create(flag); }
 
 
     public static Pair prepend(Value head, List tail)

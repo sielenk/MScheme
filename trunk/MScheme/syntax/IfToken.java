@@ -8,7 +8,7 @@ import MScheme.environment.StaticEnvironment;
 import MScheme.code.CompiledSelector;
 import MScheme.values.Value;
 import MScheme.values.Function;
-import MScheme.values.SchemeBoolean;
+import MScheme.values.ScmBoolean;
 import MScheme.values.List;
 
 import MScheme.exceptions.CompileError;
@@ -33,7 +33,7 @@ final class IfToken
         Value onTrue  = arguments.getTail().getHead();
         Value onFalse =
             (arguments.safeGetLength() == 2)
-            ? SchemeBoolean.createFalse()
+            ? ScmBoolean.createFalse()
             : arguments.getTail().getTail().getHead();
 
         return new CompiledSelector(
