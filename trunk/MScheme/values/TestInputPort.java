@@ -14,7 +14,7 @@ public class TestInputPort
         throws Exception
     {
         StringReader source = new StringReader("test");
-        InputPort in = ValueFactory.createInputPort(source);
+        InputPort in = InputPort.create(source);
         
         assert(in.isReady());
         assert(in.peekChar() == 't');
@@ -39,7 +39,7 @@ public class TestInputPort
         StringReader source = new StringReader(
             " \t \n ; test# 1 2 \"\"\" ;;; 3 \n  \n ;  fkdjhgd "
         );
-        InputPort in = ValueFactory.createInputPort(source);
+        InputPort in = InputPort.create(source);
         
         assert(in.read().eq(in.EOF_VALUE));
     }
@@ -48,12 +48,12 @@ public class TestInputPort
         throws Exception
     {
         StringReader source = new StringReader(" #t #f #t#f ");
-        InputPort in = ValueFactory.createInputPort(source);
+        InputPort in = InputPort.create(source);
         
-        assert(in.read().eq(ValueFactory.createTrue()));
-        assert(in.read().eq(ValueFactory.createFalse()));
-        assert(in.read().eq(ValueFactory.createTrue()));
-        assert(in.read().eq(ValueFactory.createFalse()));
+        assert(in.read().eq(ScmBoolean.createTrue()));
+        assert(in.read().eq(ScmBoolean.createFalse()));
+        assert(in.read().eq(ScmBoolean.createTrue()));
+        assert(in.read().eq(ScmBoolean.createFalse()));
         assert(in.readChar() == ' ');
         assert(in.readChar() == InputPort.EOF);
     }
@@ -64,13 +64,13 @@ public class TestInputPort
         StringReader source = new StringReader(
             "-2 -1 0 1 2"
         );
-        InputPort in = ValueFactory.createInputPort(source);
+        InputPort in = InputPort.create(source);
         
-        assert(in.read().eqv(ValueFactory.createNumber(-2)));
-        assert(in.read().eqv(ValueFactory.createNumber(-1)));
-        assert(in.read().eqv(ValueFactory.createNumber( 0)));
-        assert(in.read().eqv(ValueFactory.createNumber( 1)));
-        assert(in.read().eqv(ValueFactory.createNumber( 2)));
+        assert(in.read().eqv(ScmNumber.create(-2)));
+        assert(in.read().eqv(ScmNumber.create(-1)));
+        assert(in.read().eqv(ScmNumber.create( 0)));
+        assert(in.read().eqv(ScmNumber.create( 1)));
+        assert(in.read().eqv(ScmNumber.create( 2)));
         assert(in.readChar() == InputPort.EOF);
     }
     
@@ -80,15 +80,15 @@ public class TestInputPort
         StringReader source = new StringReader(
             "#\\# #\\\\ #\\\" #\\  #\\newline #\\space #\\a"
         );
-        InputPort in = ValueFactory.createInputPort(source);
+        InputPort in = InputPort.create(source);
         
-        assert(in.read().eqv(ValueFactory.createChar('#')));
-        assert(in.read().eqv(ValueFactory.createChar('\\')));
-        assert(in.read().eqv(ValueFactory.createChar('"')));
-        assert(in.read().eqv(ValueFactory.createChar(' ')));
-        assert(in.read().eqv(ValueFactory.createChar('\n')));
-        assert(in.read().eqv(ValueFactory.createChar(' ')));
-        assert(in.read().eqv(ValueFactory.createChar('a')));
+        assert(in.read().eqv(ScmChar.create('#')));
+        assert(in.read().eqv(ScmChar.create('\\')));
+        assert(in.read().eqv(ScmChar.create('"')));
+        assert(in.read().eqv(ScmChar.create(' ')));
+        assert(in.read().eqv(ScmChar.create('\n')));
+        assert(in.read().eqv(ScmChar.create(' ')));
+        assert(in.read().eqv(ScmChar.create('a')));
         assert(in.readChar() == InputPort.EOF);
     }
 
@@ -105,24 +105,24 @@ public class TestInputPort
             + '"' + str2  + '"' + ' '
             + '"' + str3a + '"'
         );
-        InputPort in = ValueFactory.createInputPort(source);
+        InputPort in = InputPort.create(source);
         
-        assert(in.read().equal(ValueFactory.createString(str1)));
-        assert(in.read().equal(ValueFactory.createString(str2)));
-        assert(in.read().equal(ValueFactory.createString(str3b)));
+        assert(in.read().equal(ScmString.create(str1)));
+        assert(in.read().equal(ScmString.create(str2)));
+        assert(in.read().equal(ScmString.create(str3b)));
     }
 
     public void testList()
         throws Exception
     {
-        Value one   = ValueFactory.createNumber(1);
-        Value two   = ValueFactory.createNumber(2);
-        Value three = ValueFactory.createNumber(3);
+        Value one   = ScmNumber.create(1);
+        Value two   = ScmNumber.create(2);
+        Value three = ScmNumber.create(3);
         
         StringReader source = new StringReader(
             "()(1 .2)(1 2 3)(1 .(2 .(3 .())))"
         );
-        InputPort in = ValueFactory.createInputPort(source);
+        InputPort in = InputPort.create(source);
         
         assert(in.read().equal(Empty.create()));
         assert(in.read().equal(Pair.create(one, two)));
@@ -133,54 +133,54 @@ public class TestInputPort
     public void testVector()
         throws Exception
     {
-        Value one   = ValueFactory.createNumber(1);
-        Value two   = ValueFactory.createNumber(2);
+        Value one   = ScmNumber.create(1);
+        Value two   = ScmNumber.create(2);
         ScmVector v = ScmVector.create(3, one);
         v.set(2, two);
         StringReader source = new StringReader(
             "#() #(1 1) #(1 1 2)"
         );
-        InputPort in = ValueFactory.createInputPort(source);
+        InputPort in = InputPort.create(source);
         
-        assert(in.read().equal(ValueFactory.createVector()));
-        assert(in.read().equal(ValueFactory.createVector(2, one)));
+        assert(in.read().equal(ScmVector.create(0)));
+        assert(in.read().equal(ScmVector.create(2, one)));
         assert(in.read().equal(v));
     }
     
     public void testSymbol()
         throws Exception
     {
-        Value test = ValueFactory.createSymbol("hallo");
+        Value test = Symbol.create("hallo");
         StringReader source = new StringReader(
             "Hallo hallo HALLO HaLlO hAlLo + - ... ?12"
         );
-        InputPort in = ValueFactory.createInputPort(source);
+        InputPort in = InputPort.create(source);
         
         assert(in.read().eq(test));
         assert(in.read().eq(test));
         assert(in.read().eq(test));
         assert(in.read().eq(test));
         assert(in.read().eq(test));
-        assert(in.read().eq(ValueFactory.createSymbol("+")));
-        assert(in.read().eq(ValueFactory.createSymbol("-")));
-        assert(in.read().eq(ValueFactory.createSymbol("...")));
-        assert(in.read().eq(ValueFactory.createSymbol("?12")));
+        assert(in.read().eq(Symbol.create("+")));
+        assert(in.read().eq(Symbol.create("-")));
+        assert(in.read().eq(Symbol.create("...")));
+        assert(in.read().eq(Symbol.create("?12")));
     }
 
     public void testAbbrev()
         throws Exception
     {
-        Value test = ValueFactory.createSymbol("hallo");
+        Value test = Symbol.create("hallo");
         StringReader source = new StringReader(
             "'a ' a `a ,a ,@a"
         );
-        InputPort in = ValueFactory.createInputPort(source);
+        InputPort in = InputPort.create(source);
 
-        Symbol a   = ValueFactory.createSymbol("a");
-        Symbol q   = ValueFactory.createSymbol("quote");
-        Symbol qq  = ValueFactory.createSymbol("quasiquote");
-        Symbol uq  = ValueFactory.createSymbol("unquote");
-        Symbol uqs = ValueFactory.createSymbol("unquote-splicing");
+        Symbol a   = Symbol.create("a");
+        Symbol q   = Symbol.create("quote");
+        Symbol qq  = Symbol.create("quasiquote");
+        Symbol uq  = Symbol.create("unquote");
+        Symbol uqs = Symbol.create("unquote-splicing");
     
         assert(in.read().equal(ValueFactory.createList(q,   a)));
         assert(in.read().equal(ValueFactory.createList(q,   a)));

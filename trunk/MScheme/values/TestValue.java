@@ -46,12 +46,12 @@ public class TestValue
     public void testCastFunctions()
         throws Exception
     {
-        Pair.create(null, null).toPair();
-        Empty.create().toList();
-        ScmNumber.create(0).toScmNumber();
-        ScmChar.create('a').toScmChar();
-        ValueFactory.createString("").toScmString();
-        ValueFactory.createVector().toScmVector();
+        Pair      .create(null, null).toPair();
+        Empty     .create().toList();
+        ScmNumber .create(0).toScmNumber();
+        ScmChar   .create('a').toScmChar();
+        ScmString .create("").toScmString();
+        ScmVector .create(0).toScmVector();
         InputPort .create().toInputPort();
         OutputPort.create().toOutputPort();
     }
@@ -59,7 +59,7 @@ public class TestValue
     public void testTrue()
         throws Exception
     {
-        final Value True  = ValueFactory.createTrue();
+        final Value True  = ScmBoolean.createTrue();
 
         assert(True.isTrue());
         
@@ -72,7 +72,7 @@ public class TestValue
     public void testFalse()
         throws Exception
     {
-        final Value False = ValueFactory.createFalse();
+        final Value False = ScmBoolean.createFalse();
 
         assert(!False.isTrue());
         
@@ -100,8 +100,8 @@ public class TestValue
         throws Exception
     {       
         final Value pair = Pair.create(
-            ValueFactory.createTrue(),
-            ValueFactory.createTrue()
+            ScmBoolean.createTrue(),
+            ScmBoolean.createTrue()
         );
         
         assert(pair.isTrue());
@@ -118,7 +118,7 @@ public class TestValue
         throws Exception
     {
         final Value list = ValueFactory.createList(
-            ValueFactory.createTrue()
+            ScmBoolean.createTrue()
         );
         
         assert(list.isTrue());
@@ -134,7 +134,7 @@ public class TestValue
     public void testSymbol()
         throws Exception
     {
-        final Value symbol = ValueFactory.createSymbol("test");
+        final Value symbol = Symbol.create("test");
         
         assert(symbol.isTrue());
 
@@ -173,7 +173,7 @@ public class TestValue
     public void testNumber()
         throws Exception
     {
-        final Value number = ValueFactory.createNumber(49875);
+        final Value number = ScmNumber.create(49875);
     
         commonLiteralTests(number);
         assert(number.isScmNumber());
@@ -182,7 +182,7 @@ public class TestValue
     public void testChar()
         throws Exception
     {
-        final Value character = ValueFactory.createChar('a');
+        final Value character = ScmChar.create('a');
     
         commonLiteralTests(character);
         assert(character.isScmChar());
@@ -191,7 +191,7 @@ public class TestValue
     public void testString()
         throws Exception
     {
-        final Value string = ValueFactory.createString("Hallo !");
+        final Value string = ScmString.create("Hallo !");
     
         commonLiteralTests(string);
         assert(string.isScmString());
@@ -200,7 +200,7 @@ public class TestValue
     public void testVector()
         throws Exception
     {
-        final Value vector = ValueFactory.createVector();
+        final Value vector = ScmVector.create(0);
     
         commonLiteralTests(vector);
         assert(
@@ -211,8 +211,8 @@ public class TestValue
     public void testPort()
         throws Exception
     {
-        final Value portI = ValueFactory.createInputPort();
-        final Value portO = ValueFactory.createOutputPort();
+        final Value portI = InputPort.create();
+        final Value portO = OutputPort.create();
     
         commonLiteralTests(portI);
         assert(portI.isPort());
@@ -259,8 +259,8 @@ public class TestValue
     public void testEq()
         throws Exception
     {
-        Value u = ValueFactory.createSymbol("u");
-        Value v = ValueFactory.createSymbol("v");
+        Value u = Symbol.create("u");
+        Value v = Symbol.create("v");
         
         // eq equivalent values
         
@@ -270,29 +270,29 @@ public class TestValue
         
         assert(
             eqHelper(
-                ValueFactory.createTrue(),
-                ValueFactory.createTrue()
+                ScmBoolean.createTrue(),
+                ScmBoolean.createTrue()
             ) == 3
         );
         
         assert(
             eqHelper(
-                ValueFactory.createFalse(),
-                ValueFactory.createFalse()
+                ScmBoolean.createFalse(),
+                ScmBoolean.createFalse()
             ) == 3
         );
         
         assert(
             eqHelper(
-                ValueFactory.createSymbol("a"),
-                ValueFactory.createSymbol("a")
+                Symbol.create("a"),
+                Symbol.create("a")
             ) == 3
         );
         
         assert(
             eqHelper(
-                ValueFactory.createList(),
-                ValueFactory.createList()
+                Empty.create(),
+                Empty.create()
             ) == 3
         );
         
@@ -308,15 +308,15 @@ public class TestValue
     
         assert(
             eqHelper(
-                ValueFactory.createNumber(7123645),
-                ValueFactory.createNumber(7123645)
+                ScmNumber.create(7123645),
+                ScmNumber.create(7123645)
             ) >= 2
         );
         
         assert(
             eqHelper(
-                ValueFactory.createChar('u'),
-                ValueFactory.createChar('u')
+                ScmChar.create('u'),
+                ScmChar.create('u')
             ) >= 2
         );
 
@@ -325,29 +325,29 @@ public class TestValue
         
         assert(
             eqHelper(
-                ValueFactory.createVector(),
-                ValueFactory.createVector()
+                ScmVector.create(0),
+                ScmVector.create(0)
             ) >= 1
         );
         
         assert(
             eqHelper(
-                ValueFactory.createVector(5, v),
-                ValueFactory.createVector(5, v)
+                ScmVector.create(5, v),
+                ScmVector.create(5, v)
             ) >= 1
         );
 
         assert(
             eqHelper(
-                ValueFactory.createString(""),
-                ValueFactory.createString("")
+                ScmString.create(""),
+                ScmString.create("")
             ) >= 1
         );
 
         assert(
             eqHelper(
-                ValueFactory.createString("Hallo"),
-                ValueFactory.createString("Hallo")
+                ScmString.create("Hallo"),
+                ScmString.create("Hallo")
             ) >= 1
         );
         
@@ -366,36 +366,36 @@ public class TestValue
 
         assert(
             eqHelper(
-                ValueFactory.createTrue(),
-                ValueFactory.createFalse()
+                ScmBoolean.createTrue(),
+                ScmBoolean.createFalse()
             ) == 0
         );
         
         assert(
             eqHelper(
-                ValueFactory.createSymbol("u"),
-                ValueFactory.createSymbol("v")
+                Symbol.create("u"),
+                Symbol.create("v")
             ) == 0
         );
 
         assert(
             eqHelper(
-                ValueFactory.createVector(5, u),
-                ValueFactory.createVector(5, v)
+                ScmVector.create(5, u),
+                ScmVector.create(5, v)
             ) == 0
         );
 
         assert(
             eqHelper(
-                ValueFactory.createVector(7, v),
-                ValueFactory.createVector(5, v)
+                ScmVector.create(7, v),
+                ScmVector.create(5, v)
             ) == 0
         );
 
         assert(
             eqHelper(
-                ValueFactory.createString("Hallo 1"),
-                ValueFactory.createString("Hallo 2")
+                ScmString.create("Hallo 1"),
+                ScmString.create("Hallo 2")
             ) == 0
         );
     }

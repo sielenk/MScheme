@@ -112,39 +112,39 @@ public class DynamicEnvironment
             StaticEnvironment staticBindings = result.getStatic();
 
             staticBindings.defineSyntax(
-                ValueFactory.createSymbol("quote"),
+                Symbol.create("quote"),
                 SyntaxFactory.getQuoteToken()
             );
             staticBindings.defineSyntax(
-                ValueFactory.createSymbol("quasiquote"),
+                Symbol.create("quasiquote"),
                 SyntaxFactory.getQuasiquoteToken()
             );
             staticBindings.defineSyntax(
-                ValueFactory.createSymbol("cond"),
+                Symbol.create("cond"),
                 SyntaxFactory.getCondToken()
             );
             staticBindings.defineSyntax(
-                ValueFactory.createSymbol("if"),
+                Symbol.create("if"),
                 SyntaxFactory.getIfToken()
             );
             staticBindings.defineSyntax(
-                ValueFactory.createSymbol("begin"),
+                Symbol.create("begin"),
                 SyntaxFactory.getBeginToken()
             );
             staticBindings.defineSyntax(
-                ValueFactory.createSymbol("lambda"),
+                Symbol.create("lambda"),
                 SyntaxFactory.getLambdaToken()
             );
             staticBindings.defineSyntax(
-                ValueFactory.createSymbol("let"),
+                Symbol.create("let"),
                 SyntaxFactory.getLetToken()
             );
             staticBindings.defineSyntax(
-                ValueFactory.createSymbol("define"),
+                Symbol.create("define"),
                 SyntaxFactory.getDefineToken()
             );
             staticBindings.defineSyntax(
-                ValueFactory.createSymbol("set!"),
+                Symbol.create("set!"),
                 SyntaxFactory.getSetToken()
             );
         }

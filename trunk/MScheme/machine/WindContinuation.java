@@ -1,8 +1,8 @@
 package MScheme.machine;
 
 import MScheme.code.Code;
-import MScheme.values.ValueFactory;
 import MScheme.values.Value;
+import MScheme.values.Empty;
 import MScheme.values.Function;
 
 import MScheme.exceptions.*;
@@ -20,7 +20,7 @@ class CallThunkContinuation
         Machine machine,
         Value   value
     ) throws RuntimeError, TypeError
-    { return _thunk.call(machine, ValueFactory.createList()); }
+    { return _thunk.call(machine, Empty.create()); }
 }
 
 
@@ -52,7 +52,7 @@ class WindContinuation
         new WindContinuation(machine, before, after);
         new CallThunkContinuation(machine, thunk);
 
-        return before.call(machine, ValueFactory.createList());
+        return before.call(machine, Empty.create());
     }
 
     protected void leave(Machine machine)
@@ -67,7 +67,7 @@ class WindContinuation
     ) throws RuntimeError, TypeError
     {
         new ValueContinuation(machine, value);
-        return _after.call(machine, ValueFactory.createList());
+        return _after.call(machine, Empty.create());
     }
 }
 

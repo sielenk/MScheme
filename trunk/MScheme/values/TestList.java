@@ -18,10 +18,10 @@ public class TestList
     
     protected void setUp()
     {
-        emptyList     = ValueFactory.createList();
+        emptyList     = Empty.create();
     
-        firstElement  = ValueFactory.createSymbol("x");
-        secondElement = ValueFactory.createSymbol("y");
+        firstElement  = Symbol.create("x");
+        secondElement = Symbol.create("y");
         lastElement   = secondElement;
         occupiedList  = ValueFactory.createList(
                 firstElement,
@@ -59,7 +59,7 @@ public class TestList
     {
         assert(
             "empty isn't unique",
-            emptyList == ValueFactory.createList()
+            emptyList == Empty.create()
         );
     }
     

@@ -24,11 +24,11 @@ public class TestEnvironment
     {
         env = DynamicEnvironment.getEmpty();
     
-        sym1 = ValueFactory.createSymbol("test1");
-        sym2 = ValueFactory.createSymbol("test2");
+        sym1 = Symbol.create("test1");
+        sym2 = Symbol.create("test2");
     
-        val1 = ValueFactory.createList();
-        val2 = ValueFactory.createTrue();
+        val1 = Empty.create();
+        val2 = ScmBoolean.createTrue();
     }
     
     protected void tearDown()

@@ -34,8 +34,8 @@ final class LetToken
         List bindings = arguments.getHead().toList();
         List body     = arguments.getTail();
 
-        List formals = ValueFactory.createList();
-        List inits   = ValueFactory.createList();
+        List formals = Empty.create();
+        List inits   = Empty.create();
 
         while (!bindings.isEmpty()) {
             List  binding = bindings.getHead().toList();
