@@ -52,7 +52,7 @@ final class Begin
     ) throws SchemeException
     {
         return Sequence.create(
-                   arguments.getCodeList(compilationEnv)
-               );
+            arguments.getCodeArray(compilationEnv)
+        );
     }
 }
