@@ -134,7 +134,7 @@ public class TestR5RS
             eval("()");
             fail();
         }
-        catch (SyntaxException e) { }
+        catch (CompileError e) { }
     }
 
     /// 4.1.4 Procedures

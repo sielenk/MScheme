@@ -168,9 +168,9 @@ public class TestMachine
                     Pair.create(_val1, _val2)
                 ) != null
             );
-            fail("expected ListExpectedException");
+            fail("expected ListExpected");
         }
-        catch (ListExpectedException e) { }
+        catch (ListExpected e) { }
 
         try {
             assert(
@@ -178,9 +178,9 @@ public class TestMachine
                     ValueFactory.createList(_val1)
                 ) != null
             );
-            fail("expected FunctionExpectedException");
+            fail("expected FunctionExpected");
         }
-        catch (FunctionExpectedException e) { }
+        catch (FunctionExpected e) { }
     }
     
     public void testQuote()
@@ -282,9 +282,9 @@ public class TestMachine
         
         try {
             evaluate("(lambda (#t) #t)");
-            fail("expected SymbolExpectedException");
+            fail("expected SymbolExpected");
         }
-        catch (SymbolExpectedException e) { }
+        catch (SymbolExpected e) { }
         
         try {
             evaluate("(lambda (x y x) #t)");

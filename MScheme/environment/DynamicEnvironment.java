@@ -63,7 +63,7 @@ public class DynamicEnvironment
         DynamicEnvironment parent,
         Arity              arity,
         List               values
-    ) throws ListExpectedException
+    ) throws ListExpected
     {
         this(bindings, parent);
 
@@ -132,9 +132,9 @@ public class DynamicEnvironment
                 SyntaxFactory.getSetToken()
             );
         }
-        catch (SyntaxException e) {
+        catch (AlreadyBound e) {
             throw new RuntimeException(
-                "unexpected SyntaxException in getNullEnvironment()"
+                "unexpected AlreadyBound in getNullEnvironment()"
             );
         }
 
@@ -428,7 +428,7 @@ public class DynamicEnvironment
         StaticEnvironment newFrame,
         Arity             arity,
         List              values
-    ) throws ListExpectedException
+    ) throws ListExpected
     { return new DynamicEnvironment(newFrame, this, arity, values); }
 
     // *** Envrionment access ************************************************
@@ -460,7 +460,7 @@ public class DynamicEnvironment
     }
 
     public void assign(Symbol key, Value value)
-        throws SymbolNotFoundException, SyntaxException
+        throws SymbolNotFoundException, UnexpectedSyntax
     { assign(_bindings.getCodeFor(key), value); }
 
 
@@ -488,8 +488,8 @@ public class DynamicEnvironment
     }
 
     public Value lookup(Symbol key)
-        throws SymbolNotFoundException,
-               SyntaxException,
+        throws SymbolNotFoundException, 
+               UnexpectedSyntax,
                UninitializedSymbolException
     { return lookup(_bindings.getCodeFor(key)); }
 

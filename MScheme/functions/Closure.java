@@ -10,7 +10,7 @@ import MScheme.environment.StaticEnvironment;
 import MScheme.code.Code;
 import MScheme.values.List;
 
-import MScheme.exceptions.ListExpectedException;
+import MScheme.exceptions.ListExpected;
 
 
 final public class Closure
@@ -38,7 +38,7 @@ final public class Closure
     { destination.write("[closure]"); }
     
     protected Code checkedCall(Machine machine, List arguments)
-        throws ListExpectedException
+        throws ListExpected
     {
         machine.setEnvironment(
             _dynamicParent.newChild(

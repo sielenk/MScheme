@@ -11,7 +11,7 @@ import MScheme.values.List;
 
 import MScheme.exceptions.TypeError;
 import MScheme.exceptions.CompileError;
-import MScheme.exceptions.CompileArityError;
+import MScheme.exceptions.SyntaxArityError;
 
 
 public abstract class Syntax
@@ -33,7 +33,7 @@ public abstract class Syntax
     ) throws CompileError, TypeError
     {
         if (!_arity.isValid(arguments.safeGetLength())) {
-            throw new CompileArityError(arguments, _arity);
+            throw new SyntaxArityError(arguments, _arity);
         }
 
         return checkedTranslate(syntax, arguments);

@@ -7,8 +7,7 @@ import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Token;
 import MScheme.code.Code;
 
-import MScheme.exceptions.SymbolNotFoundException;
-import MScheme.exceptions.SyntaxException;
+import MScheme.exceptions.*;
 
 
 public final class Symbol
@@ -59,7 +58,7 @@ public final class Symbol
 
 
     public Code getCode(StaticEnvironment env)
-        throws SymbolNotFoundException, SyntaxException
+        throws SymbolNotFoundException, UnexpectedSyntax
     { return env.getCodeFor(this); }
 
     public Token getToken(StaticEnvironment env)

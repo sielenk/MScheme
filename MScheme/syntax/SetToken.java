@@ -17,6 +17,6 @@ final class SetToken
     protected Reference getReference(
         StaticEnvironment syntax,
         Symbol            symbol
-    ) throws SyntaxException
+    ) throws CompileError
     { return syntax.getCodeFor(symbol); }
 }

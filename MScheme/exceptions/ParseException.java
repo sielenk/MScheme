@@ -5,7 +5,7 @@ import MScheme.values.*;
 
 
 public class ParseException
-    extends SchemeException
+    extends RuntimeError
 {
     private final String _message;
     

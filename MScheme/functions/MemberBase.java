@@ -4,7 +4,7 @@ import MScheme.values.ValueFactory;
 import MScheme.values.Value;
 import MScheme.values.List;
 
-import MScheme.exceptions.ListExpectedException;
+import MScheme.exceptions.ListExpected;
 
 
 abstract class MemberBase
@@ -15,7 +15,7 @@ abstract class MemberBase
     protected final Value checkedCall(
         Value key,
         Value values
-    ) throws ListExpectedException
+    ) throws ListExpected
     {
         List tail = values.toList();
 

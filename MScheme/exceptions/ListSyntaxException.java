@@ -3,10 +3,10 @@ package MScheme.exceptions;
 import MScheme.values.Value;
 
 
-public class SyntaxException
+public class ListSyntaxException
     extends CompileError
 {
-    public SyntaxException(Value cause)
+    public ListSyntaxException(Value cause)
     { super(cause); }
 }
 

@@ -120,11 +120,11 @@ public final class Pair
     { return getFirst(); }
     
     public List getTail()
-        throws ListExpectedException
+        throws ListExpected
     { return getSecond().toList(); }
 
     public List getReversed()
-        throws ListExpectedException
+        throws ListExpected
     {
         List currentTail = toList();
         List result      = ValueFactory.createList();

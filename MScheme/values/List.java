@@ -65,7 +65,11 @@ public abstract class List
                 current = pair.getSecond();
             }
         }
-        catch (PairExpectedException e) { }
+        catch (PairExpected e) {
+            throw new RuntimeException(
+                "unexpected PairExpected"
+            );
+        }
         
         if (!current.isList()) {
             destination.write(" . ");
@@ -95,24 +99,23 @@ public abstract class List
     abstract public int safeGetLength();
         
     final public int getLength()
-        throws ListExpectedException
+        throws ListExpected
     {
         int result = safeGetLength();
 
         if (result < 0) {
-            throw new ListExpectedException(this);
+            throw new ListExpected(this);
         } else {
             return result;
         }
     }
         
-    abstract public Value getHead() throws PairExpectedException;
-    abstract public List  getTail() throws ListExpectedException;
+    abstract public Value getHead() throws PairExpected;
+    abstract public List  getTail() throws ListExpected;
         
-    abstract public List getReversed() throws ListExpectedException;
+    abstract public List getReversed() throws ListExpected;
 
 
     public abstract CodeList getCodeList(StaticEnvironment e)
         throws CompileError, TypeError;
 }
-

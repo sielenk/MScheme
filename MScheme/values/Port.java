@@ -3,8 +3,8 @@ package MScheme.values;
 import java.io.Writer;
 import java.io.IOException;
 
-import MScheme.exceptions.InputPortExpectedException;
-import MScheme.exceptions.OutputPortExpectedException;
+import MScheme.exceptions.InputPortExpected;
+import MScheme.exceptions.OutputPortExpected;
 import MScheme.exceptions.CloseException;
 
 
@@ -32,11 +32,11 @@ public abstract class Port
     { return false; }
 
 
-    public InputPort toInput() throws InputPortExpectedException
-    { throw new InputPortExpectedException(this); }
+    public InputPort toInput() throws InputPortExpected
+    { throw new InputPortExpected(this); }
 
-    public OutputPort toOutput() throws OutputPortExpectedException
-    { throw new OutputPortExpectedException(this); }
+    public OutputPort toOutput() throws OutputPortExpected
+    { throw new OutputPortExpected(this); }
     
     
     public abstract void close()
