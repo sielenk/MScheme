@@ -1,4 +1,160 @@
+; -*- scheme -*-
+
 (begin
+  ;procedure+: reduce <procedure> <initial> <list> 
+  ;    Combines all the elements of list using the binary
+  ;    operation procedure. For example, using + one can 
+  ;    add up all the elements: 
+  ;
+  ;    (reduce + 0 list-of-numbers)
+  ;
+  ;    The argument initial is used only if list is empty;
+  ;    in this case initial is the result of the call to reduce.
+  ;    If list has a single argument, it is returned. Otherwise,
+  ;    the arguments are reduced in a left-associative fashion.
+  ;    For example: 
+  ;
+  ;    (reduce + 0 '(1 2 3 4))                 =>  10
+  ;    (reduce + 0 '(1 2))                     =>  3
+  ;    (reduce + 0 '(1))                       =>  1
+  ;    (reduce + 0 '())                        =>  0
+  ;    (reduce + 0 '(foo))                     =>  foo
+  ;    (reduce list '() '(1 2 3 4))            =>  (((1 2) 3) 4)
+
+  (define (reduce func initial args)
+    (define (helper head tail)
+      (if (null? tail)
+        head
+        (helper (func head (car tail)) (cdr tail))))
+
+    (if (null? args)
+      initial
+      (helper (car args) (cdr args))))
+
+
+  ;procedure+: reduce-right procedure initial list 
+  ;    Like reduce except that it is right-associative. 
+  ;
+  ;    (reduce-right list '() '(1 2 3 4))      =>  (1 (2 (3 4)))
+
+  (define (reduce-right func initial args)
+    (define (helper head tail)
+      (if (null? tail)
+        head
+        (func head (helper (car tail) (cdr tail)))))
+
+    (if (null? args)
+      initial
+      (helper (car args) (cdr args))))
+
+
+  ;procedure+: fold-right procedure initial list 
+  ;    Combines all of the elements of list using the binary
+  ;    operation procedure. Unlike reduce and reduce-right,
+  ;    initial is always used: 
+  ;
+  ;    (fold-right + 0 '(1 2 3 4))             =>  10
+  ;    (fold-right + 0 '(foo))                 error--> Illegal datum
+  ;    (fold-right list '() '(1 2 3 4))        =>  (1 (2 (3 (4 ()))))
+  ;
+  ;    Fold-right has interesting properties because it
+  ;    establishes a homomorphism between (cons, ()) and
+  ;    (procedure, initial). It can be thought of as replacing
+  ;    the pairs in the spine of the list with procedure and replacing
+  ;    the () at the end with initial. Many of the classical
+  ;    list-processing procedures can be expressed in terms of
+  ;    fold-right, at least for the simple versions that take 
+  ;    a fixed number of arguments: 
+  ;
+  ;    (define (copy-list list)
+  ;      (fold-right cons '() list))
+  ;
+  ;    (define (append list1 list2)
+  ;      (fold-right cons list2 list1))
+  ;
+  ;    (define (map p list) 
+  ;      (fold-right (lambda (x r) (cons (p x) r)) '() list))
+  ;
+  ;    (define (reverse items)
+  ;      (fold-right (lambda (x r) (append r (list x))) '() items))
+
+  (define (fold-right func initial args)
+    (define (helper head tail)
+      (func
+        head
+        (if (null? tail)
+          initial
+          (helper
+            (car tail)
+            (cdr tail)))))
+
+    (if (null? args)
+      initial
+      (helper
+        (car args)
+        (cdr args))))
+
+
+  ;procedure+: fold-left procedure initial list 
+  ;    Combines all the elements of list using the binary operation
+  ;    procedure. Elements are combined starting with initial
+  ;    and then the elements of list from left to right. Whereas
+  ;    fold-right is recursive in nature, capturing the essence
+  ;    of cdr-ing down a list and then computing a result, fold-left
+  ;    is iterative in nature, combining the elements as the list
+  ;    is traversed.
+  ;
+  ;    (fold-left list '() '(1 2 3 4))         =>  ((((() 1) 2) 3) 4)
+  ;
+  ;    (define (length list)
+  ;      (fold-left (lambda (sum element) (+ sum 1)) 0 list))
+  ;
+  ;    (define (reverse items)
+  ;      (fold-left (lambda (x y) (cons y x)) () items))
+
+  (define (fold-left func initial args)
+    (define (helper head tail)
+      (if (null? tail)
+        head
+        (helper (func head (car tail)) (cdr tail)))
+    (helper initial args)))
+
+
+
+  (define (primitve-map f l)
+    (fold-right
+      (lambda (x r)
+        (cons
+          (f x)
+          r))
+      '()
+      l))
+
+  (define (transpose lists)
+    (let loop ((rest lists))
+      (if (null? (car rest))
+        '()
+        (cons
+          (primitve-map car rest)
+          (loop (primitve-map cdr rest))))))
+
+  (define (map func . lists)
+    (if (null? (cdr lists))
+      (primitve-map
+        func
+        (car lists))
+      (primitve-map
+        (lambda (list) (apply func list))
+        (transpose lists))))
+
+  (define (for-each func . lists)
+    (reverse (apply map func (map reverse lists))))
+
+
+  (define (force object)
+    (object))
+
+
   (define (call-with-input-file filename proc)
     (let* ((port   (open-input-file filename))
            (result (proc port)))
@@ -85,6 +241,9 @@
   (define load (make-load (current-environment)))
 
   (list 'begin
+    (list 'define 'map                   map)
+    (list 'define 'for-each              for-each)
+    (list 'define 'force                 force)
     (list 'define 'call-with-input-file  call-with-input-file)
     (list 'define 'call-with-output-file call-with-output-file)
     (list 'define 'current-input-port    current-input-port)
