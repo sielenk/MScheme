@@ -169,7 +169,7 @@ public final class ScmString
     {
         String str = getJavaString();
 
-        destination.write('"');
+        destination.write('"'); // "
         for (int i = 0; i < str.length(); i++)
         {
             char c = str.charAt(i);
@@ -179,7 +179,7 @@ public final class ScmString
                 destination.write("\\n");
                 break;
 
-            case '"':
+            case '"': // "
                 destination.write("\\\"");
                 break;
 
@@ -188,7 +188,7 @@ public final class ScmString
                 break;
             }
         }
-        destination.write('"');
+        destination.write('"'); // "
     }
 
     public void display(Writer destination)

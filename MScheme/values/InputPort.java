@@ -159,7 +159,7 @@ public class InputPort
                || (c == ')')
                || (c == '[')
                || (c == ']')
-               || (c == '"')
+               || (c == '"')    // "
                || (c == ';');
     }
 
@@ -355,7 +355,7 @@ public class InputPort
 
             switch (c)
             {
-            case '"':
+            case '"':  // "
                 return ScmString.createConst(
                            buf.toString()
                        );
@@ -523,7 +523,7 @@ checkNumber:
         case '[':
             return parseList(']');
 
-        case '"':
+        case '"':  // "
             return parseString();
 
         case '\'':
