@@ -2,6 +2,8 @@ package MScheme.values;
 
 import java.io.StringReader;
 
+import MScheme.Value;
+
 
 public class TestInputPort
     extends junit.framework.TestCase

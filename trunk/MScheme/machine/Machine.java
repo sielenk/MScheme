@@ -1,6 +1,6 @@
 package MScheme.machine;
 
-import MScheme.values.Value;
+import MScheme.Value;
 import MScheme.code.Code;
 import MScheme.environment.Environment;
 
@@ -28,7 +28,7 @@ final class AbortContinuation
 
 final public class Machine
 {
-    final private Environment  _environment;
+    final private Environment _environment;
     
     public Machine(Environment environment)
     { _environment  = environment; }

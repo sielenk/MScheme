@@ -1,7 +1,6 @@
 package MScheme.exceptions;
 
-import MScheme.values.Value;
-import MScheme.values.*;
+import MScheme.Value;
 
 
 public class ParseException

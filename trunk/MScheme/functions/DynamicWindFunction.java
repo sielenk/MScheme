@@ -6,7 +6,7 @@ import MScheme.code.Code;
 import MScheme.code.CodeList;
 import MScheme.code.Application;
 import MScheme.values.ValueFactory;
-import MScheme.values.Value;
+import MScheme.Value;
 import MScheme.values.Function;
 
 import MScheme.exceptions.*;

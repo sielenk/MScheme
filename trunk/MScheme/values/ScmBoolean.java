@@ -3,6 +3,8 @@ package MScheme.values;
 import java.io.Writer;
 import java.io.IOException;
 
+import MScheme.Value;
+
 
 public final class ScmBoolean
     extends Value

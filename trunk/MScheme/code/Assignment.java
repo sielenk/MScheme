@@ -3,7 +3,7 @@ package MScheme.code;
 import MScheme.machine.Registers;
 import MScheme.machine.Continuation;
 import MScheme.environment.Reference;
-import MScheme.values.Value;
+import MScheme.Value;
 
 
 final public class Assignment

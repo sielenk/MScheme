@@ -1,7 +1,8 @@
 package MScheme.values;
 
+import MScheme.Value; 
+
 import MScheme.environment.StaticEnvironment;
-import MScheme.values.Value; 
 import MScheme.code.CodeList;
 
 import MScheme.exceptions.*;

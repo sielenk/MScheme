@@ -4,6 +4,8 @@ import java.io.Writer;
 import java.io.IOException;
 import java.util.Vector;
 
+import MScheme.Value;
+
 import MScheme.util.Arity;
 import MScheme.machine.Machine;
 import MScheme.machine.Registers;

@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.io.IOException;
 
+import MScheme.Value;
+
 import MScheme.exceptions.OpenException;
 import MScheme.exceptions.WriteException;
 import MScheme.exceptions.CloseException;

@@ -4,7 +4,8 @@ import java.lang.reflect.Field;
 import java.io.Reader;
 import java.io.Writer;
 
-import MScheme.values.Value;
+import MScheme.Value;
+
 import MScheme.exceptions.OpenException;
 import MScheme.exceptions.FunctionNotFoundException;
 

@@ -3,8 +3,9 @@ package MScheme.values;
 import java.io.Writer;
 import java.io.IOException;
 
+import MScheme.Value;
+
 import MScheme.environment.StaticEnvironment;
-import MScheme.values.Value;
 import MScheme.code.*;
 import MScheme.exceptions.*;
 

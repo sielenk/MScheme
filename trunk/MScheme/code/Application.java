@@ -3,7 +3,7 @@ package MScheme.code;
 import MScheme.machine.Registers;
 import MScheme.machine.Continuation;
 import MScheme.values.ValueFactory;
-import MScheme.values.Value;
+import MScheme.Value;
 import MScheme.values.List;
 import MScheme.values.Empty;
 

@@ -3,6 +3,8 @@ package MScheme.values;
 import java.io.Writer;
 import java.io.IOException;
 
+import MScheme.Value;
+
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Token;
 import MScheme.code.Code;

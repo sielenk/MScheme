@@ -1,30 +1,23 @@
-package MScheme.values;
+package MScheme;
 
 import java.io.Writer;
 import java.io.StringWriter;
 import java.io.IOException;
 
+import MScheme.values.*;
+
 import MScheme.environment.Environment;
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Token;
-import MScheme.code.Code;
-import MScheme.machine.Literal;
 import MScheme.exceptions.*;
 
 
 public abstract class Value
 {
-    /** 
-     */
     public void setConst() { }
 
-    /** <code>false</code> only for the false singleton */
     public boolean isTrue() { return true; }
 
-    /** true for the empty list,
-     *  called recursively by pairs on their second element,
-     *  false otherwise.
-     */
     public boolean isList() { return false; }
 
     
@@ -87,8 +80,12 @@ public abstract class Value
         throws EnvironmentExpected
     { throw new EnvironmentExpected(this); }
 
+    public StaticEnvironment toStaticEnvironment()
+        throws EnvironmentExpected
+    { throw new EnvironmentExpected(this); }
 
-    // equivalence predicates (as in R5RS, 6.1)
+
+    // scheme equivalence predicates (as in R5RS, 6.1)
     
     public boolean eq(Value other)
     { return this == other; }
@@ -98,6 +95,9 @@ public abstract class Value
     
     public boolean equal(Value other)
     { return eqv(other); }
+
+    
+    // the java equivalence predicate
 
     public final boolean equals(Object other)
     {
@@ -109,7 +109,7 @@ public abstract class Value
     }
     
     
-    // io functions
+    // scheme io functions
     
     public abstract void write(Writer destination)
         throws IOException;
@@ -118,6 +118,8 @@ public abstract class Value
         throws IOException
     { write(destination); }
 
+
+    // the java io function
 
     public final String toString()
     {
@@ -132,10 +134,10 @@ public abstract class Value
 
     // compilation functions
 
-    public final Literal getLiteral()
-    { return new Literal(this); }
+    public final MScheme.machine.Literal getLiteral()
+    { return new MScheme.machine.Literal(this); }
     
-    public Code getCode(StaticEnvironment e)
+    public MScheme.code.Code getCode(StaticEnvironment e)
         throws CompileError, TypeError
     { return getLiteral(); }
 

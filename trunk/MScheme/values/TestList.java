@@ -2,6 +2,8 @@ package MScheme.values;
 
 import MScheme.exceptions.*;
 
+import MScheme.Value;
+
 
 public class TestList
     extends junit.framework.TestCase
