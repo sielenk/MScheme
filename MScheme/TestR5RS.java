@@ -513,7 +513,7 @@ public class TestR5RS
     
 
     /// 6.4 Control features
-    public void test6_4()
+    public void test6_4_procedureq()
         throws SchemeException
     {
         check("(procedure?  car)", "#t");
@@ -521,9 +521,74 @@ public class TestR5RS
         check("(procedure?  (lambda (x) (* x x)))", "#t");
         check("(procedure? '(lambda (x) (* x x)))", "#f");
         check("(call-with-current-continuation procedure?)", "#t");
+    }
 
+    public void test6_4_apply()
+        throws SchemeException
+    {
         check("(apply + (list 3 4))", "7");
+        check("(apply + 1 2 '(3 4))", "10");
+    }
 
+    public void test6_4_map()
+        throws SchemeException
+    {
+        check(
+            "(map + '(1 2 3) '(4 5 6))",
+            "(5 7 9)"
+        );
+    }
+
+    public void test6_4_for_each()
+        throws SchemeException
+    {
+        eval("(define count 0)");
+        check(
+            "(for-each" +
+            "  (lambda (x y)" +
+            "    (set! count (+ count 1))" +
+            "    (+ x y count))" +
+            "  '(1 2 3)" +
+            "  '(4 5 6))",
+            "(6 9 12)"
+        );
+    }
+
+    public void test6_4_force()
+        throws SchemeException
+    {
+        check(
+            "(force (delay (+ 1 2)))",
+            "3"
+        );
+        
+        check(
+            "(let ((p (delay (+ 1 2)))) (list (force p) (force p)))",
+            "(3 3)"
+        );
+        
+        eval(
+          "(begin" +
+          "  (define count 0)" +
+          "  (define x 'foo)" +
+          "  (define p" +
+          "    (delay" +
+          "      (begin" +
+          "        (set! count (+ count 1))" +
+          "        (if (> count x)" +
+          "          count" +
+          "          (force p)))))" +
+          "  (define x 5))"
+        );
+
+        check("(force p)", "6");
+        eval("(set! x 10)");
+        check("(force p)", "6");            
+    }
+
+    public void test6_4_callcc()
+        throws SchemeException
+    {
         check(
             "(let ((path '())\n"+
             "      (c #f))\n"+
@@ -559,4 +624,3 @@ public class TestR5RS
         );
     }
 }
-
