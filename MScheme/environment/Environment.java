@@ -16,7 +16,7 @@ import MScheme.functions.ValueThunk;
 import MScheme.exceptions.*;
 
 
-public class DynamicEnvironment
+public class Environment
     extends Value
 {
     // *******************************************************************
@@ -25,7 +25,7 @@ public class DynamicEnvironment
         throws IOException
     { destination.write("[environment]"); }
 
-    public DynamicEnvironment toEnvironment()
+    public Environment toEnvironment()
     { return this; }
 
     // *******************************************************************
@@ -35,18 +35,18 @@ public class DynamicEnvironment
 
     // *******************************************************************
 
-    private DynamicEnvironment(
+    private Environment(
         StaticEnvironment bindings,
         Vector[]          data
     )
     { _bindings = bindings; _data = data; }
 
-    DynamicEnvironment()
-    { this(new StaticEnvironment(), (DynamicEnvironment)null); }
+    Environment()
+    { this(new StaticEnvironment(), (Environment)null); }
 
-    DynamicEnvironment(
+    Environment(
         StaticEnvironment bindings,
-        DynamicEnvironment parent
+        Environment       parent
     )
     {
         int level = bindings.getLevel();
@@ -73,9 +73,9 @@ public class DynamicEnvironment
         _data[level] = newData;
     }
 
-    DynamicEnvironment(
+    Environment(
         StaticEnvironment  bindings,
-        DynamicEnvironment parent,
+        Environment        parent,
         Arity              arity,
         List               values
     ) throws ListExpected
@@ -104,10 +104,10 @@ public class DynamicEnvironment
     }
 
 
-    private static DynamicEnvironment
+    private static Environment
         _implementationEnvironment = getSchemeReportEnvironment();
 
-    public static DynamicEnvironment getImplementationEnvironment()
+    public static Environment getImplementationEnvironment()
     { return _implementationEnvironment; }
 
 
@@ -158,14 +158,14 @@ public class DynamicEnvironment
     	}
 	}
 
-    private static void callHook(DynamicEnvironment env, Value hook)
+    private static void callHook(Environment env, Value hook)
     {
         if (hook != null) {
             Value null_buffer = _nullEnvironmentHook;
             Value  sre_buffer = _schemeReportEnvironmentHook;
 			
 	        try {
-		        synchronized (DynamicEnvironment.class) {
+		        synchronized (Environment.class) {
                     _nullEnvironmentHook         = null;
                     _schemeReportEnvironmentHook = null;
 
@@ -185,15 +185,15 @@ public class DynamicEnvironment
     	}
     }
     
-    public static DynamicEnvironment getEmpty()
+    public static Environment getEmpty()
     {
         initHooks();
-        return new DynamicEnvironment();
+        return new Environment();
 	}
 
-    public static DynamicEnvironment getNullEnvironment()
+    public static Environment getNullEnvironment()
     {
-        DynamicEnvironment result = getEmpty();
+        Environment result = getEmpty();
 
         try {
             StaticEnvironment staticBindings = result.getStatic();
@@ -250,9 +250,9 @@ public class DynamicEnvironment
         return result;
     }
 
-    public static DynamicEnvironment getSchemeReportEnvironment()
+    public static Environment getSchemeReportEnvironment()
     {
-        DynamicEnvironment result = getNullEnvironment();
+        Environment result = getNullEnvironment();
 
         try {
             for (int i = 0; i < BuiltinTable.builtins.length; i++) {
@@ -277,23 +277,23 @@ public class DynamicEnvironment
     public StaticEnvironment getStatic()
     { return _bindings; }
 
-    public DynamicEnvironment getParent()
-    { return new DynamicEnvironment(_bindings.getParent(), _data); }
+    public Environment getParent()
+    { return new Environment(_bindings.getParent(), _data); }
 
-    public DynamicEnvironment newChild()
+    public Environment newChild()
     { return newChild(_bindings.newChild()); }
 
-    public DynamicEnvironment newChild(
+    public Environment newChild(
         StaticEnvironment newFrame
     )
-    { return new DynamicEnvironment(newFrame, this); }
+    { return new Environment(newFrame, this); }
     
-    public DynamicEnvironment newChild(
+    public Environment newChild(
         StaticEnvironment newFrame,
         Arity             arity,
         List              values
     ) throws ListExpected
-    { return new DynamicEnvironment(newFrame, this, arity, values); }
+    { return new Environment(newFrame, this, arity, values); }
 
     // *** Envrionment access ************************************************
 
