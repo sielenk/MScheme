@@ -27,13 +27,11 @@ public abstract class Value
     { }
 
     /**
-     * Changes a value to be immutable.
-     * Since mutation only makes sense for compound values,
-     * this function is a no-op by default.
+     * Returns an immutable version of <code>this</code>.
      * <p>
-     * It is overridden in class {@link Compound}.
+     * @return always <code>this</code>.
      */
-    public void setConst() { }
+    public Value getConst() { return this; }
 
     /**
      * Returns Scheme's boolean interpretation of a value.
