@@ -12,7 +12,6 @@ import MScheme.code.Application;
 import MScheme.environment.Environment;
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Reference;
-import MScheme.values.ValueFactory;
 import MScheme.values.List;
 import MScheme.values.Empty;
 import MScheme.values.Pair;
