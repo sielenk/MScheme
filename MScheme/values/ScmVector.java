@@ -121,8 +121,8 @@ public final class ScmVector
     public ScmVector toScmVector()
     { return this; }
 
-    public Value getConst()
-    { return isConst() ? this : createConst(_data); }
+    protected Value getConstCopy()
+    { return createConst((Value[])_data.clone()); }
 
     public boolean equal(Value other)
     {

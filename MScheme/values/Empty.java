@@ -29,8 +29,12 @@ public final class Empty
 
     // implementation of Compound
 
-     public Value getConst()
-     { return this; }
+     protected Value getConstCopy()
+     {
+        throw new RuntimeException(
+            "unexpected call of Empty.getConstCopy()"
+        );
+    }
 
 
     // implementation of List

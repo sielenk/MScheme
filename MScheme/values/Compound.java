@@ -9,9 +9,13 @@ import MScheme.code.*;
 import MScheme.exceptions.*;
 
 
+/**
+ * 
+ */
 public abstract class Compound
     extends Value
 {
+    /** The CVS id of the file containing this class. */
     public final static String id
         = "$Id$";
 
@@ -21,9 +25,6 @@ public abstract class Compound
     protected Compound(boolean isConst)
     { _isConst = isConst; }
 
-    protected final boolean isConst()
-    { return _isConst; }
-
     protected final void modify()
         throws ImmutableException
     {
@@ -32,5 +33,9 @@ public abstract class Compound
         }
     }
 
-    public abstract Value getConst();
+    protected abstract Value getConstCopy();
+
+
+    public final Value getConst()
+    { return _isConst ? this : getConstCopy(); }
 }

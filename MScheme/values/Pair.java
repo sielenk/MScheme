@@ -48,8 +48,8 @@ public final class Pair
 
     // implementation of Compound
 
-    public Value getConst()
-    { return isConst() ? this : createConst(getFirst(), getSecond()); }
+    protected Value getConstCopy()
+    { return createConst(getFirst(), getSecond()); }
 
 
     // implementation of List

@@ -64,8 +64,11 @@ public final class ScmString
     public ScmString toScmString()
     { return this; }
 
-    public Value getConst()
-    { return isConst() ? this : createConst(getJavaString()); }
+
+    // implementation of Compound
+
+    protected Value getConstCopy()
+    { return createConst(getJavaString()); }
 
 
     // accessors
