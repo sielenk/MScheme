@@ -7,7 +7,7 @@ import MScheme.util.Arity;
 import MScheme.machine.Machine;
 import MScheme.environment.Reference;
 import MScheme.environment.StaticEnvironment;
-import MScheme.environment.DynamicEnvironment;
+import MScheme.environment.Environment;
 import MScheme.functions.CheckedFunction;
 import MScheme.values.List;
 
@@ -55,10 +55,10 @@ public final class CompiledLambda
     final class Closure
         extends CheckedFunction
     {
-        private final DynamicEnvironment _dynamicParent;
+        private final Environment _enclosingEnvironment;
     
-        public Closure(DynamicEnvironment dynamicParent)
-        { _dynamicParent   = dynamicParent; }
+        public Closure(Environment enclosingEnvironment)
+        { _enclosingEnvironment = enclosingEnvironment; }
 
         public void write(Writer destination)
             throws IOException
@@ -73,8 +73,8 @@ public final class CompiledLambda
             List    arguments
         ) throws ListExpected
         {
-	        DynamicEnvironment newEnvironment = 
-                _dynamicParent.newChild(
+	        Environment newEnvironment = 
+                _enclosingEnvironment.newChild(
                     _compiledFormals,
                     getArity(),
                     arguments
