@@ -1,5 +1,6 @@
 all: functions/BuiltinTable.java
 	jikes +P +M=depend `find . -name "*.java"`
+	java junit.textui.TestRunner MScheme.TestMScheme
 
 functions/BuiltinTable.java: functions/ParseBuiltins.class functions/Builtins.class
 	java MScheme.functions.ParseBuiltins > functions/BuiltinTable.java
