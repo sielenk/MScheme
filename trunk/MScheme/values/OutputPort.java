@@ -78,7 +78,7 @@ public class OutputPort
         }
     }
     
-    public void writeScmChar(SchemeChar c)
+    public void writeScmChar(ScmChar c)
         throws WriteException
     { writeChar(c.getJavaChar()); }
     

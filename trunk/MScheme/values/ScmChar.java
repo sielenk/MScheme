@@ -4,16 +4,16 @@ import java.io.Writer;
 import java.io.IOException;
 
 
-public final class SchemeChar
+public final class ScmChar
     extends Value
 {
     private char _character;
     
-    private SchemeChar(char c)
+    private ScmChar(char c)
     { _character = c; }
 
-    public static SchemeChar create(char c)
-    { return new SchemeChar(c); }
+    public static ScmChar create(char c)
+    { return new ScmChar(c); }
 
     public char getJavaChar()
     { return _character; }
@@ -23,14 +23,14 @@ public final class SchemeChar
     public boolean isChar()
     { return true; }
 
-    public SchemeChar toChar()
+    public ScmChar toChar()
     { return this; }
 
 
     public boolean eqv(Value other)
     {
         try {
-            SchemeChar otherCharacter = (SchemeChar)other;
+            ScmChar otherCharacter = (ScmChar)other;
         
             return _character == otherCharacter._character;
         }

@@ -61,8 +61,8 @@ public abstract class ValueFactory
     public static SchemeNumber createNumber(int value)
     { return SchemeNumber.create(value); }
     
-    public static SchemeChar createChar(char c)
-    { return SchemeChar.create(c); }
+    public static ScmChar createChar(char c)
+    { return ScmChar.create(c); }
     
     public static SchemeString createString(String javaString)
     { return SchemeString.create(javaString); }
