@@ -1,10 +1,12 @@
-package MScheme.values;
+package MScheme.tests;
 
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Environment;
 
 import MScheme.exceptions.*;
 import MScheme.Value;
+
+import MScheme.values.*;
 
 import MScheme.functions.CallCCFunction;
 
@@ -31,43 +33,63 @@ public class TestValue
     {
         int count = 0;
 
-        if (v.isScmBoolean()) count++;
-        if (v.isPair      ()) count++;
-        if (v.isSymbol    ()) count++;
-        if (v.isScmNumber ()) count++;
-        if (v.isScmChar   ()) count++;
-        if (v.isScmString ()) count++;
-        if (v.isScmVector ()) count++;
-        if (v.isPort      ()) count++;
-        if (v.isFunction  ()) count++;
+        if (v.isList      ()) ++count;
+
+        if (v.isScmBoolean()) ++count;
+        if (v.isPair      ()) ++count;
+        if (v.isSymbol    ()) ++count;
+        if (v.isScmNumber ()) ++count;
+        if (v.isScmChar   ()) ++count;
+        if (v.isScmString ()) ++count;
+        if (v.isScmVector ()) ++count;
+        if (v.isPort      ()) ++count;
+        if (v.isFunction  ()) ++count;
 
         return count;
     }
 
-    private void checkNotAList(Value v)
+    private int countCasts(Value v)
     {
-        assert(!v.isList());
+        int count = 0;
+
+        try { v.toList             (); ++count; } catch (TypeError e) { }
+
+        try { v.toPair             (); ++count; } catch (TypeError e) { }
+        try { v.toSymbol           (); ++count; } catch (TypeError e) { }
+        try { v.toScmNumber        (); ++count; } catch (TypeError e) { }
+        try { v.toScmChar          (); ++count; } catch (TypeError e) { }
+        try { v.toScmString        (); ++count; } catch (TypeError e) { }
+        try { v.toScmVector        (); ++count; } catch (TypeError e) { }
+        try { v.toInputPort        (); ++count; } catch (TypeError e) { }
+        try { v.toOutputPort       (); ++count; } catch (TypeError e) { }
+        try { v.toFunction         (); ++count; } catch (TypeError e) { }
+
+        try { v.toEnvironment      (); ++count; } catch (TypeError e) { }
+        try { v.toStaticEnvironment(); ++count; } catch (TypeError e) { }
+        
+        return count;
+    }
+
+    private void commonTests(Value v)
+    {
+        assert(v.isTrue());
+        
+        assert(countTypes(v) == 1);
+        assert(countCasts(v) == 1);
     }
 
 
-    public void testCastFunctions()
+    public void testFalse()
         throws Exception
     {
-        Pair      .create(null, null).toPair();
-        Empty     .create().toList();
-        ScmNumber .create(0).toScmNumber();
-        ScmChar   .create('a').toScmChar();
-        ScmString .create("").toScmString();
-        ScmVector .create().toScmVector();
-        InputPort .create().toInputPort();
-        OutputPort.create().toOutputPort();
+        final Value False = ScmBoolean.createFalse();
 
-        {
-            Environment empty = Environment.getEmpty();
+        assert(!False.isTrue());
 
-            empty.toEnvironment();
-            empty.getStatic().toStaticEnvironment();
-        }
+        assert(countTypes(False) == 1);
+        assert(countCasts(False) == 0);
+
+        assert(False.isScmBoolean());
     }
 
     public void testTrue()
@@ -77,23 +99,10 @@ public class TestValue
 
         assert(True.isTrue());
 
-        assert(True.isScmBoolean());
         assert(countTypes(True) == 1);
+        assert(countCasts(True) == 0);
 
-        checkNotAList(True);
-    }
-
-    public void testFalse()
-        throws Exception
-    {
-        final Value False = ScmBoolean.createFalse();
-
-        assert(!False.isTrue());
-
-        assert(False.isScmBoolean());
-        assert(countTypes(False) == 1);
-
-        checkNotAList(False);
+        assert(True.isScmBoolean());
     }
 
     public void testEmpty()
@@ -101,12 +110,8 @@ public class TestValue
     {
         final Value empty = Empty.create();
 
-        assert(empty.isTrue());
-
-        assert(countTypes(empty) == 0);
-
+        commonTests(empty);
         assert(empty.isList());
-
         assert(empty.toList() == empty);
     }
 
@@ -118,13 +123,8 @@ public class TestValue
             ScmBoolean.createTrue()
         );
 
-        assert(pair.isTrue());
-
+        commonTests(pair);
         assert(pair.isPair());
-        assert(countTypes(pair) == 1);
-
-        checkNotAList(pair);
-
         assert(pair.toPair() == pair);
     }
 
@@ -137,11 +137,13 @@ public class TestValue
 
         assert(list.isTrue());
 
+        assert(countTypes(list) == 2);
+        assert(countCasts(list) == 2);
+
         assert(list.isPair());
-        assert(countTypes(list) == 1);
+        assert(list.toPair() == list);
 
         assert(list.isList());
-
         assert(list.toList() == list);
     }
 
@@ -150,13 +152,8 @@ public class TestValue
     {
         final Value symbol = Symbol.create("test");
 
-        assert(symbol.isTrue());
-
+        commonTests(symbol);
         assert(symbol.isSymbol());
-        assert(countTypes(symbol) == 1);
-
-        checkNotAList(symbol);
-
         assert(symbol.toSymbol() == symbol);
     }
 
@@ -165,23 +162,9 @@ public class TestValue
     {
         final Value function = CallCCFunction.INSTANCE;
 
-        assert(function.isTrue());
-
+        commonTests(function);
         assert(function.isFunction());
-        assert(countTypes(function) == 1);
-
-        checkNotAList(function);
-
         assert(function.toFunction() == function);
-    }
-
-
-    private void commonLiteralTests(Value literal)
-        throws Exception
-    {
-        assert(literal.isTrue());
-        assert(countTypes(literal) == 1);
-        checkNotAList(literal);
     }
 
     public void testNumber()
@@ -189,8 +172,9 @@ public class TestValue
     {
         final Value number = ScmNumber.create(49875);
 
-        commonLiteralTests(number);
+        commonTests(number);
         assert(number.isScmNumber());
+        assert(number.toScmNumber() == number);
     }
 
     public void testChar()
@@ -198,8 +182,9 @@ public class TestValue
     {
         final Value character = ScmChar.create('a');
 
-        commonLiteralTests(character);
+        commonTests(character);
         assert(character.isScmChar());
+        assert(character.toScmChar() == character);
     }
 
     public void testString()
@@ -207,8 +192,9 @@ public class TestValue
     {
         final Value string = ScmString.create("Hallo !");
 
-        commonLiteralTests(string);
+        commonTests(string);
         assert(string.isScmString());
+        assert(string.toScmString() == string);
     }
 
     public void testVector()
@@ -216,23 +202,55 @@ public class TestValue
     {
         final Value vector = ScmVector.create();
 
-        commonLiteralTests(vector);
-        assert(
-            vector.isScmVector()
-        );
+        commonTests(vector);
+        assert(vector.isScmVector());
+        assert(vector.toScmVector() == vector);
     }
 
-    public void testPort()
+    public void testOutputPort()
         throws Exception
     {
-        final Value portI = InputPort.create();
-        final Value portO = OutputPort.create();
+        final Value port = OutputPort.create();
 
-        commonLiteralTests(portI);
-        assert(portI.isPort());
+        commonTests(port);
+        assert(port.isPort());
+        assert(port.toOutputPort() == port);
+    }
 
-        commonLiteralTests(portO);
-        assert(portO.isPort());
+    public void testInputPort()
+        throws Exception
+    {
+        final Value port = InputPort.create();
+
+        commonTests(port);
+        assert(port.isPort());
+        assert(port.toInputPort() == port);
+    }
+
+    public void testEnvironment()
+        throws Exception
+    {
+        final Value environment = Environment.getEmpty();
+        
+        assert(environment.isTrue());
+        
+        assert(countTypes(environment) == 0);
+        assert(countCasts(environment) == 1);
+
+        assert(environment.toEnvironment() == environment);
+    }
+
+    public void testStaticEnvironment()
+        throws Exception
+    {
+        final Value environment = Environment.getEmpty().getStatic();
+        
+        assert(environment.isTrue());
+        
+        assert(countTypes(environment) == 0);
+        assert(countCasts(environment) == 1);
+
+        assert(environment.toStaticEnvironment() == environment);
     }
 
 
