@@ -39,11 +39,15 @@ import MScheme.exceptions.RuntimeError;
 import MScheme.exceptions.SchemeException;
 import MScheme.exceptions.TypeError;
 
+import MScheme.code.Application;
+
 import MScheme.values.InputPort;
 import MScheme.values.ListFactory;
 import MScheme.values.OutputPort;
 import MScheme.values.ScmBoolean;
+import MScheme.values.List;
 import MScheme.values.Symbol;
+import MScheme.values.Function;
 
 import MScheme.values.functions.UnaryValueFunction;
 import MScheme.values.functions.ValueThunk;
@@ -94,13 +98,6 @@ public final class Machine
     public final static String id
         = "$Id$";
 
-    private final Value _lastErrorFunc =
-        new ValueThunk() {
-            protected Value checkedCall()
-            {
-                return getLastError();
-            }
-        };
 
     private final Value _getInputFunc =
         new ValueThunk() {
@@ -140,13 +137,33 @@ public final class Machine
             }
         };
 
+    private final Value _getErrorHandlerFunc =
+        new ValueThunk() {
+            protected Value checkedCall()
+            {
+                return getErrorHandler();
+            }
+        };
+
+    private final Value _resetErrorHandlerFunc =
+        new UnaryValueFunction() {
+            protected Value checkedCall(Value argument)
+                throws TypeError
+            {
+                Value result = getErrorHandler();
+		        _errorHandler = argument.isTrue()
+			                    ? argument.toFunction()
+					            : null;
+                return result;
+            }
+        };
+
     private final Environment _environment;
 
     private InputPort  _stdin;
     private OutputPort _stdout;
 
-    private SchemeException _lastError      = null;
-    private Value           _lastErrorValue = null;
+    private Function   _errorHandler = null;
 
 
     public Machine()
@@ -185,11 +202,6 @@ public final class Machine
         try
         {
             _environment.define(
-                Symbol.create("last-error"),
-                _lastErrorFunc
-            );
-
-            _environment.define(
                 Symbol.create("current-input-port"),
                 _getInputFunc
             );
@@ -207,6 +219,16 @@ public final class Machine
             _environment.define(
                 Symbol.create("reset-output-port"),
                 _resetOutputFunc
+            );
+
+            _environment.define(
+                Symbol.create("current-error-handler"),
+                _getErrorHandlerFunc
+            );
+
+            _environment.define(
+                Symbol.create("reset-error-handler"),
+                _resetErrorHandlerFunc
             );
 
             _environment.define(
@@ -271,16 +293,13 @@ public final class Machine
         return _stdout;
     }
 
-    public Value getLastError()
+    public Value getErrorHandler()
     {
-        Value result = 
-            (_lastErrorValue != null)
-            ? _lastErrorValue
-            : ScmBoolean.createFalse();
-        
-        _lastErrorValue = null;
-        
-        return result;
+        if (_errorHandler != null)
+	    {
+	        return _errorHandler;
+		}
+		return ScmBoolean.createFalse();
     }
 
 
@@ -292,9 +311,6 @@ public final class Machine
         Registers        state   = new Registers(getEnvironment().getDynamic());
         StopContinuation stop    = new StopContinuation(state);
 
-        _lastError      = null;
-        _lastErrorValue = null;
-
         while (!stop.hasResult())
         {
             try
@@ -303,46 +319,38 @@ public final class Machine
             }
             catch (SchemeException error)
             {
-                // the Java stack is unwound
-                // now go for the Scheme's ...
-                
-                // remember what happened, to be able
-                // to "rethrow" the caught exception again
-                // after the scheme stack is unwound
-                _lastError      = error;
-                _lastErrorValue = 
-                    ListFactory.create(
-                        error.getCauseValue(),
-                        error.getMessageValue(),
-                        state.getCurrentContinuation(),
-                        ScmBoolean.create(
-                            error instanceof RuntimeError
-                        )
-                    );
+                if (_errorHandler != null)
+		        {
+                    List errorValue = 
+                        ListFactory.create(
+                            error.getCauseValue(),
+                            error.getMessageValue(),
+                            state.getCurrentContinuation(),
+                            ScmBoolean.create(
+                                error instanceof RuntimeError
+                            )
+                        );
 
-                // collect dynamic-wind thunks
-                // and let the machine handle them
-                current = new ContinuationFunction(
-                    stop
-                ).call(
-                    state,
-                    ListFactory.create(
-                        _lastErrorValue
-                    )
-                );
+                    // Avoid endless loop if the
+		            // handler is buggy:
+                    Function handler = _errorHandler;
+		            _errorHandler = null;
+
+                    current = handler.call(
+		                state,
+				        ListFactory.create(
+					        errorValue
+					    )
+				    );
+			    }
+			    else
+			    {
+			        throw error;
+		        }
             }
         }
 
-        Value result = stop.getResult();
-        
-        if (result == _lastErrorValue)
-        {
-            throw _lastError;
-        }
-        else
-        {
-            return result;
-        }
+        return stop.getResult();
     }
 
     public Code compile(
