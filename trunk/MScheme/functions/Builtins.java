@@ -405,11 +405,21 @@ public class Builtins
 
     public final static Value open_2Dinput_2Dfile(Value argument)
         throws StringExpected, OpenException
-    { return InputPort.create(argument.toScmString()); }
+    {
+        return
+	        argument.isTrue()
+		    ? InputPort.create(argument.toScmString())
+		    : InputPort.create();
+    }
 
     public final static Value open_2Doutput_2Dfile(Value argument)
         throws StringExpected, OpenException
-    { return OutputPort.create(argument.toScmString()); }
+    {
+        return
+	        argument.isTrue()
+	        ? OutputPort.create(argument.toScmString())
+		    : OutputPort.create();
+	}
 
 
     public final static Value close_2Dinput_2Dport(Value argument)
@@ -438,7 +448,7 @@ public class Builtins
     public final static Value eof_2Dobject_3F(Value fst)
     { return ScmBoolean.create(fst.eq(InputPort.EOF_VALUE)); }
 
-    public final static Value char_2Dready(Value fst)
+    public final static Value char_2Dready_3F(Value fst)
         throws TypeError
     { return ScmBoolean.create(fst.toInputPort().isReady()); }
 
