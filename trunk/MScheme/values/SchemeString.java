@@ -7,10 +7,9 @@ import MScheme.exceptions.ImmutableException;
 
 
 public final class SchemeString
-    extends Value
+    extends Compound
 {
     private String  _string;
-    private boolean _isConst = false;
 
     
     private SchemeString(String value)
@@ -22,14 +21,11 @@ public final class SchemeString
     public static SchemeString create(Symbol schemeSymbol)
     {
         SchemeString result = new SchemeString(schemeSymbol.getKey());
-        result._isConst = true;
+        result.setConst();
         return result;
     }
 
 
-    public Value setConst()
-    { _isConst = true; return this; }
-     
     public String getJavaString()
     { return _string; }
     
@@ -48,9 +44,7 @@ public final class SchemeString
     public void set(int index, char c)
         throws ImmutableException
     {
-        if (_isConst) {
-            throw new ImmutableException(this);
-        }
+        modify();
     }
 
     public boolean equal(Value other)
@@ -94,4 +88,3 @@ public final class SchemeString
         throws IOException
     { destination.write(getJavaString()); }
 }
-
