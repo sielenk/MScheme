@@ -220,7 +220,7 @@ public class Machine
 
 
     public Value evaluate(Value evaluatee)
-        throws SchemeException
+        throws RuntimeError, CompileError, TypeError
     {
         Code accumulator = evaluatee.getCode(
             getEnvironment().getStatic()
