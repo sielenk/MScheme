@@ -75,11 +75,6 @@ public interface Value
      */
     boolean isList();
 
-    /**
-     * Returns <code>true</code> for the empty list.
-     */
-    boolean isEmpty();
-
 
     // disjoint types (as in R5RS, 3.2)
 
