@@ -15,11 +15,11 @@ public class Literal
     public Literal(Value literalValue)
     { _literalValue = literalValue; }
 
-    public Code executionStep(Machine machine)
+    public Code executionStep(State state)
         throws RuntimeError, TypeError
     {
-        return machine.getContinuation().invoke(
-            machine,
+        return state.getContinuation().invoke(
+            state,
             _literalValue
         );
     }

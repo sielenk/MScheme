@@ -7,38 +7,12 @@ import MScheme.functions.UnaryFunction;
 import MScheme.environment.*;
 
 
-class AbortContinuation
-    extends Continuation
-{
-    private Value _result;
-
-    AbortContinuation(Machine machine)
-    {
-        super(machine);
-        _result = null;
-    }
-
-    Value getResult()
-    { return _result; }
-
-    protected Code execute(Machine machine, Value evaluationResult)
-    {
-        _result = evaluationResult;
-        return null;
-    }
-}
-
-
 public class Machine
 {
     private Environment  _environment;
-    private Continuation _continuation;
     
     public Machine(Environment environment)
-    {
-        _environment  = environment;
-        _continuation = null;
-    }
+    { _environment  = environment; }
 
     public Machine()
     { this(Environment.getSchemeReportEnvironment()); }
@@ -51,31 +25,19 @@ public class Machine
     { _environment = newEnvironment; }
     
 
-    public UnaryFunction getCurrentContinuation()
-    { return _continuation.getFunction(); }
-
-    void setContinuation(Continuation newContinuation)
-    { _continuation = newContinuation; }
-    
-    Continuation getContinuation()
-    { return _continuation; }
-
-    
     public Value execute(Code program)
         throws RuntimeError, TypeError
     {
-        Code nextInstruction = program;
+        Code  nextInstruction = program;
+        State state           = new State(getEnvironment());
         
-        setContinuation(null);
-        AbortContinuation abort = new AbortContinuation(this);
-        
-        while (nextInstruction != null) {
-            nextInstruction = nextInstruction.executionStep(this);
+        while (!state.isHalt()) {
+            nextInstruction = nextInstruction.executionStep(state);
         }
 
-        return abort.getResult();
+        return state.getResult();
     }
-    
+
 	public Value evaluate(Value evaluatee)
         throws RuntimeError, CompileError, TypeError
     {

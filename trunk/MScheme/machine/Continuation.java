@@ -69,12 +69,12 @@ class ContinuationFunction
 
     // implementation of UnaryFunction
     
-    protected Code checkedCall(Machine machine, Value argument)
+    protected Code checkedCall(State state, Value argument)
     {
-        Continuation source      = machine.getContinuation();
+        Continuation source      = state.getContinuation();
         Continuation destination = _continuation;
         
-        machine.setContinuation(destination);
+        state.setContinuation(destination);
 
         return Sequence.create(
             dynamicWind(
@@ -92,21 +92,21 @@ class ContinuationFunction
 public abstract class Continuation
 {
     final private int          _level;
-    final private Environment  _capturedEnvironment;
     final private Continuation _capturedContinuation;
+    final private Environment  _capturedEnvironment;
 
 
-    protected Continuation(Machine machine)
+    protected Continuation(State state)
     {
-        _capturedEnvironment  = machine.getEnvironment();
-        _capturedContinuation = machine.getContinuation();
+        _capturedContinuation = state.getContinuation();
+        _capturedEnvironment  = state.getEnvironment();
 
         _level =
             (_capturedContinuation != null)
             ? _capturedContinuation._level + 1
             : 0;
 
-        machine.setContinuation(this);
+        state.setContinuation(this);
     }
 
     final int getLevel()
@@ -114,23 +114,22 @@ public abstract class Continuation
 
     final Continuation getParent()
     { return _capturedContinuation; }
-    
+
     final UnaryFunction getFunction()
     { return new ContinuationFunction(this); }
 
-    final Code invoke(Machine machine, Value value)
+    final Code invoke(State state, Value value)
         throws RuntimeError, TypeError
     {
-        machine.setEnvironment (_capturedEnvironment);
-        machine.setContinuation(_capturedContinuation);
-        
-        return execute(machine, value);
+        state.setContinuation(_capturedContinuation);
+        state.setEnvironment (_capturedEnvironment );
+        return execute(state, value);
     }
- 
+
 
     abstract protected Code execute(
-        Machine machine,
-        Value   value
+        State state,
+        Value value
     ) throws RuntimeError, TypeError;
 
     protected CodeList dynamicWindLeave(CodeList sequence)
