@@ -80,14 +80,40 @@ public final class Machine
     }
 
 
+    public Value execute(
+        Code programm
+    )
+        throws SchemeException
+    {
+        return execute(
+            programm,
+            getEnvironment()
+        );
+    }
+
+    public Value evaluate(
+        Value evaluatee
+    )
+        throws SchemeException
+    {
+        return evaluate(
+            evaluatee,
+            getEnvironment()
+        );
+    }
+
+
     private final static Symbol errorTag
         = Symbol.create("error-tag");
 
-    public Value execute(Code program)
+    public static Value execute(
+        Code        program,
+        Environment executionEnv
+    )
         throws SchemeException
     {
         Code              next  = program;
-        Registers         state = new Registers(getEnvironment());
+        Registers         state = new Registers(executionEnv);
         AbortContinuation abort = new AbortContinuation(state);
 
         SchemeException   lastError      = null;
@@ -140,13 +166,17 @@ public final class Machine
         }
     }
 
-    public Value evaluate(Value evaluatee)
+    public static Value evaluate(
+        Value       evaluatee,
+        Environment executionEnv
+    )
         throws SchemeException
     {
         return execute(
             evaluatee.getCode(
-                getEnvironment().getStatic()
-            )
+                executionEnv.getStatic()
+            ),
+            executionEnv
         );
     }
 }
