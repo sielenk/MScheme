@@ -17,8 +17,9 @@ public class SchemeException
     public String toString()
     {
         return
+	        "'" +
             getCause().toString() +
-            " caused a\n" +
+            "' caused a\n" +
             super.toString();
     }
 }
