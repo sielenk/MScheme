@@ -5,7 +5,6 @@ import java.io.StringWriter;
 import java.io.IOException;
 
 import MScheme.Value;
-import MScheme.List;
 import MScheme.Translator;
 import MScheme.Code;
 
@@ -18,7 +17,7 @@ import MScheme.exceptions.*;
 
 
 public abstract class ValueDefaultImplementations
-            implements Value
+    implements Value
 {
     /** The CVS id of the file containing this class. */
     public final static String id

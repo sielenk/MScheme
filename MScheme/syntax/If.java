@@ -5,12 +5,15 @@ import MScheme.Code;
 import MScheme.Syntax;
 
 import MScheme.util.Arity;
+
 import MScheme.code.CodeList;
-import MScheme.environment.StaticEnvironment;
 import MScheme.code.Selection;
+
+import MScheme.environment.StaticEnvironment;
+
 import MScheme.values.Function;
 import MScheme.values.ScmBoolean;
-import MScheme.List;
+import MScheme.values.List;
 
 import MScheme.exceptions.SchemeException;
 

@@ -1,7 +1,6 @@
 package MScheme.values;
 
 import MScheme.Value;
-import MScheme.List;
 import MScheme.Code;
 
 import MScheme.environment.StaticEnvironment;

@@ -1,7 +1,6 @@
 package MScheme.values;
 
 import MScheme.Value;
-import MScheme.List;
 
 
 public abstract class ListFactory

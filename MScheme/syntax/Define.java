@@ -3,7 +3,6 @@ package MScheme.syntax;
 import MScheme.util.Arity;
 
 import MScheme.Value;
-import MScheme.List;
 import MScheme.Code;
 import MScheme.Syntax;
 
@@ -11,6 +10,7 @@ import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Reference;
 
 import MScheme.values.ListFactory;
+import MScheme.values.List;
 import MScheme.values.Pair;
 import MScheme.values.Symbol;
 
