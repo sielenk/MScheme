@@ -18,18 +18,18 @@ public abstract class ValueFactory
     { return SchemeBoolean.False; }
     
     public static SchemeBoolean createBool(boolean flag)
-    { return flag ? createTrue() : createFalse(); }
+    { return SchemeBoolean.create(flag); }
 
 
     public static Pair createPair(Value first, Value second)
-    { return new Pair(first, second); }
+    { return Pair.create(first, second); }
 
 
     public static List prepend(Value head, List tail)
-    { return new Pair(head, tail); }
+    { return Pair.create(head, tail); }
     
     public static List createList()
-    { return Empty.INSTANCE; }
+    { return List.EMPTY; }
 
     public static List createList(Value first)
     { return prepend(first, createList()); }
@@ -41,8 +41,8 @@ public abstract class ValueFactory
     { return prepend(first, createList(second, third)); }
 
     
-    public static Symbol createSymbol(String symbol)
-    { return new Symbol(symbol); }
+    public static Symbol createSymbol(String javaString)
+    { return Symbol.create(javaString); }
 
     
     public static Function createFunction(String name)
@@ -63,22 +63,22 @@ public abstract class ValueFactory
     
     
     public static SchemeNumber createNumber(int value)
-    { return new SchemeNumber(value); }
+    { return SchemeNumber.create(value); }
     
     public static SchemeChar createChar(char c)
-    { return new SchemeChar(c); }
+    { return SchemeChar.create(c); }
     
-    public static SchemeString createString(String s)
-    { return new SchemeString(s); }
+    public static SchemeString createString(String javaString)
+    { return SchemeString.create(javaString); }
 
     public static SchemeVector createVector()
-    { return SchemeVector.getInstance(0, null); }
+    { return SchemeVector.create(0); }
 
     public static SchemeVector createVector(int size)
-    { return SchemeVector.getInstance(size, null); }
+    { return SchemeVector.create(size); }
 
     public static SchemeVector createVector(int size, Value fill)
-    { return SchemeVector.getInstance(size, fill); }
+    { return SchemeVector.create(size, fill); }
 
     
     public static InputPort createInputPort()
