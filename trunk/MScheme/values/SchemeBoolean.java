@@ -23,8 +23,8 @@ public final class SchemeBoolean
     { return TRUE; }
 
 
-    public boolean isFalse()
-    { return (this == FALSE); }
+    public boolean isTrue()
+    { return (this != FALSE); }
     
     public boolean isBoolean()
     { return true; }
@@ -33,10 +33,10 @@ public final class SchemeBoolean
         throws IOException
     {
         destination.write('#');
-        if (isFalse()) {
-            destination.write('f');
-        } else {
+        if (isTrue()) {
             destination.write('t');
+        } else {
+            destination.write('f');
         }
     }
 }

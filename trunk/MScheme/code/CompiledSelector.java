@@ -30,7 +30,7 @@ final public class CompiledSelector
         { super(machine); }
 
         protected Code execute(Machine machine, Value evaluationResult)
-        { return evaluationResult.isFalse() ? _onFalse : _onTrue; }
+        { return evaluationResult.isTrue() ? _onTrue : _onFalse; }
     }
     
     public Code executionStep(Machine machine)

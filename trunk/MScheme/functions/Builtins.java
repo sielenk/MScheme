@@ -203,7 +203,7 @@ public class Builtins
     // 6.3.1 Booleans
 
     public final static Value not(Value argument) // boolean?
-    { return SchemeBoolean.create(argument.isFalse()); }
+    { return SchemeBoolean.create(!argument.isTrue()); }
 
     public final static Value boolean_3F(Value argument) // boolean?
     { return SchemeBoolean.create(argument.isBoolean()); }

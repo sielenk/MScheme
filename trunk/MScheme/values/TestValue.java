@@ -61,7 +61,7 @@ public class TestValue
     {
         final Value True  = ValueFactory.createTrue();
 
-        assert(!True.isFalse());
+        assert(True.isTrue());
         
         assert(True.isBoolean());
         assert(countTypes(True) == 1);
@@ -74,7 +74,7 @@ public class TestValue
     {
         final Value False = ValueFactory.createFalse();
 
-        assert(False.isFalse());
+        assert(!False.isTrue());
         
         assert(False.isBoolean());
         assert(countTypes(False) == 1);
@@ -87,7 +87,7 @@ public class TestValue
     {
         final Value empty = Empty.create();
         
-        assert(!empty.isFalse());
+        assert(empty.isTrue());
         
         assert(countTypes(empty) == 0);
         
@@ -104,7 +104,7 @@ public class TestValue
             ValueFactory.createTrue()
         );
         
-        assert(!pair.isFalse());
+        assert(pair.isTrue());
         
         assert(pair.isPair());
         assert(countTypes(pair) == 1);
@@ -121,7 +121,7 @@ public class TestValue
             ValueFactory.createTrue()
         );
         
-        assert(!list.isFalse());
+        assert(list.isTrue());
         
         assert(list.isPair());
         assert(countTypes(list) == 1);
@@ -136,7 +136,7 @@ public class TestValue
     {
         final Value symbol = ValueFactory.createSymbol("test");
         
-        assert(!symbol.isFalse());
+        assert(symbol.isTrue());
 
         assert(symbol.isSymbol());
         assert(countTypes(symbol) == 1);
@@ -151,7 +151,7 @@ public class TestValue
     {
         final Value function = ValueFactory.createFunction("CallCC");
         
-        assert(!function.isFalse());
+        assert(function.isTrue());
     
         assert(function.isFunction());
         assert(countTypes(function) == 1);
@@ -165,7 +165,7 @@ public class TestValue
     private void commonLiteralTests(Value literal)
         throws Exception
     {
-        assert(!literal.isFalse());
+        assert(literal.isTrue());
         assert(countTypes(literal) == 1);
         checkNotAList(literal);
     }
