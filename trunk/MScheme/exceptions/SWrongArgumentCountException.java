@@ -27,4 +27,16 @@ public class SWrongArgumentCountException extends SException
     {
         return _expectedMax;
     }
+
+
+    public String toString()
+    {
+        return
+            "error: expected "
+            + _expectedMin
+            + " to "
+            + _expectedMax
+            + " arguments";
+
+    }
 }
