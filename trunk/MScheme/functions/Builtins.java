@@ -1,8 +1,11 @@
 package MScheme.functions;
 
 import MScheme.util.Arity;
-import MScheme.exceptions.*;
+import MScheme.machine.Machine;
+import MScheme.environment.DynamicEnvironment;
 import MScheme.values.*;
+
+import MScheme.exceptions.*;
 
 
 final class Adder
@@ -325,6 +328,17 @@ public class Builtins
     public final static Value vector_3F(Value argument) // vector?
     { return SchemeBoolean.create(argument.isVector()); }
 
+    public final static Value vector(List arguments) // vector
+        throws ListExpected
+    { return SchemeVector.create(arguments); }
+
+    public final static Value vector_2D_3Elist(Value argument) // vector->list
+        throws VectorExpected
+    { return argument.toVector().getList(); }
+
+    public final static Value list_2D_3Evector(Value argument) // list->vector
+        throws ListExpected
+    { return SchemeVector.create(argument.toList()); }
 
     // 6.4 Control features
 
@@ -337,6 +351,41 @@ public class Builtins
         = CallCCFunction.INSTANCE;
 
     public final static Function dynamic_2Dwind = DynamicWindFunction.INSTANCE;
+
+
+    // 6.5 Eval
+
+    public final static Value eval(Value fst, Value snd)
+        throws RuntimeError, TypeError
+    {
+        try {
+            return new Machine(snd.toEnvironment()).evaluate(fst);
+        }
+        catch (CompileError e) {
+            throw new RuntimeError(fst);
+        }
+    }
+
+    public final static Value scheme_2Dreport_2Denvironment(Value fst)
+        throws RuntimeError, TypeError
+    {
+        if (fst.toNumber().getInteger() != 5) {
+            throw new RuntimeError(fst);
+        }
+
+        return DynamicEnvironment.getSchemeReportEnvironment();
+    }
+
+    public final static Value null_2Denvironment(Value fst)
+        throws RuntimeError, TypeError
+    {
+        if (fst.toNumber().getInteger() != 5) {
+            throw new RuntimeError(fst);
+        }
+
+        return DynamicEnvironment.getNullEnvironment();
+    }
+
 
     // 6.6 Input and output
 
