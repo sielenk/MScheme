@@ -62,9 +62,11 @@ public class Main
             )
             .getList();
 
+        Machine machine = new Machine(env);
+
         try {
             System.out.println(
-                Machine.evaluate(env, expr)
+                machine.evaluate(expr)
             );
         }
         catch (SException e) {
