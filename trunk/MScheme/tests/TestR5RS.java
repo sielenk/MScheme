@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.tests;
 
-import junit.framework.TestCase;
-
 import MScheme.Value;
 
 import MScheme.exceptions.CompileError;
@@ -29,72 +27,21 @@ import MScheme.exceptions.ImmutableException;
 import MScheme.exceptions.SchemeException;
 import MScheme.exceptions.SyntaxArityError;
 
-import MScheme.machine.Machine;
-
 import MScheme.values.InputPort;
 import MScheme.values.Pair;
 import MScheme.values.ScmString;
 import MScheme.values.ScmVector;
 
+
 public class TestR5RS
-    extends TestCase
+    extends TestSchemeBase
 {
     public final static String id
         = "$Id$";
 
-    private Machine machine;
-
-
     public TestR5RS(String name)
     {
         super(name);
-    }
-
-
-    protected void setUp()
-        throws Exception
-    {
-        machine = new Machine();
-    }
-
-    protected void tearDown()
-    {
-        machine = null;
-    }
-
-
-    private Value quote(String expression)
-        throws SchemeException
-    {
-        return machine.parse(expression);
-    }
-
-    private Value eval(String expression)
-        throws SchemeException
-    {
-        return machine.evaluate(expression);
-    }
-
-    private void check(String in, String out)
-        throws SchemeException
-    {
-        Value   value   = eval(in);
-        boolean success = value.equal(quote(out));
-
-        if (!success)
-        {
-            System.out.println(
-                "*** evaluation of ***\n" +
-                in + '\n' +
-                "*** returned ***\n" +
-                value + '\n' +
-                "*** expected was ***\n" +
-                out + '\n' +
-                "*** end ***"
-            );
-        }
-
-        assertTrue(success);
     }
 
 
@@ -227,49 +174,13 @@ public class TestR5RS
 
     /// 4.1.6 Assignments
 
-    public void test4_1_6a()
+    public void test4_1_6()
         throws SchemeException
     {
         eval("(define x 2)");
         check("(+ x 1)", "3");
         eval("(set! x 4)");
         check("(+ x 1)", "5");
-    }
-
-    public void test4_1_6b()
-        throws SchemeException
-    {
-        // This failed, because set! didn't use delayed
-        // references, MHS 2002-19-03
-        check("(begin\n" +
-              "  (define (f)\n" +
-              "    (define (g)\n" +
-              "      (set! x 1)\n" +
-              "      x)\n" +
-              "    (define x 2)\n" +
-              "    (g)\n" +
-              "    x)\n" +
-              "  (f))",
-              "1"
-        );
-    }
-
-    public void test4_1_6c()
-        throws SchemeException
-    {
-        // This still compiles. Calling f causes a
-        // runtime error if called ...
-        try {
-            eval("(define (f)\n" +
-                 "  (define g (+ y 1))\n" +
-                 "  (define y 2)\n" +
-                 "  g\n" +
-                 "  y))"
-            );
-            fail();
-        }
-        catch (CompileError e)
-        { }
     }
 
 
@@ -432,8 +343,6 @@ public class TestR5RS
         check("(let ((x 1)) (let    () (define x 2)) x)", "1");
         check("(let ((x 1)) (let*   () (define x 2)) x)", "1");
         check("(let ((x 1)) (letrec () (define x 2)) x)", "1");
-
-        check("(let ((x 1)) (begin     (define x 2)) x)", "2");
     }
 
 

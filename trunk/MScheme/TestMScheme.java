@@ -32,7 +32,7 @@ public class TestMScheme
     public static Test suite()
     {
         TestSuite suite = new TestSuite("All MScheme Tests");
-        
+
         suite.addTestSuite(MScheme.util.TestArity.class);
 
         suite.addTestSuite(MScheme.values.TestList.class);
@@ -44,7 +44,8 @@ public class TestMScheme
         suite.addTestSuite(MScheme.tests.TestMachine.class);
 
         suite.addTestSuite(MScheme.tests.TestValue.class);
-        
+        suite.addTestSuite(MScheme.tests.TestBugs.class);
+
         return suite;
     }
 

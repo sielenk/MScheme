@@ -29,13 +29,14 @@ import MScheme.Value;
 
 import MScheme.environment.Environment;
 
+import MScheme.exceptions.CompileError;
 import MScheme.exceptions.CantCompileException;
-import MScheme.exceptions.DuplicateSymbolException;
 import MScheme.exceptions.FunctionExpected;
 import MScheme.exceptions.ListExpected;
 import MScheme.exceptions.RuntimeArityError;
 import MScheme.exceptions.SchemeException;
 import MScheme.exceptions.SymbolExpected;
+import MScheme.exceptions.AlreadyBound;
 
 import MScheme.machine.Machine;
 
@@ -314,9 +315,9 @@ public class TestMachine
         try
         {
             evaluate("(lambda (x y x) #t)");
-            fail("expected DuplicateSymbolException");
+            fail("expected CompileError");
         }
-        catch (DuplicateSymbolException e)
+        catch (CompileError e)
         { }
     }
 
