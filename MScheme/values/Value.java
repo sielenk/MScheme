@@ -13,7 +13,7 @@ public abstract class Value
 {
     /** 
      */
-    public void setLiteral() { }
+    public Value setLiteral() { return this; }
 
     /** <code>true</code> only for the false singleton */
     public boolean isFalse() { return false; }
