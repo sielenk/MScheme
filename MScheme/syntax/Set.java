@@ -60,7 +60,7 @@ final class Set
         Value  value  = arguments.getTail().getHead();
 
         return translate(
-            compilationEnv.getReferenceFor(symbol),
+            compilationEnv.getDelayedReferenceFor(symbol),
             value.getCode(compilationEnv)
         );
     }
