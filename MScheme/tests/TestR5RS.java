@@ -1,11 +1,11 @@
-package MScheme;
+package MScheme.tests;
 
 import java.io.StringReader;
 import junit.framework.*;
 
+import MScheme.Value;
+
 import MScheme.machine.Machine;
-import MScheme.environment.*;
-import MScheme.code.*;
 import MScheme.values.*;
 import MScheme.exceptions.*;
 
