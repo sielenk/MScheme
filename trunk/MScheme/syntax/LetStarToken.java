@@ -32,59 +32,68 @@ final class LetStarToken
 
         List bindings = arguments.getHead().toList();
         List body     = arguments.getTail();
-        int  count    = bindings.getLength();
 
-        if (count == 0) {
-            return CompiledSequence.create(
-                body.getCodeList(environment)
-            );
-        }
+        if (bindings.isEmpty()) {
+            // special handling because the helper wouldn't
+            // create a new environment in this case
 
-        StaticEnvironment[] environments  = new StaticEnvironment[count + 1];
-        Code             [] compiledInits = new Code[count];
-
-        {
-            environments[0] = environment;
-
-            for (int i = 0; i < count; ++i) {
-                List  binding = bindings.getHead().toList();
-
-                Symbol formal  = binding.getHead().toSymbol();
-                Value  init    = binding.getTail().getHead();
-
-                compiledInits[i    ] = init.getCode(environments[i]);
-                environments [i + 1] = environments[i].newChild(formal);
-
-                bindings = bindings.getTail();
-            }
-        }
-
-        Code lambda = new CompiledLambda(
-            Arity.exactly(1),
-            environments[count],
-            body
-        );
-
-        int i = count - 1;
-        while (true) {
-            Code application = new CompiledApplication(
+            return new CompiledApplication(
                 CodeList.create(
-                    lambda,
-                    compiledInits[i]
+                    new CompiledLambda(
+                        Arity.exactly(0),
+                        environment.newChild(),
+                        body
+                    )
                 )
             );
+        } else {
+            return new LetStarHelper(body).helper(environment, bindings);
+        }
+    }
+}
 
-            if (i == 0) {
-                return application;
-            }
+final class LetStarHelper
+{
+    private final List _body;
 
-            lambda = new CompiledLambda(
-                Arity.exactly(1),
-                environments[i],
-                application
+    LetStarHelper(List body)
+    { _body = body; }
+
+    Code helper(
+        StaticEnvironment outerEnvironment,
+        List              bindings
+    ) throws CompileError, TypeError
+    {
+        if (bindings.isEmpty()) {
+            return CompiledSequence.create(
+                _body.getCodeList(outerEnvironment)
+            );
+        } else {
+            List binding = bindings.getHead().toList();
+
+            Symbol formal  = binding.getHead().toSymbol();
+            Value  init    = binding.getTail().getHead();
+
+            StaticEnvironment
+                innerEnvironment = outerEnvironment.newChild(formal);
+
+            Code innerCode = helper(
+                innerEnvironment,
+                bindings.getTail()
             );
 
-            --i;
+            Code lambda = new CompiledLambda(
+                Arity.exactly(1),
+                innerEnvironment,
+                innerCode
+            );
+
+            return new CompiledApplication(
+                CodeList.create(
+                    lambda,
+                    init.getCode(outerEnvironment)
+                )
+            );
         }
     }
 }
