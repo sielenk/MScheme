@@ -17,7 +17,7 @@ import MScheme.functions.*;
 import MScheme.values.*;
 
 
-// *** let ***
+// *** let* ***
 
 final class LetStar
     extends Syntax
@@ -35,7 +35,7 @@ final class LetStar
     protected Code checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
-    ) throws CompileError, TypeError
+    ) throws SchemeException
     {
         // (let* ((<var> <init>) ...) <body>)
 
@@ -77,7 +77,7 @@ final class LetStarHelper
     Code translate(
         StaticEnvironment outerEnvironment,
         List              bindings
-    ) throws CompileError, TypeError
+    ) throws SchemeException
     {
         if (bindings.isEmpty()) {
             return Sequence.create(
