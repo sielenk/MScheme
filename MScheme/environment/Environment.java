@@ -17,12 +17,12 @@ import MScheme.values.*;
 
 import MScheme.syntax.SyntaxFactory;
 
-import MScheme.functions.BuiltinTable;
-import MScheme.functions.Thunk;
-import MScheme.functions.ValueThunk;
-import MScheme.functions.TernaryValueFunction;
-import MScheme.functions.YCombinator;
-import MScheme.functions.SpawnFunction;
+import MScheme.values.functions.BuiltinTable;
+import MScheme.values.functions.Thunk;
+import MScheme.values.functions.ValueThunk;
+import MScheme.values.functions.TernaryValueFunction;
+import MScheme.values.functions.YCombinator;
+import MScheme.values.functions.SpawnFunction;
 
 import MScheme.exceptions.*;
 

@@ -1,15 +1,16 @@
-package MScheme.functions;
+package MScheme.values.functions;
 
 import MScheme.util.Arity;
 import MScheme.machine.Registers;
 import MScheme.Code;
+import MScheme.Value;
 import MScheme.values.List;
 import MScheme.values.Function;
 
 import MScheme.exceptions.SchemeException;
 
 
-public abstract class Thunk
+public abstract class UnaryFunction
             extends CheckedFunction
 {
     public final static String id
@@ -18,7 +19,7 @@ public abstract class Thunk
 
     protected final Arity getArity()
     {
-        return Arity.exactly(0);
+        return Arity.exactly(1);
     }
 
     protected final Code checkedCall(
@@ -27,10 +28,14 @@ public abstract class Thunk
         List      arguments
     ) throws SchemeException
     {
-        return checkedCall(state);
+        return checkedCall(
+                   state,
+                   arguments.getHead()
+               );
     }
 
     protected abstract Code checkedCall(
-        Registers state
+        Registers state,
+        Value     fst
     ) throws SchemeException;
 }

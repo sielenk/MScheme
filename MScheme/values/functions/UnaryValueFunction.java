@@ -1,4 +1,4 @@
-package MScheme.functions;
+package MScheme.values.functions;
 
 import MScheme.Value;
 import MScheme.Code;

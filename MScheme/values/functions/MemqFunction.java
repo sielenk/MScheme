@@ -1,20 +1,20 @@
-package MScheme.functions;
+package MScheme.values.functions;
 
 import MScheme.Value;
 
 
-public final class MemberFunction
+public final class MemqFunction
             extends MemberBase
 {
     public final static String id
     = "$Id$";
 
 
-    public final static MemberFunction INSTANCE
-    = new MemberFunction();
+    public final static MemqFunction INSTANCE
+    = new MemqFunction();
 
     protected boolean equal(Value fst, Value snd)
     {
-        return fst.equal(snd);
+        return fst.eq(snd);
     }
 }

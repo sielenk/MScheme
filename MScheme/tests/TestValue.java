@@ -8,7 +8,7 @@ import MScheme.Value;
 
 import MScheme.values.*;
 
-import MScheme.functions.CallCCFunction;
+import MScheme.values.functions.CallCCFunction;
 
 
 public class TestValue

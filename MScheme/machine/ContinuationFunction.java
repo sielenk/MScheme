@@ -8,7 +8,7 @@ import MScheme.Code;
 
 import MScheme.code.CodeList;
 import MScheme.code.Sequence;
-import MScheme.functions.UnaryFunction;
+import MScheme.values.functions.UnaryFunction;
 
 
 /**
