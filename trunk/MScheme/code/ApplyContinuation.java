@@ -26,8 +26,6 @@ import MScheme.Code;
 import MScheme.machine.Registers;
 import MScheme.machine.Continuation;
 
-import MScheme.environment.StaticEnvironment;
-
 import MScheme.values.ListFactory;
 import MScheme.values.List;
 import MScheme.values.Empty;
