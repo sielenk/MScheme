@@ -20,11 +20,9 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.values.functions;
 
+import mscheme.compiler.Compiler;
 import mscheme.environment.Environment;
-
 import mscheme.exceptions.SchemeException;
-
-import mscheme.machine.Machine;
 import mscheme.values.ValueTraits;
 
 
@@ -47,7 +45,7 @@ public final class EvalFunction
     throws SchemeException
     {
         Environment newEnv  = ValueTraits.toEnvironment(snd);
-        Object      newCode = Machine.compile(newEnv.getStatic(), fst);
+        Object      newCode = Compiler.compile(newEnv.getStatic(), fst);
 
         state.setEnvironment(newEnv.getDynamic());
         return newCode;
