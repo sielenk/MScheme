@@ -111,7 +111,7 @@ final class LetStarHelper
         if (bindings.isEmpty())
         {
             return Sequence.create(
-                _body.getCodeArray(outerEnvironment)
+                _body.getCompiledArray(outerEnvironment)
             );
         }
         else
@@ -139,7 +139,7 @@ final class LetStarHelper
                 new Code[]
                 {
                     lambda,
-                    init.getCode(outerEnvironment)
+                    init.getCompiled(outerEnvironment)
                 }
             );
         }

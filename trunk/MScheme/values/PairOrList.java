@@ -167,7 +167,7 @@ final class PairOrList
         return false;
     }
 
-    public Code getCode(StaticEnvironment compilationEnv)
+    public Code getCompiled(StaticEnvironment compilationEnv)
         throws SchemeException
     {
         List list = toList();
@@ -374,17 +374,17 @@ final class PairOrList
         }
     }
 
-    public Code[] getCodeArray(StaticEnvironment compilationEnv)
+    public Code[] getCompiledArray(StaticEnvironment compilationEnv)
         throws SchemeException
     {
-        return getCodeArray(compilationEnv, 0);
+        return getCompiledArray(compilationEnv, 0);
     }
 
-    public Code[] getCodeArray(StaticEnvironment compilationEnv, int index)
+    public Code[] getCompiledArray(StaticEnvironment compilationEnv, int index)
         throws SchemeException
     {
-        Code         compiledHead = getHead().getCode(compilationEnv);
-        Code[]       result       = getTail().getCodeArray(
+        Code         compiledHead = getHead().getCompiled(compilationEnv);
+        Code[]       result       = getTail().getCompiledArray(
                                         compilationEnv,
                                         index + 1
                                     );

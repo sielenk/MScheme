@@ -88,7 +88,7 @@ public final class CompiledLambda
         throws SchemeException
     {
         Code compiledBody = Sequence.create(
-            body.getCodeArray(env)
+            body.getCompiledArray(env)
         );
 
         return create(

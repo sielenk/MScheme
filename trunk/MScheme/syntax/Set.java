@@ -61,7 +61,7 @@ final class Set
 
         return translate(
             compilationEnv.getDelayedReferenceFor(symbol),
-            value.getCode(compilationEnv)
+            value.getCompiled(compilationEnv)
         );
     }
 

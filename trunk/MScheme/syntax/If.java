@@ -64,9 +64,9 @@ final class If
             : arguments.getTail().getTail().getHead();
 
         return Selection.create(
-                   flag.   getCode(compilationEnv),
-                   onTrue. getCode(compilationEnv),
-                   onFalse.getCode(compilationEnv)
+                   flag.   getCompiled(compilationEnv),
+                   onTrue. getCompiled(compilationEnv),
+                   onFalse.getCompiled(compilationEnv)
                );
     }
 }

@@ -60,7 +60,7 @@ final class Begin
     {
         return Sequence.create(
             _tag,
-            arguments.getCodeArray(compilationEnv)
+            arguments.getCompiledArray(compilationEnv)
         );
     }
 }
