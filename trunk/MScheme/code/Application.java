@@ -33,6 +33,40 @@ import MScheme.values.Empty;
 import MScheme.exceptions.*;
 
 
+final class CallContinuation
+    extends Continuation
+{
+    public final static String id
+        = "$Id$";
+
+    private final List _arguments;
+
+    CallContinuation(
+        Registers state,
+        List      arguments
+    )
+    {
+        super(state);
+        _arguments = arguments;
+    }
+
+    protected Code execute(Registers state, Value value)
+        throws SchemeException
+    {
+        return value.toFunction().call(
+            state,
+            _arguments
+        );
+    }
+
+
+    protected String debugString()
+    {
+        return "call[" + _arguments + "]";
+    }
+}
+
+
 final class PushContinuation
     extends Continuation
 {
@@ -44,7 +78,7 @@ final class PushContinuation
     private final CodeList _todo;
 
 
-    private PushContinuation(
+    PushContinuation(
         Registers state,
         List      done,
         CodeList  todo
@@ -55,36 +89,14 @@ final class PushContinuation
         _todo = todo;
     }
 
-    static Code prepareNext(
-        Registers state,
-        List      done,
-        CodeList  todo
-    )
-    {
-        new PushContinuation(
-            state,
-            done,
-            todo.getTail()
-        );
-
-        return todo.getHead();
-    }
-
     protected Code execute(Registers state, Value value)
         throws SchemeException
     {
-        if (_todo.isEmpty())
-        {
-            return value.toFunction().call(state, _done);
-        }
-        else
-        {
-            return prepareNext(
-                       state,
-                       ListFactory.prepend(value, _done),
-                       _todo
-                   );
-        }
+        return Application.prepareNext(
+            state,
+            ListFactory.prepend(value, _done),
+            _todo
+        );
     }
 
 
@@ -102,6 +114,34 @@ public final class Application
         = "$Id$";
 
 
+    static Code prepareNext(
+        Registers state,
+        List      done,
+        CodeList  todo
+    )
+    {
+        CodeList newTail = todo.getTail();
+
+        if (newTail.isEmpty())
+        {
+            new CallContinuation(
+                state,
+                done
+            );
+        }
+        else
+        {
+            new PushContinuation(
+                state,
+                done,
+                newTail
+            );
+        }
+
+        return todo.getHead();
+    }
+
+
     private final CodeList _permutedApplication;
 
     private Application(CodeList application)
@@ -116,11 +156,11 @@ public final class Application
 
     public Code executionStep(Registers state)
     {
-        return PushContinuation.prepareNext(
-                   state,
-                   Empty.create(),
-                   _permutedApplication
-               );
+        return prepareNext(
+            state,
+            Empty.create(),
+            _permutedApplication
+        );
     }
 
 
