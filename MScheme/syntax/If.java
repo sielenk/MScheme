@@ -41,7 +41,7 @@ final class If
             ? ScmBoolean.createFalse()
             : arguments.getTail().getTail().getHead();
 
-        return new Selection(
+        return Selection.create(
             flag.   getCode(compilationEnv),
             onTrue. getCode(compilationEnv),
             onFalse.getCode(compilationEnv)
