@@ -11,7 +11,6 @@ import java.lang.reflect.Method;
 
 import mscheme.environment.Environment;
 import mscheme.environment.StaticEnvironment;
-import mscheme.exceptions.CantCompileException;
 import mscheme.exceptions.CharExpected;
 import mscheme.exceptions.EnvironmentExpected;
 import mscheme.exceptions.FunctionExpected;
@@ -26,8 +25,6 @@ import mscheme.exceptions.StringExpected;
 import mscheme.exceptions.SymbolExpected;
 import mscheme.exceptions.VectorExpected;
 import mscheme.machine.Registers;
-import mscheme.syntax.ProcedureCall;
-import mscheme.syntax.ITranslator;
 
 
 /**
@@ -394,41 +391,5 @@ public class ValueTraits
         {
             return o;
         }
-    }
-
-    public static Object getCompiled(StaticEnvironment compilationEnv,
-        Object object) throws SchemeException
-    {
-        if (isScmVector(object))
-        {
-            throw new CantCompileException(object);
-        }
-        else if (object instanceof ICompileable)
-        {
-            return ((ICompileable)object).getCompiled(compilationEnv);
-        }
-        else
-        {
-            compilationEnv.setStateClosed();
-            return getConst(object);
-        }
-    }
-
-    public static ITranslator getTranslator(StaticEnvironment compilationEnv,
-        Object object) throws SchemeException
-    {
-        if (object instanceof Symbol)
-        {
-            Symbol symbol = (Symbol)object;
-            
-            ITranslator result = compilationEnv.getSyntaxFor(symbol);
-            
-            if (result != null)
-            {
-                return result;
-            }
-        }
-
-        return ProcedureCall.create(object);
     }
 }
