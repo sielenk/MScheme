@@ -147,6 +147,6 @@ public final class CompiledLambda
 
     public String toString()
     {
-        return "LAMBDA[" + _compiledBody + ']';
+        return "lambda:<" + _compiledBody + '>';
     }
 }

@@ -166,6 +166,6 @@ public final class Application
 
     public String toString()
     {
-        return "APPLY[" + _permutedApplication.getReversed().toString() + ']';
+        return "app:<" + _permutedApplication.getReversed().toString() + '>';
     }
 }
