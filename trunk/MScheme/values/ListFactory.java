@@ -34,4 +34,14 @@ public abstract class ListFactory
     {
         return prepend(first, create(second, third));
     }
+
+    public static List create(
+        Value first,
+        Value second,
+        Value third,
+        Value fourth
+    )
+    {
+        return prepend(first, create(second, third, fourth));
+    }
 }
