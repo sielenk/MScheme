@@ -49,7 +49,7 @@ public class TestValue
         Pair.create(null, null).toPair();
         Empty.create().toList();
         ValueFactory.createNumber(0).toNumber();
-        ValueFactory.createChar('a').toChar();
+        ScmChar.create('a').toScmChar();
         ValueFactory.createString("").toScmString();
         ValueFactory.createVector().toVector();
         ValueFactory.createInputPort().toPort().toInput();
