@@ -10,7 +10,7 @@ public abstract class ListFactory
 
 
     public static List prepend(Value head, List tail)
-    { return new Pair(false, head, tail); }
+    { return Pair.create(head, tail); }
 
     public static List create()
     { return Empty.create(); }
