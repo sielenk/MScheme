@@ -3,12 +3,11 @@ package MScheme.exceptions;
 import MScheme.values.Value;
 
 
-public class ExpectedException
-    extends TypeError
+public class PairExpected
+    extends ListExpected
 {
-    public ExpectedException(Value cause)
+    public PairExpected(Value cause)
     {
         super(cause);
     }
 }
-

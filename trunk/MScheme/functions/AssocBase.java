@@ -5,7 +5,7 @@ import MScheme.values.Value;
 import MScheme.values.List;
 import MScheme.values.Pair;
 
-import MScheme.exceptions.ListExpectedException;
+import MScheme.exceptions.ListExpected;
 
 
 abstract class AssocBase
@@ -16,7 +16,7 @@ abstract class AssocBase
     protected final Value checkedCall(
         Value key,
         Value values
-    ) throws ListExpectedException
+    ) throws ListExpected
     {
         List tail = values.toList();
 
@@ -33,4 +33,3 @@ abstract class AssocBase
         return ValueFactory.createFalse();
     }
 }
-

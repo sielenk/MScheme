@@ -41,32 +41,32 @@ public abstract class Value
 
     // type casts (to get SchemeExceptions instead of ClassCastExceptions)
     
-    public List         toList     () throws     ListExpectedException
-    { throw new ListExpectedException(this); }
+    public List         toList     () throws     ListExpected
+    { throw new ListExpected(this); }
 
-    public Pair         toPair     () throws     PairExpectedException
-    { throw new PairExpectedException(this); }
+    public Pair         toPair     () throws     PairExpected
+    { throw new PairExpected(this); }
 
-    public Symbol       toSymbol   () throws   SymbolExpectedException
-    { throw new SymbolExpectedException(this); }
+    public Symbol       toSymbol   () throws   SymbolExpected
+    { throw new SymbolExpected(this); }
 
-    public SchemeNumber toNumber   () throws   NumberExpectedException
-    { throw new NumberExpectedException(this); }
+    public SchemeNumber toNumber   () throws   NumberExpected
+    { throw new NumberExpected(this); }
 
-    public SchemeChar   toChar     () throws     CharExpectedException
-    { throw new CharExpectedException(this); }
+    public SchemeChar   toChar     () throws     CharExpected
+    { throw new CharExpected(this); }
 
-    public SchemeString toScmString() throws   StringExpectedException
-    { throw new StringExpectedException(this); }
+    public SchemeString toScmString() throws   StringExpected
+    { throw new StringExpected(this); }
 
-    public SchemeVector toVector   () throws   VectorExpectedException
-    { throw new VectorExpectedException(this); }
+    public SchemeVector toVector   () throws   VectorExpected
+    { throw new VectorExpected(this); }
 
-    public Port         toPort     () throws     PortExpectedException
-    { throw new PortExpectedException(this); }
+    public Port         toPort     () throws     PortExpected
+    { throw new PortExpected(this); }
 
-    public Function     toFunction () throws FunctionExpectedException
-    { throw new FunctionExpectedException(this); }
+    public Function     toFunction () throws FunctionExpected
+    { throw new FunctionExpected(this); }
 
 
     // equivalence predicates (as in R5RS, 6.1)

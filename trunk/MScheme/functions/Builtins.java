@@ -12,7 +12,7 @@ class Adder
     { return ValueFactory.createNumber(0); }
 
     protected Value combine(Value fst, Value snd)
-        throws NumberExpectedException
+        throws NumberExpected
     { return fst.toNumber().plus(snd.toNumber()); }
 }
 
@@ -24,7 +24,7 @@ class Multiplier
     { return ValueFactory.createNumber(1); }
 
     protected Value combine(Value fst, Value snd)
-        throws NumberExpectedException
+        throws NumberExpected
     { return fst.toNumber().times(snd.toNumber()); }
 }
 
@@ -182,19 +182,19 @@ public class Builtins
     { return Pair.create(fst, snd); }
 
     public static Value car(Value argument)
-        throws PairExpectedException
+        throws PairExpected
     { return argument.toPair().getFirst(); }
 
     public static Value cdr(Value argument)
-        throws PairExpectedException
+        throws PairExpected
     { return argument.toPair().getSecond(); }
 
     public static Value set_2Dcar_21(Value fst, Value snd) // set-car!
-        throws PairExpectedException, ImmutableException
+        throws PairExpected, ImmutableException
     { fst.toPair().setFirst(snd); return snd; }
 
     public static Value set_2Dcdr_21(Value fst, Value snd) // set-car!
-        throws PairExpectedException, ImmutableException
+        throws PairExpected, ImmutableException
     { fst.toPair().setSecond(snd); return snd; }
 
 
@@ -208,11 +208,11 @@ public class Builtins
     { return argument; }
 
     public static Value length(Value argument)
-        throws ListExpectedException
+        throws ListExpected
     { return SchemeNumber.create(argument.toList().getLength()); }
 
     public static Value reverse(Value argument)
-        throws ListExpectedException
+        throws ListExpected
     { return argument.toList().getReversed(); }
 
 
@@ -221,11 +221,11 @@ public class Builtins
     { return SchemeBoolean.create(argument.isSymbol()); }
 
     public static Value symbol_2D_3Estring(Value argument) // symbol->string
-        throws SymbolExpectedException
+        throws SymbolExpected
     { return SchemeString.create(argument.toSymbol()); }
 
     public static Value string_2D_3Esymbol(Value argument) // string->symbol
-        throws StringExpectedException
+        throws StringExpected
     { return Symbol.create(argument.toScmString()); }
 
 
@@ -235,39 +235,39 @@ public class Builtins
     { return SchemeBoolean.create(argument.isChar()); }
 
     public static Value char_3C_3F(Value fst, Value snd) // char<?
-        throws CharExpectedException
+        throws CharExpected
     { return SchemeBoolean.create(fst.toChar().getJavaChar() < snd.toChar().getJavaChar()); }
 
     public static Value char_3C_3D_3F(Value fst, Value snd) // char<=?
-        throws CharExpectedException
+        throws CharExpected
     { return SchemeBoolean.create(fst.toChar().getJavaChar() <= snd.toChar().getJavaChar()); }
 
     public static Value char_3D_3F(Value fst, Value snd) // char=?
-        throws CharExpectedException
+        throws CharExpected
     { return SchemeBoolean.create(fst.toChar().getJavaChar() == snd.toChar().getJavaChar()); }
 
     public static Value char_3E_3D_3F(Value fst, Value snd) // char>=?
-        throws CharExpectedException
+        throws CharExpected
     { return SchemeBoolean.create(fst.toChar().getJavaChar() >= snd.toChar().getJavaChar()); }
 
     public static Value char_3E_3F(Value fst, Value snd) // char>?
-        throws CharExpectedException
+        throws CharExpected
     { return SchemeBoolean.create(fst.toChar().getJavaChar() > snd.toChar().getJavaChar()); }
 
     public static Value char_2D_3Einteger(Value argument)
-        throws CharExpectedException
+        throws CharExpected
     { return SchemeNumber.create(argument.toChar().getJavaChar()); }
 
     public static Value integer_2D_3Echar(Value argument)
-        throws NumberExpectedException
+        throws NumberExpected
     { return SchemeChar.create((char)argument.toNumber().getInteger()); }
 
     public static Value char_2Dupcase(Value argument)
-        throws CharExpectedException
+        throws CharExpected
     { return SchemeChar.create(Character.toUpperCase(argument.toChar().getJavaChar())); }
 
     public static Value char_2Ddowncase(Value argument)
-        throws CharExpectedException
+        throws CharExpected
     { return SchemeChar.create(Character.toLowerCase(argument.toChar().getJavaChar())); }
 
 
@@ -297,66 +297,66 @@ public class Builtins
     { return SchemeBoolean.create(argument.isPort()); }
 
     public static Value input_2Dport_3F(Value argument) // input-port?
-        throws PortExpectedException
+        throws PortExpected
     { return SchemeBoolean.create(argument.isPort() && argument.toPort().isInput()); }
 
     public static Value output_2Dport_3F(Value argument) // output-port?
-        throws PortExpectedException
+        throws PortExpected
     { return SchemeBoolean.create(argument.isPort() && argument.toPort().isOutput()); }
 
 
     public static Value open_2Dinput_2Dfile(Value argument)
-        throws StringExpectedException, OpenException
+        throws StringExpected, OpenException
     { return InputPort.create(argument.toScmString()); }
 
     public static Value open_2Doutput_2Dfile(Value argument)
-        throws StringExpectedException, OpenException
+        throws StringExpected, OpenException
     { return OutputPort.create(argument.toScmString()); }
 
 
     public static Value close_2Dinput_2Dport(Value argument)
-        throws PortExpectedException, CloseException
+        throws PortExpected, CloseException
     { argument.toPort().toInput().close(); return argument; }
     
     public static Value close_2Doutput_2Dport(Value argument)
-        throws PortExpectedException, CloseException
+        throws PortExpected, CloseException
     { argument.toPort().toOutput().close(); return argument; }
     
 
     // 6.6.2 Input
 
     public static Value read(Value fst)
-        throws SchemeException
+        throws RuntimeError, TypeError
     { return fst.toPort().toInput().read(); }
 
     public static Value read_2Dchar(Value fst)
-        throws SchemeException
+        throws RuntimeError, TypeError
     { return fst.toPort().toInput().readScmChar(); }
 
     public static Value peek_2Dchar(Value fst)
-        throws SchemeException
+        throws RuntimeError, TypeError
     { return fst.toPort().toInput().peekScmChar(); }
 
     public static Value eof_2Dobject_3F(Value fst)
     { return SchemeBoolean.create(fst.eq(InputPort.EOF_VALUE)); }
 
     public static Value char_2Dready(Value fst)
-        throws SchemeException
+        throws TypeError
     { return SchemeBoolean.create(fst.toPort().toInput().isReady()); }
 
 
     // 6.6.3 Output
 
     public static Value write(Value fst, Value snd)
-        throws SchemeException
+        throws RuntimeError, TypeError
     { snd.toPort().toOutput().write(fst); return snd; }
 
     public static Value display(Value fst, Value snd)
-        throws SchemeException
+        throws RuntimeError, TypeError
     { snd.toPort().toOutput().display(fst); return snd; }
 
     public static Value write_2Dchar(Value fst, Value snd)
-        throws SchemeException
+        throws RuntimeError, TypeError
     { snd.toPort().toOutput().writeScmChar(fst.toChar()); return snd; }
 }
 

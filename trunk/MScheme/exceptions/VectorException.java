@@ -4,7 +4,7 @@ import MScheme.values.SchemeVector;
 
 
 public class VectorException
-    extends SchemeException
+    extends RuntimeError
 {
     private final int _index;
     

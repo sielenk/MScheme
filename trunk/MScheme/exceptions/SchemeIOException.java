@@ -4,7 +4,7 @@ import MScheme.values.Value;
 
 
 public class SchemeIOException
-    extends SchemeException
+    extends RuntimeError
 {
     public SchemeIOException(Value cause)
     { super(cause); }

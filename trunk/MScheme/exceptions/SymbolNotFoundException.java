@@ -4,7 +4,7 @@ import MScheme.values.Value;
 
 
 public class SymbolNotFoundException
-    extends SyntaxException
+    extends CompileError
 {
     public SymbolNotFoundException(Value cause)
     {

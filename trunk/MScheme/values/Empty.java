@@ -35,12 +35,12 @@ final class Empty
     { return 0; }
     
     public Value getHead()
-        throws PairExpectedException
-    { throw new PairExpectedException(this);  }
+        throws PairExpected
+    { throw new PairExpected(this);  }
     
     public List getTail()
-        throws PairExpectedException
-    { throw new PairExpectedException(this); }
+        throws PairExpected
+    { throw new PairExpected(this); }
     
     public List getReversed()
     { return this; }

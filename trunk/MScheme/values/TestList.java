@@ -105,9 +105,9 @@ public class TestList
     {
         try {
             Value dummy = emptyList.getHead();
-            fail("PairExpectedException expected");
+            fail("PairExpected expected");
         }
-        catch (PairExpectedException e) { }
+        catch (PairExpected e) { }
         
         assert(
             "getHead failed",
@@ -120,9 +120,9 @@ public class TestList
     {
         try {
             assert(emptyList.getTail() != null);
-            fail("PairExpectedException expected");
+            fail("PairExpected expected");
         }
-        catch (PairExpectedException e) { }
+        catch (PairExpected e) { }
         
         assert(
             "getTail failed",

@@ -77,7 +77,7 @@ public class StaticEnvironment
     // *** instance access ***************************************************
 
     public Reference define(Symbol symbol)
-        throws CompileError
+        throws AlreadyBound
     {
         try {
             String    key = symbol.getKey();
@@ -101,18 +101,18 @@ public class StaticEnvironment
             return ref;
         }
         catch (ClassCastException e) {
-            throw new CompileError(symbol);
+            throw new AlreadyBound(symbol);
         }
     }
 
 
     public void defineSyntax(Symbol symbol, Syntax value)
-        throws SyntaxException
+        throws AlreadyBound
     {
         String  key = symbol.getKey();
 
         if (_bindings.get(key) != null) {
-            throw new SyntaxException(symbol);
+            throw new AlreadyBound(symbol);
         }
 
         _bindings.put(key, value);
@@ -149,13 +149,13 @@ public class StaticEnvironment
     }
 
     public Reference getCodeFor(Symbol key)
-        throws SymbolNotFoundException, SyntaxException
+        throws SymbolNotFoundException, UnexpectedSyntax
     {
         try {
             return (Reference)getTokenFor(key);
         }
         catch (ClassCastException e) {
-            throw new SyntaxException(key);
+            throw new UnexpectedSyntax(key);
         }
     }
 

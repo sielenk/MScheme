@@ -126,9 +126,9 @@ public class TestEnvironment
         
         try {
             env.getCodeFor(sym1);
-            fail("expected SyntaxException");
+            fail("expected UnexpectedSyntax");
         }
-        catch (SyntaxException e) { }
+        catch (UnexpectedSyntax e) { }
 
         Reference reference = env.define(sym2);
 
