@@ -162,7 +162,7 @@ clean:
 
 doc:
 	if [ \! -e doc ]; then mkdir doc; fi
-	javadoc -d doc $(PACKAGES)
+	javadoc -private -d doc $(PACKAGES)
 
 .PHONY: doc clean all
 
