@@ -1,3 +1,23 @@
+/* A helper class for creating flexible ops from binary ones.
+   Copyright (C) 2001  Marvin H. Sielenkemper
+
+This file is part of MScheme.
+
+MScheme is free software; you can redistribute it and/or modify 
+it under the terms of the GNU General Public License as published by 
+the Free Software Foundation; either version 2 of the License, 
+or (at your option) any later version. 
+
+MScheme is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details. 
+
+You should have received a copy of the GNU General Public License
+along with MScheme; see the file COPYING. If not, write to 
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA  02111-1307, USA. */
+
 package MScheme.values.functions;
 
 import MScheme.Value;
@@ -11,7 +31,7 @@ import MScheme.exceptions.TypeError;
 abstract class Reducer
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     private final Value _initial;
@@ -22,11 +42,11 @@ abstract class Reducer
     }
 
     protected abstract Value combine(Value fst, Value snd)
-    throws RuntimeError, TypeError;
+        throws RuntimeError, TypeError;
 
 
     public final Value reduceLeft(List list)
-    throws RuntimeError, TypeError
+        throws RuntimeError, TypeError
     {
         if (list.isEmpty())
         {
@@ -50,7 +70,7 @@ abstract class Reducer
     }
 
     public final Value foldLeft(List list)
-    throws RuntimeError, TypeError
+        throws RuntimeError, TypeError
     {
         Value result = _initial;
 	
@@ -67,7 +87,7 @@ abstract class Reducer
     }
 
     private Value reduceRightHelper(List list)
-    throws RuntimeError, TypeError
+        throws RuntimeError, TypeError
     {
         List tail = list.getTail();
 
@@ -85,7 +105,7 @@ abstract class Reducer
     }
 
     public final Value reduceRight(List list)
-    throws RuntimeError, TypeError
+        throws RuntimeError, TypeError
     {
         if (list.isEmpty())
         {
@@ -98,7 +118,7 @@ abstract class Reducer
     }
 
     public Value foldRight(List list)
-    throws RuntimeError, TypeError
+        throws RuntimeError, TypeError
     {
         if (list.isEmpty())
         {
