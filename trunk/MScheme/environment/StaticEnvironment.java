@@ -222,7 +222,7 @@ public class StaticEnvironment
     {
         Object result = lookupNoThrow(key);
 
-        if (result == null)
+        if ((result == null) || (result instanceof Reference))
         {
             return Reference.create(key, this);
         }
