@@ -25,7 +25,7 @@ public interface List
     int   getLength  () throws ListExpected;
     List  getReversed() throws ListExpected;
     Value getHead    () throws PairExpected;
-    List  getTail    () throws ListExpected;
+    List  getTail    () throws PairExpected, ListExpected;
 
     Code getCode(StaticEnvironment env)
         throws SchemeException;

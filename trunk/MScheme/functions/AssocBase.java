@@ -6,6 +6,7 @@ import MScheme.List;
 import MScheme.values.Pair;
 
 import MScheme.exceptions.ListExpected;
+import MScheme.exceptions.PairExpected;
 
 
 abstract class AssocBase
@@ -20,7 +21,7 @@ abstract class AssocBase
     protected final Value checkedCall(
         Value key,
         Value values
-    ) throws ListExpected
+    ) throws ListExpected, PairExpected
     {
         for (
             List tail = values.toList();

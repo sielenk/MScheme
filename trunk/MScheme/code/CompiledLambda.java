@@ -19,6 +19,7 @@ import MScheme.environment.Environment;
 import MScheme.functions.CheckedFunction;
 
 import MScheme.exceptions.ListExpected;
+import MScheme.exceptions.PairExpected;
 import MScheme.exceptions.CompileError;
 import MScheme.exceptions.TypeError;
 import MScheme.exceptions.SchemeException;
@@ -83,7 +84,7 @@ public final class CompiledLambda
             Registers state,
             int       length,
             List      arguments
-        ) throws ListExpected
+        ) throws ListExpected, PairExpected
         {
 	        Environment newEnvironment = 
                 _enclosingEnvironment.newChild(
@@ -103,5 +104,5 @@ public final class CompiledLambda
 
 
     public String toString()
-    { return "(LAMBDA " + _compiledBody + ")"; }
+    { return "LAMBDA[" + _compiledBody + ']'; }
 }

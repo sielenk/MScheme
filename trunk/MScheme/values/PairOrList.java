@@ -48,37 +48,51 @@ final class PairOrList
     public int getLength()
         throws ListExpected
     {
-        int result = 1;
+        try {
+            int result = 1;
 
-        for (
-            List tail = getTail();
-            !tail.isEmpty();
-            tail = tail.getTail()
-        ) {
-            ++result;
+            for (
+                List tail = getTail();
+                !tail.isEmpty();
+                tail = tail.getTail()
+            ) {
+                ++result;
+            }
+
+            return result;
         }
-
-        return result;
+        catch (PairExpected e) {
+            throw new RuntimeException(
+                "unexpected PairExpected"
+            );
+        }
     }
 
     public final List getReversed()
         throws ListExpected
     {
-        List result = Empty.create();
+        try {
+            List result = Empty.create();
 
-        for (
-            List rest = this;
-            !rest.isEmpty();
-            rest = rest.getTail()
-        ) {
-            result = ListFactory.prepend(
-                rest.getHead(),
-                result
+            for (
+                List rest = this;
+                !rest.isEmpty();
+                rest = rest.getTail()
+            ) {
+                result = ListFactory.prepend(
+                    rest.getHead(),
+                    result
+                );
+            }
+
+            return result;
+        }
+        catch (PairExpected e) {
+            throw new RuntimeException(
+                "unexpected PairExpected"
             );
         }
-
-        return result;
-    }    
+    }
 
 
     public Value getHead()

@@ -3,7 +3,7 @@ package MScheme.exceptions;
 import MScheme.values.ScmVector;
 
 
-public class UninitializedVectorException
+public final class UninitializedVectorException
     extends VectorException
 {
     public final static String id
@@ -15,4 +15,3 @@ public class UninitializedVectorException
     )
     { super(vector, index); }
 }
-

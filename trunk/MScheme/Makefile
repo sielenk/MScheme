@@ -113,7 +113,7 @@ SRC =	Code.java	\
 	values/ScmString.java	\
 	values/ScmVector.java	\
 	values/Symbol.java	\
-	values/ValueImplementation.java
+	values/ValueDefaultImplementations.java
 
 
 OBJ =	$(SRC:.java=.o)

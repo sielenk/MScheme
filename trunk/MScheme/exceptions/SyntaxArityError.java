@@ -4,17 +4,12 @@ import MScheme.util.Arity;
 import MScheme.List;
 
 
-public class SyntaxArityError
+public final class SyntaxArityError
     extends CompileError
 {
     public final static String id
         = "$Id$";
 
-    private final Arity _expected;
-    
     public SyntaxArityError(List arguments, Arity expected)
-    {
-        super(arguments);
-        _expected = expected;
-    }
+    { super(arguments, "expected " + expected.toString() + " arguments"); }
 }

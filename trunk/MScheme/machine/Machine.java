@@ -3,6 +3,13 @@ package MScheme.machine;
 import MScheme.Value;
 import MScheme.Code;
 
+import MScheme.values.ListFactory;
+import MScheme.values.ScmBoolean;
+import MScheme.values.Function;
+
+import MScheme.code.CodeList;
+import MScheme.code.Application;
+
 import MScheme.environment.Environment;
 
 import MScheme.exceptions.*;
@@ -47,7 +54,7 @@ public final class Machine
     { _environment  = environment; }
 
     public Machine()
-    { this(Environment.getSchemeReportEnvironment()); }
+    { _environment = Environment.getSchemeReportEnvironment(); }
 
 
     public Environment getEnvironment()
@@ -56,22 +63,35 @@ public final class Machine
 
     public Value execute(Code program)
         throws SchemeException
+    { return execute(program, null); }
+
+    public Value execute(Code program, Function errorFunction)
+        throws SchemeException
     {
         Code              next  = program;
         Registers         state = new Registers(getEnvironment());
         AbortContinuation abort = new AbortContinuation(state);
 
-        try {
-            while (!abort.hasResult()) {
+        while (!abort.hasResult()) {
+            try {
                 next = next.executionStep(state);
             }
-        }
-        catch (SchemeException e) {
-            System.err.print(
-                state.getContinuation().toString()
-            );
-            
-            throw e;
+            catch (SchemeException error)
+            {
+                if (errorFunction != null)
+                {
+                    next = errorFunction.call(
+                        state,
+                        ListFactory.create(
+                            ScmBoolean.createFalse(),
+                            error.getCauseValue(),
+                            error.getMessageValue()
+                        )
+                    );
+                } else {
+                    throw error;
+                }
+            }
         }
 
         return abort.getResult();
@@ -79,11 +99,38 @@ public final class Machine
 
     public Value evaluate(Value evaluatee)
         throws SchemeException
+    { return evaluate(evaluatee, null); }
+
+    public Value evaluate(Value evaluatee, Function errorFunction)
+        throws SchemeException
     {
-        return execute(
-            evaluatee.getCode(
+        Code program;
+
+        try {
+            program = evaluatee.getCode(
                 getEnvironment().getStatic()
-            )
+            );
+        }
+        catch (SchemeException error)
+        {
+            if (errorFunction != null)
+            {
+                program = Application.create(
+                    CodeList.create(
+                        errorFunction.getLiteral(),
+                        ScmBoolean.createTrue().getLiteral(),
+                        error.getCauseValue().getLiteral(),
+                        error.getMessageValue().getLiteral()
+                    )
+                );
+            } else { 
+                throw error;
+            }
+        }
+
+        return execute(
+            program,
+            errorFunction
         );
     }
 }

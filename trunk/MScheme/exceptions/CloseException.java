@@ -3,7 +3,7 @@ package MScheme.exceptions;
 import MScheme.Value;
 
 
-public class CloseException
+public final class CloseException
     extends SchemeIOException
 {
     public final static String id
@@ -12,4 +12,3 @@ public class CloseException
     public CloseException(Value cause)
     { super(cause); }
 }
-

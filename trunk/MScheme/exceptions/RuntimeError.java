@@ -9,6 +9,9 @@ public class RuntimeError
     public final static String id
         = "$Id$";
 
+    public RuntimeError(Value cause, String message)
+    { super(cause, message); }
+
     public RuntimeError(Value cause)
-    { super(cause); }
+    { this(cause, ""); }
 }

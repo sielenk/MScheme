@@ -60,5 +60,5 @@ public final class Selection
 
 
     public String toString()
-    { return "(IF " + _test + ' ' + _onTrue + ' ' + _onFalse + ')'; }
+    { return "IF[" + _test + ' ' + _onTrue + ' ' + _onFalse + ']'; }
 }
