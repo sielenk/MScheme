@@ -91,7 +91,7 @@ public final class CompiledLambda
         public void write(Writer destination)
         throws IOException
         {
-            destination.write("[closure]");
+            destination.write("#[closure]");
         }
 
         public Arity getArity()

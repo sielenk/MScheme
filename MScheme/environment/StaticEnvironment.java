@@ -30,7 +30,7 @@ public class StaticEnvironment
     public void write(Writer destination)
     throws IOException
     {
-        destination.write("[static environment]");
+        destination.write("#[static environment]");
     }
 
     public StaticEnvironment toStaticEnvironment()

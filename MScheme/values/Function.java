@@ -35,7 +35,7 @@ public abstract class Function
     public void write(Writer destination)
     throws IOException
     {
-        destination.write("[procedure]");
+        destination.write("#[procedure]");
     }
 
 

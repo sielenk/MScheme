@@ -64,7 +64,7 @@ public class OutputPort
     public void write(Writer destination)
     throws IOException
     {
-        destination.write("[output port]");
+        destination.write("#[output port]");
     }
 
     public OutputPort toOutputPort()
