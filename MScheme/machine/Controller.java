@@ -26,7 +26,6 @@ import java.io.IOException;
 import MScheme.Value;
 import MScheme.Code;
 
-import MScheme.code.CodeList;
 import MScheme.code.Application;
 
 import MScheme.values.functions.UnaryFunction;

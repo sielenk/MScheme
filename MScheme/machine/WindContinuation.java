@@ -23,7 +23,6 @@ package MScheme.machine;
 import MScheme.Value;
 import MScheme.Code;
 
-import MScheme.code.CodeList;
 import MScheme.code.Sequence;
 
 import MScheme.exceptions.RuntimeError;

@@ -26,7 +26,6 @@ import MScheme.Syntax;
 
 import MScheme.util.Arity;
 
-import MScheme.code.CodeList;
 import MScheme.code.Selection;
 
 import MScheme.environment.StaticEnvironment;

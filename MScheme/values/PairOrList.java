@@ -27,7 +27,6 @@ import MScheme.Value;
 import MScheme.Code;
 
 import MScheme.environment.StaticEnvironment;
-import MScheme.code.CodeList;
 
 import MScheme.exceptions.*;
 

@@ -40,7 +40,6 @@ import MScheme.values.OutputPort;
 
 import MScheme.values.functions.ValueThunk;
 
-import MScheme.code.CodeList;
 import MScheme.code.Application;
 
 import MScheme.environment.Environment;
