@@ -23,7 +23,10 @@ package MScheme.values.functions;
 import MScheme.util.Arity;
 
 import MScheme.machine.Registers;
+
 import MScheme.Code;
+import MScheme.code.ApplyContinuation;
+
 import MScheme.Value;
 import MScheme.values.Function;
 import MScheme.values.List;
@@ -69,18 +72,19 @@ public class ApplyFunction
 
         // Now toBeModified referes the pair containing the
         // last but one argument. In the example it would be
-        // (1 . ((2 3)))
+        // (1 (2 3)) which is equal to (1 . ((2 3)))
 
         toBeModified.toPair().setSecond(
             toBeModified.getTail().getHead().toList().getCopy()
         );
 
         // and here it would have become
-        // (1 . (2 3)) == (1 2 3)
+        // (1 . (2 3)) which is equal to (1 2 3)
         
-        // the call to getCopy() is necessary, because of the
-        // statement marked with (*) above.
+        // the call to getCopy() is necessary to keep the
+        // statement marked with (*) above true.
 
-        return func.call(state, arguments.getTail());
+        ApplyContinuation.create(state, arguments.getTail());
+        return func.getLiteral();
     }
 }
