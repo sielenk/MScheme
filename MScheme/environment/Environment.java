@@ -6,7 +6,11 @@ import MScheme.exceptions.SSymbolNotFoundException;
 
 public class Environment {
 
-    SExpr lookup(SSymbol symbol)
+    public Environment()
+    {
+    }
+
+    public SExpr lookup(SSymbol symbol)
         throws SSymbolNotFoundException
     {
         throw new SSymbolNotFoundException(symbol);
