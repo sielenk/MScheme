@@ -222,7 +222,7 @@ public class Builtins
 
     // 6.3.1 Booleans
 
-    public final static Value not(Value argument) // boolean?
+    public final static Value not(Value argument)
     { return ScmBoolean.create(!argument.isTrue()); }
 
     public final static Value boolean_3F(Value argument) // boolean?
@@ -254,13 +254,13 @@ public class Builtins
     { fst.toPair().setSecond(snd); return snd; }
 
 
-    public final static Value null_3F(Value argument) // pair?
+    public final static Value null_3F(Value argument) // null?
     { return ScmBoolean.create(argument.eq(Empty.create())); }
 
     public final static Value list_3F(Value argument) // list?
     { return ScmBoolean.create(argument.isList()); }
 
-    public final static Value list(List argument) // list?
+    public final static Value list(List argument)
     { return argument.toValue(); }
 
     public final static Value length(Value argument)
