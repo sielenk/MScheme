@@ -107,8 +107,8 @@ final class LetStarHelper
         if (bindings.isEmpty())
         {
             return Sequence.create(
-                       _body.getCodeList(outerEnvironment)
-                   );
+                _body.getCodeArray(outerEnvironment)
+            );
         }
         else
         {
