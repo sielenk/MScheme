@@ -16,7 +16,7 @@ final class Adder
 
     protected Value combine(Value fst, Value snd)
         throws NumberExpected
-    { return fst.toNumber().plus(snd.toNumber()); }
+    { return fst.toScmNumber().plus(snd.toScmNumber()); }
 }
 
 final class Suber
@@ -27,7 +27,7 @@ final class Suber
 
     protected Value combine(Value fst, Value snd)
         throws NumberExpected
-    { return fst.toNumber().minus(snd.toNumber()); }
+    { return fst.toScmNumber().minus(snd.toScmNumber()); }
 }
 
 final class Multiplier
@@ -38,7 +38,7 @@ final class Multiplier
 
     protected Value combine(Value fst, Value snd)
         throws NumberExpected
-    { return fst.toNumber().times(snd.toNumber()); }
+    { return fst.toScmNumber().times(snd.toScmNumber()); }
 }
 
 
@@ -60,7 +60,7 @@ final class Order {
             throw new RuntimeArityError(arguments, _arity);
         }
 
-        SchemeNumber curr = arguments.getHead().toNumber();
+        SchemeNumber curr = arguments.getHead().toScmNumber();
         List         tail = arguments.getTail();
 
         boolean rising  = true;
@@ -68,7 +68,7 @@ final class Order {
         boolean falling = true;
 
         do {
-            SchemeNumber next = tail.getHead().toNumber();
+            SchemeNumber next = tail.getHead().toScmNumber();
                          tail = tail.getTail();
 
             if (curr.isEqualTo(next)) {
@@ -120,23 +120,23 @@ public class Builtins
 
     // 6.2.5 Numerical operations
     public final static Value number_3F(Value argument)
-    { return ScmBoolean.create(argument.isNumber()); }
+    { return ScmBoolean.create(argument.isScmNumber()); }
 
     public final static Value complex_3F(Value argument)
-    { return ScmBoolean.create(argument.isNumber()); }
+    { return ScmBoolean.create(argument.isScmNumber()); }
 
     public final static Value real_3F(Value argument)
-    { return ScmBoolean.create(argument.isNumber()); }
+    { return ScmBoolean.create(argument.isScmNumber()); }
 
     public final static Value rational_3F(Value argument)
-    { return ScmBoolean.create(argument.isNumber()); }
+    { return ScmBoolean.create(argument.isScmNumber()); }
 
     public final static Value integer_3F(Value argument)
-    { return ScmBoolean.create(argument.isNumber()); }
+    { return ScmBoolean.create(argument.isScmNumber()); }
 
 
     public final static Value exact_3F(Value argument)
-    { return ScmBoolean.create(argument.isNumber()); }
+    { return ScmBoolean.create(argument.isScmNumber()); }
 
     public final static Value inexact_3F(Value argument)
     { return ScmBoolean.createFalse(); }
@@ -177,7 +177,7 @@ public class Builtins
     {
         int len = Function.checkArguments(AT_LEAST_1, arguments);
 
-        SchemeNumber first = arguments.getHead().toNumber();
+        SchemeNumber first = arguments.getHead().toScmNumber();
         if (len == 1) {
             return first.negated();
         } else {
@@ -201,7 +201,7 @@ public class Builtins
     { return ScmBoolean.create(!argument.isTrue()); }
 
     public final static Value boolean_3F(Value argument) // boolean?
-    { return ScmBoolean.create(argument.isBoolean()); }
+    { return ScmBoolean.create(argument.isScmBoolean()); }
 
 
     // 6.3.2 Pairs and lists
@@ -301,7 +301,7 @@ public class Builtins
 
     public final static Value integer_2D_3Echar(Value argument)
         throws NumberExpected
-    { return ScmChar.create((char)argument.toNumber().getInteger()); }
+    { return ScmChar.create((char)argument.toScmNumber().getInteger()); }
 
     public final static Value char_2Dupcase(Value argument)
         throws CharExpected
@@ -315,13 +315,13 @@ public class Builtins
     // 6.3.5 Strings
 
     public final static Value string_3F(Value argument) // string?
-    { return ScmBoolean.create(argument.isString()); }
+    { return ScmBoolean.create(argument.isScmString()); }
 
 
     // 6.3.6 Vectors
 
     public final static Value vector_3F(Value argument) // vector?
-    { return ScmBoolean.create(argument.isVector()); }
+    { return ScmBoolean.create(argument.isScmVector()); }
 
     public final static Value vector(List arguments) // vector
         throws ListExpected
@@ -329,7 +329,7 @@ public class Builtins
 
     public final static Value vector_2D_3Elist(Value argument) // vector->list
         throws VectorExpected
-    { return argument.toVector().getList().toValue(); }
+    { return argument.toScmVector().getList().toValue(); }
 
     public final static Value list_2D_3Evector(Value argument) // list->vector
         throws ListExpected
@@ -364,7 +364,7 @@ public class Builtins
     public final static Value scheme_2Dreport_2Denvironment(Value fst)
         throws RuntimeError, TypeError
     {
-        if (fst.toNumber().getInteger() != 5) {
+        if (fst.toScmNumber().getInteger() != 5) {
             throw new RuntimeError(fst);
         }
 
@@ -374,7 +374,7 @@ public class Builtins
     public final static Value null_2Denvironment(Value fst)
         throws RuntimeError, TypeError
     {
-        if (fst.toNumber().getInteger() != 5) {
+        if (fst.toScmNumber().getInteger() != 5) {
             throw new RuntimeError(fst);
         }
 
@@ -391,11 +391,11 @@ public class Builtins
 
     public final static Value input_2Dport_3F(Value argument) // input-port?
         throws PortExpected
-    { return ScmBoolean.create(argument.isPort() && argument.toPort().isInput()); }
+    { return ScmBoolean.create(argument instanceof InputPort); }
 
     public final static Value output_2Dport_3F(Value argument) // output-port?
         throws PortExpected
-    { return ScmBoolean.create(argument.isPort() && argument.toPort().isOutput()); }
+    { return ScmBoolean.create(argument instanceof OutputPort); }
 
 
     public final static Value open_2Dinput_2Dfile(Value argument)
@@ -409,47 +409,47 @@ public class Builtins
 
     public final static Value close_2Dinput_2Dport(Value argument)
         throws PortExpected, CloseException
-    { argument.toPort().toInput().close(); return argument; }
+    { argument.toInputPort().close(); return argument; }
     
     public final static Value close_2Doutput_2Dport(Value argument)
         throws PortExpected, CloseException
-    { argument.toPort().toOutput().close(); return argument; }
+    { argument.toOutputPort().close(); return argument; }
     
 
     // 6.6.2 Input
 
     public final static Value read(Value fst)
         throws RuntimeError, TypeError
-    { return fst.toPort().toInput().read(); }
+    { return fst.toInputPort().read(); }
 
     public final static Value read_2Dchar(Value fst)
         throws RuntimeError, TypeError
-    { return fst.toPort().toInput().readScmChar(); }
+    { return fst.toInputPort().readScmChar(); }
 
     public final static Value peek_2Dchar(Value fst)
         throws RuntimeError, TypeError
-    { return fst.toPort().toInput().peekScmChar(); }
+    { return fst.toInputPort().peekScmChar(); }
 
     public final static Value eof_2Dobject_3F(Value fst)
     { return ScmBoolean.create(fst.eq(InputPort.EOF_VALUE)); }
 
     public final static Value char_2Dready(Value fst)
         throws TypeError
-    { return ScmBoolean.create(fst.toPort().toInput().isReady()); }
+    { return ScmBoolean.create(fst.toInputPort().isReady()); }
 
 
     // 6.6.3 Output
 
     public final static Value write(Value fst, Value snd)
         throws RuntimeError, TypeError
-    { snd.toPort().toOutput().write(fst); return snd; }
+    { snd.toOutputPort().write(fst); return snd; }
 
     public final static Value display(Value fst, Value snd)
         throws RuntimeError, TypeError
-    { snd.toPort().toOutput().display(fst); return snd; }
+    { snd.toOutputPort().display(fst); return snd; }
 
     public final static Value write_2Dchar(Value fst, Value snd)
         throws RuntimeError, TypeError
-    { snd.toPort().toOutput().writeScmChar(fst.toScmChar()); return snd; }
+    { snd.toOutputPort().writeScmChar(fst.toScmChar()); return snd; }
 }
 

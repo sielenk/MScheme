@@ -28,7 +28,7 @@ class EofValue
 
 
 public class InputPort
-    extends Port
+    extends Value
 {
     public final static int   EOF       = -1;
     public final static Value EOF_VALUE = EofValue.INSTANCE;
@@ -72,10 +72,14 @@ public class InputPort
 
     // specialisation of Port
     
-    public boolean isInput()
+    public void write(Writer destination)
+        throws IOException
+    { destination.write("[input port]"); }
+        
+    public boolean isPort()
     { return true; }
     
-    public InputPort toInput()
+    public InputPort toInputPort()
     { return this; }
 
 

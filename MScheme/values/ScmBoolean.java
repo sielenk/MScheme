@@ -26,7 +26,7 @@ public final class ScmBoolean
     public boolean isTrue()
     { return (this != FALSE); }
     
-    public boolean isBoolean()
+    public boolean isScmBoolean()
     { return true; }
     
     public void write(Writer destination)

@@ -60,10 +60,10 @@ final class QuasiquoteToken
                 qqExpandList(fst             , level),
                 qqExpand    (pair.getSecond(), level)
             );
-        } else if (value.isVector()) {
+        } else if (value.isScmVector()) {
             return ValueFactory.createList(
                 Symbol.create("list->vector"),
-                qqExpand(value.toVector().getList().toValue(), level)
+                qqExpand(value.toScmVector().getList().toValue(), level)
             );
         }
 

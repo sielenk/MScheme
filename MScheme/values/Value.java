@@ -30,47 +30,61 @@ public abstract class Value
     
     // disjoint types (as in R5RS, 3.2)
         
-    public boolean isBoolean()  { return false; }
-    public boolean isPair()     { return false; }
-    public boolean isSymbol()   { return false; }
-    public boolean isNumber()   { return false; }
-    public boolean isScmChar()  { return false; }
-    public boolean isString()   { return false; }
-    public boolean isVector()   { return false; }
-    public boolean isPort()     { return false; }
-    public boolean isFunction() { return false; }
+    public boolean isScmBoolean() { return false; }
+    public boolean isPair()       { return false; }
+    public boolean isSymbol()     { return false; }
+    public boolean isScmNumber()  { return false; }
+    public boolean isScmChar()    { return false; }
+    public boolean isScmString()  { return false; }
+    public boolean isScmVector()  { return false; }
+    public boolean isPort()       { return false; }
+    public boolean isFunction()   { return false; }
 
 
     // type casts (to get SchemeExceptions instead of ClassCastExceptions)
     
-    public List         toList     () throws     ListExpected
+    public List toList()
+        throws     ListExpected
     { throw new ListExpected(this); }
 
-    public Pair         toPair     () throws     PairExpected
+    public Pair toPair()
+        throws PairExpected
     { throw new PairExpected(this); }
 
-    public Symbol       toSymbol   () throws   SymbolExpected
+    public Symbol toSymbol()
+        throws SymbolExpected
     { throw new SymbolExpected(this); }
 
-    public SchemeNumber toNumber   () throws   NumberExpected
+    public SchemeNumber toScmNumber()
+        throws NumberExpected
     { throw new NumberExpected(this); }
 
-    public ScmChar      toScmChar  () throws     CharExpected
+    public ScmChar toScmChar()
+        throws CharExpected
     { throw new CharExpected(this); }
 
-    public SchemeString toScmString() throws   StringExpected
+    public SchemeString toScmString()
+        throws StringExpected
     { throw new StringExpected(this); }
 
-    public SchemeVector toVector   () throws   VectorExpected
+    public SchemeVector toScmVector()
+        throws VectorExpected
     { throw new VectorExpected(this); }
 
-    public Port         toPort     () throws     PortExpected
-    { throw new PortExpected(this); }
+    public InputPort toInputPort()
+        throws InputPortExpected
+    { throw new InputPortExpected(this); }
 
-    public Function     toFunction () throws FunctionExpected
+    public OutputPort toOutputPort()
+        throws OutputPortExpected
+    { throw new OutputPortExpected(this); }
+
+    public Function toFunction()
+        throws FunctionExpected
     { throw new FunctionExpected(this); }
 
-    public DynamicEnvironment toEnvironment() throws EnvironmentExpected
+    public DynamicEnvironment toEnvironment()
+        throws EnvironmentExpected
     { throw new EnvironmentExpected(this); }
 
 
