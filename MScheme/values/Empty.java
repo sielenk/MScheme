@@ -7,13 +7,12 @@ import MScheme.Value;
 import MScheme.Code;
 
 import MScheme.environment.StaticEnvironment;
-import MScheme.code.*;
+import MScheme.code.CodeList;
 import MScheme.exceptions.*;
 
 
 public final class Empty
-    extends    Value
-    implements List
+    extends List
 {
     public final static String id
         = "$Id$";
@@ -21,44 +20,22 @@ public final class Empty
 
     private final static Empty INSTANCE = new Empty();
 
-    private Empty() { }
-    
+    private Empty()
+    { }
+
     public static Empty create()
     { return INSTANCE; }
 
+
     // implementation of List
+    
+    public boolean isEmpty()
+    { return true; }
     
     public boolean isList()
     { return true; }
 
-    public Value toValue()
-    { return this; }
-
-    // specialisation of Value
-    
-    public void write(Writer destination)
-        throws IOException
-    { destination.write("()"); }
-
-    public List toList()
-    { return this; }
-
-    public boolean isEmpty()
-    { return true; }
-    
-    public Code getCode(StaticEnvironment e)
-        throws CantCompileException
-    { throw new CantCompileException(this); }
-    
-    public CodeList getCodeList(StaticEnvironment e)
-    { return CodeList.create(); }
-    
-    // implementation of List
-    
     public int safeGetLength()
-    { return 0; }
-    
-    public int getLength()
     { return 0; }
     
     public Value getHead()
@@ -69,6 +46,10 @@ public final class Empty
         throws PairExpected
     { throw new PairExpected(this); }
     
-    public List getReversed()
-    { return this; }
+    public Code getCode(StaticEnvironment e)
+        throws CantCompileException
+    { throw new CantCompileException(this); }
+    
+    public CodeList getCodeList(StaticEnvironment e)
+    { return CodeList.create(); }    
 }

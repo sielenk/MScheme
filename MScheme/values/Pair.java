@@ -1,113 +1,40 @@
 package MScheme.values;
 
-import java.io.Writer;
-import java.io.IOException;
-
 import MScheme.Value;
 import MScheme.Code;
 
 import MScheme.machine.Machine;
 import MScheme.environment.StaticEnvironment;
-import MScheme.code.*;
+import MScheme.code.CodeList;
 
 import MScheme.exceptions.*;
 
 
-public final class Pair
-    extends    Compound
-    implements List
+public abstract class Pair
+    extends List
 {
     public final static String id
         = "$Id$";
 
 
-    private Value   _first;
-    private Value   _second;
-
-
-    private Pair(Value first, Value second)
-    {
-        _first  = first;
-        _second = second;
-    }
+    protected Pair()
+    { }
 
     public static Pair create(Value first, Value second)
-    { return new Pair(first, second); }
+    { return new MutablePair(first, second); }
+
+    public static Pair createConst(Value first, Value second)
+    { return new ConstPair(first.getConst(), second.getConst()); }
 
 
-    // implementation of List
-    
-    public boolean isList()
-    { return _second.isList(); }
-
-    public Value toValue()
-    { return this; }
-
-    // specialisation/implementation of Value
-    
-    private void put(Writer destination, boolean doDisplay)
-        throws IOException
-    {
-        boolean first   = true;
-        Value   current = this;
-        
-        destination.write('(');
-        
-        try {
-            while (current.isPair()) {
-                Pair pair = current.toPair();
-        
-                if (first) {
-                    first = false;
-                } else {
-                    destination.write(' ');
-                }
-            
-                if (doDisplay) {
-                    pair.getFirst().display(destination);
-                } else {
-                    pair.getFirst().write(destination);
-                }
-                current = pair.getSecond();
-            }
-        }
-        catch (PairExpected e) {
-            throw new RuntimeException(
-                "unexpected PairExpected"
-            );
-        }
-        
-        if (!current.isList()) {
-            destination.write(" . ");
-            if (doDisplay) {
-                current.display(destination);
-            } else {
-                current.write(destination);
-            }
-        }
-        
-        destination.write(')');
-    }
-
-    public void write(Writer destination)
-        throws IOException
-    { put(destination, false); }
-
-    public void display(Writer destination)
-        throws IOException
-    { put(destination, true); }
-
-
-    public final List toList()
-    { return this; }
-
-    public boolean isPair()
+    public final boolean isPair()
     { return true; }
     
-    public Pair toPair()
+    public final Pair toPair()
     { return this; }
 
-    public boolean equal(Value other)
+
+    public final boolean equal(Value other)
     {
         try {
             Pair otherPair = (Pair)other;
@@ -121,19 +48,91 @@ public final class Pair
         return false;
     }
     
-    public Code getCode(StaticEnvironment env)
-        throws CompileError, TypeError
-    { return getHead().getTranslator(env).translate(env, getTail()); }
 
-    public CodeList getCodeList(StaticEnvironment env)
+    // implementation of List
+    
+    public final boolean isEmpty()
+    { return false; }
+
+    public final boolean isList()
+    { return getSecond().isList(); }
+
+    public final int safeGetLength()
+    {
+        int   result = 1;
+        
+        Value tail = getSecond();
+        for (
+            ;
+            tail instanceof Pair;
+            tail = ((Pair)tail).getSecond()
+        ) {
+            ++result;
+        }
+
+        return tail.isList() ? result : -result;
+    }
+
+    public final Value getHead()
+    { return getFirst(); }
+    
+    public final List getTail()
+        throws ListExpected
+    { return getSecond().toList(); }
+
+    public final Code getCode(StaticEnvironment compilationEnv)
+        throws CompileError, TypeError
+    {
+        return
+            getHead()
+            .getTranslator(compilationEnv)
+            .translate(
+                compilationEnv,
+                getTail()
+            );
+    }
+
+    public final CodeList getCodeList(StaticEnvironment compilationEnv)
         throws CompileError, TypeError
     {
         return CodeList.prepend(
-            getHead().getCode    (env),
-            getTail().getCodeList(env)
+            getHead().getCode    (compilationEnv),
+            getTail().getCodeList(compilationEnv)
         );
     }
+
+
+    // abstract interface of Pair
     
+    public abstract Value getFirst();
+    
+    public abstract void setFirst(Value first)
+        throws ImmutableException;
+    
+    public abstract Value getSecond();
+
+    public abstract void setSecond(Value second)
+        throws ImmutableException;
+}
+
+
+final class ConstPair
+    extends Pair
+{
+    public final static String id
+        = "$Id";
+
+
+    private final Value _first;
+    private final Value _second;
+
+
+    ConstPair(Value first, Value second)
+    {
+        _first  = first;
+        _second = second;
+    }
+
 
     // implementation of Pair
     
@@ -142,71 +141,53 @@ public final class Pair
     
     public void setFirst(Value first)
         throws ImmutableException
-    {
-        modify();
-        _first = first;
-    }
+    { throw new ImmutableException(this); }
     
     public Value getSecond()
     { return _second; }    
 
     public void setSecond(Value second)
         throws ImmutableException
+    { throw new ImmutableException(this); }
+}
+
+
+final class MutablePair
+    extends Pair
+{
+    public final static String id
+        = "$Id$";
+
+
+    private Value _first;
+    private Value _second;
+
+
+    MutablePair(Value first, Value second)
     {
-        modify();
+        _first  = first;
         _second = second;
     }
-    
 
-    // implementation of List
 
-    public boolean isEmpty()
-    { return false; }
-    
-    public int safeGetLength()
-    {
-        Value current = getSecond();
-        int   result  = 1;
-        while (current instanceof Pair) {
-            current = ((Pair)current).getSecond();
-            ++result;
-        }
-        return current.isList() ? result : -1;
-    }
+    // specialisation of Value
 
-    public int getLength()
-        throws ListExpected
-    {
-        int result = safeGetLength();
+    public Value getConst()
+    { return createConst(_first, _second); }
 
-        if (result < 0) {
-            throw new ListExpected(this);
-        } else {
-            return result;
-        }
-    }
-    
-    public Value getHead()
-    { return getFirst(); }
-    
-    public List getTail()
-        throws ListExpected
-    { return getSecond().toList(); }
 
-    public List getReversed()
-        throws ListExpected
-    {
-        List currentTail = toList();
-        List result      = ValueFactory.createList();
-        
-        while (!currentTail.isEmpty()) {
-            result = ValueFactory.prepend(
-                currentTail.getHead(),
-                result
-            );
-            currentTail = currentTail.getTail();
-        }
-        
-        return result;        
-    }    
+    // implementation of Pair
+
+    public Value getFirst()
+    { return _first; }
+
+    public void setFirst(Value first)
+        throws ImmutableException
+    { _first = first; }
+
+    public Value getSecond()
+    { return _second; }
+
+    public void setSecond(Value second)
+    { _second = second; }
 }

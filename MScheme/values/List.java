@@ -1,6 +1,10 @@
 package MScheme.values;
 
+import java.io.Writer;
+import java.io.IOException;
+
 import MScheme.Value; 
+import MScheme.Code;
 
 import MScheme.environment.StaticEnvironment;
 import MScheme.code.CodeList;
@@ -9,68 +13,131 @@ import MScheme.exceptions.*;
 
 
 /**
- * This is an interface, because in scheme there is no list type.
- * Lists are composed of pairs and the empty list.
- * The classes representing those in this implementation are
- * at different levels in the inheritance hierarchy.
  */
-public interface List
+public abstract class List
+    extends Value
 {
     /** The CVS id of the file containing this class. */
     String id
         = "$Id$";
 
 
-    /**
-     * Returns a reference to {@link Value}.
-     */
-    Value toValue();
+    protected List()
+    { }
+
+
+    public static Pair prepend(Value head, List tail)
+    { return Pair.create(head, tail); }
+
+
+    // specialisation/implementation of Value
     
-    /**
-     * Returns a reference to {@link Pair}.
-     * <p>
-     * @throws PairExpected if called on the empty list.
-     */
-    Pair toPair () throws PairExpected;
-    
-    /**
-     * Returns <code>true</code> if called for the empty list,
-     * <code>false</code> otherwise.
-     */
-    boolean isEmpty();
+    private final void put(Writer destination, boolean doDisplay)
+        throws IOException
+    {
+        destination.write('(');
 
-    /**
-     *
-     */
-     int safeGetLength();
+        Value current = this;
+        while (current instanceof Pair) {
+            // 'this' is the first element of the list
+            // and needs no leading space
+            // (the opening parenthesis is a delimiter)
+            if (current != this) {
+                destination.write(' ');
+            }
 
-    /**
-     *
-     * @throws ListExpected if called on an improper list.
-     */ 
-    int getLength() throws ListExpected;
+            Pair currentPair = (Pair)current;
 
-    /**
-     *
-     * @throws PairExpected if called on the empty list.
-     */
-    Value getHead() throws PairExpected;
+            if (doDisplay) {
+                currentPair.getFirst().display(destination);
+            } else {
+                currentPair.getFirst().write(destination);
+            }
 
-    /**
-     *
-     */
-    List  getTail() throws ListExpected;
+            current = currentPair.getSecond();
+        }
 
-    /**
-     * 
-     *
-     * @throws ListExpected if called on an improper list.
-     */
-    List getReversed() throws ListExpected;
+        if (current != Empty.create()) {
+            // 'this' is an improper list
 
-    /**
-     *
-     */
-    CodeList getCodeList(StaticEnvironment e)
+            destination.write(" . ");
+
+            if (doDisplay) {
+                current.display(destination);
+            } else {
+                current.write(destination);
+            }
+        }
+
+        destination.write(')');
+    }
+
+    public final void write(Writer destination)
+        throws IOException
+    { put(destination, false); }
+
+    public final void display(Writer destination)
+        throws IOException
+    { put(destination, true); }
+
+
+    // implementation of List
+
+    public final int getLength()
+        throws ListExpected
+    {
+        int result = safeGetLength();
+
+        if (result < 0) {
+            throw new ListExpected(this);
+        } else {
+            return result;
+        }
+    }
+
+    public final List getReversed()
+        throws ListExpected
+    {
+        List result = Empty.create();
+
+        for (
+            List rest = this;
+            !rest.isEmpty();
+            rest = rest.getTail()
+        ) {
+            result = List.prepend(
+                rest.getHead(),
+                result
+            );
+        }
+
+        return result;
+    }    
+
+    public final List toList()
+        throws ListExpected
+    {
+        if (isList()) {
+            return this; 
+        } else {
+            throw new ListExpected(this);
+        }
+    }
+
+
+    // abstract interface of list
+
+    public abstract boolean isEmpty();
+    public abstract boolean isList();
+
+    public abstract int safeGetLength();
+
+    public abstract Value getHead() throws PairExpected;
+    public abstract List  getTail() throws ListExpected;
+
+    public abstract Code getCode(StaticEnvironment env)
+            throws CompileError, TypeError;
+
+    public abstract CodeList getCodeList(StaticEnvironment compilationEnv)
         throws CompileError, TypeError;
 }
