@@ -42,6 +42,9 @@ public class ParseBuiltins
             .append("    extends    ").append(baseClassName).append("\n")
             .append("    implements BuiltinTable\n")
             .append("{\n")
+            .append("    public final static String id\n")
+            .append("        = \"$Id$\";\n")
+            .append("\n")
             .append("    private final int    _id;\n")
             .append("    private final String _name;\n")
             .append("\n")
@@ -265,6 +268,9 @@ public class ParseBuiltins
             "class BuiltinTableEntry\n" +
             "    implements BuiltinTable\n" +
             "{\n" +
+            "    public final static String id\n" +
+            "        = \"$Id$\";\n" +
+            "\n" +
             "    private final Function _func;\n" +
             "    private final String   _name;\n" +
             "\n" +
@@ -278,6 +284,9 @@ public class ParseBuiltins
             "\n\n" +
             "public interface BuiltinTable\n" +
             "{\n" +
+            "    String id\n" +
+            "        = \"$Id$\";\n" +
+            "\n" +
             "    String getName();\n" +
             "    Function getFunc();\n\n"
         );

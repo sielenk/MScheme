@@ -1,3 +1,6 @@
+; -*- scheme -*-
+; $Id$
+
 (begin
   (define (quasiquote-func def-env use-env arg)
     (define (tag-uq? x)

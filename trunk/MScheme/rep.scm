@@ -1,3 +1,6 @@
+; -*- scheme -*-
+; $Id$
+
 (define user-env
   (scheme-report-environment 5))
         
