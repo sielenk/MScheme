@@ -343,7 +343,7 @@ public class Builtins
 
     public final static Value null_3F(Value argument) // null?
     {
-        return ScmBoolean.create(argument.eq(Empty.create()));
+        return ScmBoolean.create(argument.isEmpty());
     }
 
     public final static Value list_3F(Value argument) // list?
