@@ -33,9 +33,6 @@ public interface Value
 
     /**
      * Returns <code>true</code> for proper lists.
-     * <p>
-     * This function is opverridden in the classes
-     * {@link Empty} and {@link Pair}.
      */
     boolean isList();
 
@@ -101,15 +98,6 @@ public interface Value
     
     /**
      * Casts a reference to {@link Value} to a reference to {@link List}.
-     *
-     * <p>These type cast functions are provided here,
-     * because simple casting and catching a possible
-     * {@link java.lang.ClassCastException} always unwinds the stack.
-     * Due to the dynamic nature of Scheme
-     * it is desireable to be able to start an error
-     * session and query the user for a value of
-     * appropriate type and return it where the
-     * error occured.</p>
      */
     List toList() throws ListExpected;
 
@@ -224,9 +212,6 @@ public interface Value
     /**
      * Part of Scheme's <code>display</code> function implementation.
      * <p>
-     * The default implementation just calls
-     * {@link #write write(destination)}.
-     * <p>
      * @param  destination  the java writer which expects the output.
      */
     void display(Writer destination) throws IOException;
@@ -247,22 +232,11 @@ public interface Value
 
     /**
      * Compiles a value as a literal.
-     * <p>
-     * @return a newly created {@link Literal}.
      */
     Literal getLiteral();
 
     /**
      * Compiles a value as normal code.
-     * The default implementation assumes the value
-     * to be a constant.
-     * <p>
-     * @param  compilationEnv ignored by this implementation
-     * @return {@link #getLiteral()}
-     * @see ScmVector#getCode(StaticEnvironment)
-     * @see Empty#getCode(StaticEnvironment)
-     * @see Pair#getCode(StaticEnvironment)
-     * @see Symbol#getCode(StaticEnvironment)
      */
     Code getCode(StaticEnvironment compilationEnv)
         throws CompileError, TypeError;
@@ -271,10 +245,6 @@ public interface Value
      * Compiles a value as list head.
      * A symbol at the head of a list can be a syntactic
      * keyword which needs special treatment.
-     * All other values and symbols are compiled
-     * as normal code by the default implementation.
-     * <p>
-     * @return <code>getCode(compilationEnv)</code>
      */
     Translator getTranslator(StaticEnvironment compilationEnv)
         throws CompileError, TypeError;
