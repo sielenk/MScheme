@@ -21,10 +21,16 @@ public final class Empty
     private final static Empty INSTANCE = new Empty();
 
     private Empty()
-    { }
+    { super(true); }
 
     public static Empty create()
     { return INSTANCE; }
+
+
+    // implementation of Compound
+
+     public Value getConst()
+     { return this; }
 
 
     // implementation of List
@@ -51,5 +57,5 @@ public final class Empty
     { throw new CantCompileException(this); }
     
     public CodeList getCodeList(StaticEnvironment e)
-    { return CodeList.create(); }    
+    { return CodeList.create(); }
 }
