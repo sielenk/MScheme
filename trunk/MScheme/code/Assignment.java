@@ -40,8 +40,8 @@ public final class Assignment
         = "$Id$";
 
 
-    private final Reference _binding;
-    private       Code      _valueCalculation;
+    private Reference _binding;
+    private Code      _valueCalculation;
 
     private Assignment(
         Reference binding,
@@ -90,6 +90,7 @@ public final class Assignment
     public Code force()
         throws SymbolNotFoundException, UnexpectedSyntax
     {
+        _binding          = _binding         .forceRef();
         _valueCalculation = _valueCalculation.force();
         return this;
     }
