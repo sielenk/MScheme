@@ -139,7 +139,7 @@ PACKAGES =	MScheme			\
 		MScheme.values		\
 		MScheme.tests
 
-GCJ=gcj -O -W -Wall
+GCJ=gcj -W -Wall
 JAVAC=jikes -bootclasspath /usr/lib/java/jre/lib/rt.jar +P
 # JAVAC = $(GCJ) -W -Wall -C
 
