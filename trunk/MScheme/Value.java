@@ -140,7 +140,7 @@ public abstract class Value
         throws CompileError, TypeError
     { return getLiteral(); }
 
-    public Token getToken(StaticEnvironment e)
+    public Translator getTranslator(StaticEnvironment e)
         throws CompileError, TypeError
     { return getCode(e); }
 }

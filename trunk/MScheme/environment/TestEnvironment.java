@@ -3,7 +3,6 @@ package MScheme.environment;
 import MScheme.Value;
 import MScheme.Code;
 import MScheme.Syntax;
-import MScheme.Token;
 
 import MScheme.environment.*;
 import MScheme.values.*;
@@ -112,13 +111,13 @@ public class TestEnvironment
         StaticEnvironment env = new StaticEnvironment();
         
         try {
-            env.getTokenFor(sym1);
+            env.getTranslatorFor(sym1);
             fail("expected SymbolNotFoundException");
         }
         catch (SymbolNotFoundException e) { }
         
         try {
-            env.getTokenFor(sym1);
+            env.getTranslatorFor(sym1);
             fail("expected SymbolNotFoundException");
         }
         catch (SymbolNotFoundException e) { }
@@ -126,7 +125,7 @@ public class TestEnvironment
         Syntax    token = SyntaxFactory.getBeginToken();
         env.defineSyntax(sym1, token);
         
-        assert(env.getTokenFor(sym1) == token);
+        assert(env.getTranslatorFor(sym1) == token);
         
         try {
             env.getCodeFor(sym1);
@@ -136,7 +135,7 @@ public class TestEnvironment
 
         Reference reference = env.define(sym2);
 
-        assert(env.getTokenFor(sym2) == reference);
+        assert(env.getTranslatorFor(sym2) == reference);
         assert(env.getCodeFor (sym2) == reference);
     }
     

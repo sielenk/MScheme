@@ -7,10 +7,10 @@ import java.io.Writer;
 import java.io.IOException;
 
 import MScheme.Value;
+import MScheme.Translator;
 import MScheme.Code;
 
 import MScheme.environment.StaticEnvironment;
-import MScheme.Token;
 
 import MScheme.exceptions.*;
 
@@ -75,7 +75,7 @@ public final class Symbol
         throws SymbolNotFoundException, UnexpectedSyntax
     { return env.getCodeFor(this); }
 
-    public Token getToken(StaticEnvironment env)
+    public Translator getTranslator(StaticEnvironment env)
         throws SymbolNotFoundException
-    { return env.getTokenFor(this); }
+    { return env.getTranslatorFor(this); }
 }
