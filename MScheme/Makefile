@@ -145,7 +145,9 @@ functions/BuiltinTable.java: functions/ParseBuiltins.class functions/Builtins.cl
 	java MScheme.functions.ParseBuiltins > functions/BuiltinTable.java
 
 functions/ParseBuiltins.class: functions/ParseBuiltins.java
+	cp functions/BuiltinTable.java.empty functions/BuiltinTable.java
 	$(JIKES) functions/ParseBuiltins.java
+	touch functions/Builtins.java
 
 functions/Builtins.class: functions/Builtins.java
 	$(JIKES) functions/Builtins.java
