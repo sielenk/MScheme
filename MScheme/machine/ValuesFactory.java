@@ -17,6 +17,20 @@ public class ValuesFactory
     }
 
 
+    public void prepend(SExpr sexpr)
+    {
+        ValuePair pair = new ValuePair(sexpr);
+
+        if (_length == 0) {
+            _last = pair;
+        } else {
+            pair.tail = _first;
+        }
+        _first = pair;
+        _length++;
+    }
+
+
     public void append(SExpr sexpr)
     {
         ValuePair pair = new ValuePair(sexpr);
