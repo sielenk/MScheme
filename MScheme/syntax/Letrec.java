@@ -73,11 +73,11 @@ final class Letrec
 
         Code[] compiledBody = body.getCodeArray(bodyCompilationEnv);
 
-	Code[] compiledLetrec
+        Code[] compiledLetrec
             = new Code[numberOfFormals + compiledBody.length];
 
         // prepend the initialisations to the body
-	int index = 0;
+        int index = 0;
         while (!formals.isEmpty())
         {
             Symbol formal = formals.getHead().toSymbol();
@@ -93,22 +93,22 @@ final class Letrec
             inits   = inits  .getTail();
         }
 
-	System.arraycopy(
-		compiledBody,
-		0,
-		compiledLetrec,
-		index,
-		compiledBody.length
-	);
-
-        return Application.create(
-            CodeList.create(
-                CompiledLambda.create(
-                    Arity.exactly(0),
-                    bodyCompilationEnv,
-                    compiledLetrec
-                )
-            )
+        System.arraycopy(
+            compiledBody,
+            0,
+            compiledLetrec,
+            index,
+            compiledBody.length
         );
+
+        Code[] application = new Code[1];
+        
+        application[0] = CompiledLambda.create( 
+            Arity.exactly(0),  
+            bodyCompilationEnv,
+            compiledLetrec
+        );
+
+        return Application.create(application);
     }
 }

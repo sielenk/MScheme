@@ -59,10 +59,10 @@ public class DynamicWindFunction
     private static Code createCall(Value v)
     throws FunctionExpected
     {
-        return Application.create(
-                   CodeList.create(
-                       v.toFunction().getLiteral()
-                   )
-               );
+        Code[] application = new Code[1];
+        
+        application[0] = v.toFunction().getLiteral();
+        
+        return Application.create(application);
     }
 }

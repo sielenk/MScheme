@@ -67,15 +67,15 @@ final class LetStar
             // special handling because the helper won't
             // create a new environment in this case
 
-            return Application.create(
-                       CodeList.create(
-                           CompiledLambda.create(
-                               Arity.exactly(0),
-                               compilationEnv.newChild(),
-                               body
-                           )
-                       )
-                   );
+            Code[] application = new Code[1];
+            
+            application[0] = CompiledLambda.create(
+                Arity.exactly(0),
+                compilationEnv.newChild(),
+                body
+            );
+
+            return Application.create(application);
         }
         else
         {
@@ -131,12 +131,12 @@ final class LetStarHelper
                               innerBody
                           );
 
-            return Application.create(
-                       CodeList.create(
-                           lambda,
-                           init.getCode(outerEnvironment)
-                       )
-                   );
+            Code[] application = new Code[2];
+
+            application[0] = lambda;
+            application[1] = init.getCode(outerEnvironment);
+            
+            return Application.create(application);
         }
     }
 }
