@@ -44,7 +44,7 @@ final class Define
                 compilationEnv.define(symbol),
                 Lambda.INSTANCE.translate(
                     compilationEnv,
-                    ValueFactory.prepend(
+                    List.prepend(
                         formals,
                         body
                     )
