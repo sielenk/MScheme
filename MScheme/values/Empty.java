@@ -104,11 +104,6 @@ public final class Empty
         throw new CantCompileException(this);
     }
 
-    public CodeList getCodeList(StaticEnvironment compilationEnv)
-    {
-        return CodeList.create();
-    }
-
     public Code[] getCodeArray(StaticEnvironment compilationEnv)
     {
 	return new Code[0];
