@@ -175,6 +175,13 @@ Init.java: bootstrap.scm rep.scm
 main: all $(OBJ)
 	$(GCJ) -ggdb --main=MScheme.Main -o main $(OBJ)
 
+depend: $(SRC:.java=.d)
+	cat $^ > .deps
+
+.deps:
+	echo "do a 'make depend' to update .deps"
+	touch .deps
+
 clean:
 	rm -f $(OBJ)
 
@@ -190,4 +197,4 @@ doc:
 
 .PHONY: doc clean all indent
 
-include $(SRC:.java=.d)
+include .deps
