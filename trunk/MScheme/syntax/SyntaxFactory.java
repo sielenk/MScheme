@@ -31,7 +31,17 @@ public abstract class SyntaxFactory
 
     public static Syntax getBeginToken()
     {
-        return Begin.INSTANCE;
+        return Begin.INSTANCE_BEGIN;
+    }
+
+    public static Syntax getAndToken()
+    {
+        return Begin.INSTANCE_AND;
+    }
+
+    public static Syntax getOrToken()
+    {
+        return Begin.INSTANCE_OR;
     }
 
     public static Syntax getSetToken()

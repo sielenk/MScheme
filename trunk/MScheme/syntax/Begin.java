@@ -35,17 +35,22 @@ import MScheme.values.List;
 
 
 final class Begin
-    extends CheckedSyntax
+    extends    CheckedSyntax
+    implements SequenceTags
 {
     public final static String id
         = "$Id$";
 
+    private final int _tag;
 
-    final static Syntax INSTANCE = new Begin();
+    final static Syntax INSTANCE_BEGIN = new Begin(TAG_BEGIN);
+    final static Syntax INSTANCE_AND   = new Begin(TAG_AND  );
+    final static Syntax INSTANCE_OR    = new Begin(TAG_OR   );
 
-    private Begin()
+    private Begin(int tag)
     {
-        super(Arity.atLeast(1));
+        super(Arity.atLeast((tag == TAG_BEGIN) ? 1 : 0));
+        _tag = tag;
     }
 
     protected Code checkedTranslate(
@@ -54,6 +59,7 @@ final class Begin
     ) throws SchemeException
     {
         return Sequence.create(
+            _tag,
             arguments.getCodeArray(compilationEnv)
         );
     }
