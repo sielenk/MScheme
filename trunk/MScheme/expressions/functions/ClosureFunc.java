@@ -7,10 +7,8 @@ import MScheme.expressions.SBool;
 import MScheme.machine.Values;
 import MScheme.machine.ContinuationStack;
 
-
 import MScheme.environment.Environment;
 import MScheme.environment.EnvironmentStub;
-import MScheme.environment.EnvironmentFactory;
 
 
 public class ClosureFunc extends Function
