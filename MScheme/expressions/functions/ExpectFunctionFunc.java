@@ -1,9 +1,7 @@
 package MScheme.expressions.functions;
 
 import MScheme.expressions.SExpr;
-import MScheme.expressions.SSymbol;
-import MScheme.expressions.SPair;
-import MScheme.expressions.SVector;
+import MScheme.expressions.SValues;
 
 import MScheme.exceptions.SExpectedFunctionException;
 import MScheme.machine.ContinuationStack;
@@ -11,10 +9,10 @@ import MScheme.environment.Environment;
 
 public class ExpectFunctionFunc extends Function
 {
-    private SExpr _arguments;
+    private SValues _arguments;
     
     public ExpectFunctionFunc(
-	SExpr arguments
+	SValues arguments
     ) {
 	_arguments = arguments;
     }
@@ -24,10 +22,10 @@ public class ExpectFunctionFunc extends Function
 	Environment       environment,
 	SExpr             sexpr
     ) throws SExpectedFunctionException {
-	if (sexpr instanceof Function) {
+	try {
 	    stack.push((Function)sexpr);
 	    return _arguments;
-	} else {
+	} catch (ClassCastException e) {
 	    throw new SExpectedFunctionException(sexpr);
 	}
     }
