@@ -97,9 +97,8 @@ public final class Sequence
     public Code force()
         throws SymbolNotFoundException, UnexpectedSyntax
     {
-        return create(
-            CodeArray.force(_sequence)
-        );
+        CodeArray.force(_sequence);
+        return this;
     }
 
     public String toString()

@@ -37,9 +37,9 @@ public final class Selection
         = "$Id$";
 
 
-    private final Code _test;
-    private final Code _onTrue;
-    private final Code _onFalse;
+    private Code _test;
+    private Code _onTrue;
+    private Code _onFalse;
 
     private Selection(
         Code test,
@@ -90,11 +90,10 @@ public final class Selection
     public Code force()
         throws SymbolNotFoundException, UnexpectedSyntax
     {
-        return create(
-            _test   .force(),
-            _onTrue .force(),
-            _onFalse.force()
-        );
+        _test    = _test   .force();
+        _onTrue  = _onTrue .force();
+        _onFalse = _onFalse.force();
+        return this;
     }
 
     public String toString()
