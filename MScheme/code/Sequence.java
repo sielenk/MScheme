@@ -26,8 +26,6 @@ import MScheme.Code;
 import MScheme.machine.Continuation;
 import MScheme.machine.Registers;
 
-import MScheme.environment.StaticEnvironment;
-
 import MScheme.exceptions.SymbolNotFoundException;   
 import MScheme.exceptions.UnexpectedSyntax;
 
@@ -96,11 +94,11 @@ public final class Sequence
         return _sequence[_index];
     }
 
-    public Code force(StaticEnvironment global)
+    public Code force()
         throws SymbolNotFoundException, UnexpectedSyntax
     {
         return create(
-            CodeArray.force(_sequence, global)
+            CodeArray.force(_sequence)
         );
     }
 

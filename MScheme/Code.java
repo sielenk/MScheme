@@ -22,8 +22,6 @@ package MScheme;
 
 import MScheme.machine.Registers;
 
-import MScheme.environment.StaticEnvironment;
-
 import MScheme.exceptions.SchemeException;
 import MScheme.exceptions.SymbolNotFoundException;
 import MScheme.exceptions.UnexpectedSyntax;
@@ -65,6 +63,6 @@ public interface Code
      * Unbound Symbols are automatically created but not
      * initialized in the given global environment.
      */
-    Code force(StaticEnvironment global)
+    Code force()
         throws SymbolNotFoundException, UnexpectedSyntax;
 }

@@ -65,14 +65,14 @@ class CodeArray
         return buffer.toString(); 
     }
 
-    static Code[] force(Code[] array, StaticEnvironment global)
+    static Code[] force(Code[] array)
         throws SymbolNotFoundException, UnexpectedSyntax
     {
         Code[] result = new Code[array.length];
 
         for (int i = 0; i < array.length; ++i)
         {
-            result[i] = array[i].force(global);
+            result[i] = array[i].force();
         }
 
         return result;
