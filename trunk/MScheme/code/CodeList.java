@@ -14,12 +14,8 @@ public abstract class CodeList
     protected CodeList()
     { }
 
+
     // static creation functions
-
-
-
-
-
 
     public static CodeList prepend(
         Code     head,
@@ -86,6 +82,7 @@ public abstract class CodeList
 
         return buffer.toString();
     }
+
 
     // abstract interface
 
@@ -171,6 +168,7 @@ final class CodeListEmpty
     {
         return _instance;
     }
+
 
     // implementation of CodeList
 

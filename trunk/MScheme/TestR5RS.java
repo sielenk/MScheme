@@ -135,11 +135,8 @@ public class TestR5RS
         { }
     }
 
+
     /// 4.1.3 Procedure calls
-
-
-
-
 
     public void test4_1_3()
     throws SchemeException
@@ -156,11 +153,8 @@ public class TestR5RS
         { }
     }
 
+
     /// 4.1.4 Procedures
-
-
-
-
 
     public void test4_1_4()
     throws SchemeException
@@ -193,7 +187,9 @@ public class TestR5RS
         check("((lambda (x y .z) z) 3 4 5 6)", "(5 6)");
     }
 
+
     /// 4.1.5 Conditionals
+
     public void test4_1_5()
     throws SchemeException
     {
@@ -206,7 +202,9 @@ public class TestR5RS
              );
     }
 
+
     /// 4.1.6 Assignments
+
     public void test4_1_6()
     throws SchemeException
     {
@@ -220,6 +218,7 @@ public class TestR5RS
     // 4.2 Derived expression types
 
     /// 4.2.1 Conditionals
+
     public void no_test4_2_1()
     throws SchemeException
     {
@@ -241,7 +240,9 @@ public class TestR5RS
         );
     }
 
+
     /// 4.2.2 Binding constructs
+
     public void test4_2_2_let()
     throws SchemeException
     {
@@ -335,7 +336,9 @@ public class TestR5RS
         check("(let ((x 1)) (begin     (define x 2)) x)", "2");
     }
 
+
     /// 4.2.3 Sequencing
+
     public void test4_2_3()
     throws SchemeException
     {
@@ -347,7 +350,9 @@ public class TestR5RS
         );
     }
 
+
     /// 4.2.4 Iteration
+
     public void test4_2_4_named_let()
     throws SchemeException
     {
@@ -358,9 +363,11 @@ public class TestR5RS
         );
     }
 
+
     /// 4.2.5 Delayed evaluation
 
     /// 4.2.6 Quasiquotation
+
     public void notest4_2_6()
     throws SchemeException
     {
@@ -387,7 +394,9 @@ public class TestR5RS
         );
     }
 
+
     /// 5.2 Definitions
+
     public void test5_2()
     throws SchemeException
     {
@@ -413,7 +422,9 @@ public class TestR5RS
         );
     }
 
+
     /// 5.3 Syntax definitions
+
     public void test5_3()
     throws SchemeException
     {
@@ -430,7 +441,9 @@ public class TestR5RS
         );
     }
 
+
     /// 6.1 Equivalence predicates
+
     public void test6_1()
     throws SchemeException
     {
@@ -451,6 +464,7 @@ public class TestR5RS
     // 6.3.1 Booleans
 
     /// 6.3.2 Pairs and lists
+
     public void test6_3_2()
     throws SchemeException
     {
@@ -480,11 +494,6 @@ public class TestR5RS
         { }
 
         // cdr
-
-
-
-
-
         check("(cdr '((a) b c d))", "(b c d)");
         check("(cdr '(1 . 2))", "2");
         try
@@ -496,11 +505,6 @@ public class TestR5RS
         { }
 
         // set-car!
-
-
-
-
-
         eval("(define (f) (list 'not-a-constant-list))");
         eval("(define (g) '(constant-list))");
         eval("(set-car! (f) 3)");
@@ -513,11 +517,6 @@ public class TestR5RS
         { }
 
         // set-cdr!
-
-
-
-
-
         eval("(set-cdr! (f) 3)");
         try
         {
@@ -528,11 +527,6 @@ public class TestR5RS
         { }
 
         // list?
-
-
-
-
-
         check("(list? '(a b c))", "#t");
         check("(list? '())", "#t");
         check("(list? '(a . b))", "#f");
@@ -577,7 +571,9 @@ public class TestR5RS
         check("(assq 'b '((a . 1) (b . 2)))", "(b . 2)");
     }
 
+
     /// 6.3.3 Symbols
+
     public void test6_3_3()
     throws SchemeException
     {
@@ -598,6 +594,7 @@ public class TestR5RS
 
 
     /// 6.3.5 Strings
+
     public void test6_3_5()
     throws SchemeException
     {
@@ -623,11 +620,8 @@ public class TestR5RS
         { }
     }
 
+
     /// 6.3.6 Vectors
-
-
-
-
 
     public void test6_3_6()
     throws SchemeException
@@ -642,6 +636,7 @@ public class TestR5RS
 
 
     /// 6.4 Control features
+
     public void test6_4_procedureq()
     throws SchemeException
     {
@@ -741,6 +736,7 @@ public class TestR5RS
 
 
     /// 6.5 Eval
+
     public void test6_5()
     throws SchemeException
     {
