@@ -1,5 +1,8 @@
 package MScheme.values;
 
+import java.io.Writer;
+import java.io.IOException;
+
 import MScheme.machine.Machine;
 import MScheme.environment.StaticEnvironment;
 import MScheme.code.*;
@@ -8,12 +11,12 @@ import MScheme.exceptions.*;
 
 
 public final class Pair
-    extends List
+    extends    Compound
+    implements List
 {
     private Value   _first;
     private Value   _second;
-    private boolean _isConst = false;
-  
+
 
     private Pair(Value first, Value second)
     {
@@ -25,18 +28,72 @@ public final class Pair
     { return new Pair(first, second); }
 
 
-    public Value setConst()
-    { _isConst = true; return this; }
-
-
     // implementation of List
     
     public boolean isList()
     { return _second.isList(); }
-    
-    
+
+    public Value toValue()
+    { return this; }
+
     // specialisation/implementation of Value
     
+    private void put(Writer destination, boolean doDisplay)
+        throws IOException
+    {
+        boolean first   = true;
+        Value   current = this;
+        
+        destination.write('(');
+        
+        try {
+            while (current.isPair()) {
+                Pair pair = current.toPair();
+        
+                if (first) {
+                    first = false;
+                } else {
+                    destination.write(' ');
+                }
+            
+                if (doDisplay) {
+                    pair.getFirst().display(destination);
+                } else {
+                    pair.getFirst().write(destination);
+                }
+                current = pair.getSecond();
+            }
+        }
+        catch (PairExpected e) {
+            throw new RuntimeException(
+                "unexpected PairExpected"
+            );
+        }
+        
+        if (!current.isList()) {
+            destination.write(" . ");
+            if (doDisplay) {
+                current.display(destination);
+            } else {
+                current.write(destination);
+            }
+        }
+        
+        destination.write(')');
+    }
+
+    public void write(Writer destination)
+        throws IOException
+    { put(destination, false); }
+
+    public void display(Writer destination)
+        throws IOException
+    { put(destination, true); }
+
+
+    public final List toList()
+    { return this; }
+
     public boolean isPair()
     { return true; }
     
@@ -79,10 +136,7 @@ public final class Pair
     public void setFirst(Value first)
         throws ImmutableException
     {
-        if (_isConst) {
-            throw new ImmutableException(this);
-        }
-
+        modify();
         _first = first;
     }
     
@@ -92,10 +146,7 @@ public final class Pair
     public void setSecond(Value second)
         throws ImmutableException
     {
-        if (_isConst) {
-            throw new ImmutableException(this);
-        }
-
+        modify();
         _second = second;
     }
     
@@ -114,6 +165,18 @@ public final class Pair
             ++result;
         }
         return current.isList() ? result : -1;
+    }
+
+    public int getLength()
+        throws ListExpected
+    {
+        int result = safeGetLength();
+
+        if (result < 0) {
+            throw new ListExpected(this);
+        } else {
+            return result;
+        }
     }
     
     public Value getHead()

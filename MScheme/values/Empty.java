@@ -1,24 +1,42 @@
 package MScheme.values;
 
+import java.io.Writer;
+import java.io.IOException;
+
 import MScheme.environment.StaticEnvironment;
 import MScheme.values.Value;
 import MScheme.code.*;
 import MScheme.exceptions.*;
 
 
-final class Empty
-    extends List
+public final class Empty
+    extends    Value
+    implements List
 {
-    Empty() { }
+    private final static Empty INSTANCE = new Empty();
+
+    private Empty() { }
+    
+    public static Empty create()
+    { return INSTANCE; }
 
     // implementation of List
     
     public boolean isList()
     { return true; }
 
+    public Value toValue()
+    { return this; }
 
     // specialisation of Value
     
+    public void write(Writer destination)
+        throws IOException
+    { destination.write("()"); }
+
+    public List toList()
+    { return this; }
+
     public boolean isEmpty()
     { return true; }
     
@@ -34,6 +52,9 @@ final class Empty
     public int safeGetLength()
     { return 0; }
     
+    public int getLength()
+    { return 0; }
+    
     public Value getHead()
         throws PairExpected
     { throw new PairExpected(this);  }
@@ -45,4 +66,3 @@ final class Empty
     public List getReversed()
     { return this; }
 }
-

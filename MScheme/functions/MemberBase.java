@@ -21,7 +21,7 @@ abstract class MemberBase
 
         while (!tail.isEmpty()) {
             if (equal(key, tail.getHead())) {
-                return tail;
+                return tail.toValue();
             }
 
             tail = tail.getTail();

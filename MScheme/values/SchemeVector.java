@@ -150,9 +150,9 @@ public final class SchemeVector
 
     public List getList()
     {
-        List result = List.with();
+        List result = Empty.create();
         for (int i = getLength() - 1; i >= 0; i--) {
-            result = List.prepend(_data[i], result);
+            result = ValueFactory.prepend(_data[i], result);
         }
         return result;
     }

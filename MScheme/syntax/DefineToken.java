@@ -4,6 +4,7 @@ import MScheme.code.Code;
 import MScheme.code.CompiledAssignment;
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Reference;
+import MScheme.values.ValueFactory;
 import MScheme.values.Value;
 import MScheme.values.List;
 import MScheme.values.Pair;
@@ -33,13 +34,13 @@ final class DefineToken
             // -> (define f (lambda (x y) (+ x y)))
             Symbol symbol  = arguments.getHead().toPair().getFirst ().toSymbol();
             Value  formals = arguments.getHead().toPair().getSecond();
-            Value  body    = arguments.getTail();
+            List   body    = arguments.getTail();
 
             return new CompiledAssignment(
                 getReference(syntax, symbol),
                 LambdaToken.INSTANCE.translate(
                     syntax,
-                    Pair.create(
+                    ValueFactory.prepend(
                         formals,
                         body
                     )

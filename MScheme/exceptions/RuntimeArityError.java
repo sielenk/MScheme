@@ -11,7 +11,7 @@ public class RuntimeArityError
     
     public RuntimeArityError(List arguments, Arity expected)
     {
-        super(arguments);
+        super(arguments.toValue());
         _expected = expected;
     }
 }
