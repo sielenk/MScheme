@@ -48,7 +48,7 @@ public class TestValue
             extends junit.framework.TestCase
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     public TestValue(String name)
@@ -57,8 +57,8 @@ public class TestValue
     }
 
     protected void setUp()
-    throws Exception
-        { }
+        throws Exception
+    { }
 
     protected void tearDown()
     { }
@@ -116,7 +116,7 @@ public class TestValue
 
 
     public void testFalse()
-    throws Exception
+        throws Exception
     {
         final Value False = ScmBoolean.createFalse();
 
@@ -129,7 +129,7 @@ public class TestValue
     }
 
     public void testTrue()
-    throws Exception
+        throws Exception
     {
         final Value True  = ScmBoolean.createTrue();
 
@@ -142,13 +142,13 @@ public class TestValue
     }
 
     public void testEmpty()
-    throws Exception
+        throws Exception
     {
         final Value empty = Empty.create();
 
         assertTrue(empty.isTrue());
 
-        assertTrue(countTypes(empty) == 2);
+        assertTrue(countTypes(empty) == 2); // List and Empty
         assertTrue(countCasts(empty) == 1);
 
         assertTrue(empty.isEmpty());
@@ -158,12 +158,12 @@ public class TestValue
     }
 
     public void testPair()
-    throws Exception
+        throws Exception
     {
         final Value pair = ListFactory.createPair(
-                               ScmBoolean.createTrue(),
-                               ScmBoolean.createTrue()
-                           );
+            ScmBoolean.createTrue(),
+            ScmBoolean.createTrue()
+        );
 
         commonTests(pair);
         assertTrue(pair.isPair());
@@ -174,12 +174,12 @@ public class TestValue
     throws Exception
     {
         final Value list = ListFactory.create(
-                               ScmBoolean.createTrue()
-                           );
+            ScmBoolean.createTrue()
+        );
 
         assertTrue(list.isTrue());
 
-        assertTrue(countTypes(list) == 2);
+        assertTrue(countTypes(list) == 2); // List and Pair
         assertTrue(countCasts(list) == 2);
 
         assertTrue(list.isPair());
@@ -210,7 +210,7 @@ public class TestValue
     }
 
     public void testNumber()
-    throws Exception
+        throws Exception
     {
         final Value number = ScmNumber.create(49875);
 
@@ -220,7 +220,7 @@ public class TestValue
     }
 
     public void testChar()
-    throws Exception
+        throws Exception
     {
         final Value character = ScmChar.create('a');
 
@@ -230,7 +230,7 @@ public class TestValue
     }
 
     public void testString()
-    throws Exception
+        throws Exception
     {
         final Value string = ScmString.create("Hallo !");
 
@@ -240,7 +240,7 @@ public class TestValue
     }
 
     public void testVector()
-    throws Exception
+        throws Exception
     {
         final Value vector = ScmVector.create();
 
@@ -250,7 +250,7 @@ public class TestValue
     }
 
     public void testOutputPort()
-    throws Exception
+        throws Exception
     {
         final Value port = OutputPort.create(new StringWriter());
 
@@ -260,7 +260,7 @@ public class TestValue
     }
 
     public void testInputPort()
-    throws Exception
+        throws Exception
     {
         final Value port = InputPort.create(new StringReader(""));
 
@@ -270,7 +270,7 @@ public class TestValue
     }
 
     public void testEnvironment()
-    throws Exception
+        throws Exception
     {
         final Value environment = Environment.getEmpty();
 
@@ -283,7 +283,7 @@ public class TestValue
     }
 
     public void testStaticEnvironment()
-    throws Exception
+        throws Exception
     {
         final Value environment = Environment.getEmpty().getStatic();
 
@@ -338,7 +338,7 @@ public class TestValue
     }
 
     public void testEq()
-    throws Exception
+        throws Exception
     {
         Value u = Symbol.create("u");
         Value v = Symbol.create("v");
