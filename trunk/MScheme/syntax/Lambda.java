@@ -82,7 +82,7 @@ final class Lambda
         StaticEnvironment
         bodyCompilationEnv = compilationEnv.newChild(formals);
 
-        return new CompiledLambda(
+        return CompiledLambda.create(
                    arity,
                    bodyCompilationEnv,
                    body
