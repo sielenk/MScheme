@@ -168,10 +168,16 @@ depend:
 clean:
 	rm -f $(OBJ)
 
+indent:
+	for i in `find . -name "*.java"`; do		\
+		echo $$i;				\
+		astyle -j -s -b --convert-tabs $$i;	\
+	done
+
 doc:
 	if [ \! -e doc ]; then mkdir doc; fi
 	javadoc -private -d doc $(PACKAGES)
 
-.PHONY: doc clean all
+.PHONY: doc clean all indent
 
 include depend
