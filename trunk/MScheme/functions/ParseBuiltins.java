@@ -6,7 +6,8 @@ import java.util.Vector;
 import java.io.*;
 
 import MScheme.Value;
-import MScheme.values.List;
+import MScheme.List;
+
 import MScheme.values.Function;
 
 
@@ -251,6 +252,7 @@ public class ParseBuiltins
             "import MScheme.util.Arity;\n" +
             "\n" +
             "import MScheme.Value;\n" +
+            "import MScheme.List;\n" +
             "import MScheme.Code;\n\n" +
             "import MScheme.values.*;\n" +
             "import MScheme.machine.Registers;\n\n" +

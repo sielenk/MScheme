@@ -6,7 +6,7 @@ import MScheme.Syntax;
 
 import MScheme.util.Arity;
 import MScheme.environment.StaticEnvironment;
-import MScheme.values.List;
+import MScheme.List;
 
 import MScheme.exceptions.TypeError;
 

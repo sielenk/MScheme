@@ -2,6 +2,7 @@ package MScheme.functions;
 
 import MScheme.util.Arity;
 import MScheme.Value;
+import MScheme.List;
 import MScheme.machine.Machine;
 import MScheme.environment.Environment;
 import MScheme.values.*;

@@ -2,7 +2,7 @@ package MScheme.functions;
 
 import MScheme.Value;
 import MScheme.values.ScmBoolean;
-import MScheme.values.List;
+import MScheme.List;
 
 import MScheme.exceptions.ListExpected;
 
