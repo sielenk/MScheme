@@ -23,6 +23,7 @@ class EofValue
     public final static String id
         = "$Id$";
 
+
     public final static EofValue INSTANCE = new EofValue();
     
     private EofValue() { }
@@ -38,6 +39,7 @@ public class InputPort
 {
     public final static String id
         = "$Id$";
+
 
     public final static int   EOF       = -1;
     public final static Value EOF_VALUE = EofValue.INSTANCE;
@@ -210,13 +212,13 @@ public class InputPort
         }
     }
     
-    private ScmVector parseVector(int index)
+    private Value[] parseVector(int index)
         throws IOException, ParseException
     {
         int la = skipWSread();
     
         if (la == ')') {
-            return ScmVector.create(index);
+            return new Value[index];
         } else if (la == EOF) {
             throw new ParseException(
                 this,
@@ -225,24 +227,10 @@ public class InputPort
         } else {
             _reader.unread(la);
 
-            Value     head   = parseDatum();
-            ScmVector result = parseVector(index + 1);
+            Value   head   = parseDatum();
+            Value[] result = parseVector(index + 1);
 
-            try {
-                result.set(index, head);
-            }
-            catch (InvalidVectorIndexException e) {
-                throw new RuntimeException(
-                    "unexpected InvalidVectorIndexException in "
-                    + "InputPort.parseVector"
-                );
-            }
-            catch (ImmutableException e) {
-                throw new RuntimeException(
-                    "unexpected ImmutableException in "
-                    + "InputPort.parseVector"
-                );
-            }
+            result[index] = head;
 
             return result;
         }
@@ -424,7 +412,7 @@ public class InputPort
                 return parseChar();
 
             case '(':
-                return parseVector(0);
+                return ScmVector.create(parseVector(0));
 
             default:
                 throw new ParseException(
