@@ -172,7 +172,7 @@ public class TestMachine
     
         assert(
             machine.evaluate(
-                ValueFactory.prepend(
+                List.prepend(
                     Symbol.create("if"),
                     ValueFactory.createList(
                         ScmBoolean.createTrue(),
@@ -185,7 +185,7 @@ public class TestMachine
 
         assert(
             machine.evaluate(
-                ValueFactory.prepend(
+                List.prepend(
                     Symbol.create("if"),
                     ValueFactory.createList(
                         ScmBoolean.createTrue(),
@@ -197,7 +197,7 @@ public class TestMachine
 
         assert(
             machine.evaluate(
-                ValueFactory.prepend(
+                List.prepend(
                     Symbol.create("if"),
                     ValueFactory.createList(
                         ScmBoolean.createFalse(),
