@@ -241,7 +241,7 @@ public class TestR5RS
 
     /// 4.2.1 Conditionals
 
-    public void no_test4_2_1()
+    public void no_test4_2_1_cond()
         throws SchemeException
     {
         check(
@@ -259,6 +259,48 @@ public class TestR5RS
             "(cond ((assv 'b '((a 1) (b 2))) => cadr)\n" +
             "      (else #f))",
             "2"
+        );
+    }
+
+    public void test4_2_1_and()
+        throws SchemeException
+    {
+        check(
+            "(and (= 2 2) (> 2 1))",
+            "#t"
+        );
+        check(
+            "(and (= 2 2) (< 2 1))",
+            "#f"
+        );
+        check(
+            "(and 1 2 'c 'f '(f g))",
+            "(f g)"
+        );
+        check(
+            "(and)",
+            "#t"
+        );
+    }
+
+    public void test4_2_1_or()
+        throws SchemeException
+    {
+        check(
+            "(or (= 2 2) (> 2 1))",
+            "#t"
+        );
+        check(
+            "(or (= 2 2) (< 2 1))",
+            "#t"
+        );
+        check(
+            "(or (memq 'b '(a b c)) (/ 3 0))",
+            "(b c)"
+        );
+        check(
+            "(or)",
+            "#f"
         );
     }
 
