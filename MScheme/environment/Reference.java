@@ -1,7 +1,7 @@
 package MScheme.environment;
 
 import MScheme.machine.Registers;
-import MScheme.code.Code;
+import MScheme.Code;
 import MScheme.values.Symbol;
 
 import MScheme.exceptions.RuntimeError;

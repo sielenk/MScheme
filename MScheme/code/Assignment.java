@@ -1,9 +1,11 @@
 package MScheme.code;
 
+import MScheme.Value;
+import MScheme.Code;
+
 import MScheme.machine.Registers;
 import MScheme.machine.Continuation;
 import MScheme.environment.Reference;
-import MScheme.Value;
 
 
 final public class Assignment

@@ -3,10 +3,11 @@ package MScheme.machine;
 import java.io.Writer;
 import java.io.IOException;
 
-import MScheme.code.Code;
+import MScheme.Value;
+import MScheme.Code;
+
 import MScheme.code.CodeList;
 import MScheme.code.Sequence;
-import MScheme.Value;
 import MScheme.functions.UnaryFunction;
 
 

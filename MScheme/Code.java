@@ -1,4 +1,7 @@
-package MScheme.code;
+package MScheme;
+
+import MScheme.code.CodeList;
+import MScheme.code.Application;
 
 import MScheme.machine.Registers;
 import MScheme.environment.Token;

@@ -1,5 +1,7 @@
 package MScheme.code;
 
+import MScheme.Code;
+
 import MScheme.exceptions.*;
 
 

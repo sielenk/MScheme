@@ -10,7 +10,7 @@ import MScheme.Value;
 import MScheme.values.Symbol;
 import MScheme.values.List;
 
-import MScheme.code.Code;
+import MScheme.Code;
 import MScheme.syntax.Syntax;
 
 import MScheme.exceptions.*;

@@ -4,10 +4,10 @@ import java.io.Writer;
 import java.io.IOException;
 
 import MScheme.Value;
+import MScheme.Code;
 
 import MScheme.util.Arity;
 import MScheme.machine.Registers;
-import MScheme.code.Code;
 
 import MScheme.exceptions.*;
 

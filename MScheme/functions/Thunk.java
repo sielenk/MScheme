@@ -2,7 +2,7 @@ package MScheme.functions;
 
 import MScheme.util.Arity;
 import MScheme.machine.Registers;
-import MScheme.code.Code;
+import MScheme.Code;
 import MScheme.values.List;
 import MScheme.values.Function;
 

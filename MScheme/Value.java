@@ -137,7 +137,7 @@ public abstract class Value
     public final MScheme.machine.Literal getLiteral()
     { return new MScheme.machine.Literal(this); }
     
-    public MScheme.code.Code getCode(StaticEnvironment e)
+    public MScheme.Code getCode(StaticEnvironment e)
         throws CompileError, TypeError
     { return getLiteral(); }
 

@@ -1,6 +1,7 @@
 package MScheme.environment;
 
 import MScheme.Value;
+import MScheme.Code;
 
 import MScheme.environment.*;
 import MScheme.values.*;

@@ -1,9 +1,10 @@
 package MScheme.syntax;
 
-import MScheme.util.Arity;
-import MScheme.code.Code;
-import MScheme.environment.StaticEnvironment;
 import MScheme.Value;
+import MScheme.Code;
+
+import MScheme.util.Arity;
+import MScheme.environment.StaticEnvironment;
 import MScheme.values.List;
 
 import MScheme.exceptions.TypeError;

@@ -1,7 +1,8 @@
 package MScheme.machine;
 
 import MScheme.Value;
-import MScheme.code.Code;
+import MScheme.Code;
+
 import MScheme.environment.Environment;
 
 import MScheme.exceptions.*;

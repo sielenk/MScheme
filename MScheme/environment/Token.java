@@ -1,6 +1,6 @@
 package MScheme.environment;
 
-import MScheme.code.Code;
+import MScheme.Code;
 import MScheme.values.List;
 
 import MScheme.exceptions.TypeError;
