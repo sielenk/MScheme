@@ -33,7 +33,7 @@ import MScheme.exceptions.*;
 
 public final class Empty
     extends ValueDefaultImplementations
-    implements List
+    implements ExtendedList
 {
     public final static String id
         = "$Id$";
@@ -107,5 +107,15 @@ public final class Empty
     public CodeList getCodeList(StaticEnvironment compilationEnv)
     {
         return CodeList.create();
+    }
+
+    public Code[] getCodeArray(StaticEnvironment compilationEnv)
+    {
+	return new Code[0];
+    }
+
+    public Code[] getCodeArray(StaticEnvironment compilationEnv, int index)
+    {
+        return new Code[index];
     }
 }
