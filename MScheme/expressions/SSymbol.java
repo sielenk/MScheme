@@ -4,14 +4,16 @@ package MScheme.expressions;
 public class SSymbol extends SExpr
 {
     private String _symbol;
+    private String _key;
 
     public SSymbol(String symbol)
     {
-        _symbol = symbol.intern();
+        _symbol =  symbol.intern();
+        _key    = _symbol.toLowerCase().intern();
     }
 
-    public String getString()
+    public String getKey()
     {
-        return _symbol;
+        return _key;
     }
 }
