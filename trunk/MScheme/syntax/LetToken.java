@@ -25,13 +25,29 @@ final class LetToken
 
     protected Code checkedTranslate(
         StaticEnvironment environment,
+	    int               len,
         List              arguments
     ) throws CompileError, TypeError
     {
-        // (let ((<var> <init>) ...) <body>)
+        Symbol name;
+        List   bindings;
+        List   body;
 
-        List bindings = arguments.getHead().toList();
-        List body     = arguments.getTail();
+        if (arguments.getHead().isSymbol()) {
+	        if (len < 3) {
+		        arityError(arguments);
+		    }
+	        // named let
+            // (let <var> ((<var> <init>) ...) <body>)
+		    name     = arguments.getHead().toSymbol();
+            bindings = arguments.getTail().getHead().toList();
+            body     = arguments.getTail().getTail();
+	    } else {
+            // (let ((<var> <init>) ...) <body>)
+            name     = null;
+            bindings = arguments.getHead().toList();
+            body     = arguments.getTail();
+	    }
 
         int  count   = 0;
         List formals = Empty.create();
@@ -50,17 +66,33 @@ final class LetToken
             bindings = bindings.getTail();
         }
 
-        StaticEnvironment
-            newEnvironment = environment.newChild(formals);
+        if (name != null) {
+	        formals = ValueFactory.prepend(name, formals);
+		
+		    formals = formals.getReversed();
+		    inits   = inits  .getReversed();
+	    }
+
+        StaticEnvironment innerEnvironment =
+	        environment.newChild(formals);
+
+        CompiledLambda compiledProc =
+	        new CompiledLambda(
+                Arity.exactly(count),
+                innerEnvironment,
+                body
+            );
+
+        if (name != null) {
+	        compiledProc.setSelf(
+		        innerEnvironment.getCodeFor(name)
+			);
+	    }
 
         return new CompiledApplication(
             CodeList.prepend(
-                new CompiledLambda(
-                    Arity.exactly(count),
-                    newEnvironment,
-                    body
-                ),
-                inits.getCodeList(environment)
+		        compiledProc,
+		        inits.getCodeList(environment)
             )
         );
     }
