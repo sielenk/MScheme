@@ -1,7 +1,7 @@
 <project name="MScheme" default="all">
   <property file="${basedir}/build.properties"/>
   <property name="srcdir"      value="${basedir}"     />
-  <property name="classdir"    value="${basedir}"     />
+  <property name="classdir"    value="${basedir}/bin" />
   <property name="docdir"      value="${basedir}/doc" />
   <property name="schemedir"   value="${basedir}/scm" />
   <property name="jarname"     value="mscheme.jar"    />
