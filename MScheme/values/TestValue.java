@@ -43,6 +43,19 @@ public class TestValue
     }
 
 
+    public void testCastFunctions()
+        throws Exception
+    {
+        ValueFactory.createPair(null, null).toPair();
+        ValueFactory.createList().toList();
+        ValueFactory.createNumber(0).toNumber();
+        ValueFactory.createChar('a').toChar();
+        ValueFactory.createString("").toScmString();
+        ValueFactory.createVector().toVector();
+        ValueFactory.createInputPort().toPort().toInput();
+        ValueFactory.createOutputPort().toPort().toOutput();
+    }
+
     public void testTrue()
         throws Exception
     {
@@ -169,7 +182,7 @@ public class TestValue
     public void testChar()
         throws Exception
     {
-        final Value character = ValueFactory.createCharacter('a');
+        final Value character = ValueFactory.createChar('a');
     
         commonLiteralTests(character);
         assert(character.isChar());
@@ -302,8 +315,8 @@ public class TestValue
         
         assert(
             eqHelper(
-                ValueFactory.createCharacter('u'),
-                ValueFactory.createCharacter('u')
+                ValueFactory.createChar('u'),
+                ValueFactory.createChar('u')
             ) >= 2
         );
 
