@@ -102,7 +102,11 @@ public class ParseBuiltins
     {
         StringBuffer buf = new StringBuffer();
 
-        for (int index = 0; index < name.length(); index++)
+        for (
+            int index = name.startsWith("__") ? 2 : 0;
+            index < name.length();
+            ++index
+        )
         {
             char c = name.charAt(index);
 
@@ -199,7 +203,7 @@ public class ParseBuiltins
                 continue;
             }
 
-            final String       schemeName = parseName(field.getName());
+            final String schemeName = parseName(field.getName());
 
             table
             .append("        new BuiltinTableEntry(Builtins.")
