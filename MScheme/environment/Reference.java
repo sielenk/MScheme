@@ -21,30 +21,87 @@ Boston, MA  02111-1307, USA. */
 package MScheme.environment;
 
 import MScheme.Value;
+import MScheme.Code;
 
 import MScheme.machine.Registers;
 import MScheme.machine.Result;
 import MScheme.values.Symbol;
 
+import MScheme.exceptions.AlreadyBound;
 import MScheme.exceptions.RuntimeError;
+import MScheme.exceptions.UnexpectedSyntax;
+import MScheme.exceptions.SymbolNotFoundException;
 
-
-public final class Reference
-            extends Result
+final class DelayedReference
+    extends Reference
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
+
+
+    private final Symbol            _key;
+    private final StaticEnvironment _env;
+
+
+    DelayedReference(Symbol key, StaticEnvironment env)
+    {
+        super(key, -1, -1);
+
+        _key = key;
+        _env = env;
+    }
+
+    protected Value getValue(Registers state)
+        throws RuntimeError
+    {
+        throw new RuntimeError(_key, "delayed reference");
+    }
+
+    public Code force(StaticEnvironment global)
+        throws SymbolNotFoundException, UnexpectedSyntax
+    {
+        try {
+            return _env.getReferenceFor(_key);
+        }
+        catch (SymbolNotFoundException e1)
+        {
+            try {
+                return global.define(_key);
+            }
+            catch (AlreadyBound e2)
+            {
+                throw new RuntimeException(e2.toString());
+            }
+        }
+    }
+}
+
+public class Reference
+    extends Result
+{
+    public final static String id
+        = "$Id$";
 
 
     private final Symbol _symbol;
     private final int    _level;
     private final int    _index;
 
-    Reference(Symbol symbol, int level, int index)
+    protected Reference(Symbol symbol, int level, int index)
     {
         _symbol = symbol;
         _level  = level;
         _index  = index;
+    }
+
+    static Reference create(Symbol key, StaticEnvironment env)
+    {
+        return new DelayedReference(key, env);
+    }
+
+    static Reference create(Symbol key, int level, int index)
+    {
+        return new Reference(key, level, index);
     }
 
     public Symbol getSymbol()
@@ -52,25 +109,34 @@ public final class Reference
         return _symbol;
     }
 
-    int getLevel ()
+    int getLevel()
     {
         return _level;
     }
-    int getIndex ()
+
+    int getIndex()
     {
         return _index;
     }
 
-
     protected Value getValue(Registers state)
-    throws RuntimeError
+        throws RuntimeError
     {
         return state.getEnvironment().lookup(this);
     }
 
+    public Code force(StaticEnvironment global)
+        throws SymbolNotFoundException, UnexpectedSyntax
+    {
+        return this;
+    }
 
     public String toString()
     {
-        return "ptr:<" + _level + ", " + _index + ", " + _symbol + '>';
+        return
+            "ptr:<" + _level 
+            + ", "  + _index
+            + ", "  + _symbol 
+            + '>';
     }
 }
