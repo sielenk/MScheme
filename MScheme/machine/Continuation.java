@@ -3,11 +3,14 @@ package MScheme.machine;
 import java.io.Writer;
 import java.io.IOException;
 
-import MScheme.values.*;
-import MScheme.code.*;
-import MScheme.exceptions.*;
+import java.util.Stack;
+
+import MScheme.environment.DynamicEnvironment;
+import MScheme.code.Code;
+import MScheme.values.Value;
 import MScheme.functions.UnaryFunction;
-import MScheme.environment.*;
+
+import MScheme.exceptions.SchemeException;
 
 
 class ContinuationFunction
@@ -19,53 +22,61 @@ class ContinuationFunction
     { _continuation = continuation; }
 
 
-    private CodeList dynamicWind(
+    private void dynamicWind(
+        Machine      machine,
         Continuation source,
         Continuation destination
     )
     {
-        CodeList     result = CodeList.create();
+        Stack        stack  = new Stack();
         Continuation from   = source;
         Continuation to     = destination;
         
         while (from != to) {
             Continuation newFrom = from;
-            Continuation newTo  = to;
-        
+            Continuation newTo   = to;
+
             if (from.getLevel() >= to.getLevel()) {
                 newFrom = from.getParent();
+                from.leave(machine);
             }
-            
+
             if (to.getLevel() >= from.getLevel()) {
                 newTo = to.getParent();
+                stack.push(to);
             }
-            
+
             from = newFrom;
             to   = newTo;
         }
-        
-        return result;
+
+        while (!stack.isEmpty()) {
+            ((Continuation)stack.pop()).enter(machine);
+        }
     }
 
 
     // implementation of Value
-    
-    public void put(Writer destination, boolean doDisplay)
+
+    public void write(Writer destination)
         throws IOException
     { destination.write("[continuation]"); }
-    
-    
+
+
     // implementation of UnaryFunction
     
     protected Code checkedCall(Machine machine, Value argument)
         throws SchemeException
     {
-        CodeList frames = dynamicWind(
-            machine.getContinuation(),
-            _continuation
-        );
-            
-        return _continuation.invoke(machine, argument);
+        Continuation source      = machine.getContinuation();
+        Continuation destination = _continuation;
+        
+        machine.setContinuation(destination);
+        new ValueContinuation(machine, argument);
+
+        dynamicWind(machine, source, destination);
+
+        return machine.handleResult(null);
     }
 }
 
@@ -96,6 +107,8 @@ abstract class Continuation
     final Continuation getParent()
     { return _capturedContinuation; }
     
+    protected void leave(Machine machine) { }
+    protected void enter(Machine machine) { }
 
     final public Code invoke(Machine machine, Value value)
         throws SchemeException
