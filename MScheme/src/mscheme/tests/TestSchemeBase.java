@@ -56,19 +56,19 @@ public abstract class TestSchemeBase
 
 
     public Object quote(String expression)
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         return Machine.parse(expression);
     }
 
     public Object eval(String expression)
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         return machine.evaluate(expression);
     }
 
     public void check(String in, String out)
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         Object  value   = eval(in);
         boolean success = ValueTraits.equal(value, quote(out));

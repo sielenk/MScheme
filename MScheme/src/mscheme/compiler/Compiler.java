@@ -18,7 +18,7 @@ import mscheme.values.ValueTraits;
 
 /**
  * @author sielenk
- *
+ * 
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
@@ -32,16 +32,13 @@ public class Compiler
     }
 
     public static Object force(Object o)
-        throws CompileError
+            throws CompileError
     {
-    	return
-    		(o instanceof IForceable)
-    		? ((IForceable)o).force()
-    		: o;
+        return (o instanceof IForceable) ? ((IForceable) o).force() : o;
     }
 
     public Object getForceable(Object object)
-    throws SchemeException
+            throws SchemeException, InterruptedException
     {
         if (ValueTraits.isScmVector(object))
         {
@@ -49,7 +46,7 @@ public class Compiler
         }
         else if (object instanceof ICompileable)
         {
-            return ((ICompileable)object).getForceable(_env);
+            return ((ICompileable) object).getForceable(_env);
         }
         else
         {
@@ -59,24 +56,25 @@ public class Compiler
     }
 
     public ITranslator getTranslator(Object object)
-    throws SchemeException
+            throws SchemeException
     {
         if (object instanceof Symbol)
         {
-            Symbol symbol = (Symbol)object;
-            
+            Symbol symbol = (Symbol) object;
+
             ITranslator result = _env.getSyntaxFor(symbol);
-            
+
             if (result != null)
             {
                 return result;
             }
         }
-    
+
         return ProcedureCall.create(object);
     }
 
-    public Object compile(Object compilee) throws SchemeException
+    public Object compile(Object compilee)
+            throws SchemeException, InterruptedException
     {
         return force(getForceable(compilee));
     }

@@ -57,7 +57,7 @@ final class Letrec
     protected Object checkedTranslate(
         StaticEnvironment compilationEnv,
         IList              arguments
-    ) throws SchemeException
+    ) throws SchemeException, InterruptedException
     {
         // (letrec ((<var> <init>) ...) <body>)
 

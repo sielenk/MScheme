@@ -13,35 +13,26 @@ import mscheme.values.functions.UnaryFunction;
 
 /**
  * @author sielenk
- *
+ * 
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class Controller
-	extends UnaryFunction
+        extends UnaryFunction
 {
-	public final static String CVS_ID
-		= "$Id$";
+    public final static String CVS_ID = "$Id$";
 
+    private final StackList.Mark _mark;
 
-	private final StackList.Mark _mark;
+    Controller(StackList.Mark mark)
+    {
+        _mark = mark;
+    }
 
-	Controller(StackList.Mark mark)
-	{
-		_mark = mark;		
-	}
-
-	protected Object checkedCall(
-	    Registers state,
-	    Object    argument)
-	throws SchemeException
-	{
-		return ValueTraits.apply(
-			state,
-			argument,
-			ListFactory.create(
-				new Subcontinuation(
-					_mark.cutSlice(
-						state.getStack()))));
-	}
+    protected Object checkedCall(Registers state, Object argument)
+            throws SchemeException, InterruptedException
+    {
+        return ValueTraits.apply(state, argument, ListFactory
+                .create(new Subcontinuation(_mark.cutSlice(state.getStack()))));
+    }
 }

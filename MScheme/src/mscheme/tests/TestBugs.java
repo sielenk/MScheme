@@ -37,7 +37,7 @@ public class TestBugs
 
 
     public void test_2002_19_03()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         // This failed, because set! didn't use delayed
         // references, MHS 2002-19-03
@@ -55,7 +55,7 @@ public class TestBugs
     }    
 
     public void test_2002_04_09()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         // It is now illegal to internally redefine a symbol.
         try {
@@ -67,7 +67,7 @@ public class TestBugs
     }
 
     public void test_2002_04_15a()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         // Internal definitions are not allowed after the
         // first expression.
@@ -102,7 +102,7 @@ public class TestBugs
     }
 
     public void test_2002_04_15ba()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         // no nested definitions
         try {
@@ -114,7 +114,7 @@ public class TestBugs
     }
 
     public void test_2002_04_15bb()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         // no nested definitions
         try {
@@ -126,7 +126,7 @@ public class TestBugs
     }
 
     public void test_2002_04_15c()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         try {
             eval("(define (f)\n" +
@@ -166,7 +166,7 @@ public class TestBugs
     }
 
     public void test_todo01()
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         try {
             eval("(cons (define a 1) 2)");

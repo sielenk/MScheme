@@ -22,5 +22,5 @@ public interface IInvokeable
 
 	Object invoke(
 		Registers registers,
-		Object    value) throws SchemeException;
+		Object    value) throws SchemeException, InterruptedException;
 }

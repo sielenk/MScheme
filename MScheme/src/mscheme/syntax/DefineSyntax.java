@@ -62,7 +62,7 @@ final class Macro
     public Object translate(
         StaticEnvironment usageEnv,
         IList              arguments
-    ) throws SchemeException
+    ) throws SchemeException, InterruptedException
     {
         // (apply tranformer def_env use_env args)
 
@@ -103,7 +103,7 @@ final class DefineSyntax
     protected Object checkedTranslate(
         StaticEnvironment compilationEnv,
         IList              arguments
-    ) throws SchemeException
+    ) throws SchemeException, InterruptedException
     {
         Symbol symbol = ValueTraits.toSymbol(arguments.getHead());
         Object value  = arguments.getTail().getHead();

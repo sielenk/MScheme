@@ -72,7 +72,7 @@ public class MachineTest
 		_environment = null;
 	}
 	
-	final public void testObjects() throws SchemeException
+	final public void testObjects() throws SchemeException, InterruptedException
 	{
 		assertSame(null, null);
 		assertSame(O1, O1);

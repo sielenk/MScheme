@@ -57,7 +57,7 @@ final class Let
     protected Object checkedTranslate(
         StaticEnvironment compilationEnv,
         IList              arguments
-    ) throws SchemeException
+    ) throws SchemeException, InterruptedException
     {
         Symbol name;
         if (ValueTraits.isSymbol(arguments.getHead()))

@@ -48,7 +48,7 @@ public class ValueTraits
     }
 
     public static Object apply(Registers state, Object function, IList arguments)
-            throws SchemeException
+            throws SchemeException, InterruptedException
     {
         if (function instanceof Method)
         {

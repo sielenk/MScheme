@@ -34,11 +34,11 @@ public abstract class UnaryValueFunction
     protected final Object checkedCall(
 		Registers state,
         Object    fst
-    ) throws SchemeException
+    ) throws SchemeException, InterruptedException
     {
         return checkedCall(fst);
     }
 
 	protected abstract Object checkedCall(Object fst)
-		throws SchemeException;
+		throws SchemeException, InterruptedException;
 }

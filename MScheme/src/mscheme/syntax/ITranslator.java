@@ -42,5 +42,5 @@ public interface ITranslator
     Object translate(
         StaticEnvironment compilationEnv,
         IList              arguments
-    ) throws SchemeException;
+    ) throws SchemeException, InterruptedException;
 }

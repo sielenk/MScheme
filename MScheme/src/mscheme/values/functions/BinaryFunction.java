@@ -43,7 +43,7 @@ public abstract class BinaryFunction
     protected final Object checkedCall(
         Registers state,
         IList      arguments
-    ) throws SchemeException
+    ) throws SchemeException, InterruptedException
     {
         return checkedCall(
                    state,
@@ -56,5 +56,5 @@ public abstract class BinaryFunction
 		Registers state,
         Object    fst,
         Object    snd
-    ) throws SchemeException;
+    ) throws SchemeException, InterruptedException;
 }

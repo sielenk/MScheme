@@ -41,13 +41,13 @@ public abstract class CheckedFunction
     protected abstract Object checkedCall(
 		mscheme.machine.Registers state,
         IList                      args
-    ) throws SchemeException;
+    ) throws SchemeException, InterruptedException;
 
 
     // implementation of Function
 
     public final Object call(Registers state, IList arguments)
-        throws SchemeException
+        throws SchemeException, InterruptedException
     {
         checkArguments(getArity(), arguments);
 

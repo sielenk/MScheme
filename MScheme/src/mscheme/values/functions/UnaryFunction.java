@@ -43,7 +43,7 @@ public abstract class UnaryFunction
     protected final Object checkedCall(
 		mscheme.machine.Registers state,
         IList      arguments
-    ) throws SchemeException
+    ) throws SchemeException, InterruptedException
     {
         return checkedCall(
             state,
@@ -54,5 +54,5 @@ public abstract class UnaryFunction
     protected abstract Object checkedCall(
 		Registers state,
         Object    fst
-    ) throws SchemeException;
+    ) throws SchemeException, InterruptedException;
 }
