@@ -29,7 +29,6 @@ final class Let
 
     protected Code checkedTranslate(
         StaticEnvironment environment,
-	    int               len,
         List              arguments
     ) throws CompileError, TypeError
     {
@@ -38,20 +37,20 @@ final class Let
         List   body;
 
         if (arguments.getHead().isSymbol()) {
-	        if (len < 3) {
-		        arityError(arguments);
-		    }
-	        // named let
+            if (arguments.getLength() < 3) {
+                arityError(arguments);
+            }
+            // named let
             // (let <var> ((<var> <init>) ...) <body>)
-		    name     = arguments.getHead().toSymbol();
+            name     = arguments.getHead().toSymbol();
             bindings = arguments.getTail().getHead().toList();
             body     = arguments.getTail().getTail();
-	    } else {
+        } else {
             // (let ((<var> <init>) ...) <body>)
             name     = null;
             bindings = arguments.getHead().toList();
             body     = arguments.getTail();
-	    }
+        }
 
         int  count   = 0;
         List formals = Empty.create();
@@ -72,42 +71,42 @@ final class Let
         }
 
         if (name != null) {
-	        // for the named let, the usually anonymous
-		    // closure gets a name to be recursively callable.
-		    // to ensure this names uniqueness, it is added to
-		    // the formals list.
-	        formals = ValueFactory.prepend(name, formals);
+            // for the named let, the usually anonymous
+            // closure gets a name to be recursively callable.
+            // to ensure this names uniqueness, it is added to
+            // the formals list.
+            formals = ValueFactory.prepend(name, formals);
 
             // if the closure is anonymous, the order of the
-	        // arguments is irrelevant, if the inits and formals
-		    // match. But if it can be called by the user the
-		    // order has to match the definition order.
-		    // And since the parsing above reverses the lists,
-		    // they have to be reversed again here.
-		    formals = formals.getReversed();
-		    inits   = inits  .getReversed();
-	    }
+            // arguments is irrelevant, if the inits and formals
+            // match. But if it can be called by the user the
+            // order has to match the definition order.
+            // And since the parsing above reverses the lists,
+            // they have to be reversed again here.
+            formals = formals.getReversed();
+            inits   = inits  .getReversed();
+        }
 
         StaticEnvironment innerEnvironment =
-	        environment.newChild(formals);
+            environment.newChild(formals);
 
         CompiledLambda compiledProc =
-	        new CompiledLambda(
+            new CompiledLambda(
                 Arity.exactly(count),
                 innerEnvironment,
                 body
             );
 
         if (name != null) {
-	        compiledProc.setSelf(
-		        innerEnvironment.getCodeFor(name)
-			);
-	    }
+            compiledProc.setSelf(
+                innerEnvironment.getCodeFor(name)
+            );
+        }
 
         return Application.create(
             CodeList.prepend(
-		        compiledProc,
-		        inits.getCodeList(environment)
+                compiledProc,
+                inits.getCodeList(environment)
             )
         );
     }

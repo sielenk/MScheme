@@ -28,7 +28,6 @@ final class Define
 
     protected Code checkedTranslate(
         StaticEnvironment syntax,
-	    int               len,
         List              arguments
     ) throws CompileError, TypeError
     {
@@ -50,7 +49,7 @@ final class Define
                 )
             );
         } else {
-            return super.checkedTranslate(syntax, len, arguments);
+            return super.checkedTranslate(syntax, arguments);
         }
     }
 }

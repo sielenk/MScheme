@@ -28,14 +28,13 @@ final class If
 
     protected Code checkedTranslate(
         StaticEnvironment syntax,
-	    int               len,
         List              arguments
     ) throws CompileError, TypeError
     {
         Value flag    = arguments.getHead();
         Value onTrue  = arguments.getTail().getHead();
         Value onFalse =
-            (len == 2)
+            arguments.getTail().getTail().isEmpty()
             ? ScmBoolean.createFalse()
             : arguments.getTail().getTail().getHead();
 
