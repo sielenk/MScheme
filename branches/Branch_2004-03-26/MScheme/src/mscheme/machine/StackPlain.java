@@ -52,16 +52,12 @@ class StackPlain implements Stack
 
 	public void push(StackFrame frame)
 	{
-		try
-		{
-			_stack[_sp] = frame;
-		}
-		catch (ArrayIndexOutOfBoundsException e)
+		if (_sp == _stack.length)
 		{
 			enlarge();
-			_stack[_sp] = frame;
 		}
-		++_sp;
+
+		_stack[_sp++] = frame;
 	}
 
 
@@ -75,11 +71,12 @@ class StackPlain implements Stack
 
 	private void enlarge()
 	{
-		final int          length   = _stack.length;
+		final int          oldLength   = _stack.length;
+		final int          newLength   = oldLength * 2 + 1;
 		final StackFrame[] oldStack = _stack;
-		final StackFrame[] newStack = new StackFrame[length * 2 + 1];
+		final StackFrame[] newStack = new StackFrame[newLength];
 
-		System.arraycopy(oldStack, 0, newStack,0, length);
+		System.arraycopy(oldStack, 0, newStack,0, oldLength);
 
 		_stack = newStack;
 	}

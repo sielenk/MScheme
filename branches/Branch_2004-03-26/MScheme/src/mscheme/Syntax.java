@@ -20,6 +20,7 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme;
 
+import mscheme.code.Forceable;
 import mscheme.environment.StaticEnvironment;
 
 import mscheme.exceptions.SchemeException;
@@ -39,7 +40,7 @@ public interface Syntax
         = "$Id$";
 
 
-    Object translate(
+    Forceable translate(
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws SchemeException;

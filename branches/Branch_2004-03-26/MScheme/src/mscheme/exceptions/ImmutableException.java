@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.exceptions;
 
-import mscheme.Value;
-
 
 public final class ImmutableException
     extends RuntimeError
@@ -29,7 +27,7 @@ public final class ImmutableException
     public final static String id
         = "$Id$";
 
-    public ImmutableException(Value cause)
+    public ImmutableException(Object cause)
     {
         super(cause, "attempt to modify constant value");
     }

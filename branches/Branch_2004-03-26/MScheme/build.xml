@@ -23,7 +23,7 @@
   <target name="updateInit" depends="init" unless="uptodate.Init">
     <delete file="${srcdir}/mscheme/Init.java"/>
     <exec dir="${schemedir}"
-          executable="${basedir}/mkinit.pl"
+          executable="${srcdir}/mkinit.pl"
           output="${srcdir}/mscheme/Init.java">
       <arg value="bootstrap.scm"/>
       <arg value="rep.scm"/>

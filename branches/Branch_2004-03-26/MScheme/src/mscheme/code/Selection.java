@@ -60,7 +60,7 @@ public final class Selection
         return new Selection(test, onTrue, onFalse);
     }
 
-    public Object force()
+    public Reduceable force()
         throws CompileError
     {
         _test    = Code.force(_test);

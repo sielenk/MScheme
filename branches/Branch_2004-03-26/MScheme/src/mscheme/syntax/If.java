@@ -22,6 +22,8 @@ package mscheme.syntax;
 
 import mscheme.Syntax;
 
+import mscheme.code.Forceable;
+import mscheme.code.Reduceable;
 import mscheme.code.Selection;
 
 import mscheme.environment.StaticEnvironment;
@@ -49,7 +51,7 @@ final class If
     }
 
 
-    protected Object checkedTranslate(
+    protected Forceable checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws SchemeException
@@ -62,8 +64,8 @@ final class If
             : arguments.getTail().getTail().getHead();
 
         return Selection.create(
-			ValueTraits.getCompiled(compilationEnv, flag   ),
-			ValueTraits.getCompiled(compilationEnv, onTrue ),
-			ValueTraits.getCompiled(compilationEnv, onFalse));
+			ValueTraits.getForceable(compilationEnv, flag   ),
+			ValueTraits.getForceable(compilationEnv, onTrue ),
+			ValueTraits.getForceable(compilationEnv, onFalse));
     }
 }

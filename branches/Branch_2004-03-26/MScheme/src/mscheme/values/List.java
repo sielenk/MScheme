@@ -20,8 +20,7 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.values;
 
-import mscheme.Value;
-
+import mscheme.code.Forceable;
 import mscheme.environment.StaticEnvironment;
 
 import mscheme.exceptions.PairExpected;
@@ -29,13 +28,14 @@ import mscheme.exceptions.SchemeException;
 
 
 public interface List
-    extends Value
+    extends Compileable
 {
     /** The CVS id of the file containing this class. */
     String id
         = "$Id$";
 
 
+	boolean isValid();
     boolean isEmpty();
 
     int    getLength  ();
@@ -44,10 +44,10 @@ public interface List
     Object getHead    () throws PairExpected;
     List   getTail    () throws PairExpected;
 
-    Object[] getCompiledArray(StaticEnvironment compilationEnv)
+    Forceable[] getForceableArray(StaticEnvironment compilationEnv)
         throws SchemeException;
 
-    Object[] getCompiledArray(StaticEnvironment compilationEnv, int index)
+    Forceable[] getForceableArray(StaticEnvironment compilationEnv, int index)
         throws SchemeException;
 
 	Object[] getArray(         );

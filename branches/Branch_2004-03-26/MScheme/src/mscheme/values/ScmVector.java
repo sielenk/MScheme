@@ -22,85 +22,53 @@ package mscheme.values;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Arrays;
 
-import mscheme.environment.StaticEnvironment;
-
-import mscheme.exceptions.CantCompileException;
 import mscheme.exceptions.ImmutableException;
 import mscheme.exceptions.InvalidVectorIndexException;
 import mscheme.exceptions.PairExpected;
+import mscheme.exceptions.SchemeException;
 import mscheme.exceptions.VectorException;
 
 
 public final class ScmVector
-    extends Compound
-    implements Outputable
 {
     public final static String id
         = "$Id$";
 
 
-    private final static ScmVector _empty = new ScmVector(false, 0, null);
+    private final static Object[] _empty = new Object[0];
 
-    private final Object[] _data;
-
-    private ScmVector(boolean isConst, Object[] data)
-    {
-        super(isConst);
-        _data = data;
-
-        if (isConst)
-        {
-            for (int i = 0; i < _data.length; ++i)
-            {
-                _data[i] = ValueTraits.getConst(_data[i]);
-            }
-        }
-    }
-
-    private ScmVector(boolean isConst, int size, Object fill)
-    {
-        super(isConst);
-        _data = new Object[size];
-
-        if (isConst)
-        {
-            fill = ValueTraits.getConst(fill);
-        }
-
-        for (int i = 0; i < _data.length; ++i)
-        {
-            _data[i] = fill;
-        }
-    }
-
-
-    public static ScmVector create()
+    public static Object[] create()
     {
         return _empty;
     }
 
-    public static ScmVector create(Object[] data)
+    public static Object[] create(Object[] data)
     {
-        return (data.length == 0) ? _empty : new ScmVector(false, data);
+        return (data.length == 0) ? _empty : data;
     }
 
-    public static ScmVector createConst(Object[] data)
+    public static Object[] create(int size, Object fill)
     {
-        return (data.length == 0) ? _empty : new ScmVector(true, data);
+    	if (size == 0)
+    	{ 
+    		return _empty;
+    	}
+    	else
+    	{
+		    Object[] result= new Object[size];
+		    Arrays.fill(result, fill);
+		    return result;
+		}
     }
 
-    public static ScmVector create(int size, Object fill)
-    {
-        return (size == 0) ? _empty : new ScmVector(false, size, fill);
-    }
-
-    public static ScmVector create(List list)
+    public static Object[] create(List list)
     {
         return createHelper(list, 0);
     }
 
-    private static ScmVector createHelper(List list, int index)
+    private static Object[] createHelper(List list, int index)
     {
         if (list.isEmpty())
         {
@@ -110,12 +78,12 @@ public final class ScmVector
         {
             try
             {
-                ScmVector result = createHelper(
+                Object[] result = createHelper(
                                        list.getTail(),
                                        index + 1
                                    );
 
-                result._data[index] = list.getHead();
+                result[index] = list.getHead();
 
                 return result;
             }
@@ -128,70 +96,63 @@ public final class ScmVector
         }
     }
 
+	public static Object copy(Object[] objects)
+	{
+		if (objects.length == 0)
+		{
+			return _empty;
+		}
+		else
+		{
+			return (Object[])objects.clone();
+		}
+	}
 
-    public int getLength()
+
+    public static int getLength(Object[] data)
     {
-        return _data.length;
+        return data.length;
     }
 
 
-    public Object get(int index)
+    public static Object get(Object[] data, int index)
         throws VectorException
     {
         try
         {
-            return _data[index];
+            return data[index];
         }
         catch (ArrayIndexOutOfBoundsException e)
         {
-            throw new InvalidVectorIndexException(this, index);
+            throw new InvalidVectorIndexException(data, index);
         }
     }
 
-    public void set(int index, Object value)
+    public static void set(Object[] data, int index, Object value)
         throws InvalidVectorIndexException, ImmutableException
     {
-        modify();
-
         try
         {
-            _data[index] = value;
+            data[index] = value;
         }
         catch (ArrayIndexOutOfBoundsException e)
         {
-            throw new InvalidVectorIndexException(this, index);
+            throw new InvalidVectorIndexException(data, index);
         }
     }
 
 
-    // specialisation of Value
-
-    public boolean isScmVector()
-    {
-        return true;
-    }
-
-    public ScmVector toScmVector()
-    {
-        return this;
-    }
-
-    protected Object getConstCopy()
-    {
-        return createConst((Object[])_data.clone());
-    }
-
-    public boolean equal(Object other)
+    public static boolean equals(Object[] data, Object other)
     {
         try
         {
-            ScmVector otherVector = (ScmVector)other;
+            Object[] otherVector = (Object[])other;
 
-            if (_data.length == otherVector._data.length)
+            if (data.length == otherVector.length)
             {
-                for (int i = 0; i < _data.length; i++)
+                for (int i = 0; i < data.length; i++)
                 {
-                    if (!ValueTraits.equal(_data[i], otherVector._data[i]))
+                    if (!ValueTraits.equal(data[i], otherVector[i]))
                     {
                         return false;
                     }
@@ -206,35 +167,32 @@ public final class ScmVector
         return false;
     }
 
-    public void outputOn(Writer destination, boolean doDisplay)
-        throws IOException
+    public static void outputOn(
+    	Object[] data,
+    	Writer destination,
+    	boolean doWrite)
+    throws IOException, SchemeException
     {
         destination.write("#(");
-        for (int i = 0; i < getLength(); i++)
+        for (int i = 0; i < getLength(data); i++)
         {
             if (i > 0)
             {
                 destination.write(' ');
             }
 
-			ValueTraits.output(destination, doDisplay, _data[i]);
+			ValueTraits.output(data[i], destination, doWrite);
         }
         destination.write(')');
     }
 
 
-    public Object getCompiled(StaticEnvironment e)
-        throws CantCompileException
-    {
-        throw new CantCompileException(this);
-    }
-
-    public List getList()
+    public static List getList(Object[] data)
     {
         List result = Empty.create();
-        for (int i = getLength() - 1; i >= 0; i--)
+        for (int i = getLength(data) - 1; i >= 0; i--)
         {
-            result = ListFactory.prepend(_data[i], result);
+            result = ListFactory.prepend(data[i], result);
         }
         return result;
     }

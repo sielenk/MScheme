@@ -20,12 +20,10 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.code;
 
-import mscheme.Code;
-
 import mscheme.exceptions.CompileError;
 
 
-class CodeArray
+final class CodeArray
 {
     public final static String id
         = "$Id$";
@@ -62,12 +60,16 @@ class CodeArray
         return buffer.toString(); 
     }
 
-    static void force(Object[] array)
+    static Reduceable[] force(Forceable[] array)
         throws CompileError
     {
+    	Reduceable[] result = new Reduceable[array.length];
+
         for (int i = 0; i < array.length; ++i)
         {
-            array[i] = Code.force(array[i]);
+            result[i] = array[i].force();
         }
+        
+        return result;
     }
 }

@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.exceptions;
 
-import mscheme.Value;
-
 
 public final class SymbolNotFoundException
     extends CompileError
@@ -29,7 +27,7 @@ public final class SymbolNotFoundException
     public final static String id
         = "$Id$";
 
-    public SymbolNotFoundException(Value cause)
+    public SymbolNotFoundException(String cause)
     {
         super(cause, "symbol not found");
     }

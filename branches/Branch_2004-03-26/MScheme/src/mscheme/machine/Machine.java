@@ -28,8 +28,7 @@ import java.io.Writer;
 
 import mscheme.Code;
 import mscheme.Init;
-import mscheme.Value;
-import mscheme.code.Reduceable;
+import mscheme.code.Application;
 import mscheme.environment.Environment;
 import mscheme.environment.StaticEnvironment;
 import mscheme.exceptions.RuntimeError;
@@ -41,323 +40,251 @@ import mscheme.values.List;
 import mscheme.values.ListFactory;
 import mscheme.values.OutputPort;
 import mscheme.values.ScmNumber;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 import mscheme.values.functions.UnaryValueFunction;
 import mscheme.values.functions.ValueThunk;
 
-
-public final class Machine
-    implements Runnable
+public final class Machine implements Runnable
 {
-    public final static String id
-        = "$Id$";
-
+    public final static String id =
+        "$Id$";
 
     private final Environment _environment;
 
-    private InputPort  _stdin;
+    private InputPort _stdin;
     private OutputPort _stdout;
 
-    private Function   _errorHandler = null;
+    private Function _errorHandler = null;
 
-    private int        _tickerRed = 0;
-	private int        _tickerInv = 0;
-
+    private int _tickerRed = 0;
+    private int _tickerInv = 0;
 
     public Machine()
     {
-        _environment = Environment.getSchemeReportEnvironment();
-        _stdin       = InputPort .create(new InputStreamReader (System.in ));
-        _stdout      = OutputPort.create(new OutputStreamWriter(System.out));
-        init();
-        
-        // I would call this(...) but it kills gcj 3.0.2 ...
+        this(
+            new InputStreamReader(System.in),
+            new OutputStreamWriter(System.out));
     }
 
-    public Machine(
-        Reader stdin,
-        Writer stdout
-    )
+    public Machine(Reader stdin, Writer stdout)
     {
         _environment = Environment.getSchemeReportEnvironment();
-        _stdin       = InputPort .create(stdin );
-        _stdout      = OutputPort.create(stdout);
+        _stdin = InputPort.create(stdin);
+        _stdout = OutputPort.create(stdout);
         init();
     }
 
-    public Machine(
-        Environment environment
-    )
+    public Machine(Environment environment)
     {
         _environment = environment;
-        _stdin       = InputPort .create(new InputStreamReader (System.in ));
-        _stdout      = OutputPort.create(new OutputStreamWriter(System.out));
+        _stdin = InputPort.create(new InputStreamReader(System.in));
+        _stdout = OutputPort.create(new OutputStreamWriter(System.out));
     }
-
 
     private void init()
     {
         try
         {
             _environment.define(
-                Symbol.create("current-input-port"),
+                "current-input-port",
                 new ValueThunk()
-                { protected Object checkedCall() { return _stdin; } }
-            );
+            	{
+	                protected Object checkedCall()
+                	{
+	                    return _stdin;
+                	}
+            	});
 
             _environment.define(
-                Symbol.create("reset-input-port"),
+            	"reset-input-port",
                 new UnaryValueFunction()
+            	{
+	                protected Object checkedCall(Object argument)
+	                	throws TypeError
+               		{
+	                    Object result = _stdin;
+                    	_stdin = (InputPort)argument;
+                    	return result;
+                	}
+            	});
+
+            _environment
+                .define("current-output-port", new ValueThunk()
+            {
+                protected Object checkedCall()
                 {
-                    protected Object checkedCall(Object argument)
-                        throws TypeError
-                    {
-                        Value result = _stdin;
-                        _stdin = (InputPort)argument;
-                        return result;
-                    }
+                    return _stdout;
                 }
-            );
+            });
 
-            _environment.define(
-                Symbol.create("current-output-port"),
-                new ValueThunk()
-                { protected Object checkedCall() { return _stdout; } }
-            );
-
-            _environment.define(
-                Symbol.create("reset-output-port"),
-                new UnaryValueFunction()
+            _environment
+                .define(
+                    "reset-output-port",
+                    new UnaryValueFunction()
+            {
+                protected Object checkedCall(Object argument) throws TypeError
                 {
-                    protected Object checkedCall(Object argument)
-                        throws TypeError
-                    {
-                        Value result = _stdout;
-                        _stdout = (OutputPort)argument;
-                        return result;
-                    }
+                    Object result = _stdout;
+                    _stdout = (OutputPort)argument;
+                    return result;
                 }
-            );
+            });
 
-            _environment.define(
-                Symbol.create("current-error-handler"),
-                new ValueThunk()
+            _environment
+                .define("current-error-handler", new ValueThunk()
+            {
+                protected Object checkedCall()
                 {
-                    protected Object checkedCall()
+                    if (_errorHandler != null)
                     {
-                        if (_errorHandler != null)
-                        {
-                            return _errorHandler;
-                        }
-                        return Boolean.FALSE;
+                        return _errorHandler;
                     }
+                    return Boolean.FALSE;
                 }
-            );
+            });
 
-            _environment.define(
-                Symbol.create("reset-error-handler"),
-                new UnaryValueFunction()
+            _environment
+                .define(
+                    "reset-error-handler",
+                    new UnaryValueFunction()
+            {
+                protected Object checkedCall(Object argument) throws TypeError
                 {
-                    protected Object checkedCall(Object argument)
-                        throws TypeError
-                    {
-                        Object oldErrorHandler = _errorHandler;
+                    Object oldErrorHandler = _errorHandler;
 
-                        _errorHandler =
-                            ValueTraits.isTrue(argument)
+                    _errorHandler =
+                        ValueTraits.isTrue(argument)
                             ? (Function)argument
                             : null;
 
-                        if (oldErrorHandler != null)
-                        {
-                            return oldErrorHandler;
-                        }
-
-                        return Boolean.FALSE;
-                    }
-                }
-            );
-
-            _environment.define(
-                Symbol.create("machine-environment"),
-                _environment
-            );
-
-            _environment.define(
-                Symbol.create("ticker"),
-                new ValueThunk()
-                {
-                    protected Object checkedCall() 
+                    if (oldErrorHandler != null)
                     {
-                        int tRed = _tickerRed;
-						int tInv = _tickerInv;
-                        _tickerRed = _tickerInv = 0;
-                        return ListFactory.create(
-                        	ScmNumber.create(tRed),
-							ScmNumber.create(tInv));
+                        return oldErrorHandler;
                     }
-                }
-            );
 
-            evaluate(
-                InputPort.create(
-                    new StringReader(
-                        Init.bootstrap
-                    )
-                ).read()
-            );
+                    return Boolean.FALSE;
+                }
+            });
+
+            _environment.define(
+                "machine-environment",
+                _environment);
+
+            _environment.define("ticker", new ValueThunk()
+            {
+                protected Object checkedCall()
+                {
+                    int tRed = _tickerRed;
+                    int tInv = _tickerInv;
+                    _tickerRed = _tickerInv = 0;
+                    return ListFactory.create(
+                        ScmNumber.create(tRed),
+                        ScmNumber.create(tInv));
+                }
+            });
+
+            evaluate(InputPort.create(new StringReader(Init.bootstrap)).read());
         }
         catch (SchemeException e)
         {
-            throw new RuntimeException(
-                e.toString()
-            );
+            throw new RuntimeException(e.toString());
         }
     }
 
-    public Object unprotectedRun()
-        throws SchemeException
+    public Object unprotectedRun() throws SchemeException
     {
-        return evaluate(
-            InputPort.create(
-                new StringReader(
-                    Init.rep
-                )
-            ).read()
-        );
+        return evaluate(InputPort.create(new StringReader(Init.rep)).read());
     }
 
     public void run()
     {
-        try {
+        try
+        {
             unprotectedRun();
         }
         catch (Throwable t)
         {
-            System.err.println(
-                t.toString()
-            );
+            System.err.println(t.toString());
         }
     }
-
 
     public Environment getEnvironment()
     {
         return _environment;
     }
 
-
-	public Object execute(
-		Object expression
-	) throws SchemeException
-	{
-		Object    current = expression;
-		Registers state   = new Registers(getEnvironment().getDynamic());
-
-		while (true)
-		{
-			try
-			{
-				if (current instanceof Reduceable)
-				{
-					current = ((Reduceable)current).reduce(state);
-					++_tickerRed;
-				}
-				else
-				{
-					Stack stack = state.getStack();
-	
-					if (!stack.isEmpty())
-					{
-						final StackFrame frame = stack.pop();
-	
-						state.setEnvironment(frame.environment);
-		
-						current = frame.invokeable.invoke(
-							state,
-							current);
-							
-						++_tickerInv;
-					}
-					else
-					{
-						return current;
-					}
-				}
-			}
-			catch (SchemeException error)
-			{
-				if (_errorHandler != null)
-				{
-					List errorValue = 
-						ListFactory.create(
-							error.getCauseValue(),
-							error.getMessageValue(),
-							state.getCurrentContinuation(),
-							Boolean.valueOf(
-								error instanceof RuntimeError));
-
-					// Avoid endless loop if the
-					// handler is buggy:
-					Function handler = _errorHandler;
-					_errorHandler = null;
-
-					current = ValueTraits.apply(
-						state,
-						handler,
-						ListFactory.create(
-							errorValue));
-				}
-				else
-				{
-					throw error;
-				}
-			}
-		}
-	}
-
-
-    public Object compile(
-        Object compilee
-    ) throws SchemeException
+    public Object execute(Object expression) throws SchemeException
     {
-        return compile(
-            getEnvironment().getStatic(),
-            compilee
-        );
+        Registers state =
+            new Registers(getEnvironment().getDynamic(), expression);
+
+        while (!state.isEvaluated())
+        {
+            try
+            {
+                if (state.step())
+                {
+                    ++_tickerRed;
+                }
+                else
+                {
+                    ++_tickerInv;
+                }
+            }
+            catch (SchemeException error)
+            {
+                if (_errorHandler != null)
+                {
+                    List errorValue =
+                        ListFactory.create(
+                            ListFactory.create(
+                                error.getCauseValue(),
+                                error.getMessageValue(),
+                                state.getCurrentContinuation(),
+                                Boolean.valueOf(
+                                    error instanceof RuntimeError)));
+
+                    state.push(Application.createCall(errorValue));
+
+                    // Avoid endless loop if the
+                    // handler is buggy:
+                    state.setExpression(_errorHandler);
+                    _errorHandler = null;
+                }
+                else
+                {
+                    throw error;
+                }
+            }
+        }
+
+        return state.getExpression();
+    }
+
+    public Object compile(Object compilee) throws SchemeException
+    {
+        return compile(getEnvironment().getStatic(), compilee);
     }
 
     public static Object compile(
         StaticEnvironment compilationEnv,
-        Object            compilee
-    ) throws SchemeException
+        Object compilee)
+        throws SchemeException
     {
-        return
-        	Code.force(
-            	ValueTraits.getCompiled(compilationEnv, compilee));
+        return Code.force(ValueTraits.getForceable(compilationEnv, compilee));
     }
 
-    public static Object parse(
-        String expression
-    ) throws SchemeException
+    public static Object parse(String expression) throws SchemeException
     {
-        return InputPort.create(
-            new StringReader(expression)
-        ).read();
+        return InputPort.create(new StringReader(expression)).read();
     }
 
-
-    public Object evaluate(
-        Object evaluatee
-    ) throws SchemeException
+    public Object evaluate(Object evaluatee) throws SchemeException
     {
         return execute(compile(evaluatee));
     }
 
-    public Object evaluate(
-        String expression
-    ) throws SchemeException
+    public Object evaluate(String expression) throws SchemeException
     {
         return evaluate(parse(expression));
     }

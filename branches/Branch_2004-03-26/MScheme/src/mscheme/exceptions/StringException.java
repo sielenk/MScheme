@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.exceptions;
 
-import mscheme.values.ScmString;
-
 
 public class StringException
     extends RuntimeError
@@ -32,8 +30,8 @@ public class StringException
     private final int _index;
 
     public StringException(
-        ScmString string,
-        int       index
+        char[] string,
+        int    index
     )
     {
         super(string);

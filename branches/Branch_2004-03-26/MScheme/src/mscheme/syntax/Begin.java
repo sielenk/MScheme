@@ -22,6 +22,7 @@ package mscheme.syntax;
 
 import mscheme.Syntax;
 
+import mscheme.code.Forceable;
 import mscheme.code.Sequence;
 
 import mscheme.environment.StaticEnvironment;
@@ -60,14 +61,14 @@ final class Begin
         }
     }
 
-    protected Object checkedTranslate(
+    protected Forceable checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws SchemeException
     {
         return Sequence.create(
             _tag,
-            arguments.getCompiledArray(compilationEnv)
+            arguments.getForceableArray(compilationEnv)
         );
     }
 }

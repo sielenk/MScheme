@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.exceptions;
 
-import mscheme.values.ScmVector;
-
 
 public final class UninitializedVectorException
             extends VectorException
@@ -30,8 +28,8 @@ public final class UninitializedVectorException
     = "$Id$";
 
     public UninitializedVectorException(
-        ScmVector vector,
-        int       index
+        Object[] vector,
+        int      index
     )
     {
         super(vector, index);

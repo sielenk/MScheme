@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.exceptions;
 
-import mscheme.Value;
-
 import mscheme.values.ScmString;
 
 public abstract class SchemeException
@@ -31,7 +29,7 @@ public abstract class SchemeException
     = "$Id$";
 
     private final Object _cause;
-    private final Value _message;
+    private final Object _message;
 
     public SchemeException(
         Object cause,
@@ -39,7 +37,7 @@ public abstract class SchemeException
     )
     {
         _cause   = cause;
-        _message = ScmString.createConst(message);
+        _message = ScmString.create(message);
     }
 
     public Object getCauseValue()
@@ -47,7 +45,7 @@ public abstract class SchemeException
         return _cause;
     }
 
-    public Value getMessageValue()
+    public Object getMessageValue()
     {
         return _message;
     }

@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.values;
 
-import mscheme.Value;
-
 
 public abstract class ListFactory
 {
@@ -70,11 +68,6 @@ public abstract class ListFactory
     public static Pair createPair(Object fst, Object snd)
     {
         return PairOrList.create(fst, snd);
-    }
- 
-    public static Pair createConstPair(Value fst, Value snd)
-    {
-        return PairOrList.createConst(fst, snd);
     }
 }
 

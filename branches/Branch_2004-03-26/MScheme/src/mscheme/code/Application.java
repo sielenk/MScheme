@@ -32,32 +32,45 @@ import mscheme.values.ListFactory;
 import mscheme.values.ValueTraits;
 
 
+final class ForceableApplication
+	implements Forceable
+{
+	public final static String id
+		= "$Id$";
+
+
+	private final Forceable[] _application;
+
+	ForceableApplication(Forceable[] application)
+	{
+		_application = application;
+	}
+
+	public Reduceable force()
+		throws CompileError
+	{
+		return new Application(
+			CodeArray.force(_application));
+	}	
+}
+
 public final class Application
-    implements Forceable, Reduceable
+    implements Reduceable
 {
     public final static String id
         = "$Id$";
 
 
+    private final Reduceable[] _application;
 
-
-    private final Object[] _application;
-
-    private Application(Object[] application)
+    Application(Reduceable[] application)
     {
         _application = application;
     }
 
-    public static Application create(Object[] application)
+    public static Forceable create(Forceable[] application)
     {
-        return new Application(application);
-    }
-
-    public Object force()
-        throws CompileError
-    {
-        CodeArray.force(_application);
-        return this;
+        return new ForceableApplication(application);
     }
 
     public String toString()

@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.exceptions;
 
-import mscheme.values.ScmString;
-
 
 public class InvalidStringIndexException
     extends StringException
@@ -30,8 +28,8 @@ public class InvalidStringIndexException
         = "$Id$";
 
     public InvalidStringIndexException(
-        ScmString string,
-        int       index
+        char[] string,
+        int    index
     )
     {
         super(string, index);

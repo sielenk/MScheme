@@ -23,7 +23,7 @@ package mscheme.syntax;
 import mscheme.Syntax;
 
 import mscheme.code.Application;
-
+import mscheme.code.Forceable;
 import mscheme.environment.StaticEnvironment;
 
 import mscheme.exceptions.SchemeException;
@@ -51,16 +51,16 @@ public final class ProcedureCall
         return new ProcedureCall(head);
     }
 
-    public Object translate(
+    public Forceable translate(
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws SchemeException
     {
         compilationEnv.setStateClosed();
 
-        Object[] compiledList = arguments.getCompiledArray(compilationEnv, 1);
+        Forceable[] compiledList = arguments.getForceableArray(compilationEnv, 1);
 
-        compiledList[0] = ValueTraits.getCompiled(compilationEnv, _head);
+        compiledList[0] = ValueTraits.getForceable(compilationEnv, _head);
 
         return Application.create(compiledList);
     }

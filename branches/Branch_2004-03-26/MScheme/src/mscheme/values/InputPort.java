@@ -52,7 +52,6 @@ class EofValue
 
 
 public class InputPort
-    extends Port
 {
     public final static String id
         = "$Id$";
@@ -77,12 +76,6 @@ public class InputPort
                    ? (PushbackReader)reader
                    : new PushbackReader(reader)
                );
-    }
-
-    public static InputPort create(ScmString filename)
-        throws OpenException
-    {
-        return create(filename.getJavaString());
     }
 
     public static InputPort create(String filename)
@@ -337,7 +330,7 @@ public class InputPort
         }
     }
 
-    private ScmString parseString()
+    private char[] parseString()
         throws IOException, ParseException
     {
         StringBuffer buf = new StringBuffer();
@@ -418,17 +411,9 @@ public class InputPort
 
         String str = buf.toString();
 
-        if (str.equals("+"))
+        if (str.equals("+") || str.equals("-") || str.equals("..."))
         {
-            return Symbol.create("+");
-        }
-        else if (str.equals("-"))
-        {
-            return Symbol.create("-");
-        }
-        else if (str.equals("..."))
-        {
-            return Symbol.create("...");
+            return str.intern();
         }
 
 checkNumber:
@@ -474,7 +459,7 @@ checkNumber:
             }
         }
 
-        return Symbol.create(str);
+        return str.intern();
     }
 
     private Object parseDatum()
@@ -521,29 +506,29 @@ checkNumber:
 
         case '\'':
             return ListFactory.create(
-                       Symbol.create("quote"),
+                       "quote",
                        parseDatum()
                    );
 
         case '`':
             return ListFactory.create(
-                       Symbol.create("quasiquote"),
+                       "quasiquote",
                        parseDatum()
                    );
 
         case ',':
             {
                 int la2 = _reader.read();
-                Symbol sym;
+				String sym;
 
                 if (la2 == '@')
                 {
-                    sym = Symbol.create("unquote-splicing");
+                    sym = "unquote-splicing";
                 }
                 else
                 {
                     _reader.unread(la2);
-                    sym = Symbol.create("unquote");
+                    sym = "unquote";
                 }
 
                 return ListFactory.create(

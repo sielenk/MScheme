@@ -85,7 +85,7 @@ public final class CompiledLambda
         throws SchemeException
     {
         Object compiledBody = Sequence.create(
-            body.getCompiledArray(env)
+            body.getForceableArray(env)
         );
 
         return create(
@@ -138,7 +138,7 @@ public final class CompiledLambda
         }
     }
 
-    public Object force()
+    public Reduceable force()
         throws CompileError
     {
         _compiledBody = Code.force(_compiledBody);

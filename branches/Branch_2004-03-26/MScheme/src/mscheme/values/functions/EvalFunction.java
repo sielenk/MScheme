@@ -25,6 +25,7 @@ import mscheme.environment.Environment;
 import mscheme.exceptions.SchemeException;
 
 import mscheme.machine.Machine;
+import mscheme.machine.Registers;
 import mscheme.values.ValueTraits;
 
 
@@ -41,7 +42,7 @@ public final class EvalFunction
     { }
 
     protected Object checkedCall(
-		mscheme.machine.Registers state,
+		Registers state,
     	Object fst,
     	Object snd)
     throws SchemeException

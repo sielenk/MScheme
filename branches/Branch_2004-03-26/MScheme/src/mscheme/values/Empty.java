@@ -23,6 +23,7 @@ package mscheme.values;
 import java.io.IOException;
 import java.io.Writer;
 
+import mscheme.code.Forceable;
 import mscheme.environment.StaticEnvironment;
 
 import mscheme.exceptions.CantCompileException;
@@ -30,15 +31,14 @@ import mscheme.exceptions.PairExpected;
 
 
 public final class Empty
-    extends ValueDefaultImplementations
     implements List, Outputable
 {
     public final static String id
         = "$Id$";
 
 
-    private final static Empty    INSTANCE = new Empty();
-    private final static Object[] ARRAY    = new Object[0];
+    private final static Empty       INSTANCE = new Empty();
+    private final static Forceable[] ARRAY    = new Forceable[0];
 
     private Empty()
     { }
@@ -49,20 +49,12 @@ public final class Empty
     }
 
 
-    // specialisation of ValueImplementation
-
-    public boolean isList()
-    {
-        return true;
-    }
-
-    public List toList()
-    {
-        return this;
-    }
-
-
     // implementation of List
+
+	public boolean isValid()
+	{
+		return true;
+	}
 
     public boolean isEmpty()
     {
@@ -96,20 +88,14 @@ public final class Empty
         throw new PairExpected(this);
     }
 
-    public Object getCompiled(StaticEnvironment compilationEnv)
-        throws CantCompileException
-    {
-        throw new CantCompileException(this);
-    }
-
-    public Object[] getCompiledArray(StaticEnvironment compilationEnv)
+    public Forceable[] getForceableArray(StaticEnvironment compilationEnv)
     {
         return ARRAY;
     }
 
-    public Object[] getCompiledArray(StaticEnvironment compilationEnv, int index)
+    public Forceable[] getForceableArray(StaticEnvironment compilationEnv, int index)
     {
-        return new Object[index];
+        return new Forceable[index];
     }
    
 	public Object[] getArray()
@@ -127,4 +113,10 @@ public final class Empty
     {
 		destination.write("()");
     }
+
+	public Forceable getForceable(StaticEnvironment compilationEnv)
+		throws CantCompileException
+	{
+		throw new CantCompileException(this);
+	}
 }

@@ -23,6 +23,8 @@ package mscheme.syntax;
 import mscheme.Syntax;
 
 import mscheme.code.Application;
+import mscheme.code.Forceable;
+import mscheme.code.Reduceable;
 import mscheme.code.Sequence;
 import mscheme.code.CompiledLambda;
 
@@ -33,7 +35,6 @@ import mscheme.exceptions.SchemeException;
 import mscheme.util.Arity;
 
 import mscheme.values.List;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
 
@@ -54,7 +55,7 @@ final class Letrec
     }
 
 
-    protected Object checkedTranslate(
+    protected Forceable  checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws SchemeException
@@ -71,22 +72,22 @@ final class Letrec
         StaticEnvironment
             bodyCompilationEnv = compilationEnv.createChild(formals);
 
-        Object[] compiledBody = body.getCompiledArray(bodyCompilationEnv);
+        Object[] compiledBody = body.getForceableArray(bodyCompilationEnv);
 
-        Object[] compiledLetrec
-            = new Object[numberOfFormals + compiledBody.length];
+        Forceable[] compiledLetrec
+            = new Forceable[numberOfFormals + compiledBody.length];
 
         // prepend the initialisations to the body
         int index = 0;
         while (!formals.isEmpty())
         {
-            Symbol formal = ValueTraits.toSymbol(formals.getHead());
+			String formal = ValueTraits.toSymbol(formals.getHead());
             Object init   = inits  .getHead();
 
             compiledLetrec[index++]
                 = Set.translate(
                       bodyCompilationEnv.getReferenceFor(formal),
-					  ValueTraits.getCompiled(bodyCompilationEnv, init)
+					  ValueTraits.getForceable(bodyCompilationEnv, init)
                   );
 
             formals = formals.getTail();
@@ -103,7 +104,7 @@ final class Letrec
 
 
         return Application.create(
-            new Object[]
+            new Forceable[]
             {
                 CompiledLambda.create( 
                     Arity.exactly(0),

@@ -22,6 +22,8 @@ package mscheme.syntax;
 
 import mscheme.Syntax;
 import mscheme.code.Application;
+import mscheme.code.Forceable;
+import mscheme.code.Literal;
 import mscheme.environment.Environment;
 import mscheme.environment.StaticEnvironment;
 import mscheme.exceptions.SchemeException;
@@ -30,7 +32,6 @@ import mscheme.util.Arity;
 import mscheme.values.Empty;
 import mscheme.values.List;
 import mscheme.values.Pair;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 import mscheme.values.functions.ApplyFunction;
 
@@ -47,7 +48,7 @@ final class Macro
             Environment.getSchemeReportEnvironment()
         );
 
-    private final static Object _apply
+    private final static Forceable _apply
         = ApplyFunction.INSTANCE;
 
     private final Object            _transformer;
@@ -59,7 +60,7 @@ final class Macro
         _definitionEnv = definitionEnv;
     }
 
-    public Object translate(
+    public Forceable translate(
         StaticEnvironment usageEnv,
         List              arguments
     ) throws SchemeException
@@ -68,7 +69,7 @@ final class Macro
 
         Pair result = (Pair)machine.execute(
             Application.create(
-                new Object[]
+                new Forceable[]
                 {
                     _apply,
                     _transformer,
@@ -79,7 +80,7 @@ final class Macro
             )
         );
 
-        return ValueTraits.getCompiled(
+        return ValueTraits.getForceable(
         	ValueTraits.toStaticEnvironment(result.getFirst()),
         	result.getSecond());
     }
@@ -99,12 +100,12 @@ final class DefineSyntax
         super(Arity.exactly(2));
     }
 
-    protected Object checkedTranslate(
+    protected Forceable checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws SchemeException
     {
-        Symbol symbol = ValueTraits.toSymbol(arguments.getHead());
+        String symbol = ValueTraits.toSymbol(arguments.getHead());
         Object value  = arguments.getTail().getHead();
 
         Macro macro = new Macro(
@@ -118,6 +119,8 @@ final class DefineSyntax
             .getStatic()
             .defineSyntax(symbol, macro);
 
-        return Empty.create();
+        return 
+        	Literal.create(
+        		Empty.create());
     }
 }

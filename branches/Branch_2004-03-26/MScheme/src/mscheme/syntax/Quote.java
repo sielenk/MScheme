@@ -21,15 +21,13 @@ Boston, MA  02111-1307, USA. */
 package mscheme.syntax;
 
 import mscheme.Syntax;
-
+import mscheme.code.Forceable;
+import mscheme.code.Literal;
+import mscheme.code.Reduceable;
 import mscheme.environment.StaticEnvironment;
-
 import mscheme.exceptions.TypeError;
-
 import mscheme.util.Arity;
-
 import mscheme.values.List;
-import mscheme.values.ValueTraits;
 
 
 // *** quote ***
@@ -48,11 +46,11 @@ final class Quote
         super(Arity.exactly(1));
     }
 
-    protected Object checkedTranslate(
+    protected Forceable checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws TypeError
     {
-        return ValueTraits.getConst(arguments.getHead());
+        return Literal.create(arguments.getHead());
     }
 }

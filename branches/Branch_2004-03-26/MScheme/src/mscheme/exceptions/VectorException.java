@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.exceptions;
 
-import mscheme.values.ScmVector;
-
 
 public class VectorException
     extends RuntimeError
@@ -32,8 +30,8 @@ public class VectorException
     private final int _index;
 
     public VectorException(
-        ScmVector vector,
-        int       index
+        Object[] vector,
+        int      index
     )
     {
         super(vector);
