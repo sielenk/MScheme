@@ -18,9 +18,9 @@ public abstract class Value
      */
     public Value setConst() { return this; }
 
-    /** <code>true</code> only for the false singleton */
-    public boolean isFalse() { return false; }
-    
+    /** <code>false</code> only for the false singleton */
+    public boolean isTrue() { return true; }
+
     /** true for the empty list,
      *  called recursively by pairs on their second element,
      *  false otherwise.
