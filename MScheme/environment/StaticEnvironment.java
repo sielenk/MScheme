@@ -128,6 +128,11 @@ public class StaticEnvironment
 
     // *** implementation of StaticEnvironment *******************************
 
+    public static StaticEnvironment create()
+    {
+        return new StaticEnvironment();
+    }
+
     public StaticEnvironment getParent()
     {
         return _parent;
