@@ -20,12 +20,10 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.code;
 
-import mscheme.ICode;
-
+import mscheme.compiler.Compiler;
+import mscheme.compiler.IForceable;
 import mscheme.environment.Reference;
-
 import mscheme.exceptions.CompileError;
-
 import mscheme.machine.IInvokeable;
 import mscheme.machine.Registers;
 
@@ -47,14 +45,6 @@ public final class Assignment
 		_expression = expression;		
 	}
 
-    private Assignment(
-        Reference binding,
-        ICode      valueCalculation
-    )
-    {
-    	this(binding, (Object)valueCalculation);
-    }
-
     public static Assignment create(
         Reference binding,
         Object    valueCalculation
@@ -67,7 +57,7 @@ public final class Assignment
         throws CompileError
     {
         _binding    = _binding.forceRef();        
-		_expression = ICode.force(_expression);
+		_expression = Compiler.force(_expression);
         return this;
     }
 

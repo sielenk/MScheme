@@ -102,7 +102,7 @@ public final class Empty
         throw new PairExpected(this);
     }
 
-    public Object getCompiled(StaticEnvironment compilationEnv)
+    public Object getForceable(StaticEnvironment compilationEnv)
         throws CantCompileException
     {
         throw new CantCompileException(this);

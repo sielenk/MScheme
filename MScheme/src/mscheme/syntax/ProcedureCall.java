@@ -22,13 +22,10 @@ package mscheme.syntax;
 
 
 import mscheme.code.Application;
-
+import mscheme.compiler.Compiler;
 import mscheme.environment.StaticEnvironment;
-
 import mscheme.exceptions.SchemeException;
-
 import mscheme.values.IList;
-import mscheme.values.ValueTraits;
 
 
 public final class ProcedureCall
@@ -59,7 +56,7 @@ public final class ProcedureCall
 
         Object[] compiledList = arguments.getCompiledArray(compilationEnv, 1);
 
-        compiledList[0] = ValueTraits.getCompiled(compilationEnv, _head);
+        compiledList[0] = Compiler.getForceable(compilationEnv, _head);
 
         return Application.create(compiledList);
     }

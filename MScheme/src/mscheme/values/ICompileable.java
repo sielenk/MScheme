@@ -35,6 +35,6 @@ public interface ICompileable
     /**
      * Compiles a value as normal code.
      */
-    Object getCompiled(StaticEnvironment compilationEnv)
+    Object getForceable(StaticEnvironment compilationEnv)
         throws SchemeException;
 }

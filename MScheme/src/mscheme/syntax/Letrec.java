@@ -24,6 +24,7 @@ package mscheme.syntax;
 import mscheme.code.Application;
 import mscheme.code.Sequence;
 import mscheme.code.CompiledLambda;
+import mscheme.compiler.Compiler;
 
 import mscheme.environment.StaticEnvironment;
 
@@ -85,7 +86,7 @@ final class Letrec
             compiledLetrec[index++]
                 = Set.translate(
                       bodyCompilationEnv.getReferenceFor(formal),
-					  ValueTraits.getCompiled(bodyCompilationEnv, init)
+					  Compiler.getForceable(bodyCompilationEnv, init)
                   );
 
             formals = formals.getTail();

@@ -20,10 +20,9 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.code;
 
-import mscheme.ICode;
-
+import mscheme.compiler.Compiler;
+import mscheme.compiler.IForceable;
 import mscheme.exceptions.CompileError;
-
 import mscheme.machine.IInvokeable;
 import mscheme.machine.Registers;
 import mscheme.values.ValueTraits;
@@ -63,9 +62,9 @@ public final class Selection
     public Object force()
         throws CompileError
     {
-        _test    = ICode.force(_test);
-        _onTrue  = ICode.force(_onTrue);
-        _onFalse = ICode.force(_onFalse);
+        _test    = Compiler.force(_test);
+        _onTrue  = Compiler.force(_onTrue);
+        _onFalse = Compiler.force(_onFalse);
         return this;
     }
 

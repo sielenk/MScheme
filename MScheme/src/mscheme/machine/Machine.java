@@ -26,17 +26,17 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
 
-import mscheme.ICode;
 import mscheme.IInit;
 import mscheme.code.IReduceable;
+import mscheme.compiler.Compiler;
+import mscheme.environment.DynamicEnvironment;
 import mscheme.environment.Environment;
-import mscheme.environment.StaticEnvironment;
 import mscheme.exceptions.RuntimeError;
 import mscheme.exceptions.SchemeException;
 import mscheme.exceptions.TypeError;
 import mscheme.values.Function;
-import mscheme.values.InputPort;
 import mscheme.values.IList;
+import mscheme.values.InputPort;
 import mscheme.values.ListFactory;
 import mscheme.values.OutputPort;
 import mscheme.values.ScmNumber;
@@ -247,94 +247,117 @@ public final class Machine
     }
 
 
+    class Executor
+    {
+    	private boolean   _done;
+        private Registers _state;
+
+        Executor(DynamicEnvironment environment)
+        {
+            _state = new Registers(environment);
+        }
+
+        public Object execute(
+    		Object expression
+    	) throws SchemeException
+    	{
+            Object current = expression;
+
+    	    _done = false;
+    		while (!_done)
+    		{
+    			try
+    			{
+    				if (current instanceof IReduceable)
+    				{
+    					current = ((IReduceable)current).reduce(_state);
+    					++_tickerRed;
+    				}
+    				else
+    				{
+    					current = invoke(current);
+    	            	++_tickerInv;
+    				}
+    			}
+    			catch (SchemeException error)
+    			{
+    				current = handleError(error);
+    			}
+    		}
+    		
+    		return current;
+    	}
+
+        private Object invoke(Object current) throws SchemeException
+        {
+            IStack stack = _state.getStack();
+  	
+            if (!stack.isEmpty())
+            {
+            	final StackFrame frame = stack.pop();
+  	
+            	_state.setEnvironment(frame.environment);
+ 		
+            	current = frame.invokeable.invoke(
+            		_state,
+            		current);
+            }
+            else
+            {
+                _done = true;
+            }
+
+            return current;
+        }
+
+        private Object handleError(
+            SchemeException error)
+        throws RuntimeError, SchemeException
+        {
+            if (_errorHandler != null)
+            {
+            	IList errorValue = 
+            		ListFactory.create(
+            			error.getCauseValue(),
+            			error.getMessage(),
+            			_state.getCurrentContinuation(),
+            			Boolean.valueOf(
+            				error instanceof RuntimeError));
+
+            	// Avoid endless loop if the
+            	// handler is buggy:
+            	Function handler = _errorHandler;
+            	_errorHandler = null;
+
+            	return ValueTraits.apply(
+            		_state,
+            		handler,
+            		ListFactory.create(
+            			errorValue));
+            }
+            else
+            {
+            	throw error;
+            }
+        }
+    }
+
 	public Object execute(
 		Object expression
 	) throws SchemeException
 	{
-		Object    current = expression;
-		Registers state   = new Registers(getEnvironment().getDynamic());
-
-		while (true)
-		{
-			try
-			{
-				if (current instanceof IReduceable)
-				{
-					current = ((IReduceable)current).reduce(state);
-					++_tickerRed;
-				}
-				else
-				{
-					IStack stack = state.getStack();
-	
-					if (!stack.isEmpty())
-					{
-						final StackFrame frame = stack.pop();
-	
-						state.setEnvironment(frame.environment);
-		
-						current = frame.invokeable.invoke(
-							state,
-							current);
-							
-						++_tickerInv;
-					}
-					else
-					{
-						return current;
-					}
-				}
-			}
-			catch (SchemeException error)
-			{
-				if (_errorHandler != null)
-				{
-					IList errorValue = 
-						ListFactory.create(
-							error.getCauseValue(),
-							error.getMessage(),
-							state.getCurrentContinuation(),
-							Boolean.valueOf(
-								error instanceof RuntimeError));
-
-					// Avoid endless loop if the
-					// handler is buggy:
-					Function handler = _errorHandler;
-					_errorHandler = null;
-
-					current = ValueTraits.apply(
-						state,
-						handler,
-						ListFactory.create(
-							errorValue));
-				}
-				else
-				{
-					throw error;
-				}
-			}
-		}
+	    return new Executor(
+	        getEnvironment().getDynamic()).execute(expression);
 	}
-
 
     public Object compile(
         Object compilee
     ) throws SchemeException
     {
-        return compile(
+        return Compiler.compile(
             getEnvironment().getStatic(),
             compilee
         );
-    }
-
-    public static Object compile(
-        StaticEnvironment compilationEnv,
-        Object            compilee
-    ) throws SchemeException
-    {
-        return
-        	ICode.force(
-            	ValueTraits.getCompiled(compilationEnv, compilee));
     }
 
     public static Object parse(
@@ -345,7 +368,6 @@ public final class Machine
             new StringReader(expression)
         ).read();
     }
-
 
     public Object evaluate(
         Object evaluatee

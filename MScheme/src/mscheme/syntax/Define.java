@@ -20,6 +20,7 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.syntax;
 
+import mscheme.compiler.Compiler;
 import mscheme.environment.Reference;
 import mscheme.environment.StaticEnvironment;
 import mscheme.exceptions.SchemeException;
@@ -97,7 +98,7 @@ final class Define
             {
                 return Set.translate(
                     ref,
-					ValueTraits.getCompiled(compilationEnv, value)
+					Compiler.getForceable(compilationEnv, value)
                 );
             }
             finally
