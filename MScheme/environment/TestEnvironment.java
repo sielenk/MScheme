@@ -106,13 +106,13 @@ public class TestEnvironment
         StaticEnvironment env = new StaticEnvironment();
         
         try {
-            env.getCodeFor(sym1);
+            env.getTokenFor(sym1);
             fail("expected SymbolNotFoundException");
         }
         catch (SymbolNotFoundException e) { }
         
         try {
-            env.getReferenceFor(sym1);
+            env.getTokenFor(sym1);
             fail("expected SymbolNotFoundException");
         }
         catch (SymbolNotFoundException e) { }
@@ -120,18 +120,18 @@ public class TestEnvironment
         Syntax    token = SyntaxFactory.getBeginToken();
         env.defineSyntax(sym1, token);
         
-        assert(env.getCodeFor(sym1) == token);
+        assert(env.getTokenFor(sym1) == token);
         
         try {
-            env.getReferenceFor(sym1);
+            env.getCodeFor(sym1);
             fail("expected SyntaxException");
         }
         catch (SyntaxException e) { }
 
         Reference reference = env.define(sym2);
 
-        assert(env.getCodeFor     (sym2) == reference);
-        assert(env.getReferenceFor(sym2) == reference);
+        assert(env.getTokenFor(sym2) == reference);
+        assert(env.getCodeFor (sym2) == reference);
     }
     
     public void testExtendedStatic()

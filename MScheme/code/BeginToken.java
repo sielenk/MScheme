@@ -23,9 +23,9 @@ final class CompiledSequence
 }
 
 final class BeginToken
-    extends Token
+    extends Syntax
 {
-    final static Token INSTANCE = new BeginToken();
+    final static Syntax INSTANCE = new BeginToken();
     
     private BeginToken()
     { super(Arity.atLeast(1)); }

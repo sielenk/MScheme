@@ -24,9 +24,9 @@ final class Selector
 }
 
 final class IfToken
-    extends Token
+    extends Syntax
 {
-    final static Token INSTANCE = new IfToken();
+    final static Syntax INSTANCE = new IfToken();
     
     private IfToken()
     { super(Arity.inRange(2, 3)); }

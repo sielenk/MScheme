@@ -461,7 +461,7 @@ public class DynamicEnvironment
 
     public void assign(Symbol key, Value value)
         throws SymbolNotFoundException, SyntaxException
-    { assign(_bindings.getReferenceFor(key), value); }
+    { assign(_bindings.getCodeFor(key), value); }
 
 
     public Value lookup(Reference ref)
@@ -491,8 +491,7 @@ public class DynamicEnvironment
         throws SymbolNotFoundException,
                SyntaxException,
                UninitializedSymbolException
-    { return lookup(_bindings.getReferenceFor(key)); }
+    { return lookup(_bindings.getCodeFor(key)); }
 
     // ***********************************************************************
 }
-

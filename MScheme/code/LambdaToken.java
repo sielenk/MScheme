@@ -85,9 +85,9 @@ final class CompiledLambda
 }
 
 final class LambdaToken
-    extends Token
+    extends Syntax
 {
-    final static Token INSTANCE = new LambdaToken();
+    final static Syntax INSTANCE = new LambdaToken();
     
     private LambdaToken()
     { super(Arity.atLeast(2)); }

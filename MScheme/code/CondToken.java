@@ -9,9 +9,9 @@ import MScheme.values.*;
 
 
 final class CondToken
-    extends Token
+    extends Syntax
 {
-    final static Token INSTANCE = new CondToken();
+    final static Syntax INSTANCE = new CondToken();
     
     private CondToken()
     { super(Arity.atLeast(1)); }
@@ -22,7 +22,7 @@ final class CondToken
         List              arguments
     ) throws SchemeException
     {
-        throw new UnimplementedException(getValue());
+        throw new UnimplementedException(null);
     }
 }
 

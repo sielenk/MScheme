@@ -11,9 +11,9 @@ import MScheme.values.*;
 // *** quote ***
 
 final class QuoteToken
-    extends Token
+    extends Syntax
 {
-    final static Token INSTANCE = new QuoteToken();
+    final static Syntax INSTANCE = new QuoteToken();
     
     private QuoteToken()
     { super(Arity.exactly(1)); }
