@@ -294,7 +294,7 @@ public class ParseBuiltins
         .append("\n")
         .append("    public Code call(Registers state, List args)\n")
         .append("        throws SchemeException\n")
-        .append("    { return checkedCall(args).getLiteral(); }\n")
+        .append("    { return checkedCall(args); }\n")
         .append("}\n\n");
 
         table.append("    };\n");
