@@ -47,6 +47,24 @@ class AssignmentContinuation
 }
 
 
+class SelectContinuation
+    extends Continuation
+{
+    private final Code _onTrue;
+    private final Code _onFalse;
+
+    SelectContinuation(Machine machine, Code onTrue, Code onFalse)
+    {
+        super(machine);
+        _onTrue  = onTrue;
+        _onFalse = onFalse;
+    }
+
+    protected Code internalInvoke(Machine machine, Value evaluationResult)
+    { return evaluationResult.isFalse() ? _onFalse : _onTrue; }
+}
+
+
 class SequenceContinuation
     extends Continuation
 {
@@ -198,6 +216,9 @@ public class Machine
     
     public void storeValueAt(Reference binding)
     { new AssignmentContinuation(this, binding); }
+
+    public void select(Code onTrue, Code onFalse)
+    { new SelectContinuation(this, onTrue, onFalse); }
 
 
     public Value evaluate(Value evaluatee)
