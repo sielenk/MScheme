@@ -6,6 +6,8 @@ import MScheme.environment.Environment;
 import MScheme.exceptions.*;
 import MScheme.Value;
 
+import MScheme.functions.CallCCFunction;
+
 
 public class TestValue
     extends junit.framework.TestCase
@@ -129,7 +131,7 @@ public class TestValue
     public void testList()
         throws Exception
     {
-        final Value list = ValueFactory.createList(
+        final Value list = ListFactory.create(
             ScmBoolean.createTrue()
         );
 
@@ -161,7 +163,7 @@ public class TestValue
     public void testFunction()
         throws Exception
     {
-        final Value function = ValueFactory.createFunction("CallCC");
+        final Value function = CallCCFunction.INSTANCE;
 
         assert(function.isTrue());
 
@@ -305,13 +307,6 @@ public class TestValue
             eqHelper(
                 Empty.create(),
                 Empty.create()
-            ) == 3
-        );
-
-        assert(
-            eqHelper(
-                ValueFactory.createFunction("CallCC"),
-                ValueFactory.createFunction("CallCC")
             ) == 3
         );
 
