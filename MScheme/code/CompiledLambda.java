@@ -5,15 +5,18 @@ import java.io.IOException;
 
 import MScheme.Code;
 import MScheme.Value;
+import MScheme.List;
 
 import MScheme.util.Arity;
+
 import MScheme.machine.Registers;
 import MScheme.machine.Result;
+
 import MScheme.environment.Reference;
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Environment;
+
 import MScheme.functions.CheckedFunction;
-import MScheme.values.List;
 
 import MScheme.exceptions.ListExpected;
 import MScheme.exceptions.CompileError;

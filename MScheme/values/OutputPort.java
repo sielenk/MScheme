@@ -13,7 +13,7 @@ import MScheme.exceptions.CloseException;
 
 
 public class OutputPort
-    extends Value
+    extends ValueImplementation
 {
     public final static String id
         = "$Id$";

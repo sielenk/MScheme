@@ -14,7 +14,7 @@ import MScheme.exceptions.*;
 
 
 public final class Symbol
-    extends Value
+    extends ValueImplementation
 {
     public final static String id
         = "$Id$";

@@ -1,34 +1,52 @@
-package MScheme;
+package MScheme.values;
 
 import java.io.Writer;
 import java.io.StringWriter;
 import java.io.IOException;
 
-import MScheme.values.*;
+import MScheme.Value;
+import MScheme.List;
+import MScheme.Translator;
+import MScheme.Code;
+
 import MScheme.code.Literal;
 
 import MScheme.environment.Environment;
 import MScheme.environment.StaticEnvironment;
+
 import MScheme.exceptions.*;
 
 
-public interface Value
+/**
+ * This class is the base class for all scheme values.
+ * Most of its methods provide a default implementation.
+ */
+public abstract class ValueImplementation
+    implements Value
 {
     /** The CVS id of the file containing this class. */
-    String id
+    public final static String id
         = "$Id$";
+
+    /** The default constructor. */
+    protected ValueImplementation()
+    { }
 
     /**
      * Returns an immutable version of <code>this</code>.
+     * <p>
+     * @return always <code>this</code>.
      */
-    Value getConst();
+    public Value getConst() { return this; }
 
     /**
      * Returns Scheme's boolean interpretation of a value.
      * All values except <code>#f</code> are regarded as
      * true in Scheme.
+     * <p>
+     * @return always <code>true</code>
      */
-    boolean isTrue();
+    public boolean isTrue() { return true; }
 
 
     /**
@@ -36,8 +54,10 @@ public interface Value
      * <p>
      * This function is opverridden in the classes
      * {@link Empty} and {@link Pair}.
+     * <p>
+     * @return always <code>false</code>
      */
-    boolean isList();
+    public boolean isList() { return false; }
 
     
     // disjoint types (as in R5RS, 3.2)
@@ -45,56 +65,83 @@ public interface Value
     /**
      * Returns <code>true</code> for instances of 
      * {@link ScmBoolean}.
+     * <p>
+     * But the default implementation always
+     * @return <code>false</code>
      */
-    boolean isScmBoolean();
+    public boolean isScmBoolean() { return false; }
 
     /**
      * Returns <code>true</code> for instances of 
      * {@link Pair}.
+     * <p>
+     * But the default implementation always
+     * @return <code>false</code>
      */
-    boolean isPair();
+    public boolean isPair() { return false; }
 
     /**
      * Returns <code>true</code> for instances of 
      * {@link Symbol}.
+     * <p>
+     * But the default implementation always
+     * @return <code>false</code>
      */
-    boolean isSymbol();
+    public boolean isSymbol() { return false; }
 
     /**
      * Returns <code>true</code> for instances of 
      * {@link ScmNumber}.
+     * <p>
+     * But the default implementation always
+     * @return <code>false</code>
      */
-    boolean isScmNumber();
+    public boolean isScmNumber() { return false; }
 
     /**
      * Returns <code>true</code> for instances of 
      * {@link ScmChar}.
+     * <p>
+     * But the default implementation always
+     * @return <code>false</code>
      */
-    boolean isScmChar();
+    public boolean isScmChar()    { return false; }
 
     /**
      * Returns <code>true</code> for instances of 
      * {@link ScmString}.
+     * <p>
+     * But the default implementation always
+     * @return <code>false</code>
      */
-    boolean isScmString();
+    public boolean isScmString()  { return false; }
 
     /**
      * Returns <code>true</code> for instances of 
      * {@link ScmVector}.
+     * <p>
+     * But the default implementation always
+     * @return <code>false</code>
      */
-    boolean isScmVector();
+    public boolean isScmVector()  { return false; }
 
     /**
      * Returns <code>true</code> for instances of 
      * {@link OutputPort} and {@link InputPort}.
+     * <p>
+     * But the default implementation always
+     * @return <code>false</code>
      */
-    boolean isPort();
+    public boolean isPort()       { return false; }
 
     /**
      * Returns <code>true</code> for instances of 
      * {@link Function}.
+     * <p>
+     * But the default implementation always
+     * @return <code>false</code>
      */
-    boolean isFunction();
+    public boolean isFunction()   { return false; }
 
 
     // type casts (to get SchemeExceptions instead of ClassCastExceptions)
@@ -110,63 +157,136 @@ public interface Value
      * session and query the user for a value of
      * appropriate type and return it where the
      * error occured.</p>
+     *
+     * <p>But for now these functions just throw an exception.</p>
+     *
+     * @return never
+     * @throws ListExpected always
      */
-    List toList() throws ListExpected;
+    public List toList()
+        throws ListExpected
+    { throw new ListExpected(this); }
 
     /**
      * Casts a reference to {@link Value} to a reference to {@link Pair}.
+     * <p>
+     * @see  #toList()
+     * @return never
+     * @throws PairExpected always
      */
-    Pair toPair() throws PairExpected;
+    public Pair toPair()
+        throws PairExpected
+    { throw new PairExpected(this); }
 
     /**
      * Casts a reference to {@link Value} to a reference to {@link Symbol}.
+     * <p>
+     * @see  #toList()
+     * @return never
+     * @throws SymbolExpected always
      */
-    Symbol toSymbol() throws SymbolExpected;
+    public Symbol toSymbol()
+        throws SymbolExpected
+    { throw new SymbolExpected(this); }
 
     /**
      * Casts a reference to {@link Value} to a reference to {@link ScmNumber}.
+     * <p>
+     * @see  #toList()
+     * @return never
+     * @throws NumberExpected always
      */
-    ScmNumber toScmNumber() throws NumberExpected;
+    public ScmNumber toScmNumber()
+        throws NumberExpected
+    { throw new NumberExpected(this); }
 
     /**
      * Casts a reference to {@link Value} to a reference to {@link ScmChar}.
+     * <p>
+     * @see  #toList()
+     * @return never
+     * @throws CharExpected always
      */
-    ScmChar toScmChar() throws CharExpected;
+    public ScmChar toScmChar()
+        throws CharExpected
+    { throw new CharExpected(this); }
 
     /**
      * Casts a reference to {@link Value} to a reference to {@link ScmString}.
+     * <p>
+     * @see  #toList()
+     * @return never
+     * @throws StringExpected always
      */
-    ScmString toScmString() throws StringExpected;
+    public ScmString toScmString()
+        throws StringExpected
+    { throw new StringExpected(this); }
 
     /**
      * Casts a reference to {@link Value} to a reference to {@link ScmVector}.
+     * <p>
+     * @see  #toList()
+     * @return never
+     * @throws VectorExpected always
      */
-    ScmVector toScmVector() throws VectorExpected;
+    public ScmVector toScmVector()
+        throws VectorExpected
+    { throw new VectorExpected(this); }
 
     /**
      * Casts a reference to {@link Value} to a reference to {@link InputPort}.
+     * <p>
+     * @see  #toList()
+     * @return never
+     * @throws InputPortExpected always
      */
-    InputPort toInputPort() throws InputPortExpected;
+    public InputPort toInputPort()
+        throws InputPortExpected
+    { throw new InputPortExpected(this); }
 
     /**
      * Casts a reference to {@link Value} to a reference to {@link OutputPort}.
+     * <p>
+     * @see  #toList()
+     * @return never
+     * @throws OutputPortExpected always
      */
-    OutputPort toOutputPort() throws OutputPortExpected;
+    public OutputPort toOutputPort()
+        throws OutputPortExpected
+    { throw new OutputPortExpected(this); }
 
     /**
      * Casts a reference to {@link Value} to a reference to {@link Function}.
+     * <p>
+     * @see  #toList()
+     * @return never
+     * @throws FunctionExpected always
      */
-    Function toFunction() throws FunctionExpected;
+    public Function toFunction()
+        throws FunctionExpected
+    { throw new FunctionExpected(this); }
 
     /**
      * Casts a reference to {@link Value} to a reference to {@link Environment}.
+     * <p>
+     * @see  #toList()
+     * @return never
+     * @throws EnvironmentExpected always
      */
-    Environment toEnvironment() throws EnvironmentExpected;
+    public Environment toEnvironment()
+        throws EnvironmentExpected
+    { throw new EnvironmentExpected(this); }
 
     /**
      * Casts a reference to {@link Value} to a reference to {@link StaticEnvironment}.
+     * <p>
+     * @see  #toList()
+     * @return never
+     * @throws EnvironmentExpected always
      */
-    StaticEnvironment toStaticEnvironment() throws EnvironmentExpected;
+    public StaticEnvironment toStaticEnvironment()
+        throws EnvironmentExpected
+    { throw new EnvironmentExpected(this); }
 
 
     // scheme equivalence predicates (as in R5RS, 6.1)
@@ -177,8 +297,10 @@ public interface Value
      * supposed to be easiest to check.
      * <p>
      * @param other the value with which to compare.
+     * @return <code>this == other</code>
      */
-    boolean eq(Value other);
+    public boolean eq(Value other)
+    { return this == other; }
     
     /**
      * Compares two values for Scheme's <code>eqv</code>-equality.
@@ -187,8 +309,10 @@ public interface Value
      * instance.
      * <p>
      * @param other the value with which to compare.
+     * @return <code>eq(other)</code>
      */
-    boolean eqv(Value other);
+    public boolean eqv(Value other)
+    { return eq(other); }
     
     /**
      * Compares two values for Scheme's <code>equal</code>-equality.
@@ -196,8 +320,10 @@ public interface Value
      * values like <code>eqv</code>.
      * <p>
      * @param other the value with which to compare.
+     * @return <code>eqv(other)</code>
      */
-    boolean equal(Value other);
+    public boolean equal(Value other)
+    { return eqv(other); }
 
     
     // the java equivalence predicate
@@ -209,9 +335,10 @@ public interface Value
      * @param other the object with which to compare.
      * @return <code>(other instanceof Value) && equal((Value)other)</code>
      */    
-    boolean equals(Object other);
-
-
+    public final boolean equals(Object other)
+    { return (other instanceof Value) && equal((Value)other); }
+    
+    
     // scheme io functions
     
     /**
@@ -219,7 +346,8 @@ public interface Value
      * <p>
      * @param  destination  the java writer which expects the output.
      */
-    void write(Writer destination) throws IOException;
+    public abstract void write(Writer destination)
+        throws IOException;
 
     /**
      * Part of Scheme's <code>display</code> function implementation.
@@ -229,7 +357,9 @@ public interface Value
      * <p>
      * @param  destination  the java writer which expects the output.
      */
-    void display(Writer destination) throws IOException;
+    public void display(Writer destination)
+        throws IOException
+    { write(destination); }
 
 
     // the java io function
@@ -240,7 +370,15 @@ public interface Value
      * <p>
      * @return a java string representation of the value.
      */
-    String toString();
+    public final String toString()
+    {
+        StringWriter out = new StringWriter();
+
+        try { write(out); }
+        catch (IOException e) { }
+
+        return out.toString();
+    }
 
 
     // compilation functions
@@ -250,7 +388,8 @@ public interface Value
      * <p>
      * @return a newly created {@link Literal}.
      */
-    Literal getLiteral();
+    public final Literal getLiteral()
+    { return Literal.create(this); }
 
     /**
      * Compiles a value as normal code.
@@ -264,8 +403,9 @@ public interface Value
      * @see Pair#getCode(StaticEnvironment)
      * @see Symbol#getCode(StaticEnvironment)
      */
-    Code getCode(StaticEnvironment compilationEnv)
-        throws CompileError, TypeError;
+    public Code getCode(StaticEnvironment compilationEnv)
+        throws CompileError, TypeError
+    { return getLiteral(); }
 
     /**
      * Compiles a value as list head.
@@ -276,6 +416,7 @@ public interface Value
      * <p>
      * @return <code>getCode(compilationEnv)</code>
      */
-    Translator getTranslator(StaticEnvironment compilationEnv)
-        throws CompileError, TypeError;
+    public Translator getTranslator(StaticEnvironment compilationEnv)
+        throws CompileError, TypeError
+    { return getCode(compilationEnv); }
 }

@@ -1,6 +1,7 @@
 package MScheme.values;
 
 import MScheme.Value;
+import MScheme.List;
 
 
 public abstract class ListFactory
@@ -10,7 +11,7 @@ public abstract class ListFactory
 
 
     public static List prepend(Value head, List tail)
-    { return Pair.create(head, tail); }
+    { return PairOrList.prepend(head, tail); }
 
     public static List create()
     { return Empty.create(); }
