@@ -109,10 +109,10 @@ final class RootContinuation
         _equalityTag = new Object();
     }
 
-    protected Code execute(Registers state, Value result)
+    protected Code executionStep(Registers state, Value result)
         throws SchemeException
     {
-        return result.getLiteral();
+        return result;
     }
 
     protected String debugString()
@@ -189,7 +189,7 @@ public final class Controller
         return Application.create(
             new Code[]
             {
-                argument.getLiteral(),
+                argument,
                 new ContinuationFunction(
                     _root.getParent()
                 ).checkedCall(

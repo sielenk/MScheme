@@ -69,7 +69,7 @@ public final class WindContinuation
         );
     }
 
-    protected Code execute(
+    protected Code executionStep(
         Registers state,
         Value     result
     ) throws RuntimeError, TypeError
@@ -78,7 +78,7 @@ public final class WindContinuation
             new Code[]
             {
                 _after,
-                result.getLiteral()
+                result
             }
         );
     }

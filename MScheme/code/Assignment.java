@@ -68,13 +68,12 @@ public final class Assignment
             = "$Id$";
 
 
-            protected Code execute(Registers regs, Value evaluationResult)
+            protected Code executionStep(Registers regs, Value evaluationResult)
             {
                 return 
                     regs
                     .getEnvironment()
-                    .assign(_binding, evaluationResult)
-                    .getLiteral();
+                    .assign(_binding, evaluationResult);
             }
 
 

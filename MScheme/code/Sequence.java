@@ -86,7 +86,7 @@ public final class Sequence
  
                 private final int _index = index + 1;
 
-                protected Code execute(Registers innerState, Value value)
+                protected Code executionStep(Registers innerState, Value value)
                 {
                     if (
                         ((_tag == TAG_AND) && !value.isTrue())
@@ -94,7 +94,7 @@ public final class Sequence
                         ((_tag == TAG_OR ) &&  value.isTrue())
                     )
                     {
-                        return value.getLiteral();
+                        return value;
                     }
                     else
                     {

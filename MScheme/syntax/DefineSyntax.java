@@ -56,7 +56,7 @@ final class Macro
         );
 
     private final static Code _apply
-        = ApplyFunction.INSTANCE.getLiteral();
+        = ApplyFunction.INSTANCE;
 
     private final Code              _transformer;
     private final StaticEnvironment _definitionEnv;
@@ -80,9 +80,9 @@ final class Macro
                 {
                     _apply,
                     _transformer,
-                    _definitionEnv.getLiteral(),
-                          usageEnv.getLiteral(),
-                         arguments.getLiteral()
+                    _definitionEnv,
+                          usageEnv,
+                         arguments
                 }
             )
         ).toPair();
@@ -90,7 +90,7 @@ final class Macro
         return
             result
             .getSecond()
-            .getCode(
+            .getCompiled(
                 result
                 .getFirst()
                 .toStaticEnvironment()
@@ -123,9 +123,7 @@ final class DefineSyntax
         Macro macro = new Macro(
             Macro.machine.evaluate(
                 value
-            )
-            .toFunction()
-            .getLiteral(),
+            ).toFunction(),
             compilationEnv
         );
 
@@ -136,6 +134,6 @@ final class DefineSyntax
             .getStatic()
             .defineSyntax(symbol, macro);
 
-        return Empty.create().getLiteral();
+        return Empty.create();
     }
 }
