@@ -1,7 +1,6 @@
 package MScheme.environment;
 
 import MScheme.machine.Machine;
-import MScheme.environment.DynamicEnvironment;
 import MScheme.code.Code;
 import MScheme.values.Symbol;
 
