@@ -21,6 +21,7 @@ import MScheme.functions.CheckedFunction;
 import MScheme.exceptions.ListExpected;
 import MScheme.exceptions.CompileError;
 import MScheme.exceptions.TypeError;
+import MScheme.exceptions.SchemeException;
 
 
 public final class CompiledLambda
@@ -56,7 +57,7 @@ public final class CompiledLambda
         Arity             arity,
         StaticEnvironment compiledFormals,
         List              body
-    ) throws CompileError, TypeError
+    ) throws SchemeException
     { this(arity, compiledFormals, body.getCodeList(compiledFormals)); }
 
     final class Closure
@@ -99,4 +100,8 @@ public final class CompiledLambda
 
     protected Value getValue(Registers state)
     { return new Closure(state.getEnvironment()); }
+
+
+    public String toString()
+    { return "(LAMBDA " + _compiledBody + ")"; }
 }
