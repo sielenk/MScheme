@@ -26,9 +26,7 @@ public class SchemeNumber
     public boolean eqv(Value other)
     {
         try {
-            SchemeNumber otherNumber = (SchemeNumber)other;
-        
-            return _value == otherNumber._value;
+            return isEqualTo((SchemeNumber)other);
         }
         catch (ClassCastException e) { }
         
@@ -48,6 +46,9 @@ public class SchemeNumber
 
     public boolean isLessThan(SchemeNumber other)
     { return _value < other._value; }
+
+    public boolean isEqualTo(SchemeNumber other)
+    { return _value == other._value; }
 
 
     public SchemeNumber negated()
