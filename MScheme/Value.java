@@ -24,7 +24,6 @@ import java.io.Writer;
 import java.io.IOException;
 
 import MScheme.values.*;
-import MScheme.code.Literal;
 
 import MScheme.environment.Environment;
 import MScheme.environment.StaticEnvironment;
@@ -262,7 +261,7 @@ public interface Value
     /**
      * Compiles a value as a literal.
      */
-    Literal getLiteral();
+    Code getLiteral();
 
     /**
      * Compiles a value as normal code.
