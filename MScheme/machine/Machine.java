@@ -78,10 +78,10 @@ final class StopContinuation
         return _result != null;
     }
 
-    protected Code execute(Registers state, Value evaluationResult)
+    protected Code executionStep(Registers state, Value evaluationResult)
     {
         _result = evaluationResult;
-        return null;
+        return _result;
     }
 
 
@@ -370,7 +370,7 @@ public final class Machine
     {
         return
             compilee
-            .getCode(compilationEnv)
+            .getCompiled(compilationEnv)
             .force();
     }
 
