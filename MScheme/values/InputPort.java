@@ -11,6 +11,7 @@ import MScheme.exceptions.OpenException;
 import MScheme.exceptions.ReadException;
 import MScheme.exceptions.ParseException;
 import MScheme.exceptions.CloseException;
+import MScheme.exceptions.ImmutableException;
 import MScheme.exceptions.InvalidVectorIndexException;
 
 class EofValue
@@ -92,7 +93,9 @@ public class InputPort
         throws ReadException, ParseException
     {
         try {
-            return parseDatum();
+            Value result = parseDatum();
+            result.setLiteral();
+            return result;
         }
         catch (IOException e) {
             throw new ReadException(this);
@@ -152,7 +155,7 @@ public class InputPort
         return (char)c;
     }
 
-    private SchemeCharacter parseChar()
+    private SchemeChar parseChar()
         throws IOException, ParseException
     {
         int c = readNoEof();
@@ -172,13 +175,13 @@ public class InputPort
             String name = charName.toString();
             
             if (name.equals("s")) {
-                return ValueFactory.createCharacter('s');
+                return ValueFactory.createChar('s');
             } else if (name.equals("n")) {
-                return ValueFactory.createCharacter('n');
+                return ValueFactory.createChar('n');
             } else if (name.equals("space")) {
-                return ValueFactory.createCharacter(' ');
+                return ValueFactory.createChar(' ');
             } else if (name.equals("newline")) {
-                return ValueFactory.createCharacter('\n');
+                return ValueFactory.createChar('\n');
             } else {
                 throw new ParseException(
                     this,
@@ -186,7 +189,7 @@ public class InputPort
                 );
             }
         } else {
-            return ValueFactory.createCharacter((char)c);
+            return ValueFactory.createChar((char)c);
         }
     }
     
@@ -213,7 +216,14 @@ public class InputPort
             }
             catch (InvalidVectorIndexException e) {
                 throw new RuntimeException(
-                    "invalid vector index in InputPort.parseVector"
+                    "unexpected InvalidVectorIndexException in "
+                    + "InputPort.parseVector"
+                );
+            }
+            catch (ImmutableException e) {
+                throw new RuntimeException(
+                    "unexpected ImmutableException in "
+                    + "InputPort.parseVector"
                 );
             }
             
@@ -413,35 +423,35 @@ public class InputPort
         case '"':
             return parseString();
         
-	    case '\'':
-	        return ValueFactory.createList(
-		        ValueFactory.createSymbol("quote"),
-			    parseDatum()
-		    );
+        case '\'':
+            return ValueFactory.createList(
+                ValueFactory.createSymbol("quote"),
+                parseDatum()
+            );
 
-	    case '`':
-	        return ValueFactory.createList(
-		        ValueFactory.createSymbol("quasiquote"),
-			    parseDatum()
-		    );
-	        
-	    case ',': {
-    	        int c = _reader.read();
-    		    Symbol sym;
+        case '`':
+            return ValueFactory.createList(
+                ValueFactory.createSymbol("quasiquote"),
+                parseDatum()
+            );
+            
+        case ',': {
+                int c = _reader.read();
+                Symbol sym;
 
-		        if (c == '@') {
-    		        sym = ValueFactory.createSymbol("unquote-splicing");
-    		    } else {
-    		        _reader.unread(c);
-    		        sym = ValueFactory.createSymbol("unquote");
-    		    }
+                if (c == '@') {
+                    sym = ValueFactory.createSymbol("unquote-splicing");
+                } else {
+                    _reader.unread(c);
+                    sym = ValueFactory.createSymbol("unquote");
+                }
 
-    	        return ValueFactory.createList(
-    		        sym,
-    			    parseDatum()
-    		    );
-    	    }
-	        
+                return ValueFactory.createList(
+                    sym,
+                    parseDatum()
+                );
+            }
+            
 
         case EOF:
             return EOF_VALUE;
