@@ -110,7 +110,7 @@ public class StdioFrame
         {
             _stdio = new StdioArea();
             _stdio.addActionListener(this);
-            add(_stdio, "North");
+            add(_stdio);
         }
     }
 
