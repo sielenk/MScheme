@@ -234,6 +234,31 @@ public class TestR5RS
     /// 4.2.5 Delayed evaluation
 
     /// 4.2.6 Quasiquotation
+    public void test4_2_6()
+        throws SchemeException
+    {
+        check("`(list ,(+ 1 2) 4)", "(list 3 4)");
+        check(
+            "(let ((name 'a)) `(list ,name ',name))", 
+            "(list a (quote a))"
+        );
+        check(
+            "`(a ,(+ 1 2) ,@(list 4 5 6) b)",
+            "(a 3 4 5 6 b)"
+        );
+        check(
+            "`#(10 5 ,(+ 1 1) ,@(list 4 3) 8)",
+            "#(10 5 2 4 3 8)"
+        );
+        check(
+            "`(a `(b ,(+ 1 2) ,(foo ,(+ 1 3) d) e) f)",
+            "(a `(b ,(+ 1 2) ,(foo 4 d) e) f)"
+        );
+        check(
+            "(let ((name1 'x) (name2 'y)) `(a `(b ,,name1 ,',name2 d) e))",
+            "(a `(b ,x ,'y d) e))"
+        );
+    }
 
     /// 6.1 Equivalence predicates
     public void test6_1()
@@ -340,6 +365,25 @@ public class TestR5RS
         check("(assoc (list 'a) '(((a)) ((b)) ((c))))", "((a))");
         check("(assv 5 '((2 3) (5 7) (11 13)))", "(5 7)");
     }
+
+    /// 6.3.3 Symbols
+    public void test6_3_3()
+        throws SchemeException
+    {
+        // symbol?
+        check("(symbol? 'foo)"        , "#t");
+        check("(symbol? (car '(a b)))", "#t");
+        check("(symbol? \"bar\")"     , "#f");
+        check("(symbol? 'nil)"        , "#t");
+        check("(symbol? '())"         , "#f");
+        check("(symbol? #f)"          , "#f");
+
+        // symbol->string
+        // string->symbol
+        check("(symbol->string 'flying-fish)", "\"flying-fish\"");
+        check("(symbol->string 'Martin)"     , "\"martin\"");
+        check("(symbol->string (string->symbol \"Malvia\"))", "\"Malvia\"");
+    }
     
 
     /// 6.4 Control features
@@ -371,7 +415,21 @@ public class TestR5RS
             "        (c 'talk2)\n"+
             "        (reverse path))))",
             "(connect talk1 disconnect\n" +
-             "connect talk2 disconnect)"
+            " connect talk2 disconnect)"
+        );
+    }
+
+
+    /// 6.5 Eval
+    public void test6_5()
+        throws SchemeException
+    {
+        check("(eval '(* 7 3) (scheme-report-environment 5))", "21");
+        check(
+            "(let ((f (eval '(lambda (f x) (f x x))\n"+
+            "       (null-environment 5))))\n"+
+            "  (f + 10))",
+            "20"
         );
     }
 }
