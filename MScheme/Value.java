@@ -12,15 +12,30 @@ import MScheme.environment.StaticEnvironment;
 import MScheme.exceptions.*;
 
 
+/**
+ * This class is the base class for all scheme values.
+ */
 public abstract class Value
 {
+    /** The CVS id of the file containing this class. */
     public final static String id
         = "$Id$";
 
     public void setConst() { }
 
+    /**
+     * 
+     *
+     * @return <code>true</code>
+     */
     public boolean isTrue() { return true; }
 
+
+    /**
+     * 
+     *
+     * @return <code>false</code>
+     */
     public boolean isList() { return false; }
 
     
@@ -89,27 +104,57 @@ public abstract class Value
 
 
     // scheme equivalence predicates (as in R5RS, 6.1)
-    
+
+    /**
+     * Compares two values for Scheme's <code>eq</code>-equality.
+     * This is the most discriminating equality in Scheme and is
+     * supposed to be easiest to check.
+     *
+     * @param other the value with which to compare.
+     *
+     * @return <code>this == other</code>
+     */
     public boolean eq(Value other)
     { return this == other; }
     
+    /**
+     * Compares two values for Scheme's <code>eqv</code>-equality.
+     * This equality is supposed to compare characters and numbers
+     * of the same value as equal, even if they are not the same
+     * instance.
+     *
+     * @param other the value with which to compare.
+     *
+     * @return <code>eq(other)</code>
+     */
     public boolean eqv(Value other)
     { return eq(other); }
     
+    /**
+     * Compares two values for Scheme's <code>equal</code>-equality.
+     * This equality compares compound values recursively, primitive
+     * values like <code>eqv</code>.
+     *
+     * @param other the value with which to compare.
+     *
+     * @return <code>eqv(other)</code>
+     */
     public boolean equal(Value other)
     { return eqv(other); }
 
     
     // the java equivalence predicate
 
+    /**
+     * Implements Java's <code>equals</code>-equality in terms of
+     * Scheme's <code>equal</code>-equality.
+     *
+     * @param other the object with which to compare.
+     *
+     * @return <code>(other instanceof Value) && equal((Value)other)</code>
+     */    
     public final boolean equals(Object other)
-    {
-        if (!(other instanceof Value)) {
-            return false;
-        }
-    
-        return equal((Value)other);
-    }
+    { return (other instanceof Value) && equal((Value)other); }
     
     
     // scheme io functions
