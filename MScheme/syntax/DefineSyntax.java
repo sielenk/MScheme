@@ -49,41 +49,36 @@ final class Macro
     protected Code checkedTranslate(
         StaticEnvironment usageEnv,
         List              arguments
-    ) throws CompileError, TypeError
+    ) throws SchemeException
     {
-        try {
-            // (apply tranformer def_env use_env args)
+        // (apply tranformer def_env use_env args)
     
-            Pair result = new Machine(
-                Environment.getImplementationEnvironment()
-            ).execute(
-                Application.create(
+        Pair result = new Machine(
+            Environment.getImplementationEnvironment()
+        ).execute(
+            Application.create(
+                CodeList.prepend(
+                    _apply,
                     CodeList.prepend(
-                        _apply,
-                        CodeList.prepend(
-                            _transformer,
-                            CodeList.create(
-                                _definitionEnv.getLiteral(),
-                                usageEnv.getLiteral(),
-                                arguments.getLiteral()
-                            )
+                        _transformer,
+                        CodeList.create(
+                            _definitionEnv.getLiteral(),
+                            usageEnv.getLiteral(),
+                            arguments.getLiteral()
                         )
                     )
                 )
-            ).toPair();
-            
-            return
+            )
+        ).toPair();
+
+        return
+            result
+            .getSecond()
+            .getCode(
                 result
-                .getSecond()
-                .getCode(
-                    result
-                    .getFirst()
-                    .toStaticEnvironment()
-                );
-        }
-        catch (RuntimeError e) {
-            throw new CompileError(e.getCause());
-        }
+                .getFirst()
+                .toStaticEnvironment()
+            );
     }
 }
 
@@ -102,29 +97,24 @@ final class DefineSyntax
     protected Code checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
-    ) throws CompileError, TypeError
+    ) throws SchemeException
     {
         Symbol symbol = arguments.getHead().toSymbol();
         Value  value  = arguments.getTail().getHead();
 
-        try {
-            Macro macro = new Macro(
-                new Machine(Environment.getImplementationEnvironment())
-                    .evaluate(value)
-                    .toFunction()
-                    .getLiteral(),
-                compilationEnv
-            );
+        Macro macro = new Macro(
+            new Machine(Environment.getImplementationEnvironment())
+                .evaluate(value)
+                .toFunction()
+                .getLiteral(),
+            compilationEnv
+        );
 
-            compilationEnv.defineSyntax(symbol, macro);
-            Environment
-                .getImplementationEnvironment()
-                .getStatic()
-                .defineSyntax(symbol, macro);
-        }
-        catch (RuntimeError e) {
-            throw new CompileError(e.getCause());
-        }
+        compilationEnv.defineSyntax(symbol, macro);
+        Environment
+            .getImplementationEnvironment()
+            .getStatic()
+            .defineSyntax(symbol, macro);
 
         return Empty.create().getLiteral();
     }
