@@ -132,22 +132,22 @@ public abstract class Continuation
 
 
     /**
-     * Restores the captured state and calls {@link #execute}.
+     * Restores the captured state and calls {@link #executionStep}.
      * The parameters are just passed on.
      * <p>
-     * @return  the result of the call to {@link #execute}.
+     * @return  the result of the call to {@link #executionStep}.
      */
     final Code invoke(Registers state, Value result)
         throws SchemeException
     {
         state.assign(this);
-        return execute(state, result);
+        return executionStep(state, result);
     }
 
     /**
      * Implements the concrete behaviour of the continuation.
      */
-    protected abstract Code execute(Registers state, Value result)
+    protected abstract Code executionStep(Registers state, Value result)
         throws SchemeException;
 
 

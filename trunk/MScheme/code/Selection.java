@@ -69,7 +69,7 @@ public final class Selection
             = "$Id$";
 
 
-            protected Code execute(
+            protected Code executionStep(
                 Registers regs,
                 Value     evaluatedTest
             )
