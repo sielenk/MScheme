@@ -92,26 +92,26 @@ public class TestMachine
     {
         try
         {
-            assert(_unval.getCode(_environment.getStatic()) != null);
+            assertTrue(_unval.getCode(_environment.getStatic()) != null);
             fail("expected CantCompileException");
         }
         catch (CantCompileException e)
         { }
 
-        assert(_val1.getCode(_environment.getStatic()) != null);
-        assert(_val2.getCode(_environment.getStatic()) != null);
+        assertTrue(_val1.getCode(_environment.getStatic()) != null);
+        assertTrue(_val2.getCode(_environment.getStatic()) != null);
     }
 
     public void testEnvironment()
     {
-        assert(machine.getEnvironment() == _environment);
+        assertTrue(machine.getEnvironment() == _environment);
     }
 
     public void testValue()
     throws Exception
     {
-        assert(machine.evaluate(_val1) == _val1);
-        assert(machine.evaluate(_val2) == _val2);
+        assertTrue(machine.evaluate(_val1) == _val1);
+        assertTrue(machine.evaluate(_val2) == _val2);
     }
 
     public void testUnevaluatable()
@@ -146,11 +146,11 @@ public class TestMachine
         define(_sym1, _val1);
         define(_sym2, _unval);
 
-        assert(
+        assertTrue(
             "evaluation to Value failed",
             machine.evaluate(_sym1) == _val1
         );
-        assert(
+        assertTrue(
             "evaluation to Unevaluatable failed",
             machine.evaluate(_sym2) == _unval
         );
@@ -161,7 +161,7 @@ public class TestMachine
     {
         try
         {
-            assert(
+            assertTrue(
                 machine.evaluate(
                     ListFactory.createPair(_val1, _val2)
                 ) != null
@@ -173,7 +173,7 @@ public class TestMachine
 
         try
         {
-            assert(
+            assertTrue(
                 machine.evaluate(
                     ListFactory.create(_val1)
                 ) != null
@@ -187,7 +187,7 @@ public class TestMachine
     public void testQuote()
     throws Exception
     {
-        assert(
+        assertTrue(
             machine.evaluate(
                 ListFactory.create(
                     Symbol.create("quote"),
@@ -203,7 +203,7 @@ public class TestMachine
         define(_sym1, _val1);
         define(_sym2, _val2);
 
-        assert(
+        assertTrue(
             machine.evaluate(
                 ListFactory.prepend(
                     Symbol.create("if"),
@@ -216,7 +216,7 @@ public class TestMachine
             ) == _val1
         );
 
-        assert(
+        assertTrue(
             machine.evaluate(
                 ListFactory.prepend(
                     Symbol.create("if"),
@@ -228,7 +228,7 @@ public class TestMachine
             ) == _val1
         );
 
-        assert(
+        assertTrue(
             machine.evaluate(
                 ListFactory.prepend(
                     Symbol.create("if"),
@@ -263,7 +263,7 @@ public class TestMachine
 
         _environment.define(_sym1, _val1);
 
-        assert(
+        assertTrue(
             machine.evaluate(
                 ListFactory.create(
                     Symbol.create("begin"),
@@ -313,7 +313,7 @@ public class TestMachine
                             )
                         ).toFunction();
 
-        assert(
+        assertTrue(
             machine.evaluate(ListFactory.create(func)) == _val1
         );
 
@@ -339,7 +339,7 @@ public class TestMachine
     {
         Function func = evaluate("(lambda (x y) x)").toFunction();
 
-        assert(
+        assertTrue(
             machine.evaluate(
                 ListFactory.create(
                     func,
@@ -371,13 +371,13 @@ public class TestMachine
         catch (RuntimeArityError e)
         { }
 
-        assert(
+        assertTrue(
             machine.evaluate(
                 ListFactory.create(func, _val1)
             ) == Empty.create()
         );
 
-        assert(
+        assertTrue(
             machine.evaluate(
                 ListFactory.create(func, _val1, _val2)
             ).toList().getHead() == _val2
@@ -402,8 +402,8 @@ public class TestMachine
                            ListFactory.createPair(func, pair1)
                        );
 
-        assert(result.equal(pair1));
-        assert(!result.eq(pair1));
+        assertTrue(result.equal(pair1));
+        assertTrue(!result.eq(pair1));
     }
 
     public void testDefineNormal()
@@ -417,7 +417,7 @@ public class TestMachine
             )
         );
 
-        assert(
+        assertTrue(
             machine.evaluate(
                 Symbol.create("a")
             ) == _val1
@@ -429,7 +429,7 @@ public class TestMachine
     {
         evaluate("(define f (lambda (x) x))");
 
-        assert(
+        assertTrue(
             machine.evaluate(
                 ListFactory.create(
                     Symbol.create("f"),
@@ -445,14 +445,14 @@ public class TestMachine
         evaluate("(define (f x y) x)");
         evaluate("(define (g . x) x)");
 
-        assert(
+        assertTrue(
             "function creation failed",
             machine.evaluate(
                 Symbol.create("f")
             ).isFunction()
         );
 
-        assert(
+        assertTrue(
             "function application failed",
             machine.evaluate(
                 ListFactory.create(
@@ -467,7 +467,7 @@ public class TestMachine
     public void testCallCC()
     throws Exception
     {
-        assert(
+        assertTrue(
             machine.evaluate(
                 ListFactory.create(
                     MScheme.values.functions.CallCCFunction.INSTANCE,

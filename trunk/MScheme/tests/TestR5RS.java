@@ -92,7 +92,7 @@ public class TestR5RS
             );
         }
 
-        assert(success);
+        assertTrue(success);
     }
 
 
@@ -179,8 +179,8 @@ public class TestR5RS
     public void test4_1_4()
     throws SchemeException
     {
-        assert(eval("(lambda (x) (+ x x))").isFunction());
-        check(   "((lambda (x) (+ x x)) 4)", "8");
+        assertTrue(eval("(lambda (x) (+ x x))").isFunction());
+        check("((lambda (x) (+ x x)) 4)", "8");
 
         eval(
             "(define reverse-subtract\n" +

@@ -44,21 +44,21 @@ public class TestInputPort
         StringReader source = new StringReader("test");
         InputPort in = InputPort.create(source);
 
-        assert(in.isReady());
-        assert(in.peekChar() == 't');
-        assert(in.readChar() == 't');
-        assert(in.isReady());
-        assert(in.peekChar() == 'e');
-        assert(in.readChar() == 'e');
-        assert(in.isReady());
-        assert(in.readChar() == 's');
-        assert(in.peekChar() == 't');
-        assert(in.isReady());
-        assert(in.readChar() == 't');
-        assert(in.isReady());
-        assert(in.peekChar() == InputPort.EOF);
-        assert(in.readChar() == InputPort.EOF);
-        assert(in.isReady());
+        assertTrue(in.isReady());
+        assertTrue(in.peekChar() == 't');
+        assertTrue(in.readChar() == 't');
+        assertTrue(in.isReady());
+        assertTrue(in.peekChar() == 'e');
+        assertTrue(in.readChar() == 'e');
+        assertTrue(in.isReady());
+        assertTrue(in.readChar() == 's');
+        assertTrue(in.peekChar() == 't');
+        assertTrue(in.isReady());
+        assertTrue(in.readChar() == 't');
+        assertTrue(in.isReady());
+        assertTrue(in.peekChar() == InputPort.EOF);
+        assertTrue(in.readChar() == InputPort.EOF);
+        assertTrue(in.isReady());
     }
 
     public void testWS()
@@ -69,7 +69,7 @@ public class TestInputPort
                               );
         InputPort in = InputPort.create(source);
 
-        assert(in.read().eq(in.EOF_VALUE));
+        assertTrue(in.read().eq(in.EOF_VALUE));
     }
 
     public void testBool()
@@ -78,12 +78,12 @@ public class TestInputPort
         StringReader source = new StringReader(" #t #f #t#f ");
         InputPort in = InputPort.create(source);
 
-        assert(in.read().eq(ScmBoolean.createTrue()));
-        assert(in.read().eq(ScmBoolean.createFalse()));
-        assert(in.read().eq(ScmBoolean.createTrue()));
-        assert(in.read().eq(ScmBoolean.createFalse()));
-        assert(in.readChar() == ' ');
-        assert(in.readChar() == InputPort.EOF);
+        assertTrue(in.read().eq(ScmBoolean.createTrue()));
+        assertTrue(in.read().eq(ScmBoolean.createFalse()));
+        assertTrue(in.read().eq(ScmBoolean.createTrue()));
+        assertTrue(in.read().eq(ScmBoolean.createFalse()));
+        assertTrue(in.readChar() == ' ');
+        assertTrue(in.readChar() == InputPort.EOF);
     }
 
     public void testNumber()
@@ -94,12 +94,12 @@ public class TestInputPort
                               );
         InputPort in = InputPort.create(source);
 
-        assert(in.read().eqv(ScmNumber.create(-2)));
-        assert(in.read().eqv(ScmNumber.create(-1)));
-        assert(in.read().eqv(ScmNumber.create( 0)));
-        assert(in.read().eqv(ScmNumber.create( 1)));
-        assert(in.read().eqv(ScmNumber.create( 2)));
-        assert(in.readChar() == InputPort.EOF);
+        assertTrue(in.read().eqv(ScmNumber.create(-2)));
+        assertTrue(in.read().eqv(ScmNumber.create(-1)));
+        assertTrue(in.read().eqv(ScmNumber.create( 0)));
+        assertTrue(in.read().eqv(ScmNumber.create( 1)));
+        assertTrue(in.read().eqv(ScmNumber.create( 2)));
+        assertTrue(in.readChar() == InputPort.EOF);
     }
 
     public void testChar()
@@ -110,14 +110,14 @@ public class TestInputPort
                               );
         InputPort in = InputPort.create(source);
 
-        assert(in.read().eqv(ScmChar.create('#')));
-        assert(in.read().eqv(ScmChar.create('\\')));
-        assert(in.read().eqv(ScmChar.create('"')));
-        assert(in.read().eqv(ScmChar.create(' ')));
-        assert(in.read().eqv(ScmChar.create('\n')));
-        assert(in.read().eqv(ScmChar.create(' ')));
-        assert(in.read().eqv(ScmChar.create('a')));
-        assert(in.readChar() == InputPort.EOF);
+        assertTrue(in.read().eqv(ScmChar.create('#')));
+        assertTrue(in.read().eqv(ScmChar.create('\\')));
+        assertTrue(in.read().eqv(ScmChar.create('"')));
+        assertTrue(in.read().eqv(ScmChar.create(' ')));
+        assertTrue(in.read().eqv(ScmChar.create('\n')));
+        assertTrue(in.read().eqv(ScmChar.create(' ')));
+        assertTrue(in.read().eqv(ScmChar.create('a')));
+        assertTrue(in.readChar() == InputPort.EOF);
     }
 
     public void testString()
@@ -135,9 +135,9 @@ public class TestInputPort
                               );
         InputPort in = InputPort.create(source);
 
-        assert(in.read().equal(ScmString.create(str1)));
-        assert(in.read().equal(ScmString.create(str2)));
-        assert(in.read().equal(ScmString.create(str3b)));
+        assertTrue(in.read().equal(ScmString.create(str1)));
+        assertTrue(in.read().equal(ScmString.create(str2)));
+        assertTrue(in.read().equal(ScmString.create(str3b)));
     }
 
     public void testList()
@@ -152,10 +152,10 @@ public class TestInputPort
                               );
         InputPort in = InputPort.create(source);
 
-        assert(in.read().equal(ListFactory.create()));
-        assert(in.read().equal(ListFactory.createPair(one, two)));
-        assert(in.read().equal(ListFactory.create(one, two, three)));
-        assert(in.read().equal(ListFactory.create(one, two, three)));
+        assertTrue(in.read().equal(ListFactory.create()));
+        assertTrue(in.read().equal(ListFactory.createPair(one, two)));
+        assertTrue(in.read().equal(ListFactory.create(one, two, three)));
+        assertTrue(in.read().equal(ListFactory.create(one, two, three)));
     }
 
     public void testVector()
@@ -170,9 +170,9 @@ public class TestInputPort
                               );
         InputPort in = InputPort.create(source);
 
-        assert(in.read().equal(ScmVector.create()));
-        assert(in.read().equal(ScmVector.create(2, one)));
-        assert(in.read().equal(v));
+        assertTrue(in.read().equal(ScmVector.create()));
+        assertTrue(in.read().equal(ScmVector.create(2, one)));
+        assertTrue(in.read().equal(v));
     }
 
     public void testSymbol()
@@ -184,15 +184,15 @@ public class TestInputPort
                               );
         InputPort in = InputPort.create(source);
 
-        assert(in.read().eq(test));
-        assert(in.read().eq(test));
-        assert(in.read().eq(test));
-        assert(in.read().eq(test));
-        assert(in.read().eq(test));
-        assert(in.read().eq(Symbol.create("+")));
-        assert(in.read().eq(Symbol.create("-")));
-        assert(in.read().eq(Symbol.create("...")));
-        assert(in.read().eq(Symbol.create("?12")));
+        assertTrue(in.read().eq(test));
+        assertTrue(in.read().eq(test));
+        assertTrue(in.read().eq(test));
+        assertTrue(in.read().eq(test));
+        assertTrue(in.read().eq(test));
+        assertTrue(in.read().eq(Symbol.create("+")));
+        assertTrue(in.read().eq(Symbol.create("-")));
+        assertTrue(in.read().eq(Symbol.create("...")));
+        assertTrue(in.read().eq(Symbol.create("?12")));
     }
 
     public void testAbbrev()
@@ -210,10 +210,10 @@ public class TestInputPort
         Symbol uq  = Symbol.create("unquote");
         Symbol uqs = Symbol.create("unquote-splicing");
 
-        assert(in.read().equal(ListFactory.create(q,   a)));
-        assert(in.read().equal(ListFactory.create(q,   a)));
-        assert(in.read().equal(ListFactory.create(qq,  a)));
-        assert(in.read().equal(ListFactory.create(uq,  a)));
-        assert(in.read().equal(ListFactory.create(uqs, a)));
+        assertTrue(in.read().equal(ListFactory.create(q,   a)));
+        assertTrue(in.read().equal(ListFactory.create(q,   a)));
+        assertTrue(in.read().equal(ListFactory.create(qq,  a)));
+        assertTrue(in.read().equal(ListFactory.create(uq,  a)));
+        assertTrue(in.read().equal(ListFactory.create(uqs, a)));
     }
 }

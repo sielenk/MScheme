@@ -98,10 +98,10 @@ public class TestValue
 
     private void commonTests(Value v)
     {
-        assert(v.isTrue());
+        assertTrue(v.isTrue());
 
-        assert(countTypes(v) == 1);
-        assert(countCasts(v) == 1);
+        assertTrue(countTypes(v) == 1);
+        assertTrue(countCasts(v) == 1);
     }
 
 
@@ -110,12 +110,12 @@ public class TestValue
     {
         final Value False = ScmBoolean.createFalse();
 
-        assert(!False.isTrue());
+        assertTrue(!False.isTrue());
 
-        assert(countTypes(False) == 1);
-        assert(countCasts(False) == 0);
+        assertTrue(countTypes(False) == 1);
+        assertTrue(countCasts(False) == 0);
 
-        assert(False.isScmBoolean());
+        assertTrue(False.isScmBoolean());
     }
 
     public void testTrue()
@@ -123,12 +123,12 @@ public class TestValue
     {
         final Value True  = ScmBoolean.createTrue();
 
-        assert(True.isTrue());
+        assertTrue(True.isTrue());
 
-        assert(countTypes(True) == 1);
-        assert(countCasts(True) == 0);
+        assertTrue(countTypes(True) == 1);
+        assertTrue(countCasts(True) == 0);
 
-        assert(True.isScmBoolean());
+        assertTrue(True.isScmBoolean());
     }
 
     public void testEmpty()
@@ -136,15 +136,15 @@ public class TestValue
     {
         final Value empty = Empty.create();
 
-        assert(empty.isTrue());
+        assertTrue(empty.isTrue());
 
-        assert(countTypes(empty) == 2);
-        assert(countCasts(empty) == 1);
+        assertTrue(countTypes(empty) == 2);
+        assertTrue(countCasts(empty) == 1);
 
-        assert(empty.isEmpty());
+        assertTrue(empty.isEmpty());
 
-        assert(empty.isList());
-        assert(empty.toList() == empty);
+        assertTrue(empty.isList());
+        assertTrue(empty.toList() == empty);
     }
 
     public void testPair()
@@ -156,8 +156,8 @@ public class TestValue
                            );
 
         commonTests(pair);
-        assert(pair.isPair());
-        assert(pair.toPair() == pair);
+        assertTrue(pair.isPair());
+        assertTrue(pair.toPair() == pair);
     }
 
     public void testList()
@@ -167,16 +167,16 @@ public class TestValue
                                ScmBoolean.createTrue()
                            );
 
-        assert(list.isTrue());
+        assertTrue(list.isTrue());
 
-        assert(countTypes(list) == 2);
-        assert(countCasts(list) == 2);
+        assertTrue(countTypes(list) == 2);
+        assertTrue(countCasts(list) == 2);
 
-        assert(list.isPair());
-        assert(list.toPair() == list);
+        assertTrue(list.isPair());
+        assertTrue(list.toPair() == list);
 
-        assert(list.isList());
-        assert(list.toList() == list);
+        assertTrue(list.isList());
+        assertTrue(list.toList() == list);
     }
 
     public void testSymbol()
@@ -185,8 +185,8 @@ public class TestValue
         final Value symbol = Symbol.create("test");
 
         commonTests(symbol);
-        assert(symbol.isSymbol());
-        assert(symbol.toSymbol() == symbol);
+        assertTrue(symbol.isSymbol());
+        assertTrue(symbol.toSymbol() == symbol);
     }
 
     public void testFunction()
@@ -195,8 +195,8 @@ public class TestValue
         final Value function = CallCCFunction.INSTANCE;
 
         commonTests(function);
-        assert(function.isFunction());
-        assert(function.toFunction() == function);
+        assertTrue(function.isFunction());
+        assertTrue(function.toFunction() == function);
     }
 
     public void testNumber()
@@ -205,8 +205,8 @@ public class TestValue
         final Value number = ScmNumber.create(49875);
 
         commonTests(number);
-        assert(number.isScmNumber());
-        assert(number.toScmNumber() == number);
+        assertTrue(number.isScmNumber());
+        assertTrue(number.toScmNumber() == number);
     }
 
     public void testChar()
@@ -215,8 +215,8 @@ public class TestValue
         final Value character = ScmChar.create('a');
 
         commonTests(character);
-        assert(character.isScmChar());
-        assert(character.toScmChar() == character);
+        assertTrue(character.isScmChar());
+        assertTrue(character.toScmChar() == character);
     }
 
     public void testString()
@@ -225,8 +225,8 @@ public class TestValue
         final Value string = ScmString.create("Hallo !");
 
         commonTests(string);
-        assert(string.isScmString());
-        assert(string.toScmString() == string);
+        assertTrue(string.isScmString());
+        assertTrue(string.toScmString() == string);
     }
 
     public void testVector()
@@ -235,8 +235,8 @@ public class TestValue
         final Value vector = ScmVector.create();
 
         commonTests(vector);
-        assert(vector.isScmVector());
-        assert(vector.toScmVector() == vector);
+        assertTrue(vector.isScmVector());
+        assertTrue(vector.toScmVector() == vector);
     }
 
     public void testOutputPort()
@@ -245,8 +245,8 @@ public class TestValue
         final Value port = OutputPort.create(new StringWriter());
 
         commonTests(port);
-        assert(port.isPort());
-        assert(port.toOutputPort() == port);
+        assertTrue(port.isPort());
+        assertTrue(port.toOutputPort() == port);
     }
 
     public void testInputPort()
@@ -255,8 +255,8 @@ public class TestValue
         final Value port = InputPort.create(new StringReader(""));
 
         commonTests(port);
-        assert(port.isPort());
-        assert(port.toInputPort() == port);
+        assertTrue(port.isPort());
+        assertTrue(port.toInputPort() == port);
     }
 
     public void testEnvironment()
@@ -264,12 +264,12 @@ public class TestValue
     {
         final Value environment = Environment.getEmpty();
 
-        assert(environment.isTrue());
+        assertTrue(environment.isTrue());
 
-        assert(countTypes(environment) == 0);
-        assert(countCasts(environment) == 1);
+        assertTrue(countTypes(environment) == 0);
+        assertTrue(countCasts(environment) == 1);
 
-        assert(environment.toEnvironment() == environment);
+        assertTrue(environment.toEnvironment() == environment);
     }
 
     public void testStaticEnvironment()
@@ -277,12 +277,12 @@ public class TestValue
     {
         final Value environment = Environment.getEmpty().getStatic();
 
-        assert(environment.isTrue());
+        assertTrue(environment.isTrue());
 
-        assert(countTypes(environment) == 0);
-        assert(countCasts(environment) == 1);
+        assertTrue(countTypes(environment) == 0);
+        assertTrue(countCasts(environment) == 1);
 
-        assert(environment.toStaticEnvironment() == environment);
+        assertTrue(environment.toStaticEnvironment() == environment);
     }
 
 
@@ -293,21 +293,21 @@ public class TestValue
         boolean equal = fst.equal(snd);
 
         // reflexivity
-        assert(fst.eq   (fst));
-        assert(snd.eq   (snd));
-        assert(fst.eqv  (fst));
-        assert(snd.eqv  (snd));
-        assert(fst.equal(fst));
-        assert(snd.equal(snd));
+        assertTrue(fst.eq   (fst));
+        assertTrue(snd.eq   (snd));
+        assertTrue(fst.eqv  (fst));
+        assertTrue(snd.eqv  (snd));
+        assertTrue(fst.equal(fst));
+        assertTrue(snd.equal(snd));
 
         // symmetry
-        assert(eq    == snd.eq   (fst));
-        assert(eqv   == snd.eqv  (fst));
-        assert(equal == snd.equal(fst));
+        assertTrue(eq    == snd.eq   (fst));
+        assertTrue(eqv   == snd.eqv  (fst));
+        assertTrue(equal == snd.equal(fst));
 
 
-        assert(!eq  | eqv  ); // aka. eq  -> eqv
-        assert(!eqv | equal); // aka. eqv -> equal
+        assertTrue(!eq  | eqv  ); // aka. eq  -> eqv
+        assertTrue(!eqv | equal); // aka. eqv -> equal
 
         if (eq)
         {
@@ -335,32 +335,32 @@ public class TestValue
 
         // eq equivalent values
 
-        assert(
+        assertTrue(
             eqHelper(v, v) == 3
         );
 
-        assert(
+        assertTrue(
             eqHelper(
                 ScmBoolean.createTrue(),
                 ScmBoolean.createTrue()
             ) == 3
         );
 
-        assert(
+        assertTrue(
             eqHelper(
                 ScmBoolean.createFalse(),
                 ScmBoolean.createFalse()
             ) == 3
         );
 
-        assert(
+        assertTrue(
             eqHelper(
                 Symbol.create("a"),
                 Symbol.create("a")
             ) == 3
         );
 
-        assert(
+        assertTrue(
             eqHelper(
                 Empty.create(),
                 Empty.create()
@@ -370,14 +370,14 @@ public class TestValue
 
         // eqv equivalent values
 
-        assert(
+        assertTrue(
             eqHelper(
                 ScmNumber.create(7123645),
                 ScmNumber.create(7123645)
             ) >= 2
         );
 
-        assert(
+        assertTrue(
             eqHelper(
                 ScmChar.create('u'),
                 ScmChar.create('u')
@@ -387,28 +387,28 @@ public class TestValue
 
         // equal equivalent but eqv unspec. values
 
-        assert(
+        assertTrue(
             eqHelper(
                 ScmVector.create(),
                 ScmVector.create()
             ) >= 1
         );
 
-        assert(
+        assertTrue(
             eqHelper(
                 ScmVector.create(5, v),
                 ScmVector.create(5, v)
             ) >= 1
         );
 
-        assert(
+        assertTrue(
             eqHelper(
                 ScmString.create(""),
                 ScmString.create("")
             ) >= 1
         );
 
-        assert(
+        assertTrue(
             eqHelper(
                 ScmString.create("Hallo"),
                 ScmString.create("Hallo")
@@ -418,7 +418,7 @@ public class TestValue
 
         // equal equivalent but eqv different values
 
-        assert(
+        assertTrue(
             eqHelper(
                 ListFactory.createPair(v, v),
                 ListFactory.createPair(v, v)
@@ -428,35 +428,35 @@ public class TestValue
 
         // different values
 
-        assert(
+        assertTrue(
             eqHelper(
                 ScmBoolean.createTrue(),
                 ScmBoolean.createFalse()
             ) == 0
         );
 
-        assert(
+        assertTrue(
             eqHelper(
                 Symbol.create("u"),
                 Symbol.create("v")
             ) == 0
         );
 
-        assert(
+        assertTrue(
             eqHelper(
                 ScmVector.create(5, u),
                 ScmVector.create(5, v)
             ) == 0
         );
 
-        assert(
+        assertTrue(
             eqHelper(
                 ScmVector.create(7, v),
                 ScmVector.create(5, v)
             ) == 0
         );
 
-        assert(
+        assertTrue(
             eqHelper(
                 ScmString.create("Hallo 1"),
                 ScmString.create("Hallo 2")
