@@ -11,6 +11,8 @@ import MScheme.functions.CheckedFunction;
 import MScheme.values.List;
 
 import MScheme.exceptions.ListExpected;
+import MScheme.exceptions.CompileError;
+import MScheme.exceptions.TypeError;
 
 
 public final class CompiledLambda
@@ -23,13 +25,27 @@ public final class CompiledLambda
     public CompiledLambda(
         Arity             arity,
         StaticEnvironment compiledFormals,
-        CodeList          compiledBody
+        Code              compiledBody
     )
     {
         _arity           = arity;
         _compiledFormals = compiledFormals;
-        _compiledBody    = new CompiledSequence(compiledBody);
+        _compiledBody    = compiledBody;
     }
+
+    public CompiledLambda(
+        Arity             arity,
+        StaticEnvironment compiledFormals,
+        CodeList          compiledBody
+    )
+    { this(arity, compiledFormals, CompiledSequence.create(compiledBody)); }
+
+    public CompiledLambda(
+        Arity             arity,
+        StaticEnvironment compiledFormals,
+        List              body
+    ) throws CompileError, TypeError
+    { this(arity, compiledFormals, body.getCodeList(compiledFormals)); }
 
     final class Closure
         extends CheckedFunction

@@ -23,7 +23,7 @@ final class BeginToken
         List              arguments
     ) throws CompileError, TypeError
     {
-        return new CompiledSequence(
+        return CompiledSequence.create(
             arguments.getCodeList(syntax)
         );
     }

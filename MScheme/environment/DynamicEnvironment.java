@@ -140,6 +140,10 @@ public class DynamicEnvironment
                 SyntaxFactory.getLetToken()
             );
             staticBindings.defineSyntax(
+                Symbol.create("let*"),
+                SyntaxFactory.getLetStarToken()
+            );
+            staticBindings.defineSyntax(
                 Symbol.create("letrec"),
                 SyntaxFactory.getLetrecToken()
             );

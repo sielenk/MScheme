@@ -40,8 +40,17 @@ final public class CompiledSequence
 {
     final private CodeList _sequence;
 
-    public CompiledSequence(CodeList sequence)
+    private CompiledSequence(CodeList sequence)
     { _sequence = sequence; }
+
+    public static Code create(CodeList sequence)
+    {
+        if (sequence.getTail().isEmpty()) {
+            return sequence.getHead();
+        } else {
+            return new CompiledSequence(sequence);
+        }
+    }
 
     public Code executionStep(Machine machine)
     { return SequenceContinuation.prepareNext(machine, _sequence); }

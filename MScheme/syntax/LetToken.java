@@ -5,8 +5,7 @@ import java.io.IOException;
 
 import MScheme.util.Arity;
 import MScheme.machine.Machine;
-import MScheme.code.Code;
-import MScheme.code.CodeList;
+import MScheme.code.*;
 import MScheme.environment.*;
 import MScheme.exceptions.*;
 import MScheme.functions.*;
@@ -25,7 +24,7 @@ final class LetToken
 
 
     protected Code checkedTranslate(
-        StaticEnvironment syntax,
+        StaticEnvironment environment,
         List              arguments
     ) throws CompileError, TypeError
     {
@@ -34,6 +33,7 @@ final class LetToken
         List bindings = arguments.getHead().toList();
         List body     = arguments.getTail();
 
+        int  count   = 0;
         List formals = Empty.create();
         List inits   = Empty.create();
 
@@ -43,26 +43,25 @@ final class LetToken
             Value formal  = binding.getHead();
             Value init    = binding.getTail().getHead();
 
+            ++count;
             formals  = ValueFactory.prepend(formal, formals);
             inits    = ValueFactory.prepend(init  , inits  );
 
             bindings = bindings.getTail();
         }
 
+        StaticEnvironment
+            newEnvironment = environment.newChild(formals);
 
-
-        // ((lambda (<var> ...) <body>) <init> ...)
-        return LambdaToken.INSTANCE
-            .translate(
-                syntax,
-                ValueFactory.prepend(
-                    formals.toValue(),
+        return new CompiledApplication(
+            CodeList.prepend(
+                new CompiledLambda(
+                    Arity.exactly(count),
+                    newEnvironment,
                     body
-                )
+                ),
+                inits.getCodeList(environment)
             )
-            .translate(
-                syntax,
-                inits
-            );
+        );
     }
 }
