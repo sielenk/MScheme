@@ -40,6 +40,7 @@ public interface List
 
     int   getLength  ();
     List  getReversed();
+    List  getCopy    ();
     Value getHead    () throws PairExpected;
     List  getTail    () throws PairExpected;
 

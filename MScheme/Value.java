@@ -63,11 +63,6 @@ public interface Value
     Value getConst();
 
     /**
-     * Returns a mutable shallow copy of <code>this</code>.
-     */
-    Value getCopy();
-
-    /**
      * Returns Scheme's boolean interpretation of a value.
      * All values except <code>#f</code> are regarded as
      * true in Scheme.

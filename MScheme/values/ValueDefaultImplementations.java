@@ -85,14 +85,6 @@ public abstract class ValueDefaultImplementations
     }
 
     /**
-     * @return <code>this</code>.
-     */
-    public Value getCopy()
-    {
-        return this;
-    }
-
-    /**
      * @return <code>true</code>
      */
     public boolean isTrue()

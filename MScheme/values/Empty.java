@@ -78,6 +78,11 @@ public final class Empty
         return true;
     }
 
+    public List getCopy()
+    {
+        return this;
+    }
+
     public int getLength()
     {
         return 0;

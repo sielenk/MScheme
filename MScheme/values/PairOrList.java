@@ -184,21 +184,6 @@ final class PairOrList
 
     // implementation of Compound
 
-    public Value getCopy()
-    {
-        Value second = getSecond();
-
-        if (second.isPair())
-        {
-            second = second.getCopy();
-        }
-
-        return create(
-            getFirst(),
-            second
-        );
-    }
-
     protected final Value getConstCopy()
     {
         return createConst(
@@ -283,6 +268,39 @@ final class PairOrList
         throws ListExpected
     {
         return isList() ? this : super.toList();
+    }
+
+    public List getCopy()
+    {
+        try
+        {
+            PairOrList result  = new PairOrList(false, getHead(), null);
+            PairOrList current = result;
+
+            for (
+                List tail = getTail();
+                !tail.isEmpty();
+                tail = tail.getTail()
+            )
+            {
+                PairOrList next = new PairOrList(
+                    false,
+                    tail.getHead(),
+                    null
+                );
+                current._second = next;
+                current = next;
+            }
+            current._second = Empty.create();
+
+            return result;
+        }
+        catch (PairExpected e)
+        {
+            throw new RuntimeException(
+                "unexpected PairExpected"
+            );
+        }
     }
 
     public Value getHead()

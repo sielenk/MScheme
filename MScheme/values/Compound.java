@@ -52,8 +52,6 @@ abstract class Compound
         }
     }
 
-    public abstract Value getCopy();
-
     protected abstract Value getConstCopy();
 
     public final Value getConst()

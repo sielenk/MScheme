@@ -103,11 +103,6 @@ public final class ScmString
 
     // implementation of Compound
 
-    public Value getCopy()
-    {
-        return create(getJavaString());
-    }
-
     protected Value getConstCopy()
     {
         return createConst(getJavaString());

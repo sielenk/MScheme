@@ -179,11 +179,6 @@ public final class ScmVector
         return this;
     }
 
-    public Value getCopy()
-    {
-        return create((Value[])_data.clone());
-    }
-
     protected Value getConstCopy()
     {
         return createConst((Value[])_data.clone());
