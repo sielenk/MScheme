@@ -24,30 +24,34 @@ import junit.framework.*;
 
 
 public class TestMScheme
-            extends TestSuite
 {
     public final static String id
-    = "$Id$";
+       = "$Id$";
 
-    public TestMScheme(String name)
+
+    public static Test suite()
     {
-        super(name);
+        TestSuite suite = new TestSuite("All MScheme Tests");
+        
+        suite.addTestSuite(MScheme.util.TestArity.class);
 
-        addTestSuite(MScheme.util.TestArity.class);
+        suite.addTestSuite(MScheme.values.TestList.class);
+        suite.addTestSuite(MScheme.values.TestInputPort.class);
 
-        addTestSuite(MScheme.values.TestList.class);
-        addTestSuite(MScheme.values.TestInputPort.class);
+        suite.addTestSuite(MScheme.environment.TestEnvironment.class);
 
-        addTestSuite(MScheme.environment.TestEnvironment.class);
+        suite.addTestSuite(MScheme.tests.TestR5RS.class);
+        suite.addTestSuite(MScheme.tests.TestMachine.class);
 
-        addTestSuite(MScheme.tests.TestR5RS.class);
-        addTestSuite(MScheme.tests.TestMachine.class);
-
-        addTestSuite(MScheme.tests.TestValue.class);
+        suite.addTestSuite(MScheme.tests.TestValue.class);
+        
+        return suite;
     }
 
-    public void testDummy()
+    public static void main (String[] args)
     {
-        Assert.fail("failure Test");
+        junit.textui.TestRunner.run(
+            suite()
+        );
     }
 }
