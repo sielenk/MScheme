@@ -159,6 +159,9 @@ public class StaticEnvironment
         }
     }
 
+    public boolean isBound(Symbol key)
+    { return safeGetCodeFor(key) != null; }
+
     // ***********************************************************************
 }
 
