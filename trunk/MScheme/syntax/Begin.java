@@ -24,13 +24,12 @@ final class Begin
     { super(Arity.atLeast(1)); }
     
     protected Code checkedTranslate(
-        StaticEnvironment syntax,
+        StaticEnvironment compilationEnv,
         List              arguments
     ) throws CompileError, TypeError
     {
         return Sequence.create(
-            arguments.getCodeList(syntax)
+            arguments.getCodeList(compilationEnv)
         );
     }
 }
-

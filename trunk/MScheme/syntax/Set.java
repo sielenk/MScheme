@@ -28,7 +28,7 @@ final class Set
     { super(Arity.exactly(2)); }
 
     protected Code checkedTranslate(
-        StaticEnvironment syntax,
+        StaticEnvironment compilationEnv,
         List              arguments
     ) throws CompileError, TypeError
     {
@@ -36,8 +36,8 @@ final class Set
         Value  value  = arguments.getTail().getHead();
 
         return translate(
-            symbol.getReference(syntax),
-            value .getCode     (syntax)
+            symbol.getReference(compilationEnv),
+            value .getCode     (compilationEnv)
         );
     }
 

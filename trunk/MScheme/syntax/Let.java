@@ -31,7 +31,7 @@ final class Let
 
 
     protected Code checkedTranslate(
-        StaticEnvironment environment,
+        StaticEnvironment compilationEnv,
         List              arguments
     ) throws CompileError, TypeError
     {
@@ -92,7 +92,7 @@ final class Let
 
         Code compiledProc =
             Lambda.INSTANCE.translate(
-                environment,
+                compilationEnv,
                 ValueFactory.prepend(formals.toValue(), body)
             );
 
@@ -108,6 +108,6 @@ final class Let
             );
         }
 
-        return compiledProc.translate(environment, inits);
+        return compiledProc.translate(compilationEnv, inits);
     }
 }

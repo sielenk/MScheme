@@ -31,7 +31,7 @@ final class Letrec
 
 
     protected Code checkedTranslate(
-        StaticEnvironment environment,
+        StaticEnvironment compilationEnv,
         List              arguments
     ) throws CompileError, TypeError
     {
@@ -57,10 +57,10 @@ final class Letrec
         }
 
         StaticEnvironment
-            newEnvironment = environment.newChild(formals);
+            bodyCompilationEnv = compilationEnv.newChild(formals);
 
         CodeList
-            compiledBody = body.getCodeList(newEnvironment);
+            compiledBody = body.getCodeList(bodyCompilationEnv);
 
         // prepend the initialisations to the body
         while (!formals.isEmpty()) {
@@ -69,8 +69,8 @@ final class Letrec
 
             compiledBody = CodeList.prepend(
                 new Assignment(
-                    formal.getReference(newEnvironment),
-                    init  .getCode     (newEnvironment)
+                    formal.getReference(bodyCompilationEnv),
+                    init  .getCode     (bodyCompilationEnv)
                 ),
                 compiledBody
             );
@@ -83,7 +83,7 @@ final class Letrec
             CodeList.create(
                 new CompiledLambda(
                     Arity.exactly(0),
-                    newEnvironment,
+                    bodyCompilationEnv,
                     compiledBody
                 )
             )
