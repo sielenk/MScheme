@@ -1,6 +1,6 @@
 package MScheme.environment;
 
-
+import java.lang.reflect.*;
 import java.util.Vector;
 
 import MScheme.util.Arity;
@@ -145,20 +145,20 @@ public class DynamicEnvironment
         // 6. Standard procedures
 
         // 6.1 Equivalence predicates
-        {"eqv?",    "Eqv"},
-        {"eq?",     "Eq"},
-        {"equal?",  "Equal"},
+//      {"eqv?",    "Eqv"},
+//      {"eq?",     "Eq"},
+//      {"equal?",  "Equal"},
 
         // 6.2 Numbers
 
         // 6.2.5 Numerical operations
-        {"number?",     "IsNumber"},
-        {"complex?",    "IsNumber"},
-        {"real?",       "IsNumber"},
-        {"rational?",   "IsNumber"},
-        {"integer?",    "IsNumber"},
+//      {"number?",     "IsNumber"},
+//      {"complex?",    "IsNumber"},
+//      {"real?",       "IsNumber"},
+//      {"rational?",   "IsNumber"},
+//      {"integer?",    "IsNumber"},
 
-        {"exact?",      "IsNumber"},
+//      {"exact?",      "IsNumber"},
 //      {"inexact?",    "IsNumber"},
 
 //      {"=",   "NumberEQ"},
@@ -217,22 +217,22 @@ public class DynamicEnvironment
         
         // 6.3.1 Booleans
 //      {"not",                    },
-        {"boolean?",    "IsBoolean"},
+//      {"boolean?",    "IsBoolean"},
 
         // 6.3.2 Pairs and lists
-        {"pair?",       "IsPair"},
-        {"cons",        "Cons"},
-        {"car",         "Car"},
-        {"cdr",         "Cdr"},
-        {"set-car!",    "SetCar"},
-        {"set-cdr!",    "SetCdr"},
+//      {"pair?",       "IsPair"},
+//      {"cons",        "Cons"},
+//      {"car",         "Car"},
+//      {"cdr",         "Cdr"},
+//      {"set-car!",    "SetCar"},
+//      {"set-cdr!",    "SetCdr"},
 
-        {"null?",       "IsEmpty"},
-        {"list?",       "IsList"},
-        {"list",        "List"},
-        {"length",      "Length"},
+//      {"null?",       "IsEmpty"},
+//      {"list?",       "IsList"},
+//      {"list",        "List"},
+//      {"length",      "Length"},
         {"append",      "Append"},
-        {"reverse",     "Reverse"},
+//      {"reverse",     "Reverse"},
 
         {"memq",        "Memq"},
         {"memv",        "Memv"},
@@ -243,34 +243,34 @@ public class DynamicEnvironment
         {"assoc",       "Assoc"},
 
         // 6.3.3 Symbols
-        {"symbol?",        "IsSymbol"},
-        {"symbol->string", "SymbolToString"},
-        {"string->symbol", "StringToSymbol"},
+//      {"symbol?",        "IsSymbol"},
+//      {"symbol->string", "SymbolToString"},
+//      {"string->symbol", "StringToSymbol"},
 
         // 6.3.4 Characters
-        {"char?",         "IsChar"},
+//      {"char?",         "IsChar"},
 
-        {"char=?",        "CharEQ"},
-        {"char<?",        "CharLT"},
-        {"char>?",        "CharGT"},
-        {"char<=?",       "CharLE"},
-        {"char>=?",       "CharGE"},
+//      {"char=?",        "CharEQ"},
+//      {"char<?",        "CharLT"},
+//      {"char>?",        "CharGT"},
+//      {"char<=?",       "CharLE"},
+//      {"char>=?",       "CharGE"},
 
-        {"char->integer", "CharToInteger"},
-        {"integer->char", "IntegerToChar"},
+//      {"char->integer", "CharToInteger"},
+//      {"integer->char", "IntegerToChar"},
 
-        {"char-upcase",   "CharUpcase"},
-        {"char-downcase", "CharDowncase"},
+//      {"char-upcase",   "CharUpcase"},
+//      {"char-downcase", "CharDowncase"},
 
         // 6.3.5 Strings
-        {"string?",       "IsString"},
+//      {"string?",       "IsString"},
         {"make-string",   "MakeString"},
         {"string-length", "StringLength"},
         {"string-ref",    "StringRef"},
         {"string-set!",   "StringSet"},
 
         // 6.3.6 Vectors
-        {"vector?",     "IsVector"},
+//      {"vector?",     "IsVector"},
         {"make-vector",   "MakeVector"},
         {"vector-length", "VectorLength"},
         {"vector-ref",    "VectorRef"},
@@ -279,7 +279,7 @@ public class DynamicEnvironment
         // 6.4 Control features
         {"procedure?",    "IsProcedure"},
         {"apply",         "Apply"},
-        {"force",         "Force"},
+//      {"force",         "Force"},
         {"call-with-current-continuation", "CallCC"},
         {"dynamic-wind",  "DynamicWind"},
 
@@ -299,16 +299,16 @@ public class DynamicEnvironment
         {"close-output-port", "CloseOutput"},
 
         // 6.6.2 Input
-        {"read",         "Read"},
-        {"read-char",    "ReadChar"},
-        {"peek-char",    "PeekChar"},
-        {"eof-object",   "IsEof"},
-        {"char-ready",   "IsCharReady"},
+//      {"read",         "Read"},
+//      {"read-char",    "ReadChar"},
+//      {"peek-char",    "PeekChar"},
+//      {"eof-object",   "IsEof"},
+//      {"char-ready",   "IsCharReady"},
 
         // 6.6.3 Output
-        {"write",        "Write"},
-        {"display",      "Display"},
-        {"write-char",   "WriteChar"}
+//      {"write",        "Write"},
+//      {"display",      "Display"},
+//      {"write-char",   "WriteChar"}
     };
 
     public static DynamicEnvironment getSchemeReportEnvironment()
@@ -328,14 +328,84 @@ public class DynamicEnvironment
                 );
             }
             catch (FunctionNotFoundException e) {
-                System.err.println("not found: " + dynamicBindings[i][1]);
+//              System.err.println("not found: " + dynamicBindings[i][1]);
 //              throw new RuntimeException(
 //                  "unexpected FunctionNotFoundException"
 //              );
             }
         }
 
+        result.parseClass(MScheme.functions.Builtins.class);
+
         return result;
+    }
+
+    private static boolean paramsValid(Class[] params)
+    {
+        if (params.length == 1) {
+            return (params[0] == Value.class) || (params[0] == List.class);
+        } else {
+            for (int i = 0; i < params.length; i++) {
+                if (params[i] != Value.class) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    public void parseClass(Class cls)
+    {
+        Method[] methods = cls.getMethods();
+
+        for (int i = 0; i < methods.length; i++) {
+            Method me = methods[i];
+            int    mo = me.getModifiers();
+
+            if (!Modifier.isStatic(mo) || !Modifier.isPublic(mo)) {
+                continue;
+            }
+
+            if (!paramsValid(me.getParameterTypes())) {
+                continue;
+            }
+
+            if (!Value.class.isAssignableFrom(me.getReturnType())) {
+                continue;
+            }
+
+            String name = me.getName();
+            StringBuffer buf = new StringBuffer();
+
+            for (int index = 0; index < name.length(); index++) {
+                char c = name.charAt(index);
+
+                if (c == '_') {
+                    buf.append(
+                        (char)Integer.parseInt(
+                            name.substring(index + 1, index + 3),
+                            16
+                        )
+                    );
+                    index += 2;
+                } else {
+                    buf.append(c);
+                }
+            }
+
+            try {
+                define(
+                    Symbol.create(buf.toString()),
+                    new MScheme.functions.ReflectedMethod(me)
+                );
+            }
+            catch (SyntaxException e) {
+                throw new RuntimeException(
+                    "unexpected SyntaxException"
+                );
+            }
+        }
     }
 
 
