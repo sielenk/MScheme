@@ -56,6 +56,6 @@ public final class Literal
 
     public String toString()
     {
-        return _value.toString();
+        return "lit:" + _value.toString();
     }
 }
