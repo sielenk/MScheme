@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import MScheme.environment.StaticEnvironment;
 import MScheme.values.Value;
+import MScheme.values.List;
 import MScheme.code.*;
 import MScheme.exceptions.*;
 
@@ -31,6 +32,27 @@ public final class SchemeVector
     
     public static SchemeVector create(int size, Value fill)
     { return (size == 0) ? _empty : new SchemeVector(size, fill); }
+    
+    public static SchemeVector create(List list)
+        throws ListExpected
+    { return createHelper(list, 0); }
+    
+    private static SchemeVector createHelper(List list, int index)
+        throws ListExpected
+    {
+        if (list.isEmpty()) {
+            return create(index);
+        } else {
+            SchemeVector result = createHelper(
+                list.getTail(),
+                index + 1
+            );
+
+            result._data[index] = list.getHead();
+
+            return result;
+        }
+    }
     
 
     public Value setConst()
@@ -132,5 +154,14 @@ public final class SchemeVector
     public Code getCode(StaticEnvironment e)
         throws CantCompileException
     { throw new CantCompileException(this); }
+
+    public List getList()
+    {
+        List result = List.with();
+        for (int i = getLength() - 1; i >= 0; i--) {
+            result = List.prepend(_data[i], result);
+        }
+        return result;
+    }
 }
 
