@@ -18,8 +18,8 @@ final class PushContinuation
     public final static String id
         = "$Id$";
 
-    final private List     _done;
-    final private CodeList _todo;
+    private final List     _done;
+    private final CodeList _todo;
 
 
     private PushContinuation(
@@ -64,13 +64,13 @@ final class PushContinuation
 }
 
 
-final public class Application
+public final class Application
     extends Code
 {
     public final static String id
         = "$Id$";
 
-    final private CodeList _permutedApplication;
+    private final CodeList _permutedApplication;
 
     private Application(CodeList application)
     { _permutedApplication = application.getReversed(); }

@@ -10,14 +10,14 @@ import MScheme.exceptions.RuntimeError;
 import MScheme.exceptions.TypeError;
 
 
-final public class WindContinuation
+public final class WindContinuation
     extends Continuation
 {
     public final static String id
         = "$Id$";
 
-    final private Code _before;
-    final private Code _after;
+    private final Code _before;
+    private final Code _after;
 
     private WindContinuation(
         Registers registers,
@@ -31,7 +31,7 @@ final public class WindContinuation
     }
 
 
-    static public Code create(
+    public static Code create(
         Registers registers,
         Code      before,
         Code      thunk,

@@ -9,18 +9,18 @@ import MScheme.exceptions.RuntimeError;
 import MScheme.exceptions.TypeError;
 
 
-abstract public class UnaryValueFunction
+public abstract class UnaryValueFunction
     extends UnaryFunction
 {
     public final static String id
         = "$Id$";
 
-    final protected Code checkedCall(
+    protected final Code checkedCall(
         Registers registers,
         Value     fst
     ) throws RuntimeError, TypeError
     { return checkedCall(fst).getLiteral(); }
 
-    abstract protected Value checkedCall(Value fst)
+    protected abstract Value checkedCall(Value fst)
         throws RuntimeError, TypeError;
 }

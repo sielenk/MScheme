@@ -14,8 +14,8 @@ public abstract class Continuation
     public final static String id
         = "$Id$";
 
-    final private int       _level;
-    final private Registers _capturedRegisters;
+    private final int       _level;
+    private final Registers _capturedRegisters;
 
 
     protected Continuation(Registers registers)
@@ -41,7 +41,7 @@ public abstract class Continuation
     }
 
 
-    abstract protected Code execute(
+    protected abstract Code execute(
         Registers registers,
         Value     value
     ) throws RuntimeError, TypeError;

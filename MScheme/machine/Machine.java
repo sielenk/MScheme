@@ -30,12 +30,12 @@ final class AbortContinuation
 }
 
 
-final public class Machine
+public final class Machine
 {
     public final static String id
         = "$Id$";
 
-    final private Environment _environment;
+    private final Environment _environment;
     
     public Machine(Environment environment)
     { _environment  = environment; }

@@ -8,17 +8,17 @@ import MScheme.exceptions.RuntimeError;
 import MScheme.exceptions.TypeError;
 
 
-abstract public class ValueThunk
+public abstract class ValueThunk
     extends Thunk
 {
     public final static String id
         = "$Id$";
 
-    final protected Code checkedCall(
+    protected final Code checkedCall(
         Registers registers
     ) throws RuntimeError, TypeError
     { return checkedCall().getLiteral(); }
 
-    abstract protected Value checkedCall()
+    protected abstract Value checkedCall()
         throws RuntimeError, TypeError;
 }
