@@ -52,6 +52,7 @@ import MScheme.values.Function;
 
 
 public interface Value
+    extends Code
 {
     /** The CVS id of the file containing this class. */
     String id
@@ -270,14 +271,9 @@ public interface Value
     // compilation functions
 
     /**
-     * Compiles a value as a literal.
-     */
-    Code getLiteral();
-
-    /**
      * Compiles a value as normal code.
      */
-    Code getCode(StaticEnvironment compilationEnv)
+    Code getCompiled(StaticEnvironment compilationEnv)
         throws SchemeException;
 
     /**
