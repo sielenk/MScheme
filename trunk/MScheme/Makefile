@@ -125,7 +125,7 @@ SRC_TEST =	TestMScheme.java	\
 		util/TestArity.java	\
 		values/TestInputPort.java	\
 		values/TestList.java	\
-		values/TestValue.java
+		tests/TestValue.java
 
 PACKAGES =	MScheme			\
 		MScheme.code		\
@@ -135,7 +135,8 @@ PACKAGES =	MScheme			\
 		MScheme.machine		\
 		MScheme.syntax		\
 		MScheme.util		\
-		MScheme.values
+		MScheme.values		\
+		MScheme.tests
 
 JIKES=jikes -bootclasspath /usr/lib/java/jre/lib/rt.jar
 GCJ=gcj
