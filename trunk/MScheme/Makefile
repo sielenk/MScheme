@@ -161,6 +161,7 @@ clean:
 	rm -f $(OBJ)
 
 doc:
+	if [ \! -e doc ]; then mkdir doc; fi
 	javadoc -d doc $(PACKAGES)
 
 .PHONY: doc clean all
