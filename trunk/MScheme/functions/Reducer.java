@@ -1,7 +1,8 @@
 package MScheme.functions;
 
 import MScheme.Value;
-import MScheme.List;
+
+import MScheme.values.List;
 
 import MScheme.exceptions.RuntimeError;
 import MScheme.exceptions.TypeError;
@@ -34,12 +35,14 @@ abstract class Reducer
         else
         {
             Value result = list.getHead();
-            List  tail   = list.getTail();
-
-            while (!tail.isEmpty())
+	    
+	        for (
+                List tail = list.getTail();
+                !tail.isEmpty();
+                tail   = tail.getTail()
+		    )
             {
                 result = combine(result, tail.getHead());
-                tail   = tail.getTail();
             }
 
             return result;
@@ -50,12 +53,14 @@ abstract class Reducer
     throws RuntimeError, TypeError
     {
         Value result = _initial;
-        List  tail   = list;
-
-        while (!tail.isEmpty())
+	
+	    for (
+            List tail = list;
+            !tail.isEmpty();
+            tail   = tail.getTail()
+	    )
         {
             result = combine(result, tail.getHead());
-            tail   = tail.getTail();
         }
 
         return result;

@@ -6,7 +6,6 @@ package MScheme.functions;
 import MScheme.util.Arity;
 
 import MScheme.Value;
-import MScheme.List;
 import MScheme.Code;
 
 import MScheme.values.*;

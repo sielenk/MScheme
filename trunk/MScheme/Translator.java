@@ -1,5 +1,7 @@
 package MScheme;
 
+import MScheme.values.List;
+
 import MScheme.environment.StaticEnvironment;
 
 import MScheme.exceptions.SchemeException;

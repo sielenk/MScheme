@@ -1,13 +1,13 @@
 package MScheme.code;
 
 import MScheme.Value;
-import MScheme.List;
 import MScheme.Code;
 
 import MScheme.machine.Registers;
 import MScheme.machine.Continuation;
 
 import MScheme.values.ListFactory;
+import MScheme.values.List;
 import MScheme.values.Empty;
 
 import MScheme.exceptions.*;

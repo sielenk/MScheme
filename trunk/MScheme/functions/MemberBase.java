@@ -1,8 +1,9 @@
 package MScheme.functions;
 
 import MScheme.Value;
+
 import MScheme.values.ScmBoolean;
-import MScheme.List;
+import MScheme.values.List;
 
 import MScheme.exceptions.ListExpected;
 import MScheme.exceptions.PairExpected;
@@ -22,16 +23,16 @@ abstract class MemberBase
         Value values
     ) throws ListExpected, PairExpected
     {
-        List tail = values.toList();
-
-        while (!tail.isEmpty())
+        for (
+            List tail = values.toList();
+            !tail.isEmpty();
+            tail = tail.getTail()
+	    )
         {
             if (equal(key, tail.getHead()))
             {
                 return tail;
             }
-
-            tail = tail.getTail();
         }
 
         return ScmBoolean.createFalse();

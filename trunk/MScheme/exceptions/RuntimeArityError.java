@@ -1,7 +1,7 @@
 package MScheme.exceptions;
 
 import MScheme.util.Arity;
-import MScheme.List;
+import MScheme.values.List;
 
 
 public final class RuntimeArityError
