@@ -101,14 +101,6 @@ public abstract class ValueDefaultImplementations
         return false;
     }
 
-    /**
-     * @return <code>false</code>
-     */
-    public boolean isEmpty()
-    {
-        return false;
-    }
-
 
     // disjoint types (as in R5RS, 3.2)
 
@@ -399,10 +391,6 @@ public abstract class ValueDefaultImplementations
     public Syntax getSyntax(StaticEnvironment compilationEnv)
         throws SchemeException
     {
-        return ProcedureCall.create(
-            getCode(
-                compilationEnv
-            )
-        );
+        return ProcedureCall.create(this);
     }
 }
