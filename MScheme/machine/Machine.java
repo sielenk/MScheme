@@ -28,6 +28,10 @@ final class AbortContinuation
 
     protected Code execute(Registers state, Value evaluationResult)
     { _result = evaluationResult; return null; }
+
+
+    protected String debugString()
+    { return "abort"; }
 }
 
 
@@ -51,21 +55,30 @@ public final class Machine
 
 
     public Value execute(Code program)
-        throws RuntimeError, TypeError
+        throws SchemeException
     {
         Code              next  = program;
         Registers         state = new Registers(getEnvironment());
         AbortContinuation abort = new AbortContinuation(state);
 
-        while (!abort.hasResult()) {
-            next = next.executionStep(state);
+        try {
+            while (!abort.hasResult()) {
+                next = next.executionStep(state);
+            }
+        }
+        catch (SchemeException e) {
+            System.err.print(
+                state.getContinuation().toString()
+            );
+            
+            throw e;
         }
 
         return abort.getResult();
     }
 
     public Value evaluate(Value evaluatee)
-        throws RuntimeError, CompileError, TypeError
+        throws SchemeException
     {
         return execute(
             evaluatee.getCode(
