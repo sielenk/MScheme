@@ -27,81 +27,77 @@ import MScheme.machine.Continuation;
 import MScheme.machine.Registers;
 
 
-final class SequenceContinuation
-    extends Continuation
-{
-    public final static String id
-    = "$Id$";
-
-
-    private final CodeList _todo;
-
-    private SequenceContinuation(
-        Registers state,
-        CodeList  todo
-    )
-    {
-        super(state);
-        _todo = todo;
-    }
-
-    static Code prepareNext(
-        Registers state,
-        CodeList  todo
-    )
-    {
-        CodeList tail = todo.getTail();
-
-        if (!tail.isEmpty())
-        {
-            new SequenceContinuation(state, tail);
-        }
-
-        return todo.getHead();
-    }
-
-    protected Code execute(Registers state, Value value)
-    {
-        return prepareNext(state, _todo);
-    }
-
-
-    protected String debugString()
-    {
-        return "seqence[" + _todo + "]";
-    }
-}
-
-
 public final class Sequence
     implements Code
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
-    private final CodeList _sequence;
+    private final Code[] _sequence;
+    private final int    _index;
 
-    private Sequence(CodeList sequence)
+    private Sequence(Code[] sequence, int index)
     {
         _sequence = sequence;
+        _index    = index;
     }
 
-    public static Code create(CodeList sequence)
+    private static Code create(Code[] sequence, int index)
     {
-        if (sequence.getTail().isEmpty())
+        if (index + 1 == sequence.length)
         {
-            return sequence.getHead();
+            // index denotes the last element
+            // don't create a new Sequence object
+            return sequence[index];
         }
         else
         {
-            return new Sequence(sequence);
+            // There are at least two elements to process 
+            // in sequence -> create a new one.
+            return new Sequence(sequence, index);
         }
+    }
+
+    public static Code create(Code[] sequence)
+    {
+    	return create(sequence, 0);
     }
 
     public Code executionStep(Registers state)
     {
-        return SequenceContinuation.prepareNext(state, _sequence);
+        new Continuation(state) {
+	    protected Code execute(Registers state, Value value)
+            {
+                // _index+1 will always be < sequence.length
+                // this is enforced by create(Code[], int)
+                return create(_sequence, _index + 1);
+            }
+
+            protected String debugString()
+            {
+            	StringBuffer result = new StringBuffer("seqence:<");
+		int          i      = _index;
+
+                while (true)
+                {
+                    result.append(_sequence[++i].toString());
+                    if (i < _sequence.length)
+                    {
+                    	result.append(", ");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            	result.append(">\n");
+
+                return result.toString();
+            }
+        };
+        
+        return _sequence[_index];
     }
 
 
