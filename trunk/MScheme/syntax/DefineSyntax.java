@@ -61,8 +61,8 @@ final class Macro
                             _transformer,
                             CodeList.create(
                                 _definitionEnv.getLiteral(),
-                                 usageEnv.getLiteral(),
-                                arguments.toValue().getLiteral()
+                                usageEnv.getLiteral(),
+                                arguments.getLiteral()
                             )
                         )
                     )
