@@ -36,7 +36,7 @@ public class Values
     }
 
 
-    public SExpr getFirst()
+    public SExpr getHead()
     {
         return _data.head;
     }
@@ -49,6 +49,12 @@ public class Values
         } else {
             return EMPTY;
         }
+    }
+
+
+    public SExpr at(int index)
+    {
+        throw new RuntimeException("public SExpr at(int index): stub");
     }
 
 
