@@ -48,27 +48,44 @@ public class TestR5RS
         );
     }
 
+    private void check(String in, String out)
+        throws SchemeException
+    { assert(eval(in).equal(quote(out))); }
 
+
+    // 4 Expressions
+
+    // 4.1 Primitive expression types
+    
+    /// 4.1.1 Variable references
+    public void test4_1_1()
+        throws SchemeException
+    {
+        eval("(define x 28)");
+        check("x", "28");
+    }
+
+    /// 4.1.2 Literal expressions
     public void test4_1_2()
         throws SchemeException
     {
-        assert(eval("(quote a)"       ).equal(quote("a"       )));
-        assert(eval("(quote #(a b c))").equal(quote("#(a b c)")));
-        assert(eval("(quote (+ 1 2))" ).equal(quote("(+ 1 2)" )));
+        check("(quote a)"       , "a"       );
+        check("(quote #(a b c))", "#(a b c)");
+        check("(quote (+ 1 2))" , "(+ 1 2)" );
 
-        assert(eval("'a"        ).equal(quote("a"        )));
-        assert(eval("'#(a b c)" ).equal(quote("#(a b c)" )));
-        assert(eval("'()"       ).equal(quote("()"       )));
-        assert(eval("'(+ 1 2)"  ).equal(quote("(+ 1 2)"  )));
-        assert(eval("'(quote a)").equal(quote("(quote a)")));
-        assert(eval("''a"       ).equal(quote("(quote a)")));
+        check("'a"        , "a"        );
+        check("'#(a b c)" , "#(a b c)" );
+        check("'()"       , "()"       );
+        check("'(+ 1 2)"  , "(+ 1 2)"  );
+        check("'(quote a)", "(quote a)");
+        check("''a"       , "(quote a)");
 
-        assert(eval("'\"abc\"").equal(quote("\"abc\"")));
-        assert(eval("\"abc\"" ).equal(quote("\"abc\"")));
-        assert(eval("'145932" ).equal(quote("145932" )));
-        assert(eval("145932"  ).equal(quote("145932" )));
-        assert(eval("'#t"     ).equal(quote("#t"     )));
-        assert(eval("#t"      ).equal(quote("#t"     )));
+        check("'\"abc\"", "\"abc\"");
+        check("\"abc\"" , "\"abc\"");
+        check("'145932" , "145932" );
+        check("145932"  , "145932" );
+        check("'#t"     , "#t"     );
+        check("#t"      , "#t"     );
 
         try {
             eval("'(1 . 2)").toPair().setFirst(quote("a"));
@@ -89,11 +106,12 @@ public class TestR5RS
         catch (ImmutableException e) { }
     }
 
+    /// 4.1.3 Procedure calls
     public void test4_1_3()
         throws SchemeException
     {
-        assert(eval("(+ 3 4)"          ).equal(quote("7" )));
-        assert(eval("((if #f + *) 3 4)").equal(quote("12")));
+        check("(+ 3 4)"          , "7" );
+        check("((if #f + *) 3 4)", "12");
 
         try {
             eval("()");
@@ -102,15 +120,103 @@ public class TestR5RS
         catch (SyntaxException e) { }
     }
 
+    /// 4.1.4 Procedures
     public void test4_1_4()
         throws SchemeException
     {
-        assert(eval( "(lambda (x) (+ x x))"   ).isFunction());
-        assert(eval("((lambda (x) (+ x x)) 4)").equal(quote("8")));
+        assert(eval("(lambda (x) (+ x x))").isFunction());
+        check(   "((lambda (x) (+ x x)) 4)", "8");
 
-        assert(eval("((lambda x x) 3 4 5 6)").equal(quote("(3 4 5 6)")));
-        assert(eval("((lambda (x y .z) z) 3 4 5 6)")
-                .equal(quote("(5 6)")));
+        eval(
+            "(define reverse-subtract\n" +
+            "  (lambda (x y) (- y x)))"
+        );
+        check("(reverse-subtract 7 10)", "3");
+
+        eval(
+            "(define add4\n" +
+            "  (let ((x 4))\n" +
+            "    (lambda (y) (+ x y))))"
+        );
+        check("(add4 6)", "10");
+
+        try {
+            eval("(lambda (x y x) y)");
+            fail();
+        }
+        catch (SyntaxException e) { }
+
+        check("((lambda x x) 3 4 5 6)", "(3 4 5 6)");
+        check("((lambda (x y .z) z) 3 4 5 6)", "(5 6)");
     }
+
+    /// 4.1.5 Conditionals
+    public void test4_1_5()
+        throws SchemeException
+    {
+        check("(if (> 3 2) 'yes 'no)", "yes");
+        check("(if (> 2 3) 'yes 'no)", "no");
+        check("(if (> 3 2)\n" +
+              "    (- 3 2)\n" +
+              "    (+ 3 2))",
+              "1"
+        );
+    }
+
+    /// 4.1.6 Assignments
+    public void test4_1_6()
+        throws SchemeException
+    {
+        eval("(define x 2)");
+        check("(+ x 1)", "3");
+        eval("(set! x 4)");
+        check("(+ x 1)", "5");
+    }
+
+
+    // 4.2 Derived expression types
+
+    /// 4.2.1 Conditionals
+    public void test4_2_1()
+        throws SchemeException
+    {
+        check(
+            "(cond ((> 3 2) 'greater)\n" +
+            "      ((< 3 2) 'less))",
+            "greater"
+        );
+        check(
+            "(cond ((> 3 3) 'greater)\n" +
+            "      ((< 3 3) 'less))\n" +
+            "      (else 'equal))",
+            "equal"
+        );
+        check(
+            "(cond ((assv 'b '((a 1) (b 2))) => cadr)\n" +
+            "      (else #f))",
+            "2"
+        );
+    }
+
+    /// 4.2.2 Binding constructs
+
+    /// 4.2.3 Sequencing
+    public void test4_2_3()
+        throws SchemeException
+    {
+        eval("(define x 0)");
+        check(
+            "(begin (set! x 5)\n" +
+            "       (+ x 1))",
+            "6"
+        );
+    }
+
+    /// 4.2.4 Iteration
+
+    /// 4.2.5 Delayed evaluation
+
+    /// 4.2.6 Quasiquotation
+
 }
 
