@@ -84,8 +84,8 @@ final class Letrec
 
             compiledLetrec[index++]
                 = Set.translate(
-                      formal.getReference(bodyCompilationEnv),
-                      init  .getCode     (bodyCompilationEnv)
+                      bodyCompilationEnv.getReferenceFor(formal),
+                      init.getCode(bodyCompilationEnv)
                   );
 
             formals = formals.getTail();
