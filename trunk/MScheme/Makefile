@@ -98,6 +98,7 @@ SRC =	Code.java	\
 	syntax/Quote.java	\
 	syntax/ProcedureCall.java	\
 	syntax/Set.java	\
+	syntax/SequenceTags.java	\
 	syntax/SyntaxFactory.java	\
 	util/Arity.java	\
 	values/Compound.java	\
