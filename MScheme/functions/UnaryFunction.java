@@ -16,7 +16,7 @@ public abstract class UnaryFunction
 {
     private final static Arity _unary = Arity.exactly(1);
 
-    protected final Arity getArity()
+    public final Arity getArity()
     { return _unary; }
 
     protected final Code checkedCall(

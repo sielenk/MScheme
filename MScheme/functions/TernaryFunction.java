@@ -16,7 +16,7 @@ public abstract class TernaryFunction
 {
     private final static Arity _ternary = Arity.exactly(3);
 
-    protected final Arity getArity()
+    public final Arity getArity()
     { return _ternary; }
 
     protected final Code checkedCall(

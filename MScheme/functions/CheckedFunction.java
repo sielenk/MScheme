@@ -13,8 +13,6 @@ import MScheme.exceptions.*;
 public abstract class CheckedFunction
     extends Function
 {
-    protected abstract Arity getArity();
-    
     protected abstract Code checkedCall(
         Registers registers,
         int       len,
@@ -22,8 +20,8 @@ public abstract class CheckedFunction
     ) throws RuntimeError, TypeError;
 
 
-    // implementation of Function
-    
+    // partial implementation of Function
+
     final public Code call(Registers registers, List arguments)
         throws RuntimeError, TypeError
     {

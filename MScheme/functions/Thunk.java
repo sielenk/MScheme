@@ -15,7 +15,7 @@ public abstract class Thunk
 {
     private final static Arity _none = Arity.exactly(0);
 
-    protected final Arity getArity()
+    public final Arity getArity()
     { return _none; }
 
     protected final Code checkedCall(

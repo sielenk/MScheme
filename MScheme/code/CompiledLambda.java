@@ -66,7 +66,7 @@ public final class CompiledLambda
             throws IOException
         { destination.write("[closure]"); }
 
-        protected Arity getArity()
+        public Arity getArity()
         { return _arity; }
 
         protected Code checkedCall(
