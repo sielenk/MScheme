@@ -10,6 +10,10 @@ import MScheme.exceptions.*;
 
 public abstract class Value
 {
+    /** 
+     */
+    public void setLiteral() { }
+
     /** <code>true</code> only for the false singleton */
     public boolean isFalse() { return false; }
     
@@ -35,20 +39,32 @@ public abstract class Value
 
     // type casts (to get SchemeExceptions instead of ClassCastExceptions)
     
-    public List      toList    () throws     ListExpectedException
+    public List         toList     () throws     ListExpectedException
     { throw new ListExpectedException(this); }
 
-    public Pair      toPair    () throws     PairExpectedException
+    public Pair         toPair     () throws     PairExpectedException
     { throw new PairExpectedException(this); }
 
-    public Function  toFunction() throws FunctionExpectedException
-    { throw new FunctionExpectedException(this); }
-
-    public Symbol    toSymbol  () throws   SymbolExpectedException
+    public Symbol       toSymbol   () throws   SymbolExpectedException
     { throw new SymbolExpectedException(this); }
 
-    public Port      toPort    () throws     PortExpectedException
+    public SchemeNumber toNumber   () throws   NumberExpectedException
+    { throw new NumberExpectedException(this); }
+
+    public SchemeChar   toChar     () throws     CharExpectedException
+    { throw new CharExpectedException(this); }
+
+    public SchemeString toScmString() throws   StringExpectedException
+    { throw new StringExpectedException(this); }
+
+    public SchemeVector toVector   () throws   VectorExpectedException
+    { throw new VectorExpectedException(this); }
+
+    public Port         toPort     () throws     PortExpectedException
     { throw new PortExpectedException(this); }
+
+    public Function     toFunction () throws FunctionExpectedException
+    { throw new FunctionExpectedException(this); }
 
 
     // equivalence predicates (as in R5RS, 6.1)
