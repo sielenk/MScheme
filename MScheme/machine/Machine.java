@@ -1,116 +1,193 @@
 package MScheme.machine;
 
-
-import MScheme.environment.Environment;
-
-import MScheme.expressions.SExpr;
-import MScheme.expressions.SFunction;
-import MScheme.expressions.functions.EvalFunc;
-
-import MScheme.exceptions.SException;
-
-import MScheme.util.Values;
+import MScheme.values.*;
+import MScheme.code.*;
+import MScheme.exceptions.*;
+import MScheme.functions.UnaryFunction;
+import MScheme.environment.*;
 
 
-class MutableContext extends Context
+final class AbortException
+    extends SchemeException
 {
-    protected MutableContext(
-        Continuation continuation,
-        Environment  environment
-    ) {
-        super(
-            continuation,
-            environment
-        );
-    }
+    public AbortException(Value result)
+    { super(result); }
+}
 
+class AbortContinuation
+    extends Continuation
+{
+    AbortContinuation(Machine machine)
+    { super(machine); }
 
-    protected void setContinuation(
-        Continuation continuation
-    ) {
-        _continuation = continuation;
-    }
-
-
-    protected void setEnvironment(
-        Environment environment
-    )
+    protected Code internalInvoke(Machine machine, Value evaluationResult)
+        throws AbortException
     {
-        _environment = environment;
-    }
-
-
-    protected void setContext(
-        Context context
-    ) {
-        _continuation = context._continuation;
-        _environment  = context._environment;
+        throw new AbortException(evaluationResult);
     }
 }
 
 
-public class Machine extends MutableContext
+class SequenceContinuation
+    extends Continuation
 {
-    public Machine(
-        Environment environment
-    ) {
-        super(
-            Continuation.HALT,
-            environment
-        );
-    }
+    final private CodeList _unevaluatedTail;
 
-
-    private Continuation pop()
+    private SequenceContinuation(
+        Machine  machine,
+        CodeList unevaluatedTail
+    )
     {
-        Continuation continuation = getContinuation();
-        setContext(continuation);
-        return continuation;
+        super(machine);
+        _unevaluatedTail = unevaluatedTail;
     }
 
 
-    public void push(
-        SFunction function
-    ) {
-        setContinuation(
-            new Continuation(
-                getContinuation(),
-                getEnvironment(),
-                function
-            )
+    static Code handle(Machine machine, CodeList sequence)
+    {
+        CodeList tail = sequence.getTail();
+
+        if (!tail.isEmpty()) {
+            new SequenceContinuation(machine, tail);
+        }
+
+        return sequence.getHead();
+    }
+    
+    protected Code internalInvoke(Machine machine, Value value)
+    { return handle(machine, _unevaluatedTail); }
+}
+
+
+class PushContinuation
+    extends Continuation
+{
+    final private List     _done;
+    final private CodeList _todo;
+
+
+    private PushContinuation(
+        Machine  machine,
+        List     done,
+        CodeList todo
+    )
+    { super(machine); _done = done; _todo = todo; }
+
+    static Code handle(Machine machine, CodeList application)
+    {
+        CodeList permutedApplication
+            = application.getReversed();
+    
+        new PushContinuation(
+            machine,
+            ValueFactory.createList(),
+            permutedApplication.getTail()
         );
+        
+        return permutedApplication.getHead();
     }
 
+    private boolean allElementsEvaluated()
+    { return _todo.isEmpty(); }
+    
+    private Code applyFunction(
+        Machine machine,
+        List    application
+    ) throws SchemeException
+    {
+        Function func = application.getHead().toFunction();
+        List     args = application.getTail();
+        
+        return func.call(machine, args);
+    }
 
-    public void push(
-        SFunction   function,
-        Environment environment
-    ) {
-        setContinuation(
-            new Continuation(
-                getContinuation(),
-                environment,
-                function
-            )
+    private Code prepareNextElement(
+        Machine machine,
+        List    evaluatedPart
+    )
+    {
+        new PushContinuation(
+            machine,
+            evaluatedPart,
+            _todo.getTail()
         );
+            
+        return _todo.getHead();
     }
+    
+    protected Code internalInvoke(Machine machine, Value value)
+        throws SchemeException
+    {
+        List evaluatedPart = ValueFactory.prepend(value, _done);
 
-
-    public SExpr evaluate(
-        SExpr sexpr
-    ) throws SException {
-        Values accu  = new Values(sexpr);
-
-        push(EvalFunc.INSTANCE);
-
-        for (;;) {
-            Continuation cont = pop();
-
-            if (cont == Continuation.HALT) {
-                return accu.at(0);
-            }
-
-            accu = cont.invoke(this, accu);
+        if (allElementsEvaluated()) {
+            return applyFunction     (machine, evaluatedPart);
+        } else {
+            return prepareNextElement(machine, evaluatedPart);
         }
     }
 }
+
+
+public class Machine
+{
+    private DynamicEnvironment _environment;
+    private Continuation       _continuation;
+    
+    public Machine(DynamicEnvironment environment)
+    {
+        _environment  = environment;
+        _continuation = null;
+    }
+
+
+    public DynamicEnvironment getEnvironment()
+    { return _environment; }
+
+    public void setEnvironment(DynamicEnvironment newEnvironment)
+    { _environment = newEnvironment; }
+    
+
+    Continuation getContinuation()
+    { return _continuation; }
+
+    void setContinuation(Continuation newContinuation)
+    { _continuation = newContinuation; }
+
+    public UnaryFunction getCurrentContinuation()
+    { return _continuation.getFunction(); }
+    
+    
+    public Code handleApplication(CodeList application)
+    { return PushContinuation.handle(this, application); }
+    
+    public Code handleSequence(CodeList sequence)
+    { return SequenceContinuation.handle(this, sequence); }
+    
+    public Code handleResult(Value result)
+        throws SchemeException
+    { return getContinuation().invoke(this, result); }
+    
+    
+    public Value evaluate(Value evaluatee)
+        throws SchemeException
+    {
+        Code accumulator = evaluatee.getCode(
+            getEnvironment().getStatic()
+        );
+        
+        new AbortContinuation(this);
+        
+        try {
+
+            for (;;)
+            {
+                accumulator = accumulator.executionStep(this);
+            }
+        
+        } catch (AbortException e) {
+            return e.getCause();
+        }
+    }
+}
+
