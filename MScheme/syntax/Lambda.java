@@ -8,6 +8,7 @@ import MScheme.util.Arity;
 import MScheme.code.CompiledLambda;
 import MScheme.environment.StaticEnvironment;
 import MScheme.values.List;
+import MScheme.values.Empty;
 import MScheme.values.Pair;
 import MScheme.values.ValueFactory;
 
@@ -42,29 +43,32 @@ final class Lambda
             formals = rawFormals.toList();
             arity   = Arity.exactly(formals.getLength());
         } else {
-            Pair head     = Pair.create(null, rawFormals);
-            Pair lastPair = head;
+            // rawFormals is an improper list.
+            // This happens for lambda expressions
+            // with optional parameters like
+            // (lambda (x y . rest) [...])
+            // or
+            // (lambda args [...]).
+            // The following code transforms the improper
+            // or not-at-all list into a proper one and
+            // counts the required parameters (two in the
+            // first example and none in second).
+
+            Value current = rawFormals;
             int  minArity = 0;
-        
-            while (lastPair.getSecond().isPair()) {
-                lastPair = lastPair.getSecond().toPair();
-                minArity++;
+            List  result  = Empty.create();
+
+            while (current.isPair()) {
+                Pair currentPair = current.toPair();
+
+                ++minArity;
+                result  = List.prepend(currentPair.getFirst(), result);
+                current = currentPair.getSecond();
             }
-            
-            try {
-                lastPair.setSecond(
-                    ValueFactory.createList(
-                        lastPair.getSecond().toSymbol()
-                    )
-                );
-            }
-            catch (ImmutableException e) {
-                throw new RuntimeException(
-                    "unexpected ImmutableException"
-                );
-            }
-            
-            formals = head.getSecond().toList();
+
+            result = List.prepend(current, result);
+
+            formals = result.getReversed();
             arity   = Arity.atLeast(minArity);
         }
 
