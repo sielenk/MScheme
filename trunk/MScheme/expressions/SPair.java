@@ -28,7 +28,7 @@ public class SPair extends SList
 
                 fab.append(curr.getCar());
 
-                if (next == SEmpty.INSTANCE) {
+                if (next == SList.EMPTY) {
                     return fab.getValues();
                 } else {
                     curr = (SPair)next;
@@ -74,7 +74,7 @@ public class SPair extends SList
             sexpr = pair._cdr;
         }
 
-        if (sexpr != SEmpty.INSTANCE) {
+        if (sexpr != EMPTY) {
             result.append(" . ").append(sexpr);
         }
 
