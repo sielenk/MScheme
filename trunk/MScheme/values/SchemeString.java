@@ -13,13 +13,24 @@ public final class SchemeString
     private boolean _isLiteral = false;
 
     
-    public SchemeString(String value)
+    private SchemeString(String value)
     { _string = value; }
 
-    public void setLiteral()
-    { _isLiteral = true; }
+    public static SchemeString create(String javaString)
+    { return new SchemeString(javaString); }
+
+    public static SchemeString create(Symbol schemeSymbol)
+    {
+        SchemeString result = new SchemeString(schemeSymbol.getKey());
+        result._isLiteral = true;
+        return result;
+    }
+
+
+    public Value setLiteral()
+    { _isLiteral = true; return this; }
      
-    public String getString()
+    public String getJavaString()
     { return _string; }
     
     
@@ -57,7 +68,7 @@ public final class SchemeString
     public void write(Writer destination)
         throws IOException
     {
-        String str = getString();
+        String str = getJavaString();
             
         destination.write('"');
         for (int i = 0; i < str.length(); i++) {
@@ -81,6 +92,6 @@ public final class SchemeString
     
     public void display(Writer destination)
         throws IOException
-    { destination.write(getString()); }
+    { destination.write(getJavaString()); }
 }
 
