@@ -12,4 +12,3 @@ public class ListExpected
     public ListExpected(Value cause)
     { super(cause); }
 }
-

@@ -1,10 +1,12 @@
 package MScheme.functions;
 
 import MScheme.machine.Registers;
+
 import MScheme.Value;
+import MScheme.List;
 import MScheme.Code;
+
 import MScheme.values.ListFactory;
-import MScheme.values.List;
 
 import MScheme.exceptions.*;
 

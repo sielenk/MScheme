@@ -11,7 +11,7 @@ import MScheme.environment.StaticEnvironment;
 import MScheme.code.Selection;
 import MScheme.values.Function;
 import MScheme.values.ScmBoolean;
-import MScheme.values.List;
+import MScheme.List;
 
 import MScheme.exceptions.CompileError;
 import MScheme.exceptions.TypeError;

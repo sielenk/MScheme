@@ -1,7 +1,7 @@
 package MScheme.functions;
 
 import MScheme.Value;
-import MScheme.values.List;
+import MScheme.List;
 
 import MScheme.exceptions.RuntimeError;
 import MScheme.exceptions.TypeError;

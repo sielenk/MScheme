@@ -1,7 +1,7 @@
 package MScheme.exceptions;
 
 import MScheme.util.Arity;
-import MScheme.values.List;
+import MScheme.List;
 
 
 public class SyntaxArityError
