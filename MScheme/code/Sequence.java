@@ -77,18 +77,15 @@ public final class Sequence
             protected String debugString()
             {
             	StringBuffer result = new StringBuffer("seqence:<");
-                int          i      = _index;
+                int          i      = _index + 1;
 
-                while (true)
+                while (i < _sequence.length)
                 {
-                    result.append(_sequence[++i].toString());
-                    if (i < _sequence.length)
+                    result.append(_sequence[i].toString());
+
+                    if (++i < _sequence.length)
                     {
                     	result.append(", ");
-                    }
-                    else
-                    {
-                        break;
                     }
                 }
             	result.append(">\n");
@@ -103,6 +100,6 @@ public final class Sequence
 
     public String toString()
     {
-        return "SEQ[" + _sequence.toString() + ']';
+        return "seq:<" + _sequence.toString() + '>';
     }
 }
