@@ -32,19 +32,6 @@ public class Main
     public final static void main(String[] argv)
         throws Exception
     {
-        Machine machine = new Machine();
-
-        for (int i = 0; i < argv.length; i++)
-        {
-            InputPort in = InputPort.create(argv[i]);
-
-            System.out.println("parsing " + argv[i]);
-
-            Value v;
-            while ((v = in.read()) != in.EOF_VALUE)
-            {
-                machine.evaluate(v);
-            }
-        }
+        new Machine().unprotectedRun();
     }
 }
