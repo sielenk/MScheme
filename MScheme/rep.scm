@@ -68,7 +68,7 @@
       try-thunk
       (on-error error-handler)))
 
-  (define (come-back)
+  (define (create-label)
     (call-with-current-continuation
       (lambda (k)
         (define (retry) (k retry))
@@ -78,7 +78,7 @@
     (define retry 'dummy)
     (try-with-error-handler
       (lambda ()
-        (set! retry (come-back))
+        (set! retry (create-label))
         (thunk))
       (lambda (error)
         (retry))))
@@ -120,14 +120,14 @@
     expr)
 
   (define (REP prompt)
-    (let internal-rep ([level 0])
+    (let internal-REP ([level 0])
       (call-with-current-continuation
         (lambda (quit)
           (let loop ([result #f])
             (loop
               (REP-print
                 (REP-eval
-                  (lambda () (internal-rep (+ level 1)))
+                  (lambda () (internal-REP (+ level 1)))
                   (REP-read
                     level
                     prompt
