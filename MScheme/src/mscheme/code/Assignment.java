@@ -39,7 +39,7 @@ public final class Assignment
     private Object    _expression;
 
 
-	public Assignment(Reference binding, Object expression)
+	private Assignment(Reference binding, Object expression)
 	{
 		_binding    = binding;
 		_expression = expression;		
