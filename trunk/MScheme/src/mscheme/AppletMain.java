@@ -23,6 +23,7 @@
 package mscheme;
 
 import java.applet.Applet;
+import java.awt.BorderLayout;
 
 /**
  * @author sielenk
@@ -31,13 +32,11 @@ import java.applet.Applet;
  * Preferences - Java - Code Style - Code Templates
  */
 public class AppletMain
-	extends Applet
+        extends Applet
 {
-    public final static String CVS_ID
-    	= "$Id$";
+    public final static String CVS_ID = "$Id$";
 
-
-    private StdioFrame frame = null;
+    private MSchemePanel _panel = null; //  @jve:decl-index=0:visual-constraint="-132,-123"
 
     public AppletMain()
     {
@@ -46,19 +45,31 @@ public class AppletMain
 
     public void init()
     {
-        frame = new StdioFrame();
-        frame.setTitle("MScheme");
-        frame.show();
+        this.setLayout(new BorderLayout());
+        this.add(get_panel(), java.awt.BorderLayout.CENTER);
     }
 
-    public void destroy()
+    public void stop()
     {
-        frame.hide();
-        frame.dispose();
+        get_panel().stop();
     }
 
     public void start()
     {
-        frame.start();
+        get_panel().start();
+    }
+
+    /**
+     * This method initializes stdioFrame1
+     * 
+     * @return mscheme.StdioFrame
+     */
+    private MSchemePanel get_panel()
+    {
+        if (_panel == null)
+        {
+            _panel = new MSchemePanel();
+        }
+        return _panel;
     }
 } //  @jve:decl-index=0:visual-constraint="10,10"

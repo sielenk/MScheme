@@ -1,57 +1,69 @@
-/* Awt main class for MScheme.
-   Copyright (C) 2001  Marvin H. Sielenkemper
-
-This file is part of MScheme.
-
-MScheme is free software; you can redistribute it and/or modify 
-it under the terms of the GNU General Public License as published by 
-the Free Software Foundation; either version 2 of the License, 
-or (at your option) any later version. 
-
-MScheme is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details. 
-
-You should have received a copy of the GNU General Public License
-along with MScheme; see the file COPYING. If not, write to 
-the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA  02111-1307, USA. */
+/*
+ * Awt main class for MScheme. Copyright (C) 2001 Marvin H. Sielenkemper
+ * 
+ * This file is part of MScheme.
+ * 
+ * MScheme is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * MScheme is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 
 package mscheme;
 
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.Frame;
 
 public final class AwtMain
-    implements WindowListener
 {
-    public final static String CVS_ID
-        = "$Id$";
+    public final static String CVS_ID = "$Id$";
 
+    private Frame _frame = null; //  @jve:decl-index=0:visual-constraint="14,13"
 
-    public void windowDeiconified(WindowEvent e) { }
-    public void windowIconified  (WindowEvent e) { }
+    private MSchemePanel _panel = null;
 
-    public void windowActivated  (WindowEvent e) { }
-    public void windowDeactivated(WindowEvent e) { }
-
-    public void windowOpened(WindowEvent e) { }
-    public void windowClosed(WindowEvent e) 
+    private Frame get_frame()
     {
-        System.exit(0);
+        if (_frame == null)
+        {
+            _frame = new Frame();
+            _frame.setTitle("MScheme");
+            _frame.setSize(600, 400);
+            _frame.add(get_panel(), java.awt.BorderLayout.CENTER);
+            _frame.addWindowListener(new java.awt.event.WindowAdapter()
+            {   
+            	public void windowClosing(java.awt.event.WindowEvent e) {    
+            		get_panel().stop();
+            		get_frame().hide();
+            	}
+                public void windowClosed(java.awt.event.WindowEvent e)
+                {
+                    System.exit(0);
+                }
+            });
+        }
+        return _frame;
     }
 
-    public void windowClosing(WindowEvent e) 
-    { }
-
+    private MSchemePanel get_panel()
+    {
+        if (_panel == null)
+        {
+            _panel = new MSchemePanel();
+        }
+        return _panel;
+    }
 
     public static void main(String argv[])
-        throws Exception
+            throws Exception
     {
-        final StdioFrame frame = new StdioFrame();
-
-        frame.addWindowListener(new AwtMain());
-        frame.show();
+        new AwtMain().get_frame().show();
     }
 }
