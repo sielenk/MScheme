@@ -1,128 +1,131 @@
-SRC =	values/ValueImplementation.java	\
-	values/Function.java	\
-	values/ScmChar.java	\
-	values/Compound.java	\
-	values/ScmString.java	\
-	values/Symbol.java	\
-	values/ScmNumber.java	\
-	values/List.java	\
-	values/ValueFactory.java	\
-	values/OutputPort.java	\
-	values/Pair.java	\
-	values/InputPort.java	\
-	values/ScmVector.java	\
-	values/Empty.java	\
-	values/ScmBoolean.java	\
-	machine/ContinuationFunction.java	\
-	machine/WindContinuation.java	\
-	machine/Continuation.java	\
-	machine/Literal.java	\
-	machine/Machine.java	\
-	machine/Registers.java	\
-	functions/CheckedFunction.java	\
-	functions/Reducer.java	\
-	functions/MemvFunction.java	\
-	functions/UnaryValueFunction.java	\
-	functions/ValueThunk.java	\
-	functions/DynamicWindFunction.java	\
-	functions/AssocFunction.java	\
-	functions/ParseBuiltins.java	\
-	functions/AssqFunction.java	\
-	functions/MemberBase.java	\
-	functions/BinaryFunction.java	\
-	functions/AppendFunction.java	\
-	functions/BinaryValueFunction.java	\
-	functions/AssocBase.java	\
-	functions/Thunk.java	\
-	functions/MemqFunction.java	\
-	functions/ApplyFunction.java	\
-	functions/TernaryValueFunction.java	\
-	functions/TernaryFunction.java	\
-	functions/MemberFunction.java	\
-	functions/CallCCFunction.java	\
-	functions/BuiltinTable.java	\
-	functions/UnaryFunction.java	\
-	functions/AssvFunction.java	\
-	functions/Builtins.java	\
-	syntax/Begin.java	\
-	syntax/Set.java	\
-	syntax/SyntaxFactory.java	\
-	syntax/Lambda.java	\
-	syntax/Letrec.java	\
-	syntax/Quote.java	\
-	syntax/Assign.java	\
-	syntax/DefineSyntax.java	\
-	syntax/LetStar.java	\
-	syntax/Define.java	\
-	syntax/Let.java	\
-	syntax/If.java	\
-	environment/StaticEnvironment.java	\
-	environment/Reference.java	\
-	environment/Environment.java	\
+# $Id$
+
+SRC =	Code.java	\
+	List.java	\
+	Main.java	\
+	Syntax.java	\
+	Translator.java	\
+	Value.java	\
 	code/Application.java	\
+	code/Assignment.java	\
+	code/CodeList.java	\
+	code/CompiledLambda.java	\
+	code/Literal.java	\
 	code/Selection.java	\
 	code/Sequence.java	\
-	code/CodeList.java	\
-	code/Assignment.java	\
-	code/CompiledLambda.java	\
-	util/Arity.java	\
-	exceptions/FunctionExpected.java	\
-	exceptions/ImmutableException.java	\
-	exceptions/SymbolExpected.java	\
-	exceptions/StringException.java	\
-	exceptions/UnimplementedException.java	\
+	environment/Environment.java	\
+	environment/Reference.java	\
+	environment/StaticEnvironment.java	\
 	exceptions/AlreadyBound.java	\
-	exceptions/ListSyntaxException.java	\
-	exceptions/ReadException.java	\
-	exceptions/WriteException.java	\
-	exceptions/SymbolNotFoundException.java	\
-	exceptions/InvalidStringIndexException.java	\
-	exceptions/VectorExpected.java	\
-	exceptions/EnvironmentExpected.java	\
-	exceptions/ParseException.java	\
-	exceptions/PairExpected.java	\
-	exceptions/OutputPortExpected.java	\
-	exceptions/PortExpected.java	\
+	exceptions/CantCompileException.java	\
+	exceptions/CharExpected.java	\
+	exceptions/CloseException.java	\
+	exceptions/CompileError.java	\
 	exceptions/DuplicateSymbolException.java	\
-	exceptions/UninitializedVectorException.java	\
+	exceptions/EnvironmentExpected.java	\
+	exceptions/FunctionExpected.java	\
+	exceptions/FunctionNotFoundException.java	\
+	exceptions/ImmutableException.java	\
+	exceptions/InputPortExpected.java	\
+	exceptions/InvalidStringIndexException.java	\
+	exceptions/InvalidVectorIndexException.java	\
+	exceptions/ListExpected.java	\
+	exceptions/ListSyntaxException.java	\
+	exceptions/NumberExpected.java	\
+	exceptions/OpenException.java	\
+	exceptions/OutputPortExpected.java	\
+	exceptions/PairExpected.java	\
+	exceptions/ParseException.java	\
+	exceptions/PortExpected.java	\
+	exceptions/ReadException.java	\
+	exceptions/RuntimeArityError.java	\
+	exceptions/RuntimeError.java	\
+	exceptions/SchemeException.java	\
+	exceptions/SchemeIOException.java	\
+	exceptions/StringException.java	\
+	exceptions/StringExpected.java	\
+	exceptions/SymbolExpected.java	\
+	exceptions/SymbolNotFoundException.java	\
+	exceptions/SyntaxArityError.java	\
 	exceptions/TypeError.java	\
 	exceptions/UnexpectedSyntax.java	\
-	exceptions/CharExpected.java	\
-	exceptions/NumberExpected.java	\
-	exceptions/SchemeException.java	\
+	exceptions/UnimplementedException.java	\
 	exceptions/UninitializedSymbolException.java	\
-	exceptions/SchemeIOException.java	\
-	exceptions/FunctionNotFoundException.java	\
-	exceptions/RuntimeError.java	\
+	exceptions/UninitializedVectorException.java	\
 	exceptions/VectorException.java	\
-	exceptions/StringExpected.java	\
-	exceptions/SyntaxArityError.java	\
-	exceptions/CantCompileException.java	\
-	exceptions/ListExpected.java	\
-	exceptions/OpenException.java	\
-	exceptions/CompileError.java	\
-	exceptions/CloseException.java	\
-	exceptions/RuntimeArityError.java	\
-	exceptions/InvalidVectorIndexException.java	\
-	exceptions/InputPortExpected.java	\
-	Translator.java	\
-	Main.java	\
-	Value.java	\
-	List.java	\
-	Code.java	\
-	Syntax.java
+	exceptions/VectorExpected.java	\
+	exceptions/WriteException.java	\
+	functions/AppendFunction.java	\
+	functions/ApplyFunction.java	\
+	functions/AssocBase.java	\
+	functions/AssocFunction.java	\
+	functions/AssqFunction.java	\
+	functions/AssvFunction.java	\
+	functions/BinaryFunction.java	\
+	functions/BinaryValueFunction.java	\
+	functions/BuiltinTable.java	\
+	functions/Builtins.java	\
+	functions/CallCCFunction.java	\
+	functions/CheckedFunction.java	\
+	functions/DynamicWindFunction.java	\
+	functions/MemberBase.java	\
+	functions/MemberFunction.java	\
+	functions/MemqFunction.java	\
+	functions/MemvFunction.java	\
+	functions/ParseBuiltins.java	\
+	functions/Reducer.java	\
+	functions/TernaryFunction.java	\
+	functions/TernaryValueFunction.java	\
+	functions/Thunk.java	\
+	functions/UnaryFunction.java	\
+	functions/UnaryValueFunction.java	\
+	functions/ValueThunk.java	\
+	functions/YCombinator.java	\
+	machine/Continuation.java	\
+	machine/ContinuationFunction.java	\
+	machine/Machine.java	\
+	machine/Registers.java	\
+	machine/Result.java	\
+	machine/WindContinuation.java	\
+	syntax/Begin.java	\
+	syntax/Define.java	\
+	syntax/DefineSyntax.java	\
+	syntax/If.java	\
+	syntax/Lambda.java	\
+	syntax/Let.java	\
+	syntax/LetStar.java	\
+	syntax/Letrec.java	\
+	syntax/Quote.java	\
+	syntax/Set.java	\
+	syntax/SyntaxFactory.java	\
+	util/Arity.java	\
+	values/Compound.java	\
+	values/Empty.java	\
+	values/Function.java	\
+	values/InputPort.java	\
+	values/ListFactory.java	\
+	values/OutputPort.java	\
+	values/Pair.java	\
+	values/PairOrList.java	\
+	values/ScmBoolean.java	\
+	values/ScmChar.java	\
+	values/ScmNumber.java	\
+	values/ScmString.java	\
+	values/ScmVector.java	\
+	values/Symbol.java	\
+	values/ValueImplementation.java
+
 
 OBJ =	$(SRC:.java=.o)
 
-SRC_TEST = 	TestFunction.java		\
-	TestMachine.java			\
-	TestR5RS.java				\
-	environment/TestEnvironment.java	\
-	values/TestInputPort.java		\
-	values/TestList.java			\
-	values/TestValue.java			\
-	util/TestArity.java			\
-	TestMScheme.java			\
+SRC_TEST =	TestMScheme.java	\
+		TestMachine.java	\
+		TestR5RS.java	\
+		environment/TestEnvironment.java	\
+		util/TestArity.java	\
+		values/TestInputPort.java	\
+		values/TestList.java	\
+		values/TestValue.java
 
 PACKAGES =	MScheme			\
 		MScheme.code		\
