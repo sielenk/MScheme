@@ -7,27 +7,6 @@ import MScheme.functions.UnaryFunction;
 import MScheme.environment.*;
 
 
-final class AbortException
-    extends SchemeException
-{
-    public AbortException(Value result)
-    { super(result); }
-}
-
-class AbortContinuation
-    extends Continuation
-{
-    AbortContinuation(Machine machine)
-    { super(machine); }
-
-    protected Code internalInvoke(Machine machine, Value evaluationResult)
-        throws AbortException
-    {
-        throw new AbortException(evaluationResult);
-    }
-}
-
-
 class AssignmentContinuation
     extends Continuation
 {
@@ -130,7 +109,7 @@ class PushContinuation
     private Code applyFunction(
         Machine machine,
         List    application
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     {
         Function func = application.getHead().toFunction();
         List     args = application.getTail();
@@ -153,7 +132,7 @@ class PushContinuation
     }
     
     protected Code internalInvoke(Machine machine, Value value)
-        throws SchemeException
+        throws RuntimeError, TypeError
     {
         List evaluatedPart = ValueFactory.prepend(value, _done);
 
@@ -162,6 +141,28 @@ class PushContinuation
         } else {
             return prepareNextElement(machine, evaluatedPart);
         }
+    }
+}
+
+
+class AbortContinuation
+    extends Continuation
+{
+    private Value _result;
+
+    AbortContinuation(Machine machine)
+    {
+        super(machine);
+        _result = null;
+    }
+
+    Value getResult()
+    { return _result; }
+
+    protected Code internalInvoke(Machine machine, Value evaluationResult)
+    {
+        _result = evaluationResult;
+        return null;
     }
 }
 
@@ -188,21 +189,18 @@ public class Machine
     { _environment = newEnvironment; }
     
 
-    Continuation getContinuation()
+    public Continuation getContinuation()
     { return _continuation; }
 
     void setContinuation(Continuation newContinuation)
     { _continuation = newContinuation; }
 
-    public UnaryFunction getCurrentContinuation()
-    { return _continuation; }
-    
     
     public Code handleDynamicWind(
         Function before,
         Function thunk,
         Function after
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     { return WindContinuation.handle(this, before, thunk, after); }
 
     public Code handleApplication(CodeList application)
@@ -228,18 +226,14 @@ public class Machine
             getEnvironment().getStatic()
         );
         
-        new AbortContinuation(this);
+        setContinuation(null);
+        AbortContinuation abort = new AbortContinuation(this);
         
-        try {
-
-            for (;;)
-            {
-                accumulator = accumulator.executionStep(this);
-            }
-        
-        } catch (AbortException e) {
-            return e.getCause();
+        while (accumulator != null) {
+            accumulator = accumulator.executionStep(this);
         }
+
+        return abort.getResult();
     }
 }
 

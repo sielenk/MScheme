@@ -7,7 +7,7 @@ import MScheme.values.Value;
 import MScheme.values.List;
 import MScheme.values.Pair;
 
-import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.*;
 
 
 class AppendHelper1
@@ -36,7 +36,7 @@ class AppendHelper2
     { return ValueFactory.createList(); }
 
     protected Value combine(Value fst, Value snd)
-        throws SchemeException
+        throws RuntimeError, TypeError
     { return new AppendHelper1(snd).foldRight(fst.toList()); }
 }
 
@@ -48,7 +48,7 @@ public class AppendFunction
         = new AppendFunction();
 
     protected Value checkedCall(List arguments)
-        throws SchemeException
+        throws RuntimeError, TypeError
     { return AppendHelper2.INSTANCE.reduceRight(arguments); }
 }
 

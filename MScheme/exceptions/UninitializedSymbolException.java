@@ -4,7 +4,7 @@ import MScheme.values.Symbol;
 
 
 public class UninitializedSymbolException
-    extends SchemeException
+    extends RuntimeError
 {
     public UninitializedSymbolException(Symbol cause)
     {

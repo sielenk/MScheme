@@ -3,13 +3,14 @@ package MScheme.environment;
 import MScheme.code.Code;
 import MScheme.values.List;
 
-import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.TypeError;
+import MScheme.exceptions.CompileError;
 
 
 public abstract class Token
 {
-    public abstract Code translateArguments(
+    public abstract Code translate(
         StaticEnvironment e,
         List              arguments
-    ) throws SchemeException;
+    ) throws CompileError, TypeError;
 }

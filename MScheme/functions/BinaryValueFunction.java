@@ -4,7 +4,7 @@ import MScheme.machine.Machine;
 import MScheme.code.Code;
 import MScheme.values.Value;
 
-import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.*;
 
 
 abstract public class BinaryValueFunction
@@ -14,11 +14,11 @@ abstract public class BinaryValueFunction
         Machine machine,
         Value   fst,
         Value   snd
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     { return machine.handleResult(checkedCall(fst, snd)); }
 
     abstract protected Value checkedCall(
         Value fst,
         Value snd
-    ) throws SchemeException;
+    ) throws RuntimeError, TypeError;
 }

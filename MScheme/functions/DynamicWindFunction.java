@@ -6,7 +6,7 @@ import MScheme.values.ValueFactory;
 import MScheme.values.Value;
 import MScheme.values.Function;
 
-import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.*;
 
 
 public class DynamicWindFunction
@@ -21,7 +21,7 @@ public class DynamicWindFunction
         Value   fst,
         Value   snd,
         Value   trd
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     {
         Function before = fst.toFunction();
         Function thunk  = snd.toFunction();

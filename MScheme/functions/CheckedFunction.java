@@ -1,12 +1,13 @@
 package MScheme.functions;
 
 import MScheme.util.Arity;
-import MScheme.exceptions.*;
 import MScheme.machine.Machine;
 import MScheme.code.Code;
 import MScheme.values.Value;
 import MScheme.values.List;
 import MScheme.values.Function;
+
+import MScheme.exceptions.*;
 
 
 public abstract class CheckedFunction
@@ -40,49 +41,49 @@ public abstract class CheckedFunction
 
 
     protected Value checkedCall(
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     { return fail(); }
 
     protected Value checkedCall(
         Value fst
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     { return fail(); }
 
     protected Value checkedCall(
         Value fst,
         Value snd
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     { return fail(); }
 
     protected Value checkedCall(
         Value fst,
         Value snd,
         Value trd
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     { return fail(); }
 
     protected Value checkedCall(
         List  args
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     { return fail(); }
 
 
     protected Code checkedCall(
         Machine machine
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     { return machine.handleResult(checkedCall()); }
     
     protected Code checkedCall(
         Machine machine,
         Value   fst
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     { return machine.handleResult(checkedCall(fst)); }
     
     protected Code checkedCall(
         Machine machine,
         Value   fst,
         Value   snd
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     { return machine.handleResult(checkedCall(fst, snd)); }
     
     protected Code checkedCall(
@@ -90,26 +91,26 @@ public abstract class CheckedFunction
         Value   fst,
         Value   snd,
         Value   trd
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     { return machine.handleResult(checkedCall(fst, snd, trd)); }
 
 
     protected Code checkedCall(
         Machine machine,
         List    args
-    ) throws SchemeException
+    ) throws RuntimeError, TypeError
     { return machine.handleResult(checkedCall(args)); }
 
 
     // implementation of Function
     
     final public Code call(Machine machine, List arguments)
-        throws SchemeException
+        throws RuntimeError, TypeError
     {
         int len = arguments.getLength();
         
         if (!getArity().isValid(len)) {
-            throw new ArityException(arguments, getArity());
+            throw new RuntimeArityError(arguments, getArity());
         }
         
         if (_dispatch) {

@@ -17,12 +17,6 @@ final class SetToken
     protected Reference getReference(
         StaticEnvironment syntax,
         Symbol            symbol
-    ) throws SymbolNotFoundException, SyntaxException
+    ) throws SyntaxException
     { return syntax.getCodeFor(symbol); }
-
-    protected Code checkedTransform(
-        StaticEnvironment syntax,
-        List              arguments
-    ) throws SchemeException
-    { return create(syntax, arguments); }
 }

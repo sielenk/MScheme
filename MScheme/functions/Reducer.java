@@ -3,20 +3,21 @@ package MScheme.functions;
 import MScheme.values.Value;
 import MScheme.values.List;
 
-import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.RuntimeError;
+import MScheme.exceptions.TypeError;
 
 
 abstract class Reducer
 {
     protected abstract Value initial()
-        throws SchemeException;
+        throws RuntimeError, TypeError;
 
     protected abstract Value combine(Value fst, Value snd)
-        throws SchemeException;
+        throws RuntimeError, TypeError;
 
 
     public final Value reduceLeft(List list)
-        throws SchemeException
+        throws RuntimeError, TypeError
     {
         if (list.isEmpty()) {
             return initial();
@@ -34,7 +35,7 @@ abstract class Reducer
     }
 
     public final Value foldLeft(List list)
-        throws SchemeException
+        throws RuntimeError, TypeError
     {
         Value result = initial();
         List  tail   = list;
@@ -48,7 +49,7 @@ abstract class Reducer
     }
 
     private Value reduceRightHelper(List list)
-        throws SchemeException
+        throws RuntimeError, TypeError
     {
         List tail = list.getTail();
 
@@ -63,7 +64,7 @@ abstract class Reducer
     }
 
     public final Value reduceRight(List list)
-        throws SchemeException
+        throws RuntimeError, TypeError
     {
        if (list.isEmpty()) {
             return initial();
@@ -73,7 +74,7 @@ abstract class Reducer
     }
 
     public Value foldRight(List list)
-        throws SchemeException
+        throws RuntimeError, TypeError
     {
         if (list.isEmpty()) {
             return initial();

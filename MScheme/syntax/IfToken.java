@@ -11,7 +11,8 @@ import MScheme.values.Function;
 import MScheme.values.SchemeBoolean;
 import MScheme.values.List;
 
-import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.CompileError;
+import MScheme.exceptions.TypeError;
 
 
 final class IfToken
@@ -23,15 +24,15 @@ final class IfToken
     { super(Arity.inRange(2, 3)); }
 
 
-    protected Code checkedTransform(
+    protected Code checkedTranslate(
         StaticEnvironment syntax,
         List              arguments
-    ) throws SchemeException
+    ) throws CompileError, TypeError
     {
         Value flag    = arguments.getHead();
         Value onTrue  = arguments.getTail().getHead();
         Value onFalse =
-            (arguments.getLength() == 2)
+            (arguments.safeGetLength() == 2)
             ? SchemeBoolean.createFalse()
             : arguments.getTail().getTail().getHead();
 

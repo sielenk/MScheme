@@ -3,6 +3,7 @@ package MScheme.values;
 import MScheme.machine.Machine;
 import MScheme.environment.StaticEnvironment;
 import MScheme.code.*;
+
 import MScheme.exceptions.*;
 
 
@@ -56,19 +57,20 @@ public final class Pair
         return false;
     }
     
-    public Code getCode(StaticEnvironment e)
-        throws SchemeException
-    { return getHead().getToken(e).translateArguments(e, getTail()); }
+    public Code getCode(StaticEnvironment env)
+        throws CompileError, TypeError
+    { return getHead().getToken(env).translate(env, getTail()); }
 
-    public CodeList getCodeList(StaticEnvironment e)
-        throws SchemeException
+    public CodeList getCodeList(StaticEnvironment env)
+        throws CompileError, TypeError
     {
         return CodeList.prepend(
-            getHead().getCode(e),
-            getTail().getCodeList(e)
+            getHead().getCode    (env),
+            getTail().getCodeList(env)
         );
     }
     
+
     // implementation of Pair
     
     public Value getFirst()
@@ -103,9 +105,16 @@ public final class Pair
     public boolean isEmpty()
     { return false; }
     
-    public int getLength()
-        throws ListExpectedException
-    { return 1 + getTail().getLength(); }
+    public int safeGetLength()
+    {
+        Value current = getSecond();
+        int   result  = 1;
+        while (current instanceof Pair) {
+            current = ((Pair)current).getSecond();
+            ++result;
+        }
+        return current.isList() ? result : -1;
+    }
     
     public Value getHead()
     { return getFirst(); }
@@ -113,7 +122,7 @@ public final class Pair
     public List getTail()
         throws ListExpectedException
     { return getSecond().toList(); }
-    
+
     public List getReversed()
         throws ListExpectedException
     {

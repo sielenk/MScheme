@@ -322,9 +322,9 @@ public class DynamicEnvironment
                     ValueFactory.createFunction(dynamicBindings[i][1])
                 );
             }
-            catch (SyntaxException e) {
+            catch (CompileError e) {
                 throw new RuntimeException(
-                    "unexpected SyntaxException"
+                    "unexpected CompileError"
                 );
             }
             catch (FunctionNotFoundException e) {
@@ -400,9 +400,9 @@ public class DynamicEnvironment
                     new MScheme.functions.ReflectedMethod(me)
                 );
             }
-            catch (SyntaxException e) {
+            catch (CompileError e) {
                 throw new RuntimeException(
-                    "unexpected SyntaxException"
+                    "unexpected CompileError"
                 );
             }
         }
@@ -436,7 +436,7 @@ public class DynamicEnvironment
     // *** code access (compiletime) ***
         
     public Reference define(Symbol key, Value value)
-        throws SyntaxException
+        throws CompileError
     {
         Reference newReference = _bindings.define(key);
         assign(newReference, value);

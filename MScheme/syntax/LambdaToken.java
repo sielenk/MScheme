@@ -23,10 +23,10 @@ final class LambdaToken
     { super(Arity.atLeast(2)); }
 
 
-    protected Code checkedTransform(
+    protected Code checkedTranslate(
         StaticEnvironment syntax,
         List              arguments
-    ) throws SchemeException
+    ) throws CompileError, TypeError
     {
         Value rawFormals = arguments.getHead();
         List  body       = arguments.getTail();
@@ -47,11 +47,18 @@ final class LambdaToken
                 minArity++;
             }
             
-            lastPair.setSecond(
-                ValueFactory.createList(
-                    lastPair.getSecond().toSymbol()
-                )
-            );
+            try {
+                lastPair.setSecond(
+                    ValueFactory.createList(
+                        lastPair.getSecond().toSymbol()
+                    )
+                );
+            }
+            catch (ImmutableException e) {
+                throw new RuntimeException(
+                    "unexpected ImmutableException"
+                );
+            }
             
             formals = head.getSecond().toList();
             arity   = Arity.atLeast(minArity);
@@ -61,7 +68,7 @@ final class LambdaToken
             compiledFormals = syntax.newChild(formals);
 
         Code compiledBody =
-            BeginToken.INSTANCE.translateArguments(
+            BeginToken.INSTANCE.translate(
                 compiledFormals,
                 body
             );

@@ -31,7 +31,7 @@ final class Empty
     
     // implementation of List
     
-    public int getLength()
+    public int safeGetLength()
     { return 0; }
     
     public Value getHead()

@@ -7,8 +7,8 @@ import MScheme.code.CompiledSequence;
 import MScheme.environment.StaticEnvironment;
 import MScheme.values.List;
 
-import MScheme.exceptions.SchemeException;
-
+import MScheme.exceptions.CompileError;
+import MScheme.exceptions.TypeError;
 
 final class BeginToken
     extends Syntax
@@ -18,10 +18,10 @@ final class BeginToken
     private BeginToken()
     { super(Arity.atLeast(1)); }
     
-    protected Code checkedTransform(
+    protected Code checkedTranslate(
         StaticEnvironment syntax,
         List              arguments
-    ) throws SchemeException
+    ) throws CompileError, TypeError
     {
         return new CompiledSequence(
             arguments.getCodeList(syntax)

@@ -20,13 +20,13 @@ final class DefineToken
     protected Reference getReference(
         StaticEnvironment syntax,
         Symbol            symbol
-    ) throws SyntaxException
+    ) throws CompileError
     { return syntax.define(symbol); }
 
-    protected Code checkedTransform(
+    protected Code checkedTranslate(
         StaticEnvironment syntax,
         List              arguments
-    ) throws SchemeException
+    ) throws CompileError, TypeError
     {
         if (arguments.getHead().isPair()) {
             //    (define (f x y) (+ x y))
@@ -37,7 +37,7 @@ final class DefineToken
 
             return new CompiledAssignment(
                 getReference(syntax, symbol),
-                SyntaxFactory.getLambdaToken().translateArguments(
+                LambdaToken.INSTANCE.translate(
                     syntax,
                     Pair.create(
                         formals,
@@ -46,7 +46,7 @@ final class DefineToken
                 )
             );
         } else {
-            return create(syntax, arguments);
+            return super.checkedTranslate(syntax, arguments);
         }
     }
 }

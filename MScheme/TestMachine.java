@@ -316,9 +316,9 @@ public class TestMachine
         
         try {
             machine.evaluate(ValueFactory.createList(func, _val1));
-            fail("expected ArityException");
+            fail("expected RuntimeArityError");
         }
-        catch (ArityException e) { }
+        catch (RuntimeArityError e) { }
     }
 
     public void testLambdaWithSimpleArgs()
@@ -338,9 +338,9 @@ public class TestMachine
         
         try {
             machine.evaluate(ValueFactory.createList(func, _val1));
-            fail("expected ArityException");
+            fail("expected RuntimeArityError");
         }
-        catch (ArityException e) { }
+        catch (RuntimeArityError e) { }
     }
 
     public void testLambdaWithOptionalArgs()
@@ -350,9 +350,9 @@ public class TestMachine
         
         try {
             machine.evaluate(ValueFactory.createList(func));
-            fail("expected ArityException");
+            fail("expected RuntimeArityError");
         }
-        catch (ArityException e) { }
+        catch (RuntimeArityError e) { }
         
         assert(
             machine.evaluate(

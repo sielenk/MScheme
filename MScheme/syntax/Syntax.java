@@ -9,8 +9,9 @@ import MScheme.environment.StaticEnvironment;
 import MScheme.code.Code;
 import MScheme.values.List;
 
-import MScheme.exceptions.SchemeException;
-import MScheme.exceptions.ArityException;
+import MScheme.exceptions.TypeError;
+import MScheme.exceptions.CompileError;
+import MScheme.exceptions.CompileArityError;
 
 
 public abstract class Syntax
@@ -21,20 +22,20 @@ public abstract class Syntax
     protected Syntax(Arity arity)
     { _arity = arity; }
     
-    protected abstract Code checkedTransform(
+    protected abstract Code checkedTranslate(
         StaticEnvironment syntax,
         List              arguments
-    ) throws SchemeException;
+    ) throws CompileError, TypeError;
     
-    public final Code translateArguments(
+    public final Code translate(
         StaticEnvironment syntax,
         List              arguments
-    ) throws SchemeException
+    ) throws CompileError, TypeError
     {
-        if (!_arity.isValid(arguments.getLength())) {
-            throw new ArityException(arguments, _arity);
+        if (!_arity.isValid(arguments.safeGetLength())) {
+            throw new CompileArityError(arguments, _arity);
         }
 
-        return checkedTransform(syntax, arguments);
+        return checkedTranslate(syntax, arguments);
     }
 }

@@ -37,7 +37,7 @@ public class StaticEnvironment
 
 
     StaticEnvironment(StaticEnvironment parent, List symbols)
-        throws SchemeException
+        throws CompileError, TypeError
     {
         this(parent);
 
@@ -71,13 +71,13 @@ public class StaticEnvironment
     { return new StaticEnvironment(this); }
     
     public StaticEnvironment newChild(List symbols)
-        throws SchemeException
+        throws CompileError, TypeError
     { return new StaticEnvironment(this, symbols); }
     
     // *** instance access ***************************************************
 
     public Reference define(Symbol symbol)
-        throws SyntaxException
+        throws CompileError
     {
         try {
             String    key = symbol.getKey();
@@ -101,7 +101,7 @@ public class StaticEnvironment
             return ref;
         }
         catch (ClassCastException e) {
-            throw new SyntaxException(symbol);
+            throw new CompileError(symbol);
         }
     }
 

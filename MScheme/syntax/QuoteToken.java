@@ -7,6 +7,8 @@ import MScheme.environment.StaticEnvironment;
 import MScheme.values.Pair;
 import MScheme.values.List;
 
+import MScheme.exceptions.TypeError;
+
 
 // *** quote ***
 
@@ -18,14 +20,10 @@ final class QuoteToken
     private QuoteToken()
     { super(Arity.exactly(1)); }
     
-    protected Code checkedTransform(
+    protected Code checkedTranslate(
         StaticEnvironment syntax,
         List              arguments
-    )
-    {
-        return new Literal(
-            ((Pair)arguments).getHead().setConst()
-        );
-    }
+    ) throws TypeError
+    { return new Literal(arguments.getHead().setConst()); }
 }
   

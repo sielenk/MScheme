@@ -6,7 +6,7 @@ import MScheme.machine.Machine;
 import MScheme.code.Code;
 import MScheme.values.Value;
 
-import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.TypeError;
 
 
 public class MinusFunction
@@ -21,7 +21,7 @@ public class MinusFunction
     protected Code checkedCall(
         Machine machine,
         Value   value
-    ) throws SchemeException
+    ) throws TypeError
     {
         return machine.handleResult(
             value.toNumber().negated()
@@ -32,7 +32,7 @@ public class MinusFunction
         Machine machine,
         Value   fst,
         Value   snd
-    ) throws SchemeException
+    ) throws TypeError
     {
         return machine.handleResult(
             fst.toNumber().minus(snd.toNumber())

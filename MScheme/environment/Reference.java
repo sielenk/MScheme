@@ -4,7 +4,8 @@ import MScheme.machine.Machine;
 import MScheme.environment.DynamicEnvironment;
 import MScheme.code.Code;
 import MScheme.values.Symbol;
-import MScheme.exceptions.SchemeException;
+
+import MScheme.exceptions.RuntimeError;
 
 
 public class Reference
@@ -27,7 +28,7 @@ public class Reference
     
     
     public Code executionStep(Machine machine)
-        throws SchemeException
+        throws RuntimeError
     {
         return machine.handleResult(
             machine.getEnvironment().lookup(this)
