@@ -15,6 +15,9 @@ public abstract class SyntaxFactory
     public static Syntax getDefineToken()
     { return DefineToken.INSTANCE; }
     
+    public static Syntax getDefineSyntaxToken()
+    { return DefineSyntaxToken.INSTANCE; }
+    
     public static Syntax getLambdaToken()
     { return LambdaToken.INSTANCE; }
     
