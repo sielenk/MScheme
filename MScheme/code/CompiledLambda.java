@@ -4,9 +4,11 @@ import java.io.Writer;
 import java.io.IOException;
 
 import MScheme.Code;
+import MScheme.Value;
 
 import MScheme.util.Arity;
 import MScheme.machine.Registers;
+import MScheme.machine.Result;
 import MScheme.environment.Reference;
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Environment;
@@ -19,7 +21,7 @@ import MScheme.exceptions.TypeError;
 
 
 public final class CompiledLambda
-    extends Code
+    extends Result
 {
     private final Arity             _arity;
     private final StaticEnvironment _compiledFormals;
@@ -84,6 +86,6 @@ public final class CompiledLambda
         }
     }
 
-    public Code executionStep(Registers registers)
-    { return new Closure(registers.getEnvironment()).getLiteral(); }
+    protected Value getValue(Registers registers)
+    { return new Closure(registers.getEnvironment()); }
 }
