@@ -1,5 +1,8 @@
 package MScheme.values;
 
+import MScheme.environment.StaticEnvironment;
+import MScheme.environment.Environment;
+
 import MScheme.exceptions.*;
 import MScheme.Value;
 
@@ -55,6 +58,13 @@ public class TestValue
         ScmVector .create(0).toScmVector();
         InputPort .create().toInputPort();
         OutputPort.create().toOutputPort();
+
+        {
+            Environment empty = Environment.getEmpty();
+
+            empty.toEnvironment();
+            empty.getStatic().toStaticEnvironment();
+        }
     }
 
     public void testTrue()
