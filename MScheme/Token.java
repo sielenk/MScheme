@@ -9,9 +9,9 @@ import MScheme.exceptions.TypeError;
 import MScheme.exceptions.CompileError;
 
 
-public abstract class Token
+public interface Token
 {
-    public abstract Code translate(
+    Code translate(
         StaticEnvironment e,
         List              arguments
     ) throws CompileError, TypeError;

@@ -13,7 +13,7 @@ import MScheme.exceptions.SyntaxArityError;
 
 
 public abstract class Syntax
-    extends Token
+    implements Token
 {
     private final Arity _arity;
     

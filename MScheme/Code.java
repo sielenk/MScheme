@@ -13,7 +13,7 @@ import MScheme.exceptions.RuntimeError;
 
 
 public abstract class Code
-    extends Token
+    implements Token
 {
     public abstract Code executionStep(Registers registers)
         throws RuntimeError, TypeError;
