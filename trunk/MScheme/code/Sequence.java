@@ -67,6 +67,10 @@ public final class Sequence
     public Code executionStep(Registers state)
     {
         new Continuation(state) {
+            public final static String id
+                = "$Id$";
+
+ 
             protected Code execute(Registers innerState, Value value)
             {
                 // _index+1 will always be < sequence.length
@@ -76,30 +80,20 @@ public final class Sequence
 
             protected String debugString()
             {
-            	StringBuffer result = new StringBuffer("seqence:<");
-                int          i      = _index + 1;
-
-                while (i < _sequence.length)
-                {
-                    result.append(_sequence[i].toString());
-
-                    if (++i < _sequence.length)
-                    {
-                    	result.append(", ");
-                    }
-                }
-            	result.append(">\n");
-
-                return result.toString();
+                return "seqence:" + CodeArray.printTuple(
+                    _sequence, 
+                    _index + 1, 
+                    _sequence.length
+                );
             }
         };
-        
+
         return _sequence[_index];
     }
 
 
     public String toString()
     {
-        return "seq:<" + _sequence.toString() + '>';
+        return "seq:<" + CodeArray.printTuple(_sequence) + '>';
     }
 }
