@@ -9,7 +9,6 @@ import MScheme.Code;
 import MScheme.Syntax;
 
 import MScheme.util.Arity;
-import MScheme.machine.Machine;
 import MScheme.code.CodeList;
 import MScheme.code.CompiledLambda;
 import MScheme.code.Application;
@@ -89,7 +88,7 @@ final class Letrec
 
         return Application.create(
                    CodeList.create(
-                       new CompiledLambda(
+                       CompiledLambda.create(
                            Arity.exactly(0),
                            bodyCompilationEnv,
                            compiledBody

@@ -9,7 +9,6 @@ import MScheme.Code;
 import MScheme.Syntax;
 
 import MScheme.util.Arity;
-import MScheme.machine.Machine;
 import MScheme.code.*;
 import MScheme.environment.*;
 import MScheme.exceptions.*;
@@ -51,7 +50,7 @@ final class LetStar
 
             return Application.create(
                        CodeList.create(
-                           new CompiledLambda(
+                           CompiledLambda.create(
                                Arity.exactly(0),
                                compilationEnv.newChild(),
                                body
@@ -107,7 +106,7 @@ final class LetStarHelper
                                  bindings.getTail()
                              );
 
-            Code lambda = new CompiledLambda(
+            Code lambda = CompiledLambda.create(
                               Arity.exactly(1),
                               innerEnvironment,
                               innerBody
