@@ -27,7 +27,7 @@ public class ExpectFunctionFunc extends Function
         Environment       environment,
         Values            arguments
     ) throws SExpectedFunctionException {
-        SExpr sexpr = arguments.getFirst();
+        SExpr sexpr = arguments.at(0);
 
         try {
             stack.push((Function)sexpr);

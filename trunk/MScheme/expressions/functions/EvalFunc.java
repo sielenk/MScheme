@@ -29,10 +29,10 @@ public class EvalFunc extends Function
         Environment       environment,
         Values            arguments
     ) throws SException {
-        SExpr sexpr = arguments.getFirst();
+        SExpr sexpr = arguments.at(0);
 
         if (sexpr instanceof SSymbol) {
-            sexpr = environment.lookup((SSymbol)sexpr);
+            sexpr = environment.get((SSymbol)sexpr);
             // throws SSymbolNotFoundException
         } else if (sexpr instanceof SPair) {
             SPair pair = (SPair)sexpr;
