@@ -32,51 +32,8 @@ import MScheme.exceptions.RuntimeError;
 import MScheme.exceptions.UnexpectedSyntax;
 import MScheme.exceptions.SymbolNotFoundException;
 
-final class DelayedReference
-    extends Reference
-{
-    public final static String id
-        = "$Id$";
 
-
-    private final Symbol            _key;
-    private final StaticEnvironment _env;
-
-
-    DelayedReference(Symbol key, StaticEnvironment env)
-    {
-        super(key, -1, -1);
-
-        _key = key;
-        _env = env;
-    }
-
-    protected Value getValue(Registers state)
-        throws RuntimeError
-    {
-        throw new RuntimeError(_key, "delayed reference");
-    }
-
-    public Code force(StaticEnvironment global)
-        throws SymbolNotFoundException, UnexpectedSyntax
-    {
-        try {
-            return _env.getReferenceFor(_key);
-        }
-        catch (SymbolNotFoundException e1)
-        {
-            try {
-                return global.define(_key);
-            }
-            catch (AlreadyBound e2)
-            {
-                throw new RuntimeException(e2.toString());
-            }
-        }
-    }
-}
-
-public class Reference
+public abstract class Reference
     extends Result
 {
     public final static String id
@@ -84,14 +41,10 @@ public class Reference
 
 
     private final Symbol _symbol;
-    private final int    _level;
-    private final int    _index;
 
-    protected Reference(Symbol symbol, int level, int index)
+    protected Reference(Symbol symbol)
     {
         _symbol = symbol;
-        _level  = level;
-        _index  = index;
     }
 
     static Reference create(Symbol key, StaticEnvironment env)
@@ -101,12 +54,85 @@ public class Reference
 
     static Reference create(Symbol key, int level, int index)
     {
-        return new Reference(key, level, index);
+        return new ForcedReference(key, level, index);
     }
 
-    public Symbol getSymbol()
+    public final Symbol getSymbol()
     {
         return _symbol;
+    }
+
+    abstract int getLevel();
+    abstract int getIndex();
+
+
+    public final String toString()
+    {
+        return
+            "ptr:<" + getLevel()
+            + ", "  + getIndex()
+            + ", "  + _symbol
+            + '>';
+    }
+}
+
+final class DelayedReference
+    extends Reference
+{
+    public final static String id
+        = "$Id$";
+
+
+    private final StaticEnvironment _env;
+
+
+    DelayedReference(Symbol key, StaticEnvironment env)
+    {
+        super(key);
+        _env = env;
+    }
+
+
+    protected Value getValue(Registers state)
+        throws RuntimeError
+    {
+        throw new RuntimeError(getSymbol(), "delayed reference");
+    }
+
+    int getLevel()
+    {
+        return -1;
+    }
+    
+    int getIndex()
+    {
+        return -1;
+    }
+
+
+    public Code force()
+        throws SymbolNotFoundException, UnexpectedSyntax
+    {
+        return _env.getReferenceFor(getSymbol());
+    }
+}
+
+
+final class ForcedReference
+    extends Reference
+{
+    public final static String id
+        = "$Id$";
+
+
+    private final int _level;
+    private final int _index;
+
+    protected ForcedReference(Symbol symbol, int level, int index)
+    {
+        super(symbol);
+        _level  = level;
+        _index  = index;
     }
 
     int getLevel()
@@ -125,18 +151,10 @@ public class Reference
         return state.getEnvironment().lookup(this);
     }
 
-    public Code force(StaticEnvironment global)
+    public Code force()
         throws SymbolNotFoundException, UnexpectedSyntax
     {
         return this;
     }
-
-    public String toString()
-    {
-        return
-            "ptr:<" + _level 
-            + ", "  + _index
-            + ", "  + _symbol 
-            + '>';
-    }
 }
+ 
