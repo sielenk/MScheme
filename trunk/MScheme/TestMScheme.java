@@ -20,7 +20,6 @@ public class TestMScheme
         addTestSuite(MScheme.values.TestInputPort.class);
 
         addTestSuite(MScheme.environment.TestEnvironment.class);
-        addTestSuite(TestFunction.class);
 
         addTestSuite(TestR5RS.class);
         addTestSuite(TestMachine.class);
@@ -31,4 +30,3 @@ public class TestMScheme
         Assert.fail("failure Test");
     }
 }
-
