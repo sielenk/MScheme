@@ -14,8 +14,7 @@ public class CallCCFunction
     extends UnaryFunction
 {
     public final static CallCCFunction INSTANCE = new CallCCFunction();
-    
-    
+
     protected Code checkedCall(Machine machine, Value argument)
         throws RuntimeError, TypeError
     {

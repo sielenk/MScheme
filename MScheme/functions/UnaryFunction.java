@@ -8,32 +8,30 @@ import MScheme.values.List;
 import MScheme.values.Function;
 
 import MScheme.exceptions.RuntimeError;
-import MScheme.exceptions.RuntimeArityError;
 import MScheme.exceptions.TypeError;
 
 
-abstract public class UnaryFunction
-    extends Function
+public abstract class UnaryFunction
+    extends CheckedFunction
 {
     private final static Arity _unary = Arity.exactly(1);
-    
-    
-    final public Code call(Machine machine, List arguments)
-        throws RuntimeError, TypeError
+
+    protected final Arity getArity()
+    { return _unary; }
+
+    protected final Code checkedCall(
+        Machine machine,
+        int     len,
+        List    arguments
+    ) throws RuntimeError, TypeError
     {
-        int len = arguments.getLength();
-        
-        if (!_unary.isValid(len)) {
-            throw new RuntimeArityError(arguments, _unary);
-        }
-        
         return checkedCall(
             machine,
             arguments.getHead()
         );
     }
 
-    abstract protected Code checkedCall(
+    protected abstract Code checkedCall(
         Machine machine,
         Value   fst
     ) throws RuntimeError, TypeError;

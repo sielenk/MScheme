@@ -11,7 +11,7 @@ import MScheme.exceptions.*;
 
 
 public abstract class Function
-    extends    SelfEvaluatingValue
+    extends SelfEvaluatingValue
 {
     // specialisation of Value
 
@@ -24,11 +24,23 @@ public abstract class Function
     public void write(Writer destination)
         throws IOException
     { destination.write("[procedure]"); }
-    
-    
+
+
+    public final static int checkArguments(Arity arity, List arguments)
+        throws RuntimeError, TypeError
+    {
+        int len = arguments.getLength();
+
+        if (!arity.isValid(len)) {
+            throw new RuntimeArityError(arguments, arity);
+        }
+
+        return len;
+    }
+
+
     // abstract function interface
     
     abstract public Code call(Machine machine, List arguments)
         throws RuntimeError, TypeError;
 }
-

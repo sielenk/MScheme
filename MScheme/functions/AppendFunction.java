@@ -42,12 +42,12 @@ class AppendHelper2
 
 
 public class AppendFunction
-    extends CheckedFunction
+    extends ValueFunction
 {
     public final static AppendFunction INSTANCE
         = new AppendFunction();
 
-    protected Value checkedCall(List arguments)
+    protected Value call(List arguments)
         throws RuntimeError, TypeError
     { return AppendHelper2.INSTANCE.reduceRight(arguments); }
 }

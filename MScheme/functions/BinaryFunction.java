@@ -8,25 +8,23 @@ import MScheme.values.List;
 import MScheme.values.Function;
 
 import MScheme.exceptions.RuntimeError;
-import MScheme.exceptions.RuntimeArityError;
 import MScheme.exceptions.TypeError;
 
 
-abstract public class BinaryFunction
-    extends Function
+public abstract class BinaryFunction
+    extends CheckedFunction
 {
     private final static Arity _binary = Arity.exactly(2);
-    
-    
-    final public Code call(Machine machine, List arguments)
-        throws RuntimeError, TypeError
+
+    protected final Arity getArity()
+    { return _binary; }
+
+    protected final Code checkedCall(
+        Machine machine,
+        int     len,
+        List    arguments
+    ) throws RuntimeError, TypeError
     {
-        int len = arguments.getLength();
-        
-        if (!_binary.isValid(len)) {
-            throw new RuntimeArityError(arguments, _binary);
-        }
-        
         return checkedCall(
             machine,
             arguments.getHead(),
@@ -34,7 +32,7 @@ abstract public class BinaryFunction
         );
     }
 
-    abstract protected Code checkedCall(
+    protected abstract Code checkedCall(
         Machine machine,
         Value   fst,
         Value   snd
