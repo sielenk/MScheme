@@ -42,7 +42,7 @@ public final class Application
         = "$Id$";
 
 
-    Code prepareNext(
+    private Code prepareNext(
         Registers  state,
         final List done,
         final int  index
