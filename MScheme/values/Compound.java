@@ -12,8 +12,8 @@ public abstract class Compound
 {
     private boolean _isConst = false;
 
-    public Value setConst()
-    { _isConst = true; return this; }
+    public void setConst()
+    { _isConst = true; }
 
     protected void modify()
         throws ImmutableException

@@ -97,7 +97,9 @@ public class InputPort
         throws ReadException, ParseException
     {
         try {
-            return parseDatum().setConst();
+            Value result = parseDatum();
+            result.setConst();
+            return result;
         }
         catch (IOException e) {
             throw new ReadException(this);
