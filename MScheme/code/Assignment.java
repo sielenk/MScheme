@@ -25,7 +25,12 @@ import MScheme.Code;
 
 import MScheme.machine.Registers;
 import MScheme.machine.Continuation;
+
 import MScheme.environment.Reference;
+import MScheme.environment.StaticEnvironment;
+
+import MScheme.exceptions.SymbolNotFoundException;
+import MScheme.exceptions.UnexpectedSyntax;
 
 
 public final class Assignment
@@ -82,6 +87,14 @@ public final class Assignment
         return _valueCalculation;
     }
 
+    public Code force(StaticEnvironment global)
+        throws SymbolNotFoundException, UnexpectedSyntax
+    {
+        return create(
+            _binding,
+            _valueCalculation.force(global)
+        );
+    }
 
     public String toString()
     {

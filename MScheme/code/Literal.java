@@ -21,8 +21,12 @@ Boston, MA  02111-1307, USA. */
 package MScheme.code;
 
 import MScheme.Value;
+import MScheme.Code;
+
 import MScheme.machine.Result;
 import MScheme.machine.Registers;
+
+import MScheme.environment.StaticEnvironment;
 
 import MScheme.exceptions.RuntimeError;
 import MScheme.exceptions.TypeError;
@@ -53,6 +57,10 @@ public final class Literal
         return _value;
     }
 
+    public Code force(StaticEnvironment global)
+    {
+        return this;
+    }
 
     public String toString()
     {
