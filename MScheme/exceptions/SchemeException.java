@@ -13,5 +13,13 @@ public class SchemeException
     
     public Value getCause()
     { return _cause; }
+
+    public String toString()
+    {
+        return
+            getCause().toString() +
+            " caused a\n" +
+            super.toString();
+    }
 }
 
