@@ -493,6 +493,39 @@ public class TestR5RS
     }
 
 
+    // 6.2 Numbers
+
+
+    /// 6.2.5 Numerical operations
+    
+    public void testNumbers()
+        throws SchemeException
+    {
+        check("(+ 3 4)", "7");
+        check("(+ 3)", "3");
+        check("(+)", "0");
+        check("(* 4)", "4");
+        check("(*)", "1");
+
+
+        check("(+)", "0");
+        check("(*)", "1");
+
+        check("(- 1)", "-1");
+        check("(/ 1)",  "1");
+
+        check("(+ 3 3)", "6");
+        check("(- 3 3)", "0");
+        check("(* 3 3)", "9");
+        check("(/ 3 3)", "1");
+
+        check("(+  1 2 3 4)", "10");
+        check("(-  1 2 3 4)", "-8");
+        check("(*  1 2 3 4)", "24");
+        check("(/ 24 2 3 4)",  "1");
+    }
+
+
     // 6.3 Other data types
 
     // 6.3.1 Booleans
@@ -500,7 +533,7 @@ public class TestR5RS
     /// 6.3.2 Pairs and lists
 
     public void test6_3_2()
-    throws SchemeException
+        throws SchemeException
     {
         // pair?
         check("(pair? '(a . b))", "#t");
