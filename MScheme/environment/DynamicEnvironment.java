@@ -115,14 +115,14 @@ public class DynamicEnvironment
                 Symbol.create("quote"),
                 SyntaxFactory.getQuoteToken()
             );
-            staticBindings.defineSyntax(
-                Symbol.create("quasiquote"),
-                SyntaxFactory.getQuasiquoteToken()
-            );
-            staticBindings.defineSyntax(
-                Symbol.create("cond"),
-                SyntaxFactory.getCondToken()
-            );
+//            staticBindings.defineSyntax(
+//                Symbol.create("quasiquote"),
+//                SyntaxFactory.getQuasiquoteToken()
+//            );
+//            staticBindings.defineSyntax(
+//                Symbol.create("cond"),
+//                SyntaxFactory.getCondToken()
+//            );
             staticBindings.defineSyntax(
                 Symbol.create("if"),
                 SyntaxFactory.getIfToken()
@@ -154,6 +154,10 @@ public class DynamicEnvironment
             staticBindings.defineSyntax(
                 Symbol.create("set!"),
                 SyntaxFactory.getSetToken()
+            );
+            staticBindings.defineSyntax(
+                Symbol.create("define-syntax"),
+                SyntaxFactory.getDefineSyntaxToken()
             );
         }
         catch (AlreadyBound e) {
