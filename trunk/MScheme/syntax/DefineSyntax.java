@@ -73,18 +73,17 @@ final class Macro
     ) throws SchemeException
     {
         // (apply tranformer def_env use_env args)
+        Code[] application = new Code[5];
+
+        application[0] = _apply;
+        application[1] = _transformer;
+        application[2] = _definitionEnv.getLiteral();
+        application[3] =       usageEnv.getLiteral();
+        application[4] =      arguments.getLiteral();
 
         Pair result = machine.execute(
             Application.create(
-                CodeList.prepend(
-                    _apply,
-                    CodeList.create(
-                        _transformer,
-                        _definitionEnv.getLiteral(),
-                        usageEnv.getLiteral(),
-                        arguments.getLiteral()
-                    )
-                )
+                application
             )
         ).toPair();
 

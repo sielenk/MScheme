@@ -187,19 +187,19 @@ public final class Controller
             }
         }
 
-        return Application.create(
-            CodeList.create(
-                argument.getLiteral(),
-                new ContinuationFunction(
-                    _root.getParent()
-                ).checkedCall(
-                    state,
-                    new Subcontinuation(
-                        _root.getParent(),
-                        state.getContinuation()
-                    )
+        Code[] application = new Code[2];
+
+        application[0] = argument.getLiteral();
+        application[1] = new ContinuationFunction(
+                _root.getParent()
+            ).checkedCall(
+                state,
+                new Subcontinuation(  
+                    _root.getParent(),
+                    state.getContinuation()
                 )
-            )
-        );
+            );
+
+        return Application.create(application);
     }
 }

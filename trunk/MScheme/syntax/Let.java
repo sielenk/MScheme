@@ -100,12 +100,13 @@ final class Let
             // the "raw" closure of a named-let has one additional
             // argument, which is to be bound to the "curried"
             // closure -- the YCombinator does it's magic ...
-            compiledProc = Application.create(
-                CodeList.create(
-                    YCombinator.INSTANCE.getLiteral(),
-                    compiledProc
-                )
-            );
+
+            Code[] application = new Code[2];
+            
+            application[0] = YCombinator.INSTANCE.getLiteral();
+            application[1] = compiledProc;
+            
+            compiledProc = Application.create(application);
         }
 
         return ProcedureCall.create(
