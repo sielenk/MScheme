@@ -16,6 +16,7 @@ import MScheme.syntax.SyntaxFactory;
 import MScheme.functions.BuiltinTable;
 import MScheme.functions.Thunk;
 import MScheme.functions.ValueThunk;
+import MScheme.functions.YCombinator;
 import MScheme.exceptions.*;
 
 
@@ -123,7 +124,7 @@ public final class Environment
 
     private static void initHooks()
     {
-        if (getImplementationEnvironment() == null) {
+        if (_implementationEnvironment == null) {
             return;
         }
         if (_nullEnvironmentHook != null) {
@@ -131,7 +132,7 @@ public final class Environment
         }
 
         try {
-            getImplementationEnvironment().define(
+            _implementationEnvironment.define(
                 Symbol.create("unique-id"),
                 new ValueThunk() {
                     public final static String id
@@ -142,7 +143,7 @@ public final class Environment
                 }
             );
 
-            getImplementationEnvironment().define(
+            _implementationEnvironment.define(
                 Symbol.create("current-environment"),
                 new Thunk() {
                     public final static String id
@@ -153,13 +154,18 @@ public final class Environment
                 }
             );
 
+            _implementationEnvironment.define(
+                Symbol.create("y"),
+                YCombinator.INSTANCE
+            );
+
             _nullEnvironmentHook =
-                new Machine(getImplementationEnvironment()).evaluate(
+                new Machine(_implementationEnvironment).evaluate(
                     InputPort.create("bootstrap_null.scm").read()
                 );
 
             _schemeReportEnvironmentHook =
-                new Machine(getImplementationEnvironment()).evaluate(
+                new Machine(_implementationEnvironment).evaluate(
                     InputPort.create("bootstrap_sre.scm").read()
                 );
         }
