@@ -66,9 +66,10 @@ abstract class Continuation
         Continuation destination
     )
     {
-        Stack        stack  = new Stack();
-        Continuation from   = source;
-        Continuation to     = destination;
+        Continuation   from   = source;
+        Continuation   to     = destination;
+        Continuation[] stack  = new Continuation[to.getLevel()];
+        int            sp     = 0;
         
         while (from != to) {
             Continuation newFrom = from;
@@ -81,15 +82,15 @@ abstract class Continuation
 
             if (to.getLevel() >= from.getLevel()) {
                 newTo = to.getParent();
-                stack.push(to);
+                stack[sp++] = to;
             }
 
             from = newFrom;
             to   = newTo;
         }
 
-        while (!stack.isEmpty()) {
-            ((Continuation)stack.pop()).enter(machine);
+        while (sp > 0) {
+            stack[--sp].enter(machine);
         }
     }
 
