@@ -50,9 +50,7 @@ public final class AwtMain
 	}
 
 	public void windowClosing(WindowEvent e) 
-	{
-		e.getWindow().dispose();
-	}
+	{ }
 
 
 	public static void main(String argv[])
@@ -61,27 +59,6 @@ public final class AwtMain
         final StdioFrame frame = new StdioFrame();
 
         frame.addWindowListener(new AwtMain());
-        frame.setSize(600, 400);
         frame.show();
-
-        Machine.stdin  = frame.stdin ();
-        Machine.stdout = frame.stdout();
-
-        Machine machine = new Machine();
-
-        for (int i = 0; i < argv.length; i++)
-        {
-            InputPort in = InputPort.create(argv[i]);
-
-            System.out.println("parsing " + argv[i]);
-
-            Value v;
-            while ((v = in.read()) != in.EOF_VALUE)
-            {
-                machine.evaluate(v);
-            }
-        }
-        
-        frame.dispose();
 	}
 }
