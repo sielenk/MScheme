@@ -15,8 +15,11 @@ public abstract class ValueFactory
     public final static String id
         = "$Id$";
 
-    public static Pair prepend(Value head, List tail)
-    { return Pair.create(head, tail.toValue()); }
+    public static Pair prependConst(Value head, List tail)
+    { return Pair.createConst(head, tail.toValue()); }
+
+    public static Pair prependMutable(Value head, List tail)
+    { return Pair.createMutable(head, tail.toValue()); }
 
     public static Empty createList()
     { return Empty.create(); }

@@ -12,6 +12,6 @@ public class AssvFunction
     public final static AssvFunction INSTANCE
         = new AssvFunction();
 
-    protected boolean equal(Value fst, Value snd)
+    protected boolean equalityPredicate(Value fst, Value snd)
     { return fst.eqv(snd); }
 }

@@ -12,6 +12,6 @@ public class AssqFunction
     public final static AssqFunction INSTANCE
         = new AssqFunction();
 
-    protected boolean equal(Value fst, Value snd)
+    protected boolean equalityPredicate(Value fst, Value snd)
     { return fst.eq(snd); }
 }

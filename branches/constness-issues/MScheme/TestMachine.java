@@ -133,7 +133,7 @@ public class TestMachine
         try {
             assert(
                 machine.evaluate(
-                    Pair.create(_val1, _val2)
+                    Pair.createConst(_val1, _val2)
                 ) != null
             );
             fail("expected ListExpected");
@@ -172,7 +172,7 @@ public class TestMachine
     
         assert(
             machine.evaluate(
-                ValueFactory.prepend(
+                ValueFactory.prependConst(
                     Symbol.create("if"),
                     ValueFactory.createList(
                         ScmBoolean.createTrue(),
@@ -185,7 +185,7 @@ public class TestMachine
 
         assert(
             machine.evaluate(
-                ValueFactory.prepend(
+                ValueFactory.prependConst(
                     Symbol.create("if"),
                     ValueFactory.createList(
                         ScmBoolean.createTrue(),
@@ -197,7 +197,7 @@ public class TestMachine
 
         assert(
             machine.evaluate(
-                ValueFactory.prepend(
+                ValueFactory.prependConst(
                     Symbol.create("if"),
                     ValueFactory.createList(
                         ScmBoolean.createFalse(),
@@ -340,17 +340,17 @@ public class TestMachine
     {
         Function func = evaluate("(lambda x x)").toFunction();
 
-        Pair pair2 = Pair.create(
+        Pair pair2 = Pair.createConst(
             _val2,
             Empty.create()
         );
-        Pair pair1 = Pair.create(
+        Pair pair1 = Pair.createConst(
             _val1,
             pair2
         );
     
         Value result = machine.evaluate(
-            Pair.create(func, pair1)
+            Pair.createConst(func, pair1)
         );
 
         assert(result.equal(pair1));

@@ -47,14 +47,15 @@ public class TestValue
     public void testCastFunctions()
         throws Exception
     {
-        Pair      .create(null, null).toPair();
-        Empty     .create().toList();
-        ScmNumber .create(0).toScmNumber();
+        Empty     .create(   ).toList();
+        ScmNumber .create( 0 ).toScmNumber();
         ScmChar   .create('a').toScmChar();
-        ScmString .create("").toScmString();
+        InputPort .create(   ).toInputPort();
+        OutputPort.create(   ).toOutputPort();
+
+        Pair      .createConst(null, null).toPair();
+        ScmString .createConst("").toScmString();
         ScmVector .create(0).toScmVector();
-        InputPort .create().toInputPort();
-        OutputPort.create().toOutputPort();
     }
 
     public void testTrue()
@@ -100,7 +101,7 @@ public class TestValue
     public void testPair()
         throws Exception
     {       
-        final Value pair = Pair.create(
+        final Value pair = Pair.createConst(
             ScmBoolean.createTrue(),
             ScmBoolean.createTrue()
         );
@@ -192,7 +193,7 @@ public class TestValue
     public void testString()
         throws Exception
     {
-        final Value string = ScmString.create("Hallo !");
+        final Value string = ScmString.createConst("Hallo !");
 
         commonLiteralTests(string);
         assert(string.isScmString());
@@ -340,15 +341,15 @@ public class TestValue
 
         assert(
             eqHelper(
-                ScmString.create(""),
-                ScmString.create("")
+                ScmString.createConst(""),
+                ScmString.createConst("")
             ) >= 1
         );
 
         assert(
             eqHelper(
-                ScmString.create("Hallo"),
-                ScmString.create("Hallo")
+                ScmString.createConst("Hallo"),
+                ScmString.createConst("Hallo")
             ) >= 1
         );
         
@@ -357,8 +358,8 @@ public class TestValue
 
         assert(
             eqHelper(
-                Pair.create(v, v),
-                Pair.create(v, v)
+                Pair.createConst(v, v),
+                Pair.createConst(v, v)
             ) == 1
         );
         
@@ -395,8 +396,8 @@ public class TestValue
 
         assert(
             eqHelper(
-                ScmString.create("Hallo 1"),
-                ScmString.create("Hallo 2")
+                ScmString.createConst("Hallo 1"),
+                ScmString.createConst("Hallo 2")
             ) == 0
         );
     }

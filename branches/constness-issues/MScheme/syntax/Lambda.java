@@ -41,7 +41,7 @@ final class Lambda
             formals = rawFormals.toList();
             arity   = Arity.exactly(formals.getLength());
         } else {
-            Pair head     = Pair.create(null, rawFormals);
+            Pair head     = Pair.createMutable(null, rawFormals);
             Pair lastPair = head;
             int  minArity = 0;
         

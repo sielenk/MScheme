@@ -56,7 +56,7 @@ final class PushContinuation
         } else {
             return prepareNext(
                 registers,
-                ValueFactory.prepend(value, _done),
+                ValueFactory.prependMutable(value, _done),
                 _todo
             );
         }

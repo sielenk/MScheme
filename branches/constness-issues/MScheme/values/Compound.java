@@ -17,14 +17,16 @@ public abstract class Compound
 
     private boolean _isMutable = true;
 
-    public void setConst()
-    { _isMutable = false; }
+    protected Compound(boolean isMutable)
+    { _isMutable = isMutable; }
 
-    protected void modify()
+    protected final void modify()
         throws ImmutableException
     {
         if (!_isMutable) {
             throw new ImmutableException(this);
         }                                    
     }
+
+    public abstract boolean equal(Value other);
 }

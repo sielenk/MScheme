@@ -10,5 +10,5 @@ public class FunctionNotFoundException
         = "$Id$";
 
     public FunctionNotFoundException(String name)
-    { super(ScmString.create(name)); }
+    { super(ScmString.createConst(name)); }
 }

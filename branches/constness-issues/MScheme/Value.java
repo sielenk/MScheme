@@ -21,8 +21,6 @@ public abstract class Value
     public final static String id
         = "$Id$";
 
-    public void setConst() { }
-
     /**
      * 
      *

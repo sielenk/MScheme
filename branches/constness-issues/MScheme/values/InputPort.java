@@ -70,7 +70,7 @@ public class InputPort
         }
         catch (IOException e) {
             throw new OpenException(
-                ScmString.create(filename)
+                ScmString.createConst(filename)
             );
         }
     }
@@ -266,7 +266,7 @@ public class InputPort
 
             la = skipWSread();
             if (la == '.') {
-                Pair result = Pair.create(
+                Pair result = Pair.createConst(
                     head,
                     parseDatum()
                 );
@@ -281,7 +281,7 @@ public class InputPort
                 return result;
             } else {
                 _reader.unread(la);
-                return Pair.create(
+                return Pair.createConst(
                     head,
                     parseList()
                 );
@@ -299,7 +299,7 @@ public class InputPort
         
             switch (c) {
             case '"':
-                return ScmString.create(
+                return ScmString.createConst(
                     buf.toString()
                 );
                 

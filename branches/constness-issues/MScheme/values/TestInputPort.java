@@ -112,9 +112,9 @@ public class TestInputPort
         );
         InputPort in = InputPort.create(source);
         
-        assert(in.read().equal(ScmString.create(str1)));
-        assert(in.read().equal(ScmString.create(str2)));
-        assert(in.read().equal(ScmString.create(str3b)));
+        assert(in.read().equal(ScmString.createConst(str1)));
+        assert(in.read().equal(ScmString.createConst(str2)));
+        assert(in.read().equal(ScmString.createConst(str3b)));
     }
 
     public void testList()
@@ -130,7 +130,7 @@ public class TestInputPort
         InputPort in = InputPort.create(source);
         
         assert(in.read().equal(Empty.create()));
-        assert(in.read().equal(Pair.create(one, two)));
+        assert(in.read().equal(Pair.createConst(one, two)));
         assert(in.read().equal(ValueFactory.createList(one, two, three)));
         assert(in.read().equal(ValueFactory.createList(one, two, three)));
     }

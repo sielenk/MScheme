@@ -17,8 +17,10 @@ public final class ScmString
     private char[] _string;
 
 
-    private ScmString(String value)
+    private ScmString(boolean isMutable, String value)
     {
+        super(isMutable);
+
         _string = new char[value.length()];
         value.getChars(
             0,
@@ -28,15 +30,14 @@ public final class ScmString
         );
     }
 
-    public static ScmString create(String javaString)
-    { return new ScmString(javaString); }
+    public static ScmString createConst(String javaString)
+    { return new ScmString(false, javaString); }
+
+    public static ScmString createMutable(String javaString)
+    { return new ScmString(true, javaString); }
 
     public static ScmString create(Symbol schemeSymbol)
-    {
-        ScmString result = create(schemeSymbol.getJavaString());
-        result.setConst();
-        return result;
-    }
+    { return createConst(schemeSymbol.getJavaString()); }
 
 
     public String getJavaString()
