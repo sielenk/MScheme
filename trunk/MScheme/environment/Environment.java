@@ -28,16 +28,16 @@ import MScheme.exceptions.*;
 
 
 public final class Environment
-            extends ValueDefaultImplementations
+    extends ValueDefaultImplementations
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     // *******************************************************************
 
     public void write(Writer destination)
-    throws IOException
+        throws IOException
     {
         destination.write("[environment]");
     }
@@ -50,89 +50,93 @@ public final class Environment
     // *******************************************************************
 
     private final StaticEnvironment _bindings;
-    private final Vector[]          _data;
+    private final Vector[]          _frames;
 
     // *******************************************************************
 
     private Environment(
         StaticEnvironment bindings,
-        Vector[]          data
+        Vector[]          frames
     )
     {
         _bindings = bindings;
-        _data = data;
+        _frames   = frames;
     }
-
-    Environment()
+ 
+    private static Environment create()
     {
-        this(new StaticEnvironment(), (Environment)null);
+        return create(new StaticEnvironment(), null);
     }
 
-    Environment(
+    private static Environment create(
         StaticEnvironment bindings,
         Environment       parent
     )
     {
-        int level = bindings.getLevel();
-
-        _bindings = bindings;
-        _data     = new Vector[level + 1];
+        int      level  = bindings.getLevel();
+        Vector[] frames = new Vector[level + 1];
 
         if (level > 0)
         {
             if (parent._bindings != bindings.getParent())
             {
                 throw new RuntimeException(
-                          "consistency failure: StaticEnvironment parent"
-                      );
+                   "consistency failure: StaticEnvironment parent"
+                );
             }
 
             System.arraycopy(
-                parent._data, 0,
-                _data, 0,
+                parent._frames, 0,
+                frames, 0,
                 level
             );
         }
 
-        Vector newData = new Vector();
-        newData.setSize(bindings.getSize());
-        _data[level] = newData;
+        {
+            Vector locations = new Vector();
+            locations.setSize(bindings.getSize());
+            frames[level] = locations;
+        }
+
+        return new Environment(bindings, frames);
     }
 
-    Environment(
+    private static Environment create(
         StaticEnvironment  bindings,
         Environment        parent,
         Arity              arity,
         List               values
     ) throws PairExpected, ListExpected
     {
-        this(bindings, parent);
+        Environment result = create(bindings, parent);
 
-        Vector data = _data[_bindings.getLevel()];
-        List   tail = values;
+        Vector locations = result._frames[result._bindings.getLevel()];
+        List   rest      = values;
 
         for (int i = 0; i < arity.getMin(); i++)
         {
-            data.setElementAt(
-                tail.getHead(),
+            locations.setElementAt(
+                rest.getHead(),
                 i
             );
 
-            tail = tail.getTail();
+            rest = rest.getTail();
         }
 
         if (arity.allowMore())
         {
-            data.setElementAt(
-                tail,
+            locations.setElementAt(
+                rest,
                 arity.getMin()
             );
         }
+
+        return result;
     }
 
 
     private static Environment
-    _implementationEnvironment = getSchemeReportEnvironment();
+        _implementationEnvironment = getSchemeReportEnvironment();
 
     public static Environment getImplementationEnvironment()
     {
@@ -243,7 +247,7 @@ public final class Environment
     public static Environment getEmpty()
     {
         initHooks();
-        return new Environment();
+        return create();
     }
 
     public static Environment getNullEnvironment()
@@ -298,8 +302,8 @@ public final class Environment
         catch (AlreadyBound e)
         {
             throw new RuntimeException(
-                      "unexpected AlreadyBound in getNullEnvironment()"
-                  );
+                "unexpected AlreadyBound in getNullEnvironment()"
+            );
         }
 
         callHook(result, _nullEnvironmentHook);
@@ -341,7 +345,7 @@ public final class Environment
 
     public Environment getParent()
     {
-        return new Environment(_bindings.getParent(), _data);
+        return new Environment(_bindings.getParent(), _frames);
     }
 
     public Environment newChild()
@@ -353,7 +357,7 @@ public final class Environment
         StaticEnvironment newFrame
     )
     {
-        return new Environment(newFrame, this);
+        return create(newFrame, this);
     }
 
     public Environment newChild(
@@ -362,7 +366,7 @@ public final class Environment
         List              values
     ) throws ListExpected, PairExpected
     {
-        return new Environment(newFrame, this, arity, values);
+        return create(newFrame, this, arity, values);
     }
 
     // *** Envrionment access ************************************************
@@ -381,22 +385,22 @@ public final class Environment
 
     public void assign(Reference key, Value value)
     {
-        Vector data  = _data[key.getLevel()];
-        int    index = key.getIndex();
+        Vector locations = _frames[key.getLevel()];
+        int    index     = key.getIndex();
 
         try
         {
-            data.setElementAt(value, index);
+            locations.setElementAt(value, index);
         }
         catch (ArrayIndexOutOfBoundsException e)
         {
-            data.setSize(index + 1);
-            data.setElementAt(value, index);
+            locations.setSize(index + 1);
+            locations.setElementAt(value, index);
         }
     }
 
     public void assign(Symbol key, Value value)
-    throws SymbolNotFoundException, UnexpectedSyntax
+        throws SymbolNotFoundException, UnexpectedSyntax
     {
         assign(_bindings.getReferenceFor(key), value);
     }
@@ -409,7 +413,7 @@ public final class Environment
 
         try
         {
-            result = (Value)_data[
+            result = (Value)_frames[
                          ref.getLevel()
                      ].get(
                          ref.getIndex()
