@@ -35,7 +35,7 @@ public class Registers
 
 
     public UnaryFunction getCurrentContinuation()
-    { return _continuation.getFunction(); }
+    { return new ContinuationFunction(_continuation); }
 
     public Environment getEnvironment()
     { return _environment; }
