@@ -1,17 +1,15 @@
 package MScheme;
 
-import MScheme.values.*;
-import MScheme.environment.*;
-import MScheme.code.*;
+import MScheme.values.InputPort;
 import MScheme.machine.Machine;
 
 public class Main
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     public final static void main(String[] argv)
-    throws Exception
+        throws Exception
     {
         Machine machine = new Machine();
 

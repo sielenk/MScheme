@@ -1,7 +1,6 @@
 package MScheme;
 
 import java.io.Writer;
-import java.io.StringWriter;
 import java.io.IOException;
 
 import MScheme.values.*;
