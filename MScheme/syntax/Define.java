@@ -1,10 +1,11 @@
 package MScheme.syntax;
 
+import MScheme.util.Arity;
+
 import MScheme.Value;
 import MScheme.Code;
 import MScheme.Syntax;
 
-import MScheme.code.Assignment;
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Reference;
 import MScheme.values.ValueFactory;
@@ -16,15 +17,12 @@ import MScheme.exceptions.*;
 
 
 final class Define
-    extends Assign
+    extends Syntax
 {
     final static Syntax INSTANCE = new Define();
-    
-    protected Reference getReference(
-        StaticEnvironment syntax,
-        Symbol            symbol
-    ) throws CompileError
-    { return syntax.define(symbol); }
+
+    private Define()
+    { super(Arity.atLeast(2)); }
 
     protected Code checkedTranslate(
         StaticEnvironment syntax,
@@ -38,8 +36,8 @@ final class Define
             Value  formals = arguments.getHead().toPair().getSecond();
             List   body    = arguments.getTail();
 
-            return new Assignment(
-                getReference(syntax, symbol),
+            return Set.translate(
+                syntax.define(symbol),
                 Lambda.INSTANCE.translate(
                     syntax,
                     ValueFactory.prepend(
@@ -49,7 +47,14 @@ final class Define
                 )
             );
         } else {
-            return super.checkedTranslate(syntax, arguments);
+            syntax.define(arguments.getHead().toSymbol());
+            
+            // call the "real" translate to let Set recheck the
+            // argument count
+            return Set.INSTANCE.translate(
+                syntax,
+                arguments
+            );
         }
     }
 }
