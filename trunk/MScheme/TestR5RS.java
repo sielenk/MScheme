@@ -277,7 +277,7 @@ public class TestR5RS
         check("(let ((x 1)) (let    () (define x 2)) x)", "1");
         check("(let ((x 1)) (let*   () (define x 2)) x)", "1");
         check("(let ((x 1)) (letrec () (define x 2)) x)", "1");
-        
+
         check("(let ((x 1)) (begin     (define x 2)) x)", "2");
     }
 
@@ -294,6 +294,23 @@ public class TestR5RS
     }
 
     /// 4.2.4 Iteration
+    public void test4_2_4_named_let()
+        throws SchemeException
+    {
+        check(
+            "(let f ((x 3) (y 7))\n" +
+            "  (if (= x 0) y (f (- x 1) y)))",
+            "7"
+        );
+
+        check(
+            "(let ((x 2) (y 3))\n" +
+            "  (let ((x 7)\n" +
+            "        (z (+ x y)))\n" +
+            "    (* z x)))",
+            "35"
+        );
+    }
 
     /// 4.2.5 Delayed evaluation
 
@@ -322,6 +339,23 @@ public class TestR5RS
             "(let ((name1 'x) (name2 'y)) `(a `(b ,,name1 ,',name2 d) e))",
             "(a `(b ,x ,'y d) e))"
         );
+    }
+
+    /// 5.2 Definitions
+    public void test5_2()
+        throws SchemeException
+    {
+        try { eval("(define x 1 2 3)"); fail(); }
+	    catch (SyntaxArityError e) { }
+	    
+	    try { eval("(set!   x 1 2 3)"); fail(); }
+	    catch (SyntaxArityError e) { }
+	    
+        check(
+	        "(begin (define (f x) x x x x x) (f 1))",
+		    "1"
+	    );
+	    
     }
 
     /// 6.1 Equivalence predicates
