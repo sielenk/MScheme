@@ -101,6 +101,12 @@ public final class Machine
             }
             catch (SchemeException error)
             {
+                // the java stack is unwound
+                // now go for the scheme's ...
+
+                // remember what happened, to be able
+                // to "rethrow" the caught exception again
+                // after the scheme stack is unwound
                 lastError      = error;
                 lastErrorValue = 
                     ListFactory.create(
@@ -109,6 +115,8 @@ public final class Machine
                         error.getMessageValue()
                     );
 
+                // collect dynamic-wind thunks
+                // and let the machine handle them
                 next = new ContinuationFunction(
                     abort
                 ).call(
@@ -122,7 +130,7 @@ public final class Machine
 
         Value result = abort.getResult();
         
-        if (result == lastErrorValue) 
+        if (result == lastErrorValue)
         {
             throw lastError;
         }
