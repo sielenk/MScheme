@@ -19,7 +19,7 @@ public class Reference
     private final int    _level;
     private final int    _index;
 
-    public Reference(Symbol symbol, int level, int index)
+    Reference(Symbol symbol, int level, int index)
     {
         _symbol = symbol;
         _level  = level;
@@ -27,10 +27,11 @@ public class Reference
     }
 
     public Symbol getSymbol() { return _symbol; }
-    public int    getLevel () { return _level;  }
-    public int    getIndex () { return _index;  }
-    
-    
+
+    int getLevel () { return _level;  }
+    int getIndex () { return _index;  }
+
+
     protected Value getValue(Registers registers)
         throws RuntimeError
     { return registers.getEnvironment().lookup(this); }
