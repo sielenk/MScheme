@@ -24,7 +24,6 @@ import MScheme.Value;
 
 import MScheme.exceptions.ImmutableException;
 
-
 public interface Pair
     extends Value
 {

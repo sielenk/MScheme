@@ -24,7 +24,6 @@ import MScheme.Value;
 
 import MScheme.values.ScmString;
 
-
 public abstract class SchemeException
             extends Exception
 {

@@ -20,20 +20,21 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.syntax;
 
-import MScheme.util.Arity;
-
 import MScheme.Code;
-import MScheme.Value;
 import MScheme.Syntax;
+import MScheme.Value;
 
 import MScheme.code.Assignment;
-import MScheme.environment.StaticEnvironment;
+
 import MScheme.environment.Reference;
+import MScheme.environment.StaticEnvironment;
+
+import MScheme.exceptions.SchemeException;
+
+import MScheme.util.Arity;
 
 import MScheme.values.List;
 import MScheme.values.Symbol;
-
-import MScheme.exceptions.SchemeException;
 
 
 final class Set

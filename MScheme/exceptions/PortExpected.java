@@ -24,10 +24,10 @@ import MScheme.Value;
 
 
 public abstract class PortExpected
-            extends TypeError
+    extends TypeError
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     public PortExpected(Value cause, String message)
     {

@@ -24,10 +24,10 @@ import MScheme.values.ScmVector;
 
 
 public class InvalidVectorIndexException
-            extends VectorException
+    extends VectorException
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     public InvalidVectorIndexException(
         ScmVector vector,
@@ -37,4 +37,3 @@ public class InvalidVectorIndexException
         super(vector, index);
     }
 }
-

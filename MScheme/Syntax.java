@@ -20,11 +20,11 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme;
 
-import MScheme.values.List;
-
 import MScheme.environment.StaticEnvironment;
 
 import MScheme.exceptions.SchemeException;
+
+import MScheme.values.List;
 
 
 /**

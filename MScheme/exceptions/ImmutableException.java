@@ -24,10 +24,10 @@ import MScheme.Value;
 
 
 public final class ImmutableException
-            extends RuntimeError
+    extends RuntimeError
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     public ImmutableException(Value cause)
     {

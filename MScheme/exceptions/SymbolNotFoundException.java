@@ -24,10 +24,10 @@ import MScheme.Value;
 
 
 public final class SymbolNotFoundException
-            extends CompileError
+    extends CompileError
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     public SymbolNotFoundException(Value cause)
     {

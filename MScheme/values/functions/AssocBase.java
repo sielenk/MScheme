@@ -21,13 +21,13 @@ Boston, MA  02111-1307, USA. */
 package MScheme.values.functions;
 
 import MScheme.Value;
-import MScheme.values.ScmBoolean;
-import MScheme.values.List;
-import MScheme.values.Pair;
 
 import MScheme.exceptions.ListExpected;
 import MScheme.exceptions.PairExpected;
 
+import MScheme.values.List;
+import MScheme.values.Pair;
+import MScheme.values.ScmBoolean;
 
 abstract class AssocBase
             extends BinaryValueFunction

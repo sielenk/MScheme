@@ -20,22 +20,27 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values;
 
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
-import MScheme.Value;
 import MScheme.Code;
+import MScheme.Value;
 
 import MScheme.environment.StaticEnvironment;
-import MScheme.code.*;
-import MScheme.exceptions.*;
+
+import MScheme.exceptions.CantCompileException;
+import MScheme.exceptions.ImmutableException;
+import MScheme.exceptions.InvalidVectorIndexException;
+import MScheme.exceptions.ListExpected;
+import MScheme.exceptions.PairExpected;
+import MScheme.exceptions.VectorException;
 
 
 public final class ScmVector
-            extends Compound
+    extends Compound
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     private final static ScmVector _empty = new ScmVector(false, 0, null);

@@ -20,19 +20,20 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values;
 
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
 import MScheme.Value;
 
-import MScheme.exceptions.*;
+import MScheme.exceptions.ImmutableException;
+import MScheme.exceptions.InvalidStringIndexException;
 
 
 public final class ScmString
-            extends Compound
+    extends Compound
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     private final char[]  _string;

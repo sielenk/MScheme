@@ -22,11 +22,8 @@ package MScheme.code;
 
 import MScheme.Code;
 
-import MScheme.environment.StaticEnvironment;
-
 import MScheme.exceptions.SymbolNotFoundException;
 import MScheme.exceptions.UnexpectedSyntax;
-
 
 class CodeArray
 {

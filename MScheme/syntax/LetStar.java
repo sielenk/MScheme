@@ -20,19 +20,22 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.syntax;
 
-import java.io.Writer;
-import java.io.IOException;
-
-import MScheme.Value;
 import MScheme.Code;
 import MScheme.Syntax;
+import MScheme.Value;
+
+import MScheme.code.Application;
+import MScheme.code.CompiledLambda;
+import MScheme.code.Sequence;
+
+import MScheme.environment.StaticEnvironment;
+
+import MScheme.exceptions.SchemeException;
 
 import MScheme.util.Arity;
-import MScheme.code.*;
-import MScheme.environment.*;
-import MScheme.exceptions.*;
-import MScheme.values.functions.*;
-import MScheme.values.*;
+
+import MScheme.values.List;
+import MScheme.values.Symbol;
 
 
 // *** let* ***
@@ -67,15 +70,16 @@ final class LetStar
             // special handling because the helper won't
             // create a new environment in this case
 
-            Code[] application = new Code[1];
-            
-            application[0] = CompiledLambda.create(
-                Arity.exactly(0),
-                compilationEnv.newChild(),
-                body
+            return Application.create(
+                new Code[]
+                {
+                    CompiledLambda.create(
+                        Arity.exactly(0),
+                        compilationEnv.newChild(),
+                        body
+                    )
+                }
             );
-
-            return Application.create(application);
         }
         else
         {
@@ -131,12 +135,13 @@ final class LetStarHelper
                               innerBody
                           );
 
-            Code[] application = new Code[2];
-
-            application[0] = lambda;
-            application[1] = init.getCode(outerEnvironment);
-            
-            return Application.create(application);
+            return Application.create(
+                new Code[]
+                {
+                    lambda,
+                    init.getCode(outerEnvironment)
+                }
+            );
         }
     }
 }

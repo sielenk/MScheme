@@ -20,19 +20,15 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values;
 
-import java.io.Writer;
 import java.io.FileWriter;
-import java.io.OutputStreamWriter;
 import java.io.IOException;
+import java.io.Writer;
 
 import MScheme.Value;
 
-import MScheme.machine.Machine;
-
+import MScheme.exceptions.CloseException;
 import MScheme.exceptions.OpenException;
 import MScheme.exceptions.WriteException;
-import MScheme.exceptions.CloseException;
-
 
 public class OutputPort
             extends Port

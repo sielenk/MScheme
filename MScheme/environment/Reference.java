@@ -20,17 +20,17 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.environment;
 
-import MScheme.Value;
 import MScheme.Code;
+import MScheme.Value;
+
+import MScheme.exceptions.RuntimeError;
+import MScheme.exceptions.SymbolNotFoundException;
+import MScheme.exceptions.UnexpectedSyntax;
 
 import MScheme.machine.Registers;
 import MScheme.machine.Result;
-import MScheme.values.Symbol;
 
-import MScheme.exceptions.AlreadyBound;
-import MScheme.exceptions.RuntimeError;
-import MScheme.exceptions.UnexpectedSyntax;
-import MScheme.exceptions.SymbolNotFoundException;
+import MScheme.values.Symbol;
 
 
 public abstract class Reference

@@ -20,24 +20,50 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values.functions;
 
+import java.io.Reader;
 import java.io.StringReader;
-import java.io.StringWriter;
-
-import MScheme.util.Arity;
 
 import MScheme.Value;
 
 import MScheme.environment.Environment;
 
-import MScheme.values.*;
+import MScheme.exceptions.CharExpected;
+import MScheme.exceptions.CloseException;
+import MScheme.exceptions.ImmutableException;
+import MScheme.exceptions.InvalidStringIndexException;
+import MScheme.exceptions.ListExpected;
+import MScheme.exceptions.NumberExpected;
+import MScheme.exceptions.OpenException;
+import MScheme.exceptions.PairExpected;
+import MScheme.exceptions.PortExpected;
+import MScheme.exceptions.RuntimeArityError;
+import MScheme.exceptions.RuntimeError;
+import MScheme.exceptions.StringExpected;
+import MScheme.exceptions.SymbolExpected;
+import MScheme.exceptions.TypeError;
+import MScheme.exceptions.VectorException;
+import MScheme.exceptions.VectorExpected;
 
-import MScheme.exceptions.*;
+import MScheme.util.Arity;
+
+import MScheme.values.Function;
+import MScheme.values.InputPort;
+import MScheme.values.List;
+import MScheme.values.ListFactory;
+import MScheme.values.OutputPort;
+import MScheme.values.Pair;
+import MScheme.values.ScmBoolean;
+import MScheme.values.ScmChar;
+import MScheme.values.ScmNumber;
+import MScheme.values.ScmString;
+import MScheme.values.ScmVector;
+import MScheme.values.Symbol;
 
 
 final class Order
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     public final static int LT = -2;
@@ -116,7 +142,7 @@ final class Order
 public class Builtins
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     // 6. Standard procedures

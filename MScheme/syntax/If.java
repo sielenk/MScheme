@@ -20,28 +20,27 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.syntax;
 
-import MScheme.Value;
 import MScheme.Code;
 import MScheme.Syntax;
-
-import MScheme.util.Arity;
+import MScheme.Value;
 
 import MScheme.code.Selection;
 
 import MScheme.environment.StaticEnvironment;
 
-import MScheme.values.Function;
-import MScheme.values.ScmBoolean;
-import MScheme.values.List;
-
 import MScheme.exceptions.SchemeException;
+
+import MScheme.util.Arity;
+
+import MScheme.values.List;
+import MScheme.values.ScmBoolean;
 
 
 final class If
     extends CheckedSyntax
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     final static Syntax INSTANCE = new If();

@@ -20,17 +20,17 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values;
 
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
-import MScheme.Value;
-import MScheme.Syntax;
 import MScheme.Code;
+import MScheme.Syntax;
+import MScheme.Value;
 
-import MScheme.environment.Reference;
 import MScheme.environment.StaticEnvironment;
 
-import MScheme.exceptions.*;
+import MScheme.exceptions.SymbolNotFoundException;
+import MScheme.exceptions.UnexpectedSyntax;
 
 
 public final class Symbol

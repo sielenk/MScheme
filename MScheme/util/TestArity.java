@@ -20,8 +20,7 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.util;
 
-import junit.framework.*;
-
+import junit.framework.TestCase;
 
 public class TestArity
     extends TestCase

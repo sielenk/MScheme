@@ -20,16 +20,17 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.code;
 
-import MScheme.Value;
 import MScheme.Code;
+import MScheme.Value;
 
-import MScheme.machine.Registers;
-import MScheme.machine.Continuation;
-
+import MScheme.environment.Environment;
 import MScheme.environment.Reference;
 
 import MScheme.exceptions.SymbolNotFoundException;
 import MScheme.exceptions.UnexpectedSyntax;
+
+import MScheme.machine.Continuation;
+import MScheme.machine.Registers;
 
 
 public final class Assignment

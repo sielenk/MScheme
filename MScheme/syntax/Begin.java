@@ -23,13 +23,15 @@ package MScheme.syntax;
 import MScheme.Code;
 import MScheme.Syntax;
 
-import MScheme.values.List;
-
-import MScheme.util.Arity;
 import MScheme.code.Sequence;
+
 import MScheme.environment.StaticEnvironment;
 
 import MScheme.exceptions.SchemeException;
+
+import MScheme.util.Arity;
+
+import MScheme.values.List;
 
 
 final class Begin

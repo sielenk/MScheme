@@ -22,7 +22,6 @@ package MScheme.values.functions;
 
 import MScheme.Value;
 
-
 public final class MemqFunction
             extends MemberBase
 {

@@ -21,14 +21,15 @@ Boston, MA  02111-1307, USA. */
 package MScheme.exceptions;
 
 import MScheme.util.Arity;
+
 import MScheme.values.List;
 
 
 public final class SyntaxArityError
-            extends CompileError
+    extends CompileError
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     public SyntaxArityError(List arguments, Arity expected)
     {

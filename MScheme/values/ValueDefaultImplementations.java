@@ -21,23 +21,34 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values;
 
-import java.io.Writer;
-import java.io.StringWriter;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 
-import MScheme.Value;
-import MScheme.Syntax;
 import MScheme.Code;
-
-import MScheme.syntax.ProcedureCall;
+import MScheme.Syntax;
+import MScheme.Value;
 
 import MScheme.environment.Environment;
 import MScheme.environment.StaticEnvironment;
 
+import MScheme.exceptions.CharExpected;
+import MScheme.exceptions.EnvironmentExpected;
+import MScheme.exceptions.FunctionExpected;
+import MScheme.exceptions.InputPortExpected;
+import MScheme.exceptions.ListExpected;
+import MScheme.exceptions.NumberExpected;
+import MScheme.exceptions.OutputPortExpected;
+import MScheme.exceptions.PairExpected;
+import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.StringExpected;
+import MScheme.exceptions.SymbolExpected;
+import MScheme.exceptions.VectorExpected;
+
 import MScheme.machine.Result;
 import MScheme.machine.Registers;
 
-import MScheme.exceptions.*;
+import MScheme.syntax.ProcedureCall;
 
 
 public abstract class ValueDefaultImplementations

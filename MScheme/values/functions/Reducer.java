@@ -22,11 +22,10 @@ package MScheme.values.functions;
 
 import MScheme.Value;
 
-import MScheme.values.List;
-
 import MScheme.exceptions.RuntimeError;
 import MScheme.exceptions.TypeError;
 
+import MScheme.values.List;
 
 abstract class Reducer
 {

@@ -20,20 +20,21 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.syntax;
 
-import java.io.Writer;
-import java.io.IOException;
-
-import MScheme.Value;
 import MScheme.Code;
 import MScheme.Syntax;
+import MScheme.Value;
+
+import MScheme.code.Application;
+import MScheme.code.CompiledLambda;
+
+import MScheme.environment.StaticEnvironment;
+
+import MScheme.exceptions.SchemeException;
 
 import MScheme.util.Arity;
-import MScheme.code.CompiledLambda;
-import MScheme.code.Application;
-import MScheme.environment.*;
-import MScheme.exceptions.*;
-import MScheme.values.functions.*;
-import MScheme.values.*;
+
+import MScheme.values.List;
+import MScheme.values.Symbol;
 
 
 // *** letrec ***
@@ -100,14 +101,16 @@ final class Letrec
             compiledBody.length
         );
 
-        Code[] application = new Code[1];
-        
-        application[0] = CompiledLambda.create( 
-            Arity.exactly(0),  
-            bodyCompilationEnv,
-            compiledLetrec
-        );
 
-        return Application.create(application);
+        return Application.create(
+            new Code[]
+            {
+                CompiledLambda.create( 
+                    Arity.exactly(0),  
+                    bodyCompilationEnv,
+                    compiledLetrec
+                )
+            }
+        );
     }
 }

@@ -24,10 +24,10 @@ import MScheme.Value;
 
 
 public abstract class TypeError
-            extends SchemeException
+    extends SchemeException
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     public TypeError(Value cause, String message)
     {

@@ -20,20 +20,22 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.syntax;
 
-import MScheme.Value;
 import MScheme.Code;
 import MScheme.Syntax;
+import MScheme.Value;
 
-import MScheme.util.Arity;
 import MScheme.code.CompiledLambda;
+
 import MScheme.environment.StaticEnvironment;
 
-import MScheme.values.ListFactory;
-import MScheme.values.List;
-import MScheme.values.Empty;
-import MScheme.values.Pair;
-
 import MScheme.exceptions.SchemeException;
+
+import MScheme.util.Arity;
+
+import MScheme.values.Empty;
+import MScheme.values.List;
+import MScheme.values.ListFactory;
+import MScheme.values.Pair;
 
 
 final class Lambda

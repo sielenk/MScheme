@@ -24,10 +24,10 @@ import MScheme.Value;
 
 
 public final class FunctionExpected
-            extends TypeError
+    extends TypeError
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     public FunctionExpected(Value cause)
     {

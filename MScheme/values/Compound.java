@@ -22,10 +22,7 @@ package MScheme.values;
 
 import MScheme.Value;
 
-import MScheme.environment.StaticEnvironment;
-import MScheme.code.*;
-
-import MScheme.exceptions.*;
+import MScheme.exceptions.ImmutableException;
 
 
 /**

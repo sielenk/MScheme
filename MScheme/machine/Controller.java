@@ -20,18 +20,18 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.machine;
 
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
-import MScheme.Value;
 import MScheme.Code;
+import MScheme.Value;
 
 import MScheme.code.Application;
 
-import MScheme.values.functions.UnaryFunction;
-
-import MScheme.exceptions.SchemeException;
 import MScheme.exceptions.RuntimeError;
+import MScheme.exceptions.SchemeException;
+
+import MScheme.values.functions.UnaryFunction;
 
 
 final class Subcontinuation
@@ -186,19 +186,20 @@ public final class Controller
             }
         }
 
-        Code[] application = new Code[2];
-
-        application[0] = argument.getLiteral();
-        application[1] = new ContinuationFunction(
-                _root.getParent()
-            ).checkedCall(
-                state,
-                new Subcontinuation(  
-                    _root.getParent(),
-                    state.getContinuation()
+        return Application.create(
+            new Code[]
+            {
+                argument.getLiteral(),
+                new ContinuationFunction(
+                    _root.getParent()
+                ).checkedCall(
+                    state,
+                    new Subcontinuation(  
+                        _root.getParent(),
+                        state.getContinuation()
+                    )
                 )
-            );
-
-        return Application.create(application);
+            }
+        );
     }
 }

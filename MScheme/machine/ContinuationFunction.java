@@ -20,15 +20,15 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.machine;
 
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
-import MScheme.Value;
 import MScheme.Code;
+import MScheme.Value;
 
 import MScheme.code.Sequence;
-import MScheme.values.functions.UnaryFunction;
 
+import MScheme.values.functions.UnaryFunction;
 
 /**
  * Continuations are first class objects in scheme. They

@@ -24,10 +24,10 @@ import MScheme.values.Symbol;
 
 
 public final class AlreadyBound
-            extends CompileError
+    extends CompileError
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     public AlreadyBound(Symbol cause)
     {

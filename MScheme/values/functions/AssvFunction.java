@@ -22,7 +22,6 @@ package MScheme.values.functions;
 
 import MScheme.Value;
 
-
 public final class AssvFunction
             extends AssocBase
 {

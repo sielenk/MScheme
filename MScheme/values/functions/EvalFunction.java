@@ -20,16 +20,15 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values.functions;
 
-import MScheme.Value;
 import MScheme.Code;
+import MScheme.Value;
 
 import MScheme.environment.Environment;
-import MScheme.environment.StaticEnvironment;
 
-import MScheme.machine.Registers;
+import MScheme.exceptions.SchemeException;
+
 import MScheme.machine.Machine;
-
-import MScheme.exceptions.*;
+import MScheme.machine.Registers;
 
 
 public final class EvalFunction

@@ -20,18 +20,19 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values.functions;
 
-import MScheme.machine.Registers;
 import MScheme.Code;
 import MScheme.Value;
 
 import MScheme.exceptions.SchemeException;
 
+import MScheme.machine.Registers;
+
 
 public abstract class ValueThunk
-            extends Thunk
+    extends Thunk
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     protected final Code checkedCall(
@@ -42,5 +43,5 @@ public abstract class ValueThunk
     }
 
     protected abstract Value checkedCall()
-    throws SchemeException;
+        throws SchemeException;
 }

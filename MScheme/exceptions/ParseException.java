@@ -24,10 +24,10 @@ import MScheme.Value;
 
 
 public class ParseException
-            extends RuntimeError
+    extends RuntimeError
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     private final String _message;
 
@@ -37,4 +37,3 @@ public class ParseException
         _message = message;
     }
 }
-

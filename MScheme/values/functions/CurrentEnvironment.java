@@ -20,9 +20,9 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values.functions;
 
-import MScheme.machine.Registers;
-
 import MScheme.Code;
+
+import MScheme.machine.Registers;
 
 
 public final class CurrentEnvironment

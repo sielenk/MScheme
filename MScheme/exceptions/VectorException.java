@@ -24,10 +24,10 @@ import MScheme.values.ScmVector;
 
 
 public class VectorException
-            extends RuntimeError
+    extends RuntimeError
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     private final int _index;
 
@@ -40,4 +40,3 @@ public class VectorException
         _index = index;
     }
 }
-

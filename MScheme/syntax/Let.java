@@ -20,19 +20,22 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.syntax;
 
-import java.io.Writer;
-import java.io.IOException;
-
-import MScheme.Value;
 import MScheme.Code;
 import MScheme.Syntax;
 
+import MScheme.code.Application;
+
+import MScheme.environment.StaticEnvironment;
+
+import MScheme.exceptions.SchemeException;
+
 import MScheme.util.Arity;
-import MScheme.code.*;
-import MScheme.environment.*;
-import MScheme.exceptions.*;
-import MScheme.values.functions.*;
-import MScheme.values.*;
+
+import MScheme.values.List;
+import MScheme.values.ListFactory;
+import MScheme.values.Symbol;
+
+import MScheme.values.functions.YCombinator;
 
 
 // *** let ***
@@ -101,12 +104,13 @@ final class Let
             // argument, which is to be bound to the "curried"
             // closure -- the YCombinator does it's magic ...
 
-            Code[] application = new Code[2];
-            
-            application[0] = YCombinator.INSTANCE.getLiteral();
-            application[1] = compiledProc;
-            
-            compiledProc = Application.create(application);
+            compiledProc = Application.create(
+                new Code[]
+                {
+                    YCombinator.INSTANCE.getLiteral(),
+                    compiledProc
+                }
+            );
         }
 
         return ProcedureCall.create(

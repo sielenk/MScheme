@@ -20,10 +20,10 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values;
 
+import java.io.Reader;
 import java.io.StringReader;
 
 import MScheme.Value;
-
 
 public class TestInputPort
             extends junit.framework.TestCase

@@ -20,18 +20,19 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values.functions;
 
-import MScheme.machine.Registers;
 import MScheme.Code;
 import MScheme.Value;
 
 import MScheme.exceptions.SchemeException;
 
+import MScheme.machine.Registers;
+
 
 public abstract class BinaryValueFunction
-            extends BinaryFunction
+    extends BinaryFunction
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     protected final Code checkedCall(
@@ -44,5 +45,5 @@ public abstract class BinaryValueFunction
     }
 
     protected abstract Value checkedCall(Value fst, Value snd)
-    throws SchemeException;
+        throws SchemeException;
 }
