@@ -108,11 +108,6 @@ public class InputPort
         }
     }
 
-    public static InputPort create()
-    {
-        return create(Machine.stdin);
-    }
-
 
     // specialisation of Port
 

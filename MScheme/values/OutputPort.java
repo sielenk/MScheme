@@ -75,11 +75,6 @@ public class OutputPort
         }
     }
 
-    public static OutputPort create()
-    {
-        return create(Machine.stdout);
-    }
-
 
     // specialisation of Port
 
