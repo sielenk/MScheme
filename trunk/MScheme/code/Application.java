@@ -51,7 +51,7 @@ final class PushContinuation
     }
 
     protected Code execute(Registers state, Value value)
-        throws RuntimeError, TypeError
+        throws SchemeException
     {
         if (_todo.isEmpty()) {
             return value.toFunction().call(state, _done);
@@ -63,6 +63,10 @@ final class PushContinuation
             );
         }
     }
+
+
+    protected String debugString()
+    { return "push[" + _done + ", " + _todo + "]"; }
 }
 
 
@@ -89,4 +93,8 @@ public final class Application
             _permutedApplication
         );
     }
+
+
+    public String toString()
+    { return _permutedApplication.toString(); }
 }
