@@ -28,8 +28,6 @@ import MScheme.Code;
 
 import MScheme.environment.StaticEnvironment;
 
-import MScheme.code.CodeList;
-
 import MScheme.exceptions.ListExpected;
 import MScheme.exceptions.PairExpected;
 import MScheme.exceptions.SchemeException;

@@ -28,7 +28,6 @@ import MScheme.Syntax;
 
 import MScheme.machine.Machine;
 
-import MScheme.code.CodeList;
 import MScheme.code.Application;
 
 import MScheme.environment.Environment;

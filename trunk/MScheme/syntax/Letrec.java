@@ -28,7 +28,6 @@ import MScheme.Code;
 import MScheme.Syntax;
 
 import MScheme.util.Arity;
-import MScheme.code.CodeList;
 import MScheme.code.CompiledLambda;
 import MScheme.code.Application;
 import MScheme.environment.*;
