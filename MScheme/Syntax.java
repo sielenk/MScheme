@@ -15,6 +15,9 @@ import MScheme.exceptions.SyntaxArityError;
 public abstract class Syntax
     implements Translator
 {
+    public final static String id
+        = "$Id$";
+
     private final Arity _arity;
     
     protected Syntax(Arity arity)

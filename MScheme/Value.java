@@ -14,6 +14,9 @@ import MScheme.exceptions.*;
 
 public abstract class Value
 {
+    public final static String id
+        = "$Id$";
+
     public void setConst() { }
 
     public boolean isTrue() { return true; }
