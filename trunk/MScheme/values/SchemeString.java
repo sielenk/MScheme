@@ -3,17 +3,25 @@ package MScheme.values;
 import java.io.Writer;
 import java.io.IOException;
 
-import MScheme.exceptions.ImmutableException;
+import MScheme.exceptions.*;
 
 
 public final class SchemeString
     extends Compound
 {
-    private String  _string;
+    private char[] _string;
 
-    
+
     private SchemeString(String value)
-    { _string = value; }
+    {
+        _string = new char[value.length()];
+        value.getChars(
+            0,
+            value.length(),
+            _string,
+            0
+        );
+    }
 
     public static SchemeString create(String javaString)
     { return new SchemeString(javaString); }
@@ -27,11 +35,11 @@ public final class SchemeString
 
 
     public String getJavaString()
-    { return _string; }
-    
-    
+    { return new String(_string); }
+
+
     // specialisation of Value
-    
+
     public boolean isString()
     { return true; }
 
@@ -42,9 +50,15 @@ public final class SchemeString
     // accessors
 
     public void set(int index, char c)
-        throws ImmutableException
+        throws InvalidStringIndexException, ImmutableException
     {
         modify();
+        try {
+            _string[index] = c;
+        }
+        catch (ArrayIndexOutOfBoundsException e) {
+            throw new InvalidStringIndexException(this, index);
+        }
     }
 
     public boolean equal(Value other)
@@ -52,7 +66,9 @@ public final class SchemeString
         try {
             SchemeString otherString = (SchemeString)other;
         
-            return _string.compareTo(otherString._string) == 0;
+            return getJavaString().compareTo(
+                otherString.getJavaString()
+            ) == 0;
         }
         catch (ClassCastException e) { }
         
@@ -83,7 +99,7 @@ public final class SchemeString
         }
         destination.write('"');
     }
-    
+
     public void display(Writer destination)
         throws IOException
     { destination.write(getJavaString()); }
