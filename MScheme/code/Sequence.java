@@ -67,7 +67,7 @@ public final class Sequence
     public Code executionStep(Registers state)
     {
         new Continuation(state) {
-	    protected Code execute(Registers state, Value value)
+            protected Code execute(Registers innerState, Value value)
             {
                 // _index+1 will always be < sequence.length
                 // this is enforced by create(Code[], int)
@@ -77,7 +77,7 @@ public final class Sequence
             protected String debugString()
             {
             	StringBuffer result = new StringBuffer("seqence:<");
-		int          i      = _index;
+                int          i      = _index;
 
                 while (true)
                 {
