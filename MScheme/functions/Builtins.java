@@ -1,10 +1,12 @@
 package MScheme.functions;
 
 import MScheme.util.Arity;
+
 import MScheme.Value;
 import MScheme.List;
-import MScheme.machine.Machine;
+
 import MScheme.environment.Environment;
+
 import MScheme.values.*;
 
 import MScheme.exceptions.*;
@@ -573,21 +575,17 @@ public class Builtins
     public final static Function apply = ApplyFunction.INSTANCE;
 
     public final static Function call_2Dwith_2Dcurrent_2Dcontinuation
-    = CallCCFunction.INSTANCE;
+        = CallCCFunction.INSTANCE;
 
     public final static Function dynamic_2Dwind = DynamicWindFunction.INSTANCE;
 
 
     // 6.5 Eval
 
-    public final static Value eval(Value fst, Value snd)
-    throws SchemeException
-    {
-        return new Machine(snd.toEnvironment()).evaluate(fst);
-    }
+    public final static Function eval = EvalFunction.INSTANCE;
 
     public final static Value scheme_2Dreport_2Denvironment(Value fst)
-    throws RuntimeError, TypeError
+        throws RuntimeError, TypeError
     {
         if (fst.toScmNumber().getInteger() != 5)
         {
@@ -598,7 +596,7 @@ public class Builtins
     }
 
     public final static Value null_2Denvironment(Value fst)
-    throws RuntimeError, TypeError
+        throws RuntimeError, TypeError
     {
         if (fst.toScmNumber().getInteger() != 5)
         {
