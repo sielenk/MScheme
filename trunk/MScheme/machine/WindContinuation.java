@@ -16,7 +16,7 @@ class CallThunkContinuation
     CallThunkContinuation(Machine machine, Function thunk)
     { super(machine); _thunk = thunk; }
 
-    protected Code internalInvoke(
+    protected Code execute(
         Machine machine,
         Value   value
     ) throws RuntimeError, TypeError
@@ -61,7 +61,7 @@ class WindContinuation
     protected void enter(Machine machine)
     { new CallThunkContinuation(machine, _before); }
 
-    protected Code internalInvoke(
+    protected Code execute(
         Machine machine,
         Value   value
     ) throws RuntimeError, TypeError

@@ -29,9 +29,5 @@ public class Reference
     
     public Code executionStep(Machine machine)
         throws RuntimeError
-    {
-        return machine.handleResult(
-            machine.getEnvironment().lookup(this)
-        );
-    }
+    { return machine.getEnvironment().lookup(this).getLiteral(); }
 }

@@ -17,7 +17,7 @@ abstract public class TernaryValueFunction
         Value   snd,
         Value   trd
     ) throws RuntimeError, TypeError
-    { return machine.handleResult(checkedCall(fst, snd, trd)); }
+    { return checkedCall(fst, snd, trd).getLiteral(); }
 
     abstract protected Value checkedCall(Value fst, Value snd, Value trd)
         throws RuntimeError, TypeError;

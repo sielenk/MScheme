@@ -17,7 +17,7 @@ abstract public class ValueFunction
         Machine machine,
         List    arguments
     ) throws RuntimeError, TypeError
-    { return machine.handleResult(call(arguments)); }
+    { return call(arguments).getLiteral(); }
 
     abstract protected Value call(List arguments)
         throws RuntimeError, TypeError;
