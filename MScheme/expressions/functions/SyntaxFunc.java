@@ -9,7 +9,7 @@ import MScheme.expressions.SSymbol;
 
 import MScheme.machine.Values;
 import MScheme.machine.ValuesFactory;
-import MScheme.machine.ContinuationStack;
+import MScheme.machine.Machine;
 
 import MScheme.environment.Environment;
 import MScheme.environment.EnvironmentStub;
@@ -34,14 +34,12 @@ class SelectFunc extends Function
     }
 
     protected Values _call(
-        ContinuationStack stack,
-        Environment       environment,
-        Values            arguments
+        Machine machine,
+        Values  arguments
     ) {
         SExpr flag = arguments.at(0);
 
-        stack.push(
-            environment,
+        machine.push(
             EvalFunc.INSTANCE
         );
 
@@ -83,11 +81,11 @@ class AssignFunc extends Function
     }
 
     protected Values _call(
-        ContinuationStack stack,
-        Environment       environment,
-        Values            arguments
+        Machine machine,
+        Values  arguments
     ) throws SException {
-        SExpr value = arguments.at(0);
+        SExpr       value       = arguments.at(0);
+        Environment environment = machine.getEnvironment();
 
         if (_isDefine) {
             environment.define(
@@ -179,9 +177,8 @@ public class SyntaxFunc
 
 
     protected Values _call(
-        ContinuationStack stack,
-        Environment       environment,
-        Values            arguments
+        Machine machine,
+        Values  arguments
     ) throws SException {
         switch(id()) {
 
@@ -189,19 +186,16 @@ public class SyntaxFunc
             {
                 int i = arguments.getLength();
 
-                stack.push(
-                    environment,
+                machine.push(
                     EvalFunc.INSTANCE
                 );
                 while (i > 1) {
-                    stack.push(
-                        environment,
+                    machine.push(
                         new ConstFunc(
                             arguments.at(--i)
                         )
                     );
-                    stack.push(
-                        environment,
+                    machine.push(
                         EvalFunc.INSTANCE
                     );
                 }
@@ -256,7 +250,9 @@ public class SyntaxFunc
                     MapFunc.wrap(
                         EvalFunc.INSTANCE,
                         new ClosureFunc(
-                            environment.newChildStub(symbols),
+                            machine
+                            .getEnvironment()
+                            .newChildStub(symbols),
                             minArity,
                             allowMore,
                             arguments.getTail()
@@ -274,16 +270,14 @@ public class SyntaxFunc
                 SSymbol symbol = (SSymbol)arguments.at(0);
                 SExpr   value  = arguments.at(1);
 
-                stack.push(
-                    environment,
+                machine.push(
                     new AssignFunc(
                         symbol,
                         (id() == DEFINE)
                     )
                 );
 
-                stack.push(
-                    environment,
+                machine.push(
                     EvalFunc.INSTANCE
                 );
                 return new Values(value);
@@ -304,15 +298,13 @@ public class SyntaxFunc
                     ? arguments.at(2)
                     : null;
 
-                stack.push(
-                    environment,
+                machine.push(
                     new SelectFunc(
                         trueCase,
                         falseCase
                     )
                 );
-                stack.push(
-                    environment,
+                machine.push(
                     EvalFunc.INSTANCE
                 );
                 return new Values(

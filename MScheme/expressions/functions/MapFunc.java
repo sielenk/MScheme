@@ -5,10 +5,10 @@ import MScheme.expressions.SExpr;
 import MScheme.expressions.SBool;
 import MScheme.expressions.SFunction;
 
+import MScheme.machine.ValuesFactory;
 import MScheme.machine.ValuePair;
 import MScheme.machine.Values;
-import MScheme.machine.ValuesFactory;
-import MScheme.machine.ContinuationStack;
+import MScheme.machine.Machine;
 
 import MScheme.environment.Environment;
 
@@ -76,9 +76,8 @@ public class MapFunc extends Function
 
 
     protected Values _call(
-        ContinuationStack stack,
-        Environment       environment,
-        Values            arguments
+        Machine machine,
+        Values  arguments
     ) {
         if (_raw == null) {
             switch (arguments.getLength()) {
@@ -86,42 +85,32 @@ public class MapFunc extends Function
                 return Values.EMPTY;
 
             case 1:
-                stack.push(
-                    environment,
-                    _func
-                );
-
+                machine.push(_func);
                 return arguments;
 
             default:
-                stack.push(
-                    environment,
-                    new ComposeFunc(
+                machine.push(
+                    new MapFunc(
                         _func,
-                        new MapFunc(
-                            _func,
-                            arguments.getTail()
-                        )
+                        arguments.getTail()
                     )
                 );
+                machine.push(_func);
 
                 return new Values(arguments.at(0));
             }
         } else if (_raw.getLength() > 0) {
-            stack.push(
-                environment,
-                new ComposeFunc(
+            machine.push(
+                new MapFunc(
                     _func,
-                    new MapFunc(
-                        _func,
-                        _raw.getTail(),
-                        new ValuePair(
-                            arguments.at(0),
-                            _done
-                        )
+                    _raw.getTail(),
+                    new ValuePair(
+                        arguments.at(0),
+                        _done
                     )
                 )
             );
+            machine.push(_func);
 
             return new Values(_raw.at(0));
         } else {

@@ -4,7 +4,8 @@ package MScheme.expressions.functions;
 import MScheme.expressions.SFunction;
 
 import MScheme.machine.Values;
-import MScheme.machine.ContinuationStack;
+import MScheme.machine.Machine;
+
 import MScheme.environment.Environment;
 
 
@@ -29,19 +30,11 @@ public class ComposeFunc extends Function
 
 
     protected Values _call(
-        ContinuationStack stack,
-        Environment       environment,
-        Values            arguments
+        Machine machine,
+        Values  arguments
     ) {
-        stack.push(
-            environment,
-            _second
-        );
-
-        stack.push(
-            environment,
-            _first
-        );
+        machine.push(_second);
+        machine.push(_first );
 
         return arguments;
     }

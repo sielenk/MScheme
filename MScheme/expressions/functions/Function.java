@@ -8,7 +8,7 @@ import MScheme.exceptions.SException;
 import MScheme.exceptions.SWrongArgumentCountException;
 
 import MScheme.machine.Values;
-import MScheme.machine.ContinuationStack;
+import MScheme.machine.Machine;
 
 import MScheme.environment.Environment;
 
@@ -29,16 +29,14 @@ public abstract class Function extends SFunction
 
 
     abstract protected Values _call(
-        ContinuationStack stack,
-        Environment       environment,
-        Values            aruments
+        Machine machine,
+        Values  aruments
     ) throws SException;
 
 
     final public Values call(
-        ContinuationStack stack,
-        Environment       environment,
-        Values            arguments
+        Machine machine,
+        Values  arguments
     ) throws SException {
         _checkArity(arguments);
 
@@ -49,7 +47,7 @@ public abstract class Function extends SFunction
             + arguments.toList()
         );
 
-        return _call(stack, environment, arguments);
+        return _call(machine, arguments);
     }
 
 
