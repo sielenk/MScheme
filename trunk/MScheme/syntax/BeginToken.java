@@ -20,6 +20,7 @@ final class BeginToken
     
     protected Code checkedTranslate(
         StaticEnvironment syntax,
+	    int               len,
         List              arguments
     ) throws CompileError, TypeError
     {

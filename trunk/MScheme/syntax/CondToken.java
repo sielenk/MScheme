@@ -19,6 +19,7 @@ final class CondToken
 
     protected Code checkedTranslate(
         StaticEnvironment syntax,
+	    int               len,
         List              arguments
     ) throws CompileError
     {

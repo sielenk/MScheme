@@ -26,6 +26,7 @@ final class DefineToken
 
     protected Code checkedTranslate(
         StaticEnvironment syntax,
+	    int               len,
         List              arguments
     ) throws CompileError, TypeError
     {
@@ -47,7 +48,7 @@ final class DefineToken
                 )
             );
         } else {
-            return super.checkedTranslate(syntax, arguments);
+            return super.checkedTranslate(syntax, len, arguments);
         }
     }
 }

@@ -25,6 +25,7 @@ final class LetStarToken
 
     protected Code checkedTranslate(
         StaticEnvironment environment,
+	    int               len,
         List              arguments
     ) throws CompileError, TypeError
     {
@@ -47,7 +48,7 @@ final class LetStarToken
                 )
             );
         } else {
-            return new LetStarHelper(body).helper(environment, bindings);
+            return new LetStarHelper(body).translate(environment, bindings);
         }
     }
 }
@@ -59,7 +60,7 @@ final class LetStarHelper
     LetStarHelper(List body)
     { _body = body; }
 
-    Code helper(
+    Code translate(
         StaticEnvironment outerEnvironment,
         List              bindings
     ) throws CompileError, TypeError
@@ -77,7 +78,7 @@ final class LetStarHelper
             StaticEnvironment
                 innerEnvironment = outerEnvironment.newChild(formal);
 
-            Code innerCode = helper(
+            Code innerBody = translate(
                 innerEnvironment,
                 bindings.getTail()
             );
@@ -85,7 +86,7 @@ final class LetStarHelper
             Code lambda = new CompiledLambda(
                 Arity.exactly(1),
                 innerEnvironment,
-                innerCode
+                innerBody
             );
 
             return new CompiledApplication(
