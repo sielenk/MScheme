@@ -730,19 +730,13 @@ public class Builtins
     public final static Value open_2Dinput_2Dfile(Value argument)
     throws StringExpected, OpenException
     {
-        return
-            argument.isTrue()
-            ? InputPort.create(argument.toScmString())
-            : InputPort.create();
+        return InputPort.create(argument.toScmString());
     }
 
     public final static Value open_2Doutput_2Dfile(Value argument)
     throws StringExpected, OpenException
     {
-        return
-            argument.isTrue()
-            ? OutputPort.create(argument.toScmString())
-            : OutputPort.create();
+        return OutputPort.create(argument.toScmString());
     }
 
 
@@ -815,4 +809,23 @@ public class Builtins
         snd.toOutputPort().writeScmChar(fst.toScmChar());
         return snd;
     }
+
+
+
+
+    // additional functions
+    
+    public final static Value __unique_2Did()
+    {
+        return Symbol.createUnique();
+    }
+
+    public final static Function
+        __spawn = SpawnFunction.INSTANCE;
+
+    public final static Function
+        __y_2Dcombinator = YCombinator.INSTANCE;
+    
+    public final static Function
+        __current_2Denvironment = CurrentEnvironment.INSTANCE;
 }
