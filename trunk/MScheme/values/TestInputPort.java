@@ -148,7 +148,7 @@ public class TestInputPort
         );
         InputPort in = InputPort.create(source);
         
-        assert(in.read().equal(ScmVector.create(0)));
+        assert(in.read().equal(ScmVector.create()));
         assert(in.read().equal(ScmVector.create(2, one)));
         assert(in.read().equal(v));
     }

@@ -56,7 +56,7 @@ public class TestValue
         ScmNumber .create(0).toScmNumber();
         ScmChar   .create('a').toScmChar();
         ScmString .create("").toScmString();
-        ScmVector .create(0).toScmVector();
+        ScmVector .create().toScmVector();
         InputPort .create().toInputPort();
         OutputPort.create().toOutputPort();
 
@@ -212,7 +212,7 @@ public class TestValue
     public void testVector()
         throws Exception
     {
-        final Value vector = ScmVector.create(0);
+        final Value vector = ScmVector.create();
 
         commonLiteralTests(vector);
         assert(
@@ -337,8 +337,8 @@ public class TestValue
         
         assert(
             eqHelper(
-                ScmVector.create(0),
-                ScmVector.create(0)
+                ScmVector.create(),
+                ScmVector.create()
             ) >= 1
         );
 
