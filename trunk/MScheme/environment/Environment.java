@@ -27,6 +27,47 @@ import MScheme.functions.YCombinator;
 import MScheme.exceptions.*;
 
 
+class UniqueId
+    extends ValueThunk
+{
+    public final static String id
+        = "$Id$";
+
+
+    public final static UniqueId INSTANCE
+        = new UniqueId();
+
+    private UniqueId()
+    { }
+
+    protected Value checkedCall()
+    {
+        return Symbol.createUnique();
+    }
+}
+ 
+class CurrentEnvironment
+    extends Thunk
+{
+    public final static String id
+        = "$Id$";
+
+
+    public final static CurrentEnvironment INSTANCE
+        = new CurrentEnvironment();
+
+    private CurrentEnvironment()
+    { }
+
+    protected Code checkedCall(Registers state)
+    {
+        return state
+            .getEnvironment()
+            .getLiteral();
+    }
+}
+
+
 public final class Environment
     extends ValueDefaultImplementations
 {
@@ -162,30 +203,12 @@ public final class Environment
         {
             _implementationEnvironment.define(
                 Symbol.create("unique-id"),
-                new ValueThunk()
-                {
-                    public final static String id
-                    = "$Id$";
-
-                    protected Value checkedCall()
-                    {
-                        return Symbol.createUnique();
-                    }
-                }
+                UniqueId.INSTANCE
             );
 
             _implementationEnvironment.define(
                 Symbol.create("current-environment"),
-                new Thunk()
-                {
-                    public final static String id
-                    = "$Id$";
-
-                    protected Code checkedCall(Registers state)
-                    {
-                        return state.getEnvironment().getLiteral();
-                    }
-                }
+                CurrentEnvironment.INSTANCE
             );
 
             _implementationEnvironment.define(
@@ -194,13 +217,15 @@ public final class Environment
             );
 
             _nullEnvironmentHook =
-                new Machine(_implementationEnvironment).evaluate(
-                    InputPort.create("bootstrap_null.scm").read()
+                Machine.evaluate(
+                    InputPort.create("bootstrap_null.scm").read(),
+                    _implementationEnvironment
                 );
 
             _schemeReportEnvironmentHook =
-                new Machine(_implementationEnvironment).evaluate(
-                    InputPort.create("bootstrap_sre.scm").read()
+                Machine.evaluate(
+                    InputPort.create("bootstrap_sre.scm").read(),
+                    _implementationEnvironment
                 );
         }
         catch (SchemeException e)
@@ -226,7 +251,7 @@ public final class Environment
                     _nullEnvironmentHook         = null;
                     _schemeReportEnvironmentHook = null;
 
-                    new Machine(env).evaluate(hook);
+                    Machine.evaluate(hook, env);
                 }
             }
             catch (SchemeException e)
