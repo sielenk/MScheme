@@ -46,7 +46,7 @@ final class Set
         Code      code
     )
     {
-        return new Assignment(
+        return Assignment.create(
             reference,
             code
         );
