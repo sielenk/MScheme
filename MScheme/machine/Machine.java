@@ -174,9 +174,9 @@ public class Machine
     public Code handleSequence(CodeList sequence)
     { return SequenceContinuation.handle(this, sequence); }
     
-    public Code handleResult(Value result)
+    public static Code handleResult(Value result)
         throws SchemeException
-    { return getContinuation().invoke(this, result); }
+    { return new Literal(result); }
     
     
     public Value evaluate(Value evaluatee)
