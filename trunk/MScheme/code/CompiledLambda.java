@@ -146,13 +146,13 @@ public final class CompiledLambda
         return new Closure(state.getEnvironment());
     }
 
-    public Code force(StaticEnvironment global)
+    public Code force()
         throws SymbolNotFoundException, UnexpectedSyntax
     {
         return create(
             _arity,
             _compiledFormals,
-            _compiledBody.force(global)
+            _compiledBody.force()
         );
     }
 

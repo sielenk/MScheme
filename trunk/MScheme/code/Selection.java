@@ -26,8 +26,6 @@ import MScheme.Code;
 import MScheme.machine.Registers;
 import MScheme.machine.Continuation;
 
-import MScheme.environment.StaticEnvironment;
-
 import MScheme.exceptions.SymbolNotFoundException;
 import MScheme.exceptions.UnexpectedSyntax;
 
@@ -89,13 +87,13 @@ public final class Selection
         return _test;
     }
 
-    public Code force(StaticEnvironment global)
+    public Code force()
         throws SymbolNotFoundException, UnexpectedSyntax
     {
         return create(
-            _test   .force(global),
-            _onTrue .force(global),
-            _onFalse.force(global)
+            _test   .force(),
+            _onTrue .force(),
+            _onFalse.force()
         );
     }
 
