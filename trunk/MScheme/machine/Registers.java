@@ -7,7 +7,7 @@ import MScheme.functions.UnaryFunction;
 /**
  * The state of a scheme machine.
  */
-public final class Registers
+public class Registers
 {
     /** The CVS id of the file containing this class. */
     public final static String id
@@ -54,6 +54,11 @@ public final class Registers
     public UnaryFunction getCurrentContinuation()
     {
         return new ContinuationFunction(_continuation);
+    }
+
+    public UnaryFunction getComputationController()
+    {
+        return Controller.create(this);
     }
 
     /** Returns the current environment. */
