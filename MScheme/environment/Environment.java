@@ -20,7 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.environment;
 
-import java.io.StringReader;
 import java.io.Writer;
 import java.io.IOException;
 import java.util.Vector;
@@ -28,22 +27,16 @@ import java.util.Vector;
 import MScheme.Init;
 
 import MScheme.Value;
-import MScheme.Code;
-import MScheme.Syntax;
+
+import MScheme.values.ValueDefaultImplementations;
+import MScheme.values.List;
+import MScheme.values.Symbol;
 
 import MScheme.util.Arity;
-
-import MScheme.machine.Machine;
-import MScheme.machine.Registers;
-
-import MScheme.values.*;
 
 import MScheme.syntax.SyntaxFactory;
 
 import MScheme.values.functions.BuiltinTable;
-import MScheme.values.functions.Thunk;
-import MScheme.values.functions.ValueThunk;
-import MScheme.values.functions.TernaryValueFunction;
 
 import MScheme.exceptions.*;
 
