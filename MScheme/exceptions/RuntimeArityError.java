@@ -14,5 +14,14 @@ public class RuntimeArityError
         super(arguments.toValue());
         _expected = expected;
     }
+    
+    public String toString()
+    {
+        return
+	        "expected " +
+		    _expected.toString() +
+		    '\n' +
+	        super.toString();
+    }
 }
 
