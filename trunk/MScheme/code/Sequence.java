@@ -8,7 +8,7 @@ import MScheme.machine.Registers;
 
 
 final class SequenceContinuation
-            extends Continuation
+    extends Continuation
 {
     public final static String id
     = "$Id$";
@@ -54,7 +54,7 @@ final class SequenceContinuation
 
 
 public final class Sequence
-            extends Code
+    implements Code
 {
     public final static String id
     = "$Id$";

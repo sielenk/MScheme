@@ -8,10 +8,10 @@ import MScheme.machine.Continuation;
 
 
 public final class Selection
-            extends Code
+    implements Code
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     private final Code _test;

@@ -153,7 +153,6 @@ public class TestEnvironment
 
         Reference reference = env.define(sym2);
 
-        assert(env.getTranslatorFor(sym2) == reference);
         assert(env.getReferenceFor (sym2) == reference);
     }
 

@@ -8,6 +8,8 @@ import MScheme.Value;
 import MScheme.Translator;
 import MScheme.Code;
 
+import MScheme.syntax.ProcedureCall;
+
 import MScheme.code.Literal;
 
 import MScheme.environment.Environment;
@@ -345,7 +347,7 @@ public abstract class ValueDefaultImplementations
      * @return {@link #getLiteral()}
      */
     public Code getCode(StaticEnvironment compilationEnv)
-    throws SchemeException
+        throws SchemeException
     {
         return getLiteral();
     }
@@ -356,8 +358,12 @@ public abstract class ValueDefaultImplementations
      * @return <code>getCode(compilationEnv)</code>
      */
     public Translator getTranslator(StaticEnvironment compilationEnv)
-    throws SchemeException
+        throws SchemeException
     {
-        return getCode(compilationEnv);
+        return ProcedureCall.create(
+            getCode(
+                compilationEnv
+            )
+        );
     }
 }

@@ -12,7 +12,7 @@ import MScheme.exceptions.RuntimeError;
  * of the scheme machine.
  */
 public abstract class Result
-            extends Code
+    implements Code
 {
     /** The CVS id of the file containing this class. */
     public final static String id
