@@ -45,6 +45,9 @@ public final class AppendFunction
     public final static AppendFunction INSTANCE
         = new AppendFunction();
 
+    public Arity getArity()
+    { return Arity.atLeast(0); }
+
     public Code call(Registers registers, List arguments)
         throws RuntimeError, TypeError
     { return AppendHelper2.INSTANCE.reduceRight(arguments).getLiteral(); }

@@ -20,7 +20,7 @@ public class ApplyFunction
 
     private final static Arity _arity = Arity.atLeast(2);
     
-    protected Arity getArity()
+    public Arity getArity()
     { return _arity; }
 
     protected Code checkedCall(

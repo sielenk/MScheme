@@ -43,6 +43,8 @@ public abstract class Function
 
     // abstract function interface
     
-    abstract public Code call(Registers registers, List arguments)
+    public abstract Arity getArity();
+
+    public abstract Code call(Registers registers, List arguments)
         throws RuntimeError, TypeError;
 }

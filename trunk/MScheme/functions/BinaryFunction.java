@@ -16,7 +16,7 @@ public abstract class BinaryFunction
 {
     private final static Arity _binary = Arity.exactly(2);
 
-    protected final Arity getArity()
+    public final Arity getArity()
     { return _binary; }
 
     protected final Code checkedCall(
