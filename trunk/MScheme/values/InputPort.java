@@ -462,9 +462,7 @@ checkNumber:
             }
             try
             {
-                return ScmNumber.create(
-                           Integer.parseInt(str)
-                       );
+                return ScmNumber.create(str);
             }
             catch (NumberFormatException e)
             { }
