@@ -24,11 +24,17 @@ import java.awt.TextArea;
 
 import java.awt.AWTEventMulticaster;
 
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
+import java.awt.event.TextEvent;
+import java.awt.event.TextListener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -76,9 +82,19 @@ class StdioReader extends Reader
                 catch (Exception exception) { }
             }
 
-            char result[] = new char[len];
-            _buffer.getChars(0, len, result, 0);
-            _buffer = _buffer.substring(len);
+            int     indexOfEot  = _buffer.indexOf('\004');
+            boolean eotInResult = (indexOfEot != -1) && (indexOfEot < len);
+            int     resultLen   = eotInResult ? indexOfEot : len;
+
+            char result[] = new char[resultLen];
+            _buffer.getChars(0, resultLen, result, 0);
+            
+            _buffer = _buffer.substring(
+                eotInResult
+                ? indexOfEot + 1  // skip the eot
+                : len
+            );
+
             return result;
         }
     }
@@ -94,19 +110,30 @@ class StdioReader extends Reader
     public int read()
         throws IOException
     {
-        return _getChars(1)[0];
+        char[] result = _getChars(1);
+
+        return
+            (result.length == 0)
+            ? -1
+            : result[0];
     }
 
     public int read(char data[], int offs, int len)
         throws IOException
     {
-        System.arraycopy(_getChars(len), 0, data, offs, len);
-        return len;
+        char[] result    = _getChars(len);
+        int    resultLen = result.length;
+
+        System.arraycopy(result, 0, data, offs, resultLen);
+        return resultLen;
     }
 
     public void close()
     {
-        _closed = true;
+        synchronized(lock)
+        {
+            _closed = true;
+        }
     }
 
 
@@ -114,8 +141,11 @@ class StdioReader extends Reader
     {
         synchronized(lock)
         {
-            _buffer += s;
-            lock.notify();
+            if (!_closed)
+            {
+                _buffer = _buffer + s;
+                lock.notify();
+            }
         }
     }
 }
@@ -174,74 +204,261 @@ class StdioWriter extends Writer
 
     public void close() 
     {
-        _closed = true;
+        synchronized(lock)
+        {
+            _closed = true;
+        }
     }
 }
 
 
 public class StdioArea
     extends    TextArea
-    implements KeyListener, MouseListener
+    implements FocusListener, KeyListener, MouseListener, TextListener
 {
     public final static String id
         = "$Id$";
 
 
+    /***** interface FocusListener begin *****/
+
+    public void focusGained(FocusEvent e)
+    {
+        _update();
+    }
+    
+    public void focusLost(FocusEvent e)
+    { }    
+
+    /***** interface FocusListener end *****/
+
     /***** interface MouseListener begin *****/
 
-    public void mouseEntered(MouseEvent e) { }
+    public void mouseEntered(MouseEvent e)
+    {
+        _update();
+    }
+
     public void mouseExited (MouseEvent e) { }
 
-    public void mousePressed (MouseEvent e) { }    
-    public void mouseReleased(MouseEvent e) { _update(); }
+    public void mousePressed (MouseEvent e)
+    { }
 
-    public void mouseClicked (MouseEvent e) { }
+    public void mouseReleased(MouseEvent e)
+    {
+        _update();
+    }
+
+    public void mouseClicked (MouseEvent e)
+    { }
 
     /***** interface MouseListener end *****/
 
     /***** interface KeyListener begin *****/
 
-    public void keyPressed (KeyEvent e) { }
-    public void keyReleased(KeyEvent e) { _update(); }
+    public void keyPressed (KeyEvent e)
+    {
+        if (
+            (e.getKeyChar() == '\n')
+            && (getCaretPosition() >= _lineBufferStart())
+        )
+        {
+            setCaretPosition(
+                _lineBufferEnd()
+            );
+        }
+    }
+
+    public void keyReleased(KeyEvent e)
+    {
+        _update();
+    }
 
     public void keyTyped(KeyEvent e)
     {
-        if (e.getKeyChar() != '\n')
-            return;
+        char c = e.getKeyChar();
 
-        String  textString = getText();
-        int     lineEnd    = getCaretPosition();
-        int     lineBegin  = textString.lastIndexOf('\n', lineEnd - 1) + 1;
-
-        _stdin.fillBuffer(textString.substring(lineBegin, lineEnd) + '\n');
+        if ((c == '\004') && _isEmptyLineBuffer())
+        {
+            _stdin.fillBuffer("\004");
+        }
     }
 
     /***** interface KeyListener end *****/
+
+    /***** interface TextListener begin *****/
+
+    private int _oldSelStart = 0;
+    private int _oldSelEnd   = 0;
+
+    private void _updateSelection()
+    {
+        _oldSelStart = getSelectionStart();
+        _oldSelEnd   = getSelectionEnd  ();
+    }
+
+    public void textValueChanged(TextEvent e)
+    {
+        int newSelEnd = getSelectionEnd();
+
+        if (newSelEnd < _oldSelStart)
+        {
+            // The del-key deletes backward from _oldSelStart.
+            // Preted the deleted char was selected.
+            _oldSelStart = newSelEnd;
+        }
+
+        if (_lineBufferStart() > _oldSelStart)
+        {
+            // the change isn't completely inside the line buffer
+
+            if (_lineBufferStart() >= _oldSelEnd)
+            {
+                // the change is completely outside the line buffer
+
+                _lineBufferStart(
+                    _lineBufferStart()
+                    - _oldSelEnd
+                    +  newSelEnd
+                );
+            }
+            else
+            {
+                // the line buffer starts inside the changed text
+
+                _lineBufferStart(
+                    _oldSelStart
+                );
+            }
+        }
+
+        _oldSelStart = getSelectionStart();
+        _oldSelEnd   = newSelEnd;
+
+        _rescanLineBuffer();
+    }
+
+    /***** interface TextListener end *****/
+
+    /***** line buffer handling begin *****/
+
+    private int _lineBufferStartVar = -1;
+
+    private void _disableLineBuffer()
+    {
+        _lineBufferStartVar = -1;  
+    }
+
+    private void _enableLineBuffer()
+    {
+        _lineBufferStart(_lineBufferEnd());
+    }
+
+    private int _lineBufferStart()
+    {
+        return 
+            (_lineBufferStartVar != -1)
+            ? _lineBufferStartVar
+            : _lineBufferEnd();
+    }
+
+    private int _lineBufferStart(int newValue)
+    {
+        int oldValue = _lineBufferStartVar;
+        _lineBufferStartVar = newValue;
+        return oldValue;
+    }
+
+    private int _lineBufferEnd()
+    {
+        return getText().length();
+    }
+
+    private void _clearLineBuffer()
+    {
+        replaceRange(
+            "",
+            _lineBufferStart(),
+            _lineBufferEnd  ()
+        );
+    }
+
+    private String _lineBuffer()
+    {
+        return getText().substring(
+            _lineBufferStart(),
+            _lineBufferEnd  ()
+        );
+    }
+    
+    private boolean _isEmptyLineBuffer()
+    {
+        return _lineBufferStart() == _lineBufferEnd();
+    }
+
+    private void _rescanLineBuffer()
+    {
+        while (!_isEmptyLineBuffer()) {
+            String line = null;
+
+            synchronized (this)
+            {
+                int i = getText().indexOf(
+                    '\n',
+                    _lineBufferStart()
+                );
+                
+                if (i != -1)
+                {
+                    int newStart = i + 1;
+                    line = getText().substring(
+                        _lineBufferStart(newStart),
+                        newStart
+                    );
+                }
+            }
+
+            if (line == null)
+            {
+                return;
+            }
+
+            _stdin.fillBuffer(line);
+        }
+    }
+
+    private boolean _selectionInLineBuffer()
+    {
+        return getSelectionStart() >= _lineBufferStart();
+    }
+
+    /***** line buffer handling end *****/
     
     /***** action event handling begin *****/
 
     ActionListener _actionListener = null;
 
-    private boolean _oldCanCopyCut = true;
-    private boolean _oldCanPaste   = true;
+    private int _oldState = 0;
 
     private void _update()
     {
-        boolean newCanCopyCut = canCopyCut();
-        boolean newCanPaste   = canPaste  ();
+        _updateSelection();
 
-        if ((_oldCanCopyCut ^ newCanCopyCut) || (_oldCanPaste ^ newCanPaste))
+        int newState = 
+              (canCut  () ? 1 : 0)
+            + (canCopy () ? 2 : 0)
+            + (canPaste() ? 4 : 0);
+
+        if (_oldState != newState)
         {
-            _oldCanCopyCut = newCanCopyCut;
-            _oldCanPaste   = newCanPaste;
-
+            _oldState = newState;
             _dispatchAction();
         }
     }
 
-    private void _dispatchAction() {
-        if (_actionListener != null) {
-            _actionListener.actionPerformed(
+    private void _dispatchAction(ActionListener l) {
+        if (l != null) {
+            l.actionPerformed(
                 new ActionEvent(
                     this,
                     ActionEvent.ACTION_PERFORMED,
@@ -251,6 +468,10 @@ public class StdioArea
         }
     }
 
+    private void _dispatchAction() {
+        _dispatchAction(_actionListener);
+    }
+
     public String getActionCommand()
     {
         return "updateCopyCutPaste";
@@ -258,7 +479,9 @@ public class StdioArea
 
     public void addActionListener(ActionListener l) {
         _actionListener = AWTEventMulticaster.add(_actionListener, l);
+        _dispatchAction(l);
     }
+
     public void removeActionListener(ActionListener l) {
         _actionListener = AWTEventMulticaster.remove(_actionListener, l);
     }
@@ -273,7 +496,13 @@ public class StdioArea
     {
         return getSelectedText();
     }
-    
+
+    public void select(int a, int e)
+    {
+        System.err.print(" " + a + '-' + e);
+        super.select(a, e);
+    }
+
     private synchronized void _paste(String s)
     {
         replaceRange(
@@ -285,7 +514,9 @@ public class StdioArea
 
     public synchronized void clear()
     {
+        _disableLineBuffer();
         setText("");
+        _enableLineBuffer();
         _update();
     }
 
@@ -308,14 +539,21 @@ public class StdioArea
         _update();
     }
 
-    public synchronized boolean canCopyCut()
+    public synchronized boolean canCopy()
     {
         return getSelectionStart() != getSelectionEnd();
     }
 
+    public synchronized boolean canCut()
+    {
+        return canCopy() && _selectionInLineBuffer();
+    }
+
     public boolean canPaste()
     {
-        return _clipboard.length() > 0;
+        return
+            (_clipboard.length() > 0)
+            && _selectionInLineBuffer();
     }
 
     /***** copy and paste support end *****/
@@ -327,7 +565,13 @@ public class StdioArea
 
     public synchronized void print(String text)
     {
-        insert(text, getCaretPosition());
+        String lineBufferContent = _lineBuffer();
+        _clearLineBuffer();
+        _disableLineBuffer();
+        append(text);
+        _enableLineBuffer();
+        append(lineBufferContent);
+        _update();
     }
 
     public Reader stdin () { return _stdin;  }
@@ -341,6 +585,9 @@ public class StdioArea
     {
         addKeyListener  (this);
         addMouseListener(this);
+        addTextListener (this);
+        _enableLineBuffer();
+        _update();
     }
 
     public StdioArea(String text, int rows, int columns, int scrollbars)
