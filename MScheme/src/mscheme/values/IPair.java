@@ -28,7 +28,7 @@ package mscheme.values;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public interface IConstPair
+public interface IPair
 {
     String CVS_ID = "$Id$";
 

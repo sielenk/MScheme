@@ -27,7 +27,7 @@ import mscheme.exceptions.SchemeException;
 import mscheme.util.Arity;
 import mscheme.values.IList;
 import mscheme.values.ListFactory;
-import mscheme.values.IConstPair;
+import mscheme.values.IPair;
 import mscheme.values.ValueTraits;
 
 
@@ -81,7 +81,7 @@ final class Lambda
 
             while (ValueTraits.isPair(current))
             {
-                IConstPair currentPair = ValueTraits.toConstPair(current);
+                IPair currentPair = ValueTraits.toConstPair(current);
 
                 ++minArity;
                 result  = ListFactory.prepend(currentPair.getFirst(), result);

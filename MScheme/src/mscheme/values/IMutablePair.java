@@ -22,7 +22,7 @@ package mscheme.values;
 import mscheme.exceptions.ImmutableException;
 
 public interface IMutablePair
-        extends IConstPair, IMutable
+        extends IPair, IMutable
 {
     String CVS_ID = "$Id$";
 

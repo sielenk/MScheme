@@ -37,7 +37,7 @@ import mscheme.values.Function;
 import mscheme.values.InputPort;
 import mscheme.values.IList;
 import mscheme.values.ListFactory;
-import mscheme.values.IConstPair;
+import mscheme.values.IPair;
 import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
@@ -350,8 +350,8 @@ public class TestMachine extends TestCase
     {
         Function func = (Function)evaluate("(lambda x x)");
 
-        IConstPair pair2 = ListFactory.createPair(_val2, ListFactory.create());
-        IConstPair pair1 = ListFactory.createPair(_val1, pair2);
+        IPair pair2 = ListFactory.createPair(_val2, ListFactory.create());
+        IPair pair1 = ListFactory.createPair(_val1, pair2);
 
         Object result = machine.evaluate(ListFactory.createPair(func, pair1));
 
