@@ -6,13 +6,10 @@ import MScheme.code.*;
 import MScheme.exceptions.*;
 
 
-public final class Empty
+final class Empty
     extends List
 {
-    final static Empty INSTANCE  = new Empty();
-    
-    private Empty() { }
-
+    Empty() { }
 
     // implementation of List
     
