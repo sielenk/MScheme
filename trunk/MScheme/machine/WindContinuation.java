@@ -1,39 +1,24 @@
 package MScheme.machine;
 
 import MScheme.code.Code;
+import MScheme.code.CodeList;
+import MScheme.code.Sequence;
 import MScheme.values.Value;
-import MScheme.values.Empty;
-import MScheme.values.Function;
 
-import MScheme.exceptions.*;
+import MScheme.exceptions.RuntimeError;
+import MScheme.exceptions.TypeError;
 
 
-class CallThunkContinuation
+final public class WindContinuation
     extends Continuation
 {
-    final private Function _thunk;
-
-    CallThunkContinuation(Machine machine, Function thunk)
-    { super(machine); _thunk = thunk; }
-
-    protected Code execute(
-        Machine machine,
-        Value   value
-    ) throws RuntimeError, TypeError
-    { return _thunk.call(machine, Empty.create()); }
-}
-
-
-class WindContinuation
-    extends Continuation
-{
-    final private Function _before;
-    final private Function _after;
+    final private Code _before;
+    final private Code _after;
 
     private WindContinuation(
         Machine machine,
-        Function before,
-        Function after
+        Code    before,
+        Code    after
     )
     {
         super(machine);
@@ -42,32 +27,56 @@ class WindContinuation
     }
 
 
-    static Code handle(
+    static public Code create(
         Machine machine,
-        Function before,
-        Function thunk,
-        Function after
+        Code    before,
+        Code    thunk,
+        Code    after
     ) throws RuntimeError, TypeError
     {
         new WindContinuation(machine, before, after);
-        new CallThunkContinuation(machine, thunk);
-
-        return before.call(machine, Empty.create());
+	
+	    return Sequence.create(
+	        CodeList.create(
+		        before,
+			    thunk
+			)
+        );
     }
 
-    protected void leave(Machine machine)
-    { new CallThunkContinuation(machine, _after); }
 
-    protected void enter(Machine machine)
-    { new CallThunkContinuation(machine, _before); }
+    protected CodeList dynamicWindLeave(CodeList sequence)
+    {
+        return super.dynamicWindLeave(
+	        CodeList.prepend(
+    	        _after,
+    	        sequence
+		    )
+		);
+	}
+
+    protected CodeList dynamicWindEnter(CodeList sequence)
+    {
+        return CodeList.prepend(
+	        _before,
+    	    super.dynamicWindEnter(
+	            sequence
+	        )
+		);
+	}
+
 
     protected Code execute(
         Machine machine,
         Value   value
     ) throws RuntimeError, TypeError
     {
-        new ValueContinuation(machine, value);
-        return _after.call(machine, Empty.create());
+	    return Sequence.create(
+	        CodeList.create(
+			    _after,
+			    value.getLiteral()
+		    )
+	    );
     }
 }
 
