@@ -4,12 +4,12 @@ import java.io.Writer;
 import java.io.IOException;
 
 
-public final class SchemeCharacter
+public final class SchemeChar
     extends SelfEvaluatingValue
 {
     private char _character;
     
-    public SchemeCharacter(char c)
+    public SchemeChar(char c)
     { _character = c; }
     
     public char getChar()
@@ -20,10 +20,14 @@ public final class SchemeCharacter
     public boolean isChar()
     { return true; }
 
+    public SchemeChar toChar()
+    { return this; }
+
+
     public boolean eqv(Value other)
     {
         try {
-            SchemeCharacter otherCharacter = (SchemeCharacter)other;
+            SchemeChar otherCharacter = (SchemeChar)other;
         
             return _character == otherCharacter._character;
         }
