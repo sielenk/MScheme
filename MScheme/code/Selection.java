@@ -31,6 +31,9 @@ final public class Selection
     public Code executionStep(Registers registers)
     {
         new Continuation(registers) {
+            public final static String id
+                = "$Id$";
+
             protected Code execute(
                 Registers regs,
                 Value     evaluatedTest

@@ -133,6 +133,9 @@ public class Environment
             getImplementationEnvironment().define(
                 Symbol.create("unique-id"),
                 new ValueThunk() {
+                    public final static String id
+                        = "$Id$";
+
                     protected Value checkedCall()
                     { return Symbol.createUnique(); }
                 }
@@ -141,6 +144,9 @@ public class Environment
             getImplementationEnvironment().define(
                 Symbol.create("current-environment"),
                 new Thunk() {
+                    public final static String id
+                        = "$Id$";
+
                     protected Code checkedCall(Registers registers)
                     { return registers.getEnvironment().getLiteral(); }
                 }
