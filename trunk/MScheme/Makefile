@@ -21,7 +21,6 @@ SRC =	Code.java	\
 	exceptions/CharExpected.java	\
 	exceptions/CloseException.java	\
 	exceptions/CompileError.java	\
-	exceptions/DuplicateSymbolException.java	\
 	exceptions/EnvironmentExpected.java	\
 	exceptions/FunctionExpected.java	\
 	exceptions/ImmutableException.java	\
@@ -123,8 +122,10 @@ SRC =	Code.java	\
 OBJ =	$(SRC:.java=.o)
 
 SRC_TEST =	TestMScheme.java	\
+                tests/TestSchemeBase.java	\
 		tests/TestMachine.java	\
 		tests/TestR5RS.java	\
+		tests/TestBugs.java	\
 		environment/TestEnvironment.java	\
 		tests/TestValue.java	\
 		util/TestArity.java	\
@@ -142,59 +143,27 @@ PACKAGES =	MScheme			\
 		MScheme.values		\
 		MScheme.tests
 
-GCJ=gcj
-JAVAC=jikes -bootclasspath /usr/lib/java/jre/lib/rt.jar +P
+JAVAC=javac -g
+# JAVAC=jikes -bootclasspath /usr/lib/java/jre/lib/rt.jar +P
 # JAVAC = $(GCJ) -W -Wall -C
 
 run: all
-	time java MScheme.TestMScheme
+	time java -server MScheme.TestMScheme
 
-all: $(SRC:.java=.class)
-	$(JAVAC) $(SRC_TEST)
+all: Init.java values/functions/BuiltinTable.java
+	$(JAVAC) `find . -name "*.java"`
 
-values/functions/BuiltinTable.java: values/functions/ParseBuiltins.class values/functions/Builtins.class
-	java MScheme.values.functions.ParseBuiltins > values/functions/BuiltinTable.java
-
-values/functions/ParseBuiltins.class: values/functions/ParseBuiltins.java
+values/functions/BuiltinTable.java: values/functions/ParseBuiltins.java values/functions/Builtins.java
 	cp values/functions/BuiltinTable.java.empty values/functions/BuiltinTable.java
 	$(JAVAC) values/functions/ParseBuiltins.java
-	touch values/functions/Builtins.java
+	java MScheme.values.functions.ParseBuiltins > values/functions/BuiltinTable.java
+	$(JAVAC) values/functions/BuiltinTable.java
 
 Init.java: bootstrap.scm rep.scm
 	mkinit.pl $^ > $@
-
-%.d: %.java
-	( echo -n "$(<:.java=.class) "; $(GCJ) -M $< ) > $@
-
-%.o: %.java
-	$(GCJ) -W -Wall -ggdb -o $@ -c $<
-
-%.class: %.java
-	$(JAVAC) $<
-
-main: all $(OBJ)
-	$(GCJ) -ggdb --main=MScheme.Main -o main $(OBJ)
-
-depend: $(SRC:.java=.d)
-	cat $^ > .deps
-
-.deps:
-	echo "do a 'make depend' to update .deps"
-	touch .deps
-
-clean:
-	rm -f $(OBJ)
-
-indent:
-	for i in `find . -name "*.java"`; do	\
-		echo $$i;			\
-		astyle --convert-tabs $$i;	\
-	done
 
 doc:
 	if [ \! -e doc ]; then mkdir doc; fi
 	javadoc -private -d doc $(PACKAGES)
 
-.PHONY: doc clean all indent
-
-include .deps
+.PHONY: doc clean all
