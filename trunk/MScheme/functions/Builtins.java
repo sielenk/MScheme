@@ -261,7 +261,7 @@ public class Builtins
     { return ScmBoolean.create(argument.isList()); }
 
     public final static Value list(List argument)
-    { return argument.toValue(); }
+    { return argument; }
 
     public final static Value length(Value argument)
         throws ListExpected
@@ -271,7 +271,7 @@ public class Builtins
 
     public final static Value reverse(Value argument)
         throws ListExpected
-    { return argument.toList().getReversed().toValue(); }
+    { return argument.toList().getReversed(); }
 
     public final static Function memq   = MemqFunction.INSTANCE;
     public final static Function memv   = MemvFunction.INSTANCE;
@@ -340,21 +340,87 @@ public class Builtins
     // 6.3.5 Strings
 
     public final static Value string_3F(Value argument) // string?
-    { return ScmBoolean.create(argument.isScmString()); }
+    { return ScmBoolean.create(argument.isScmString()); }    
 
+    public final static Value make_2Dstring(Value k, Value c)
+        throws TypeError
+    {
+        return ScmString.create(
+            k.toScmNumber().getInteger(),
+            c.toScmChar().getJavaChar()
+        );
+    }
+
+    public final static Value string_2Dlength(Value str)
+        throws TypeError
+    { return ScmNumber.create(str.toScmString().getLength()); }
+
+    public final static Value string_2Dref(Value str, Value k)
+        throws TypeError, InvalidStringIndexException
+    {
+        return ScmChar.create(
+            str.toScmString().get(
+                k.toScmNumber().getInteger()
+            )
+        );
+    }
+
+    public final static Value string_2Dset_21(Value str, Value k, Value c)
+        throws TypeError, InvalidStringIndexException, ImmutableException
+    {
+        str.toScmString().set(
+            k.toScmNumber().getInteger(),
+            c.toScmChar().getJavaChar()
+        );
+
+        return c;
+    }
 
     // 6.3.6 Vectors
 
     public final static Value vector_3F(Value argument) // vector?
     { return ScmBoolean.create(argument.isScmVector()); }
 
+    public final static Value make_2Dvector(Value k, Value obj)
+        throws TypeError
+    {
+        return ScmVector.create(
+            k.toScmNumber().getInteger(),
+            obj
+        );
+    }
+
+    public final static Value vector_2Dlength(Value str)
+        throws TypeError
+    { return ScmNumber.create(str.toScmVector().getLength()); }
+
+    public final static Value vector_2Dref(Value vector, Value k)
+        throws TypeError, VectorException
+    {
+        return vector.toScmVector().get(
+            k.toScmNumber().getInteger()
+        );
+    }
+
+    public final static Value vector_2Dset_21(Value vector, Value k, Value obj)
+        throws TypeError, VectorException, ImmutableException
+    {
+        vector.toScmVector().set(
+            k.toScmNumber().getInteger(),
+            obj
+        );
+        
+        return obj;
+    }
+
     public final static Value vector(List arguments) // vector
         throws ListExpected
     { return ScmVector.create(arguments); }
 
+
     public final static Value vector_2D_3Elist(Value argument) // vector->list
         throws VectorExpected
-    { return argument.toScmVector().getList().toValue(); }
+    { return argument.toScmVector().getList(); }
 
     public final static Value list_2D_3Evector(Value argument) // list->vector
         throws ListExpected
