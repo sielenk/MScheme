@@ -242,6 +242,7 @@
   (define load (make-load (current-environment)))
 
   (list 'begin
+    (list 'define 'spawn                 spawn)
     (list 'define 'map                   map)
     (list 'define 'for-each              for-each)
     (list 'define 'force                 force)
