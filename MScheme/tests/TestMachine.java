@@ -140,7 +140,7 @@ public class TestMachine
             machine.evaluate(_sym1);
             fail("expected SymbolNotFoundException");
         }
-        catch (SymbolNotFoundException e)
+        catch (SchemeException e)
         { }
 
         define(_sym1, _val1);
@@ -258,7 +258,7 @@ public class TestMachine
             );
             fail("begin failed");
         }
-        catch (SymbolNotFoundException e)
+        catch (SchemeException e)
         { }
 
         _environment.define(_sym1, _val1);
