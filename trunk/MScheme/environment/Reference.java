@@ -1,14 +1,16 @@
 package MScheme.environment;
 
+import MScheme.Value;
+
 import MScheme.machine.Registers;
-import MScheme.Code;
+import MScheme.machine.Result;
 import MScheme.values.Symbol;
 
 import MScheme.exceptions.RuntimeError;
 
 
 public class Reference
-    extends Code
+    extends Result
 {
     private final Symbol _symbol;
     private final int    _level;
@@ -26,7 +28,7 @@ public class Reference
     public int    getIndex () { return _index;  }
     
     
-    public Code executionStep(Registers registers)
+    protected Value getValue(Registers registers)
         throws RuntimeError
-    { return registers.getEnvironment().lookup(this).getLiteral(); }
+    { return registers.getEnvironment().lookup(this); }
 }
