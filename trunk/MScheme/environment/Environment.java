@@ -120,79 +120,79 @@ public class Environment
     private static void initHooks()
     {
         if (getImplementationEnvironment() == null) {
-	        return;
-		}
-		if (_nullEnvironmentHook != null) {
-		    return;
-		}
+            return;
+        }
+        if (_nullEnvironmentHook != null) {
+            return;
+        }
 
         try {
             getImplementationEnvironment().define(
-    	        Symbol.create("unique-id"),
-    		    new ValueThunk() {
+                Symbol.create("unique-id"),
+                new ValueThunk() {
                     protected Value checkedCall()
                     { return Symbol.createUnique(); }
-			    }
-        	);
+                }
+            );
 
             getImplementationEnvironment().define(
-        	    Symbol.create("current-environment"),
-        	    new Thunk() {
-			        protected Code checkedCall(Registers registers)
+                Symbol.create("current-environment"),
+                new Thunk() {
+                    protected Code checkedCall(Registers registers)
                     { return registers.getEnvironment().getLiteral(); }
-			    }
-        	);
+                }
+            );
 
-    		_nullEnvironmentHook =
-		        new Machine(getImplementationEnvironment()).evaluate(
-			        InputPort.create("bootstrap_null.scm").read()
-			    );
+            _nullEnvironmentHook =
+                new Machine(getImplementationEnvironment()).evaluate(
+                    InputPort.create("bootstrap_null.scm").read()
+                );
 
-			_schemeReportEnvironmentHook =
-		        new Machine(getImplementationEnvironment()).evaluate(
-			        InputPort.create("bootstrap_sre.scm").read()
-			    );
-    	}
-    	catch (SchemeException e) {
-    	    throw new RuntimeException(
-    	        "unexpected SchemeError:\n"
-    		    + e.toString()
-    		);
-    	}
-	}
+            _schemeReportEnvironmentHook =
+                new Machine(getImplementationEnvironment()).evaluate(
+                    InputPort.create("bootstrap_sre.scm").read()
+                );
+        }
+        catch (SchemeException e) {
+            throw new RuntimeException(
+                "unexpected SchemeError:\n"
+                + e.toString()
+            );
+        }
+    }
 
     private static void callHook(Environment env, Value hook)
     {
         if (hook != null) {
             Value null_buffer = _nullEnvironmentHook;
             Value  sre_buffer = _schemeReportEnvironmentHook;
-			
-	        try {
-		        synchronized (Environment.class) {
+            
+            try {
+                synchronized (Environment.class) {
                     _nullEnvironmentHook         = null;
                     _schemeReportEnvironmentHook = null;
 
-        	        new Machine(env).evaluate(hook);
-			    }
-		    }
-		    catch (SchemeException e) {
-		        throw new RuntimeException(
-			        "nullEnvironmentHook caused an exception:\n"
-				    + e.toString()
-			    );
-		    }
-		    finally {
+                    new Machine(env).evaluate(hook);
+                }
+            }
+            catch (SchemeException e) {
+                throw new RuntimeException(
+                    "nullEnvironmentHook caused an exception:\n"
+                    + e.toString()
+                );
+            }
+            finally {
                 _nullEnvironmentHook         = null_buffer;
                 _schemeReportEnvironmentHook =  sre_buffer;
-		    }
-    	}
+            }
+        }
     }
     
     public static Environment getEmpty()
     {
         initHooks();
         return new Environment();
-	}
+    }
 
     public static Environment getNullEnvironment()
     {
