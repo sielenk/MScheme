@@ -38,6 +38,7 @@ public final class ApplyContinuation
     public final static String id
         = "$Id$";
 
+
     private final List _arguments;
 
     private ApplyContinuation(
