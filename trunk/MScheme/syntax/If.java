@@ -20,6 +20,9 @@ import MScheme.exceptions.TypeError;
 final class If
     extends Syntax
 {
+    public final static String id
+        = "$Id$";
+
     final static Syntax INSTANCE = new If();
     
     private If()

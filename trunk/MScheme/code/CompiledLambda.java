@@ -23,6 +23,9 @@ import MScheme.exceptions.TypeError;
 public final class CompiledLambda
     extends Result
 {
+    public final static String id
+        = "$Id$";
+
     private final Arity             _arity;
     private final StaticEnvironment _compiledFormals;
     private final Code              _compiledBody;
@@ -55,6 +58,9 @@ public final class CompiledLambda
     final class Closure
         extends CheckedFunction
     {
+        public final static String id
+            = "$Id$";
+
         private final Environment _enclosingEnvironment;
     
         public Closure(Environment enclosingEnvironment)

@@ -12,6 +12,9 @@ import MScheme.values.Function;
 
 public class ParseBuiltins
 {
+    public final static String id
+        = "$Id$";
+
     private static boolean paramsValid(Class[] params)
     {
         if (params.length == 1) {

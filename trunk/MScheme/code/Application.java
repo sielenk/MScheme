@@ -15,6 +15,9 @@ import MScheme.exceptions.*;
 final class PushContinuation
     extends Continuation
 {
+    public final static String id
+        = "$Id$";
+
     final private List     _done;
     final private CodeList _todo;
 
@@ -64,6 +67,9 @@ final class PushContinuation
 final public class Application
     extends Code
 {
+    public final static String id
+        = "$Id$";
+
     final private CodeList _permutedApplication;
 
     private Application(CodeList application)

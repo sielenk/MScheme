@@ -20,6 +20,9 @@ import MScheme.exceptions.*;
 public class StaticEnvironment
     extends Value
 {
+    public final static String id
+        = "$Id$";
+
     // ***********************************************************************
 
     public void write(Writer destination)

@@ -10,6 +10,9 @@ import MScheme.machine.Continuation;
 final public class Selection
     extends Code
 {
+    public final static String id
+        = "$Id$";
+
     final private Code _test;
     final private Code _onTrue;
     final private Code _onFalse;

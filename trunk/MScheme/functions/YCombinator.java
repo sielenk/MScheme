@@ -15,6 +15,9 @@ import MScheme.exceptions.*;
 class YWrappedFunction
     extends Function
 {
+    public final static String id
+        = "$Id$";
+
     private final Arity    _arity;
     private final Function _f;
 
@@ -41,6 +44,9 @@ class YWrappedFunction
 public final class YCombinator
     extends UnaryValueFunction
 {
+    public final static String id
+        = "$Id$";
+
     public final static YCombinator INSTANCE = new YCombinator();
 
     protected Value checkedCall(Value fst)

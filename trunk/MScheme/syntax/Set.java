@@ -19,6 +19,9 @@ import MScheme.exceptions.TypeError;
 final class Set
     extends Syntax
 {
+    public final static String id
+        = "$Id$";
+
     final static Syntax INSTANCE = new Set();
     
     private Set()

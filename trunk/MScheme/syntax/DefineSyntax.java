@@ -26,6 +26,9 @@ import MScheme.exceptions.*;
 final class Macro
     extends Syntax
 {
+    public final static String id
+        = "$Id$";
+
     private final static Code
         _apply = ApplyFunction.INSTANCE.getLiteral();
 
@@ -74,6 +77,9 @@ final class Macro
 final class DefineSyntax
     extends Syntax
 {
+    public final static String id
+        = "$Id$";
+
     final static Syntax INSTANCE = new DefineSyntax();
 
     private DefineSyntax()

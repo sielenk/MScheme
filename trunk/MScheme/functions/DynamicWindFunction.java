@@ -15,6 +15,9 @@ import MScheme.exceptions.*;
 public class DynamicWindFunction
     extends TernaryFunction
 {
+    public final static String id
+        = "$Id$";
+
     public final static DynamicWindFunction INSTANCE
         = new DynamicWindFunction();
 

@@ -6,6 +6,9 @@ import MScheme.Value;
 public class AssqFunction
     extends AssocBase
 {
+    public final static String id
+        = "$Id$";
+
     public final static AssqFunction INSTANCE
         = new AssqFunction();
 

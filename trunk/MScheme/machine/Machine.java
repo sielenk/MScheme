@@ -11,6 +11,9 @@ import MScheme.exceptions.*;
 final class AbortContinuation
     extends Continuation
 {
+    public final static String id
+        = "$Id$";
+
     private Value _result;
 
     AbortContinuation(Registers registers)
@@ -29,6 +32,9 @@ final class AbortContinuation
 
 final public class Machine
 {
+    public final static String id
+        = "$Id$";
+
     final private Environment _environment;
     
     public Machine(Environment environment)

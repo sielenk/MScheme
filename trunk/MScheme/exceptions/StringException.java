@@ -6,6 +6,9 @@ import MScheme.values.ScmString;
 public class StringException
     extends RuntimeError
 {
+    public final static String id
+        = "$Id$";
+
     private final int _index;
     
     public StringException(

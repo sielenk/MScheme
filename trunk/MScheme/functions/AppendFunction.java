@@ -16,6 +16,9 @@ import MScheme.exceptions.*;
 final class AppendHelper1
     extends Reducer
 {
+    public final static String id
+        = "$Id$";
+
     AppendHelper1(Value initial)
     { super(initial); }
 
@@ -27,6 +30,9 @@ final class AppendHelper1
 final class AppendHelper2
     extends Reducer
 {
+    public final static String id
+        = "$Id$";
+
     final static AppendHelper2 INSTANCE
         = new AppendHelper2();
 
@@ -42,6 +48,9 @@ final class AppendHelper2
 public final class AppendFunction
     extends Function
 {
+    public final static String id
+        = "$Id$";
+
     public final static AppendFunction INSTANCE
         = new AppendFunction();
 

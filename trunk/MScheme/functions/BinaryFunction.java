@@ -14,6 +14,9 @@ import MScheme.exceptions.TypeError;
 public abstract class BinaryFunction
     extends CheckedFunction
 {
+    public final static String id
+        = "$Id$";
+
     private final static Arity _binary = Arity.exactly(2);
 
     public final Arity getArity()

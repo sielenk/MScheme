@@ -14,6 +14,9 @@ import MScheme.exceptions.*;
 public class TestEnvironment
     extends junit.framework.TestCase
 {
+    public final static String id
+        = "$Id$";
+
     protected Environment env;
     protected Symbol sym1;
     protected Symbol sym2;

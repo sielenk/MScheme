@@ -15,6 +15,9 @@ import MScheme.exceptions.*;
 public class ApplyFunction
     extends CheckedFunction
 {
+    public final static String id
+        = "$Id$";
+
     public final static ApplyFunction INSTANCE = new ApplyFunction();
 
 

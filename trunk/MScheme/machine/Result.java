@@ -10,6 +10,9 @@ import MScheme.exceptions.TypeError;
 public abstract class Result
     extends Code
 {
+    public final static String id
+        = "$Id$";
+
     protected abstract Value getValue(Registers registers)
         throws RuntimeError;
 

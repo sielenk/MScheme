@@ -10,6 +10,9 @@ import MScheme.machine.Registers;
 final class SequenceContinuation
     extends Continuation
 {
+    public final static String id
+        = "$Id$";
+
     final private CodeList _todo;
 
     private SequenceContinuation(
@@ -40,6 +43,9 @@ final class SequenceContinuation
 final public class Sequence
     extends Code
 {
+    public final static String id
+        = "$Id$";
+
     final private CodeList _sequence;
 
     private Sequence(CodeList sequence)
