@@ -6,8 +6,7 @@ import MScheme.Code;
 import MScheme.List;
 import MScheme.values.Function;
 
-import MScheme.exceptions.RuntimeError;
-import MScheme.exceptions.TypeError;
+import MScheme.exceptions.SchemeException;
 
 
 public abstract class Thunk
@@ -24,10 +23,10 @@ public abstract class Thunk
         Registers state,
         int       len,
         List      arguments
-    ) throws RuntimeError, TypeError
+    ) throws SchemeException
     { return checkedCall(state); }
 
     protected abstract Code checkedCall(
         Registers state
-    ) throws RuntimeError, TypeError;
+    ) throws SchemeException;
 }

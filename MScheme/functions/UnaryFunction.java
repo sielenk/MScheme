@@ -7,8 +7,7 @@ import MScheme.Value;
 import MScheme.List;
 import MScheme.values.Function;
 
-import MScheme.exceptions.RuntimeError;
-import MScheme.exceptions.TypeError;
+import MScheme.exceptions.SchemeException;
 
 
 public abstract class UnaryFunction
@@ -25,7 +24,7 @@ public abstract class UnaryFunction
         Registers state,
         int       len,
         List      arguments
-    ) throws RuntimeError, TypeError
+    ) throws SchemeException
     {
         return checkedCall(
             state,
@@ -36,5 +35,5 @@ public abstract class UnaryFunction
     protected abstract Code checkedCall(
         Registers state,
         Value     fst
-    ) throws RuntimeError, TypeError;
+    ) throws SchemeException;
 }

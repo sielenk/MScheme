@@ -90,7 +90,7 @@ public abstract class Pair
     {
         try {
             Pair otherPair = (Pair)other;
-        
+
             return
                 (getFirst ().equal(otherPair.getFirst ())) &&
                 (getSecond().equal(otherPair.getSecond()));
@@ -101,7 +101,7 @@ public abstract class Pair
     }
 
     public abstract Code getCode(StaticEnvironment compilationEnv)
-        throws CompileError, TypeError;
+        throws SchemeException;
 
 
     // implementation of Compound

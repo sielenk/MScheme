@@ -35,7 +35,7 @@ final class Let
     protected Code checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
-    ) throws CompileError, TypeError
+    ) throws SchemeException
     {
         Symbol name;
         List   bindings;

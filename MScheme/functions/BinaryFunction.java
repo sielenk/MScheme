@@ -7,8 +7,7 @@ import MScheme.Value;
 import MScheme.List;
 import MScheme.values.Function;
 
-import MScheme.exceptions.RuntimeError;
-import MScheme.exceptions.TypeError;
+import MScheme.exceptions.SchemeException;
 
 
 public abstract class BinaryFunction
@@ -25,7 +24,7 @@ public abstract class BinaryFunction
         Registers state,
         int       len,
         List      arguments
-    ) throws RuntimeError, TypeError
+    ) throws SchemeException
     {
         return checkedCall(
             state,
@@ -38,5 +37,5 @@ public abstract class BinaryFunction
         Registers state,
         Value fst,
         Value snd
-    ) throws RuntimeError, TypeError;
+    ) throws SchemeException;
 }

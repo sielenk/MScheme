@@ -32,7 +32,7 @@ final class Define
     protected Code checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
-    ) throws CompileError, TypeError
+    ) throws SchemeException
     {
         if (arguments.getHead().isPair()) {
             //    (define (f x y) (+ x y))

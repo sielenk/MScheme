@@ -4,8 +4,7 @@ import MScheme.machine.Registers;
 import MScheme.Code;
 import MScheme.Value;
 
-import MScheme.exceptions.RuntimeError;
-import MScheme.exceptions.TypeError;
+import MScheme.exceptions.SchemeException;
 
 
 public abstract class ValueThunk
@@ -17,9 +16,9 @@ public abstract class ValueThunk
 
     protected final Code checkedCall(
         Registers state
-    ) throws RuntimeError, TypeError
+    ) throws SchemeException
     { return checkedCall().getLiteral(); }
 
     protected abstract Value checkedCall()
-        throws RuntimeError, TypeError;
+        throws SchemeException;
 }

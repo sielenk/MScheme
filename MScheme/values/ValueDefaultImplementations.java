@@ -254,7 +254,7 @@ public abstract class ValueDefaultImplementations
      * @return {@link #getLiteral()}
      */
     public Code getCode(StaticEnvironment compilationEnv)
-        throws CompileError, TypeError
+        throws SchemeException
     { return getLiteral(); }
 
     /**
@@ -263,6 +263,6 @@ public abstract class ValueDefaultImplementations
      * @return <code>getCode(compilationEnv)</code>
      */
     public Translator getTranslator(StaticEnvironment compilationEnv)
-        throws CompileError, TypeError
+        throws SchemeException
     { return getCode(compilationEnv); }
 }

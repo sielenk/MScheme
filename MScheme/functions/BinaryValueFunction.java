@@ -4,8 +4,7 @@ import MScheme.machine.Registers;
 import MScheme.Code;
 import MScheme.Value;
 
-import MScheme.exceptions.RuntimeError;
-import MScheme.exceptions.TypeError;
+import MScheme.exceptions.SchemeException;
 
 
 public abstract class BinaryValueFunction
@@ -19,9 +18,9 @@ public abstract class BinaryValueFunction
         Registers state,
         Value     fst,
         Value     snd
-    ) throws RuntimeError, TypeError
+    ) throws SchemeException
     { return checkedCall(fst, snd).getLiteral(); }
 
     protected abstract Value checkedCall(Value fst, Value snd)
-        throws RuntimeError, TypeError;
+        throws SchemeException;
 }

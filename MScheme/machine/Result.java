@@ -3,8 +3,8 @@ package MScheme.machine;
 import MScheme.Value;
 import MScheme.Code;
 
+import MScheme.exceptions.SchemeException;
 import MScheme.exceptions.RuntimeError;
-import MScheme.exceptions.TypeError;
 
 
 /**
@@ -41,7 +41,7 @@ public abstract class Result
      *         {@link Continuation#invoke(Registers, Value)}.
      */
     public final Code executionStep(Registers state)
-        throws RuntimeError, TypeError
+        throws SchemeException
     {
         return state.getContinuation().invoke(
             state,

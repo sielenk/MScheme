@@ -90,7 +90,7 @@ final class PairOrList
 
 
     public Code getCode(StaticEnvironment compilationEnv)
-        throws CompileError, TypeError
+        throws SchemeException
     {
         return
             getHead()
@@ -102,7 +102,7 @@ final class PairOrList
     }
 
     public CodeList getCodeList(StaticEnvironment compilationEnv)
-        throws CompileError, TypeError
+        throws SchemeException
     {
         return CodeList.prepend(
             getHead().getCode    (compilationEnv),

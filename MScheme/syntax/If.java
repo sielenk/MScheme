@@ -13,8 +13,7 @@ import MScheme.values.Function;
 import MScheme.values.ScmBoolean;
 import MScheme.List;
 
-import MScheme.exceptions.CompileError;
-import MScheme.exceptions.TypeError;
+import MScheme.exceptions.SchemeException;
 
 
 final class If
@@ -33,7 +32,7 @@ final class If
     protected Code checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
-    ) throws CompileError, TypeError
+    ) throws SchemeException
     {
         Value flag    = arguments.getHead();
         Value onTrue  = arguments.getTail().getHead();

@@ -23,13 +23,13 @@ public abstract class CheckedFunction
         Registers state,
         int       len,
         List      args
-    ) throws RuntimeError, TypeError;
+    ) throws SchemeException;
 
 
     // implementation of Function
 
     public final Code call(Registers state, List arguments)
-        throws RuntimeError, TypeError
+        throws SchemeException
     {
         return checkedCall(
             state,

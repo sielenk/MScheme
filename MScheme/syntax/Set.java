@@ -12,8 +12,7 @@ import MScheme.environment.Reference;
 import MScheme.List;
 import MScheme.values.Symbol;
 
-import MScheme.exceptions.CompileError;
-import MScheme.exceptions.TypeError;
+import MScheme.exceptions.SchemeException;
 
 
 final class Set
@@ -31,7 +30,7 @@ final class Set
     protected Code checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
-    ) throws CompileError, TypeError
+    ) throws SchemeException
     {
         Symbol symbol = arguments.getHead().toSymbol();
         Value  value  = arguments.getTail().getHead();

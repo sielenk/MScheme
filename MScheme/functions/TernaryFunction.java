@@ -7,8 +7,7 @@ import MScheme.Value;
 import MScheme.List;
 import MScheme.values.Function;
 
-import MScheme.exceptions.RuntimeError;
-import MScheme.exceptions.TypeError;
+import MScheme.exceptions.SchemeException;
 
 
 public abstract class TernaryFunction
@@ -25,7 +24,7 @@ public abstract class TernaryFunction
         Registers state,
         int       len,
         List      arguments
-    ) throws RuntimeError, TypeError
+    ) throws SchemeException
     {
         return checkedCall(
             state,
@@ -40,5 +39,5 @@ public abstract class TernaryFunction
         Value fst,
         Value snd,
         Value trd
-    ) throws RuntimeError, TypeError;
+    ) throws SchemeException;
 }

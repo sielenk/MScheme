@@ -2,8 +2,7 @@ package MScheme;
 
 import MScheme.environment.StaticEnvironment;
 
-import MScheme.exceptions.TypeError;
-import MScheme.exceptions.CompileError;
+import MScheme.exceptions.SchemeException;
 
 
 /**
@@ -18,7 +17,7 @@ public interface Translator
         = "$Id$";
 
     Code translate(
-        StaticEnvironment e,
+        StaticEnvironment compilationEnv,
         List              arguments
-    ) throws CompileError, TypeError;
+    ) throws SchemeException;
 }

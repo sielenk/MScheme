@@ -24,7 +24,7 @@ public final class CallCCFunction
     { }
 
     protected Code checkedCall(Registers state, Value argument)
-        throws RuntimeError, TypeError
+        throws SchemeException
     {
         return argument.toFunction().call(
             state,
