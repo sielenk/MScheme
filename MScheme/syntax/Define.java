@@ -43,7 +43,7 @@ final class Define
                 syntax.define(symbol),
                 Lambda.INSTANCE.translate(
                     syntax,
-                    ValueFactory.prepend(
+                    ValueFactory.prependMutable(
                         formals,
                         body
                     )

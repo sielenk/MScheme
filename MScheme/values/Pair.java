@@ -24,14 +24,19 @@ public final class Pair
     private Value   _second;
 
 
-    private Pair(Value first, Value second)
+    private Pair(boolean isMutable, Value first, Value second)
     {
+        super(isMutable);
+	
         _first  = first;
         _second = second;
     }
 
-    public static Pair create(Value first, Value second)
-    { return new Pair(first, second); }
+    public static Pair createConst(Value first, Value second)
+    { return new Pair(false, first, second); }
+
+    public static Pair createMutable(Value first, Value second)
+    { return new Pair(true, first, second); }
 
 
     // implementation of List
@@ -199,7 +204,7 @@ public final class Pair
         List result      = ValueFactory.createList();
         
         while (!currentTail.isEmpty()) {
-            result = ValueFactory.prepend(
+            result = ValueFactory.prependMutable(
                 currentTail.getHead(),
                 result
             );

@@ -13,7 +13,7 @@ abstract class MemberBase
     public final static String id
         = "$Id$";
 
-    protected abstract boolean equal(Value fst, Value snd);
+    protected abstract boolean equalityPredicate(Value fst, Value snd);
 
     protected final Value checkedCall(
         Value key,
@@ -23,7 +23,7 @@ abstract class MemberBase
         List tail = values.toList();
 
         while (!tail.isEmpty()) {
-            if (equal(key, tail.getHead())) {
+            if (equalityPredicate(key, tail.getHead())) {
                 return tail.toValue();
             }
 

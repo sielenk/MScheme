@@ -12,7 +12,7 @@ public class AssocFunction
     public final static AssocFunction INSTANCE
         = new AssocFunction();
 
-    protected boolean equal(Value fst, Value snd)
+    protected boolean equalityPredicate(Value fst, Value snd)
     { return fst.equal(snd); }
 }
 

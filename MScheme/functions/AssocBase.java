@@ -14,7 +14,7 @@ abstract class AssocBase
     public final static String id
         = "$Id$";
 
-    protected abstract boolean equal(Value fst, Value snd);
+    protected abstract boolean equalityPredicate(Value fst, Value snd);
 
     protected final Value checkedCall(
         Value key,
@@ -26,7 +26,7 @@ abstract class AssocBase
         while (!tail.isEmpty()) {
             Pair pair = tail.getHead().toPair();
 
-            if (equal(key, pair.getHead())) {
+            if (equalityPredicate(key, pair.getHead())) {
                 return pair;
             }
 

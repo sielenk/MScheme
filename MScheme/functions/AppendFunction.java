@@ -23,7 +23,7 @@ final class AppendHelper1
     { super(initial); }
 
     protected Value combine(Value fst, Value snd)
-    { return Pair.create(fst, snd); }
+    { return Pair.createMutable(fst, snd); }
 }
 
 

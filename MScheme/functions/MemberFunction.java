@@ -12,7 +12,7 @@ public class MemberFunction
     public final static MemberFunction INSTANCE
         = new MemberFunction();
 
-    protected boolean equal(Value fst, Value snd)
+    protected boolean equalityPredicate(Value fst, Value snd)
     { return fst.equal(snd); }
 }
 

@@ -36,7 +36,7 @@ class YWrappedFunction
     {
         return _f.call(
             registers,
-            ValueFactory.prepend(this, arguments)
+            ValueFactory.prependMutable(this, arguments)
         );
     }
 }

@@ -39,7 +39,7 @@ public class OutputPort
         }
         catch (IOException e) {
             throw new OpenException(
-                ScmString.create(filename)
+                ScmString.createConst(filename)
             );
         }
     }

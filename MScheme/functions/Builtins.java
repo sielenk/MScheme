@@ -231,7 +231,7 @@ public class Builtins
     { return ScmBoolean.create(argument.isPair()); }
 
     public final static Value cons(Value fst, Value snd)
-    { return Pair.create(fst, snd); }
+    { return Pair.createMutable(fst, snd); }
 
     public final static Value car(Value argument)
         throws PairExpected

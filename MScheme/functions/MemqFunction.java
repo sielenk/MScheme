@@ -12,6 +12,6 @@ public class MemqFunction
     public final static MemqFunction INSTANCE
         = new MemqFunction();
 
-    protected boolean equal(Value fst, Value snd)
+    protected boolean equalityPredicate(Value fst, Value snd)
     { return fst.eq(snd); }
 }

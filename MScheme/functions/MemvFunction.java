@@ -12,7 +12,7 @@ public class MemvFunction
     public final static MemvFunction INSTANCE
         = new MemvFunction();
 
-    protected boolean equal(Value fst, Value snd)
+    protected boolean equalityPredicate(Value fst, Value snd)
     { return fst.eqv(snd); }
 }
 
