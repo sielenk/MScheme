@@ -1,22 +1,21 @@
-/* The empty list singleton.
-   Copyright (C) 2001  Marvin H. Sielenkemper
-
-This file is part of MScheme.
-
-MScheme is free software; you can redistribute it and/or modify 
-it under the terms of the GNU General Public License as published by 
-the Free Software Foundation; either version 2 of the License, 
-or (at your option) any later version. 
-
-MScheme is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details. 
-
-You should have received a copy of the GNU General Public License
-along with mscheme; see the file COPYING. If not, write to 
-the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA  02111-1307, USA. */
+/*
+ * The empty list singleton. Copyright (C) 2001 Marvin H. Sielenkemper
+ * 
+ * This file is part of MScheme.
+ * 
+ * MScheme is free software; you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation; either version 2 of the License, or (at your option) any later
+ * version.
+ * 
+ * MScheme is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * mscheme; see the file COPYING. If not, write to the Free Software Foundation,
+ * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 
 package mscheme.values;
 
@@ -31,32 +30,16 @@ import mscheme.exceptions.PairExpected;
 
 
 public final class Empty
-    implements IList, IOutputable, ICompileable
+        implements IList, IOutputable, ICompileable
 {
-    public final static String CVS_ID
-        = "$Id$";
-
+    public final static String CVS_ID = "$Id$";
 
     public final static Empty INSTANCE = new Empty();
 
-    private final static Object[] ARRAY    = new Object[0];
+    private final static Object[] ARRAY = new Object[0];
 
     private Empty()
-    { }
-
-
-    // specialisation of ValueImplementation
-
-    public boolean isList()
-    {
-        return true;
-    }
-
-    public IList toList()
-    {
-        return this;
-    }
-
+    {}
 
     // implementation of List
 
@@ -65,7 +48,8 @@ public final class Empty
         return true;
     }
 
-    public IList validate() throws ListExpected
+    public IList validate()
+            throws ListExpected
     {
         return this;
     }
@@ -91,19 +75,19 @@ public final class Empty
     }
 
     public Object getHead()
-        throws PairExpected
+            throws PairExpected
     {
         throw new PairExpected(this);
     }
 
     public IList getTail()
-        throws PairExpected
+            throws PairExpected
     {
         throw new PairExpected(this);
     }
 
     public Object getForceable(StaticEnvironment compilationEnv)
-        throws CantCompileException
+            throws CantCompileException
     {
         throw new CantCompileException(this);
     }
@@ -117,20 +101,20 @@ public final class Empty
     {
         return new Object[index];
     }
-   
-	public Object[] getArray()
-	{
-		return ARRAY;
-	}	   
 
-	public Object[] getArray(int index)
-	{
-		return new Object[index];
-	}
+    public Object[] getArray()
+    {
+        return ARRAY;
+    }
+
+    public Object[] getArray(int index)
+    {
+        return new Object[index];
+    }
 
     public void outputOn(Writer destination, boolean doWrite)
-    throws IOException
+            throws IOException
     {
-		destination.write("()");
+        destination.write("()");
     }
 }
