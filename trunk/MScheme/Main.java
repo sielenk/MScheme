@@ -20,7 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme;
 
-import MScheme.values.InputPort;
 import MScheme.machine.Machine;
 
 public class Main

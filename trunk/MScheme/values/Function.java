@@ -20,23 +20,24 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values;
 
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
-import MScheme.Value;
 import MScheme.Code;
 
-import MScheme.util.Arity;
+import MScheme.exceptions.RuntimeArityError;
+import MScheme.exceptions.SchemeException;
+
 import MScheme.machine.Registers;
 
-import MScheme.exceptions.*;
+import MScheme.util.Arity;
 
 
 public abstract class Function
-            extends ValueDefaultImplementations
+    extends ValueDefaultImplementations
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     // specialisation of Value
@@ -52,14 +53,14 @@ public abstract class Function
     }
 
     public void write(Writer destination)
-    throws IOException
+        throws IOException
     {
         destination.write("#[procedure]");
     }
 
 
     public final static int checkArguments(Arity arity, List arguments)
-    throws SchemeException
+        throws SchemeException
     {
         int len = arguments.getLength();
 
@@ -75,5 +76,5 @@ public abstract class Function
     // abstract function interface
 
     public abstract Code call(Registers state, List arguments)
-    throws SchemeException;
+        throws SchemeException;
 }

@@ -20,29 +20,27 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.syntax;
 
-import MScheme.util.Arity;
-
-import MScheme.Value;
 import MScheme.Code;
 import MScheme.Syntax;
-
-import MScheme.machine.Machine;
+import MScheme.Value;
 
 import MScheme.code.Application;
 
 import MScheme.environment.Environment;
 import MScheme.environment.StaticEnvironment;
-import MScheme.environment.Reference;
 
-import MScheme.values.List;
+import MScheme.exceptions.SchemeException;
+
+import MScheme.machine.Machine;
+
+import MScheme.util.Arity;
+
 import MScheme.values.Empty;
+import MScheme.values.List;
 import MScheme.values.Pair;
 import MScheme.values.Symbol;
-import MScheme.values.InputPort;
 
 import MScheme.values.functions.ApplyFunction;
-
-import MScheme.exceptions.*;
 
 
 final class Macro
@@ -75,17 +73,17 @@ final class Macro
     ) throws SchemeException
     {
         // (apply tranformer def_env use_env args)
-        Code[] application = new Code[5];
-
-        application[0] = _apply;
-        application[1] = _transformer;
-        application[2] = _definitionEnv.getLiteral();
-        application[3] =       usageEnv.getLiteral();
-        application[4] =      arguments.getLiteral();
 
         Pair result = machine.execute(
             Application.create(
-                application
+                new Code[]
+                {
+                    _apply,
+                    _transformer,
+                    _definitionEnv.getLiteral(),
+                          usageEnv.getLiteral(),
+                         arguments.getLiteral()
+                }
             )
         ).toPair();
 

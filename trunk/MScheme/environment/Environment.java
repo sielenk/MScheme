@@ -20,25 +20,30 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.environment;
 
-import java.io.Writer;
 import java.io.IOException;
-import java.util.Vector;
+import java.io.Writer;
 
-import MScheme.Init;
+import java.util.Vector;
 
 import MScheme.Value;
 
-import MScheme.values.ValueDefaultImplementations;
-import MScheme.values.List;
-import MScheme.values.Symbol;
-
-import MScheme.util.Arity;
+import MScheme.exceptions.AlreadyBound;
+import MScheme.exceptions.CompileError;
+import MScheme.exceptions.ListExpected;
+import MScheme.exceptions.PairExpected;
+import MScheme.exceptions.RuntimeError;
+import MScheme.exceptions.SymbolNotFoundException;
+import MScheme.exceptions.UnexpectedSyntax;
 
 import MScheme.syntax.SyntaxFactory;
 
-import MScheme.values.functions.BuiltinTable;
+import MScheme.util.Arity;
 
-import MScheme.exceptions.*;
+import MScheme.values.List;
+import MScheme.values.Symbol;
+import MScheme.values.ValueDefaultImplementations;
+
+import MScheme.values.functions.BuiltinTable;
 
 
 public final class Environment

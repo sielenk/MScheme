@@ -20,18 +20,19 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values.functions;
 
-import MScheme.machine.Registers;
 import MScheme.Code;
 import MScheme.Value;
 
 import MScheme.exceptions.SchemeException;
 
+import MScheme.machine.Registers;
+
 
 public abstract class TernaryValueFunction
-            extends TernaryFunction
+    extends TernaryFunction
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     protected final Code checkedCall(
@@ -45,5 +46,5 @@ public abstract class TernaryValueFunction
     }
 
     protected abstract Value checkedCall(Value fst, Value snd, Value trd)
-    throws SchemeException;
+        throws SchemeException;
 }

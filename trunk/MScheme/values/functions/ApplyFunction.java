@@ -20,19 +20,19 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values.functions;
 
-import MScheme.util.Arity;
+import MScheme.Code;
+
+import MScheme.code.ApplyContinuation;
+
+import MScheme.exceptions.SchemeException;
 
 import MScheme.machine.Registers;
 
-import MScheme.Code;
-import MScheme.code.ApplyContinuation;
+import MScheme.util.Arity;
 
-import MScheme.Value;
 import MScheme.values.Function;
 import MScheme.values.List;
 import MScheme.values.Pair;
-
-import MScheme.exceptions.SchemeException;
 
 
 public class ApplyFunction

@@ -24,10 +24,10 @@ import MScheme.Value;
 
 
 public final class InputPortExpected
-            extends PortExpected
+    extends PortExpected
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     public InputPortExpected(Value cause)
     {

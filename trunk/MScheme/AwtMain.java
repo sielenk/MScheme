@@ -20,15 +20,10 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme;
 
-import java.io.Reader;
-import java.io.Writer;
+import java.awt.Window;
 
-import java.awt.event.WindowListener;
 import java.awt.event.WindowEvent;
-
-import MScheme.values.InputPort;
-import MScheme.machine.Machine;
-
+import java.awt.event.WindowListener;
 
 public final class AwtMain
 	implements WindowListener

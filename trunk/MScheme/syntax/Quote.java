@@ -20,17 +20,16 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.syntax;
 
-import MScheme.Value;
 import MScheme.Code;
 import MScheme.Syntax;
 
-import MScheme.util.Arity;
-
 import MScheme.environment.StaticEnvironment;
 
-import MScheme.values.List;
-
 import MScheme.exceptions.TypeError;
+
+import MScheme.util.Arity;
+
+import MScheme.values.List;
 
 
 // *** quote ***
@@ -39,7 +38,7 @@ final class Quote
     extends CheckedSyntax
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     final static Syntax INSTANCE = new Quote();

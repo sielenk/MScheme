@@ -24,10 +24,10 @@ import MScheme.Value;
 
 
 public final class SymbolExpected
-            extends TypeError
+    extends TypeError
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     public SymbolExpected(Value cause)
     {

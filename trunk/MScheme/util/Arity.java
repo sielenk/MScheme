@@ -22,7 +22,6 @@ package MScheme.util;
 
 import MScheme.exceptions.RuntimeArityError;
 
-
 public class Arity
 {
     public final static String id

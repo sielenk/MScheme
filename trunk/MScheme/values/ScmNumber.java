@@ -20,19 +20,19 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values;
 
-import java.math.BigInteger;
-
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
+
+import java.math.BigInteger;
 
 import MScheme.Value;
 
 
 public class ScmNumber
-            extends ValueDefaultImplementations
+    extends ValueDefaultImplementations
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     private BigInteger _value;

@@ -20,8 +20,8 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.machine;
 
-import MScheme.Value;
 import MScheme.Code;
+import MScheme.Value;
 
 import MScheme.exceptions.SchemeException;
 
@@ -35,10 +35,10 @@ public abstract class Continuation
 {
     /** The CVS id of the file containing this class. */
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
-    private       int       _level;
+    private int _level;
 
 
     /**
@@ -138,7 +138,7 @@ public abstract class Continuation
      * @return  the result of the call to {@link #execute}.
      */
     final Code invoke(Registers state, Value result)
-    throws SchemeException
+        throws SchemeException
     {
         Registers buffer = new Registers(this);
         Code      next   = execute(buffer, result);
@@ -150,7 +150,7 @@ public abstract class Continuation
      * Implements the concrete behaviour of the continuation.
      */
     protected abstract Code execute(Registers state, Value result)
-    throws SchemeException;
+        throws SchemeException;
 
 
     protected abstract String debugString();

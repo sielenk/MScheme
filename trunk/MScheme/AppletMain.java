@@ -22,9 +22,6 @@ package MScheme;
 
 import java.applet.Applet;
 
-import MScheme.machine.Machine;
-
-
 public final class AppletMain
 	extends Applet
 {

@@ -20,15 +20,19 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values.functions;
 
-import java.lang.reflect.*;
-import java.util.Vector;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 
-import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import MScheme.Value;
 
-import MScheme.values.List;
 import MScheme.values.Function;
+import MScheme.values.List;
 
 
 public class ParseBuiltins

@@ -20,18 +20,17 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values.functions;
 
-import MScheme.util.Arity;
-
-import MScheme.machine.Registers;
-
 import MScheme.Code;
 import MScheme.Value;
 
-import MScheme.values.ListFactory;
-import MScheme.values.List;
-import MScheme.values.Function;
+import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.TypeError;
 
-import MScheme.exceptions.*;
+import MScheme.machine.Registers;
+
+import MScheme.values.Function;
+import MScheme.values.List;
+import MScheme.values.ListFactory;
 
 
 class YWrappedFunction
@@ -60,6 +59,7 @@ class YWrappedFunction
                );
     }
 }
+
 
 public final class YCombinator
             extends UnaryValueFunction

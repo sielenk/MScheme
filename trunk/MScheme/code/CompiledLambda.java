@@ -20,32 +20,29 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.code;
 
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
 import MScheme.Code;
 import MScheme.Value;
 
-import MScheme.values.List;
+import MScheme.environment.Environment;
+import MScheme.environment.StaticEnvironment;
 
-import MScheme.util.Arity;
+import MScheme.exceptions.ListExpected;
+import MScheme.exceptions.PairExpected;
+import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.SymbolNotFoundException;
+import MScheme.exceptions.UnexpectedSyntax;
 
 import MScheme.machine.Registers;
 import MScheme.machine.Result;
 
-import MScheme.environment.Reference;
-import MScheme.environment.StaticEnvironment;
-import MScheme.environment.Environment;
+import MScheme.util.Arity;
+
+import MScheme.values.List;
 
 import MScheme.values.functions.CheckedFunction;
-
-import MScheme.exceptions.ListExpected;
-import MScheme.exceptions.PairExpected;
-import MScheme.exceptions.CompileError;
-import MScheme.exceptions.TypeError;
-import MScheme.exceptions.SymbolNotFoundException;
-import MScheme.exceptions.UnexpectedSyntax;
-import MScheme.exceptions.SchemeException;
 
 
 public final class CompiledLambda

@@ -20,16 +20,16 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values.functions;
 
-import MScheme.Value;
 import MScheme.Code;
-
-import MScheme.machine.Registers;
+import MScheme.Value;
 
 import MScheme.exceptions.SchemeException;
 
+import MScheme.machine.Registers;
+
 
 public abstract class UnaryValueFunction
-            extends UnaryFunction
+    extends UnaryFunction
 {
     public final static String id
         = "$Id$";

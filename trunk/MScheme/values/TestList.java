@@ -20,10 +20,9 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values;
 
-import MScheme.exceptions.*;
-
 import MScheme.Value;
 
+import MScheme.exceptions.PairExpected;
 
 public class TestList
             extends junit.framework.TestCase

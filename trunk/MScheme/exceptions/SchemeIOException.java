@@ -24,14 +24,13 @@ import MScheme.Value;
 
 
 public class SchemeIOException
-            extends RuntimeError
+    extends RuntimeError
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     public SchemeIOException(Value cause)
     {
         super(cause);
     }
 }
-

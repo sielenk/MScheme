@@ -20,15 +20,24 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.tests;
 
+import java.io.Reader;
 import java.io.StringReader;
-import junit.framework.*;
+
+import junit.framework.TestCase;
 
 import MScheme.Value;
 
-import MScheme.machine.Machine;
-import MScheme.values.*;
-import MScheme.exceptions.*;
+import MScheme.exceptions.CompileError;
+import MScheme.exceptions.ImmutableException;
+import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.SyntaxArityError;
 
+import MScheme.machine.Machine;
+
+import MScheme.values.InputPort;
+import MScheme.values.Pair;
+import MScheme.values.ScmString;
+import MScheme.values.ScmVector;
 
 public class TestR5RS
             extends TestCase

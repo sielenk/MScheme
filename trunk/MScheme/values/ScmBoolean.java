@@ -20,11 +20,8 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values;
 
-import java.io.Writer;
 import java.io.IOException;
-
-import MScheme.Value;
-
+import java.io.Writer;
 
 public final class ScmBoolean
             extends ValueDefaultImplementations

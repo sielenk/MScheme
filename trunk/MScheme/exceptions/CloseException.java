@@ -24,10 +24,10 @@ import MScheme.Value;
 
 
 public final class CloseException
-            extends SchemeIOException
+    extends SchemeIOException
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     public CloseException(Value cause)
     {

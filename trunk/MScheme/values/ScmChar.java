@@ -20,17 +20,17 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values;
 
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
 import MScheme.Value;
 
 
 public final class ScmChar
-            extends ValueDefaultImplementations
+    extends ValueDefaultImplementations
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     private char _character;
@@ -78,7 +78,7 @@ public final class ScmChar
     }
 
     public void write(Writer destination)
-    throws IOException
+        throws IOException
     {
         destination.write("#\\");
         switch (getJavaChar())
@@ -98,7 +98,7 @@ public final class ScmChar
     }
 
     public void display(Writer destination)
-    throws IOException
+        throws IOException
     {
         destination.write(getJavaChar());
     }

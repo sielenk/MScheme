@@ -20,22 +20,16 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.syntax;
 
-import java.io.Writer;
-import java.io.IOException;
-
 import MScheme.Value;
-import MScheme.Code;
-import MScheme.Syntax;
+
+import MScheme.exceptions.SchemeException;
 
 import MScheme.util.Arity;
-import MScheme.code.*;
-import MScheme.environment.*;
-import MScheme.exceptions.*;
-import MScheme.values.functions.*;
-import MScheme.values.*;
 
+import MScheme.values.Empty;
+import MScheme.values.List;
+import MScheme.values.ListFactory;
 
-// *** let ***
 
 abstract class LetBase
     extends CheckedSyntax
@@ -83,10 +77,12 @@ abstract class LetBase
         formals = formals.getReversed();
         inits   = inits  .getReversed();
 
-        List[] result = new List[3];
-        result[0] = formals;
-        result[1] = inits;
-        result[2] = body;
-        return result;
+        return 
+            new List[]
+            {
+                formals,
+                inits,
+                body
+            };
     }
 }

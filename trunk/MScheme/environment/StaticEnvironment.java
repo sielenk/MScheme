@@ -20,23 +20,26 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.environment;
 
-import java.util.Hashtable;
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
-import MScheme.util.Arity;
+import java.util.Hashtable;
 
-import MScheme.Value;
 import MScheme.Syntax;
-import MScheme.Code;
+import MScheme.Value;
+
+import MScheme.exceptions.AlreadyBound;
+import MScheme.exceptions.CompileError;
+import MScheme.exceptions.DuplicateSymbolException;
+import MScheme.exceptions.SymbolNotFoundException;
+import MScheme.exceptions.TypeError;
+import MScheme.exceptions.UnexpectedSyntax;
 
 import MScheme.syntax.ProcedureCall;
 
-import MScheme.values.ValueDefaultImplementations;
 import MScheme.values.List;
 import MScheme.values.Symbol;
-
-import MScheme.exceptions.*;
+import MScheme.values.ValueDefaultImplementations;
 
 
 public class StaticEnvironment

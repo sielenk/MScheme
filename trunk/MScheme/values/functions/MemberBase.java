@@ -22,12 +22,11 @@ package MScheme.values.functions;
 
 import MScheme.Value;
 
-import MScheme.values.ScmBoolean;
-import MScheme.values.List;
-
 import MScheme.exceptions.ListExpected;
 import MScheme.exceptions.PairExpected;
 
+import MScheme.values.List;
+import MScheme.values.ScmBoolean;
 
 abstract class MemberBase
             extends BinaryValueFunction

@@ -20,15 +20,18 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.environment;
 
-import MScheme.Value;
-import MScheme.Code;
 import MScheme.Syntax;
+import MScheme.Value;
 
-import MScheme.environment.*;
-import MScheme.values.*;
-import MScheme.code.*;
+import MScheme.exceptions.RuntimeError;
+import MScheme.exceptions.SymbolNotFoundException;
+import MScheme.exceptions.UnexpectedSyntax;
+
 import MScheme.syntax.SyntaxFactory;
-import MScheme.exceptions.*;
+
+import MScheme.values.Empty;
+import MScheme.values.ScmBoolean;
+import MScheme.values.Symbol;
 
 
 public class TestEnvironment

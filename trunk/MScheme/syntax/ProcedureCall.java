@@ -20,18 +20,16 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.syntax;
 
-import MScheme.Syntax;
 import MScheme.Code;
-
-import MScheme.values.List;
-
-import MScheme.util.Arity;
+import MScheme.Syntax;
 
 import MScheme.code.Application;
 
 import MScheme.environment.StaticEnvironment;
 
 import MScheme.exceptions.SchemeException;
+
+import MScheme.values.List;
 
 
 public final class ProcedureCall

@@ -20,11 +20,12 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme;
 
-import MScheme.machine.Registers;
-
 import MScheme.exceptions.SchemeException;
 import MScheme.exceptions.SymbolNotFoundException;
 import MScheme.exceptions.UnexpectedSyntax;
+
+import MScheme.machine.Registers;
+
 
 /**
  * The abstract base class for scheme machine instructions.

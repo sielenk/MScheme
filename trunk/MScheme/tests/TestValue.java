@@ -20,19 +20,29 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.tests;
 
+import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.Writer;
 
-import MScheme.environment.StaticEnvironment;
-import MScheme.environment.Environment;
-
-import MScheme.exceptions.*;
 import MScheme.Value;
 
-import MScheme.values.*;
+import MScheme.environment.Environment;
+
+import MScheme.exceptions.TypeError;
+
+import MScheme.values.Empty;
+import MScheme.values.InputPort;
+import MScheme.values.ListFactory;
+import MScheme.values.OutputPort;
+import MScheme.values.ScmBoolean;
+import MScheme.values.ScmChar;
+import MScheme.values.ScmNumber;
+import MScheme.values.ScmString;
+import MScheme.values.ScmVector;
+import MScheme.values.Symbol;
 
 import MScheme.values.functions.CallCCFunction;
-
 
 public class TestValue
             extends junit.framework.TestCase

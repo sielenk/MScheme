@@ -20,33 +20,33 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.machine;
 
-import java.io.Reader;
-import java.io.Writer;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.StringReader;
+import java.io.Writer;
 
-import MScheme.Init;
-
-import MScheme.Value;
 import MScheme.Code;
-
-import MScheme.values.Symbol;
-import MScheme.values.ListFactory;
-import MScheme.values.ScmBoolean;
-import MScheme.values.Function;
-import MScheme.values.InputPort;
-import MScheme.values.OutputPort;
-
-import MScheme.values.functions.ValueThunk;
-import MScheme.values.functions.UnaryValueFunction;
-
-import MScheme.code.Application;
+import MScheme.Init;
+import MScheme.Value;
 
 import MScheme.environment.Environment;
 import MScheme.environment.StaticEnvironment;
 
-import MScheme.exceptions.*;
+import MScheme.exceptions.RuntimeError;
+import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.TypeError;
+
+import MScheme.values.InputPort;
+import MScheme.values.ListFactory;
+import MScheme.values.OutputPort;
+import MScheme.values.ScmBoolean;
+import MScheme.values.Symbol;
+
+import MScheme.values.functions.UnaryValueFunction;
+import MScheme.values.functions.ValueThunk;
 
 
 final class StopContinuation

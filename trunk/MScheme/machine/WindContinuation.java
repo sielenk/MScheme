@@ -20,8 +20,8 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.machine;
 
-import MScheme.Value;
 import MScheme.Code;
+import MScheme.Value;
 
 import MScheme.code.Sequence;
 
@@ -30,10 +30,10 @@ import MScheme.exceptions.TypeError;
 
 
 public final class WindContinuation
-            extends Continuation
+    extends Continuation
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     private final Code _before;
@@ -58,14 +58,15 @@ public final class WindContinuation
         Code      after
     ) throws RuntimeError, TypeError
     {
-	Code[] seq = new Code[2];
-
-        seq[0] = before;
-        seq[1] = thunk;
-
         new WindContinuation(state, before, after);
 
-        return Sequence.create(seq);
+        return Sequence.create(
+            new Code[]
+            {
+                before,
+                thunk
+            }
+        );
     }
 
     protected Code execute(
@@ -73,12 +74,13 @@ public final class WindContinuation
         Value     result
     ) throws RuntimeError, TypeError
     {
-	Code[] seq = new Code[2];
-
-        seq[0] = _after;
-        seq[1] = result.getLiteral();
-
-        return Sequence.create(seq);
+        return Sequence.create(
+            new Code[]
+            {
+                _after,
+                result.getLiteral()
+            }
+        );
     }
 
 

@@ -20,8 +20,8 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme;
 
-import junit.framework.*;
-
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 public class TestMScheme
 {

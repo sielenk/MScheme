@@ -20,18 +20,21 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values.functions;
 
+import MScheme.Code;
+import MScheme.Value;
+
+import MScheme.code.Application;
+
+import MScheme.exceptions.FunctionExpected;
+import MScheme.exceptions.RuntimeError;
+import MScheme.exceptions.TypeError;
+
 import MScheme.machine.Registers;
 import MScheme.machine.WindContinuation;
-import MScheme.Code;
-import MScheme.code.Application;
-import MScheme.Value;
-import MScheme.values.Function;
-
-import MScheme.exceptions.*;
 
 
 public class DynamicWindFunction
-            extends TernaryFunction
+    extends TernaryFunction
 {
     public final static String id
         = "$Id$";
@@ -56,12 +59,13 @@ public class DynamicWindFunction
     }
 
     private static Code createCall(Value v)
-    throws FunctionExpected
+        throws FunctionExpected
     {
-        Code[] application = new Code[1];
-        
-        application[0] = v.toFunction().getLiteral();
-        
-        return Application.create(application);
+        return Application.create(
+            new Code[]
+            {
+                v.toFunction().getLiteral()
+            }
+        );
     }
 }

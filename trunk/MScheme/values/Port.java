@@ -20,7 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values;
 
-
 public abstract class Port
     extends ValueDefaultImplementations
 {
@@ -32,3 +31,7 @@ public abstract class Port
         return true;
     }
 }
+
+
+
+

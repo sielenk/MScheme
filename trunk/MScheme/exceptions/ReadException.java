@@ -24,14 +24,13 @@ import MScheme.Value;
 
 
 public class ReadException
-            extends SchemeIOException
+    extends SchemeIOException
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     public ReadException(Value cause)
     {
         super(cause);
     }
 }
-

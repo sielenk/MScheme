@@ -20,20 +20,38 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.tests;
 
+import java.io.Reader;
 import java.io.StringReader;
-import junit.framework.*;
+
+import junit.framework.TestCase;
 
 import MScheme.Value;
 
-import MScheme.machine.Machine;
 import MScheme.environment.Environment;
-import MScheme.syntax.SyntaxFactory;
-import MScheme.values.*;
-import MScheme.exceptions.*;
+
+import MScheme.exceptions.CantCompileException;
+import MScheme.exceptions.DuplicateSymbolException;
+import MScheme.exceptions.FunctionExpected;
+import MScheme.exceptions.ListExpected;
+import MScheme.exceptions.RuntimeArityError;
+import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.SymbolExpected;
+
+import MScheme.machine.Machine;
+
+import MScheme.values.Empty;
+import MScheme.values.Function;
+import MScheme.values.InputPort;
+import MScheme.values.List;
+import MScheme.values.ListFactory;
+import MScheme.values.Pair;
+import MScheme.values.ScmBoolean;
+import MScheme.values.ScmVector;
+import MScheme.values.Symbol;
 
 
 public class TestMachine
-            extends TestCase
+    extends TestCase
 {
     public final static String id
         = "$Id$";

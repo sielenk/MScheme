@@ -20,23 +20,17 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme;
 
-import java.awt.Frame;
 import java.awt.Button;
+import java.awt.Frame;
 import java.awt.Panel;
-import java.awt.TextField;
+import java.awt.Window;
 
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-
-import java.awt.event.WindowListener;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-
-import java.io.Reader;
-import java.io.Writer;
-import java.io.IOException;
+import java.awt.event.WindowListener;
 
 import MScheme.machine.Machine;
-
 
 public class StdioFrame
     extends Frame

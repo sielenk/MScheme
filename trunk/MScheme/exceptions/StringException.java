@@ -24,10 +24,10 @@ import MScheme.values.ScmString;
 
 
 public class StringException
-            extends RuntimeError
+    extends RuntimeError
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
     private final int _index;
 

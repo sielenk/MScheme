@@ -20,14 +20,16 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values.functions;
 
-import MScheme.util.Arity;
-import MScheme.machine.Registers;
 import MScheme.Code;
 import MScheme.Value;
-import MScheme.values.List;
-import MScheme.values.Function;
 
 import MScheme.exceptions.SchemeException;
+
+import MScheme.machine.Registers;
+
+import MScheme.util.Arity;
+
+import MScheme.values.List;
 
 
 public abstract class BinaryFunction

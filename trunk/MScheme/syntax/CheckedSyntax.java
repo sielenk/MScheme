@@ -20,20 +20,17 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.syntax;
 
-import java.io.Writer;
-import java.io.IOException;
-
-import MScheme.Syntax;
 import MScheme.Code;
-
-import MScheme.util.Arity;
-
-import MScheme.values.List;
+import MScheme.Syntax;
 
 import MScheme.environment.StaticEnvironment;
 
 import MScheme.exceptions.SchemeException;
 import MScheme.exceptions.SyntaxArityError;
+
+import MScheme.util.Arity;
+
+import MScheme.values.List;
 
 
 abstract class CheckedSyntax

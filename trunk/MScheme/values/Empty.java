@@ -20,14 +20,16 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.values;
 
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
 
-import MScheme.Value;
 import MScheme.Code;
+import MScheme.Value;
 
 import MScheme.environment.StaticEnvironment;
-import MScheme.exceptions.*;
+
+import MScheme.exceptions.CantCompileException;
+import MScheme.exceptions.PairExpected;
 
 
 public final class Empty
@@ -38,7 +40,8 @@ public final class Empty
         = "$Id$";
 
 
-    private final static Empty INSTANCE = new Empty();
+    private final static Empty  INSTANCE = new Empty();
+    private final static Code[] ARRAY    = new Code[0];
 
     private Empty()
     { }
@@ -105,7 +108,7 @@ public final class Empty
 
     public Code[] getCodeArray(StaticEnvironment compilationEnv)
     {
-	return new Code[0];
+        return ARRAY;
     }
 
     public Code[] getCodeArray(StaticEnvironment compilationEnv, int index)
