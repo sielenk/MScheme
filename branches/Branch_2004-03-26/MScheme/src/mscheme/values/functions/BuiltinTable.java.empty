@@ -1,0 +1,201 @@
+/* An empty BuiltinTable template to aid bootstrapping.
+   Copyright (C) 2001  Marvin H. Sielenkemper
+
+This file is part of MScheme.
+
+MScheme is free software; you can redistribute it and/or modify 
+it under the terms of the GNU General Public License as published by 
+the Free Software Foundation; either version 2 of the License, 
+or (at your option) any later version. 
+
+MScheme is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details. 
+
+You should have received a copy of the GNU General Public License
+along with MScheme; see the file COPYING. If not, write to 
+the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+Boston, MA  02111-1307, USA. */
+
+package mscheme.values.functions;
+
+import mscheme.util.Arity;
+import mscheme.machine.Registers;
+
+import mscheme.values.*;
+
+import mscheme.exceptions.*;
+
+
+class BuiltinRaw
+    extends    Function
+    implements BuiltinTable
+{
+    public final static String id
+        = "$Id: BuiltinTable.java.empty,v 4.3 2004/01/04 11:18:00 sielenk Exp $";
+
+    private final int    _id;
+    private final String _name;
+
+    BuiltinRaw(int id, String name)
+    { _id = id; _name = name; }
+
+    public String getName() { return _name; }
+
+    public Function getFunc() { return this; }
+
+    protected Object checkedCall(List args)
+        throws RuntimeError, TypeError
+    {
+        switch(_id) {
+        default:
+            throw new RuntimeException("unexpected Id");
+        }
+    }
+
+    public Arity getArity()
+    { return Arity.atLeast(0); }
+
+    public Object call(Registers registers, List args)
+        throws RuntimeError, TypeError
+    { return checkedCall(args); }
+}
+
+class BuiltinThunks
+    extends    ValueThunk
+    implements BuiltinTable
+{
+    public final static String id
+        = "$Id: BuiltinTable.java.empty,v 4.3 2004/01/04 11:18:00 sielenk Exp $";
+
+    private final int    _id;
+    private final String _name;
+
+    BuiltinThunks(int id, String name)
+    { _id = id; _name = name; }
+
+    public String getName() { return _name; }
+
+    public Function getFunc() { return this; }
+
+    protected Object checkedCall()
+        throws RuntimeError, TypeError
+    {
+        switch(_id) {
+        default:
+            throw new RuntimeException("unexpected Id");
+        }
+    }
+}
+
+class BuiltinUnary
+    extends    UnaryValueFunction
+    implements BuiltinTable
+{
+    public final static String id
+        = "$Id: BuiltinTable.java.empty,v 4.3 2004/01/04 11:18:00 sielenk Exp $";
+
+    private final int    _id;
+    private final String _name;
+
+    BuiltinUnary(int id, String name)
+    { _id = id; _name = name; }
+
+    public String getName() { return _name; }
+
+    public Function getFunc() { return this; }
+
+    protected Object checkedCall(Object fst)
+        throws RuntimeError, TypeError
+    {
+        switch(_id) {
+        default:
+            throw new RuntimeException("unexpected Id");
+        }
+    }
+}
+
+class BuiltinBinary
+    extends    BinaryValueFunction
+    implements BuiltinTable
+{
+    public final static String id
+        = "$Id: BuiltinTable.java.empty,v 4.3 2004/01/04 11:18:00 sielenk Exp $";
+
+    private final int    _id;
+    private final String _name;
+
+    BuiltinBinary(int id, String name)
+    { _id = id; _name = name; }
+
+    public String getName() { return _name; }
+
+    public Function getFunc() { return this; }
+
+    protected Object checkedCall(Object fst, Object snd)
+        throws RuntimeError, TypeError
+    {
+        switch(_id) {
+        default:
+            throw new RuntimeException("unexpected Id");
+        }
+    }
+}
+
+class BuiltinTernary
+    extends    TernaryValueFunction
+    implements BuiltinTable
+{
+    public final static String id
+        = "$Id: BuiltinTable.java.empty,v 4.3 2004/01/04 11:18:00 sielenk Exp $";
+
+    private final int    _id;
+    private final String _name;
+
+    BuiltinTernary(int id, String name)
+    { _id = id; _name = name; }
+
+    public String getName() { return _name; }
+
+    public Function getFunc() { return this; }
+
+    protected Object checkedCall(Object fst, Object snd, Object trd)
+        throws RuntimeError, TypeError
+    {
+        switch(_id) {
+        default:
+            throw new RuntimeException("unexpected Id");
+        }
+    }
+}
+
+class BuiltinTableEntry
+    implements BuiltinTable
+{
+    public final static String id
+        = "$Id: BuiltinTable.java.empty,v 4.3 2004/01/04 11:18:00 sielenk Exp $";
+
+    private final Function _func;
+    private final String   _name;
+
+    BuiltinTableEntry(Function func, String name)
+    { _func = func; _name = name; }
+
+    public String getName() { return _name; }
+
+    public Function getFunc() { return _func; }
+}
+
+
+public interface BuiltinTable
+{
+    String id
+        = "$Id: BuiltinTable.java.empty,v 4.3 2004/01/04 11:18:00 sielenk Exp $";
+
+    String getName();
+    Function getFunc();
+
+    BuiltinTable[] builtins = {
+    };
+}
