@@ -26,15 +26,30 @@ public class Main
                             new SListFactory()
                             .append(new SSymbol("x"))
                             .append(new SSymbol("y"))
+                            .append(new SSymbol("z"))
                             .getList()
                     )
-                    .append(new SSymbol("x"))
+                    .append(new SSymbol("y"))
                     .getList()
                 )
                 .getList()
             )
             .append(
                 new SListFactory()
+                .append(new SSymbol("f"))
+                .append(SBool.FALSE)
+                .append(
+                        new SListFactory()
+                        .append(SyntaxFunc.QUOTE_FUNC)
+                        .append(new SSymbol("f"))
+                        .getList()
+                )
+                .append(SBool.TRUE)
+                .getList()
+            )
+            .append(
+                new SListFactory()
+                .append(new MapFunc(EvalFunc.INSTANCE))
                 .append(new SSymbol("f"))
                 .append(SBool.FALSE)
                 .append(SBool.TRUE)
@@ -52,7 +67,7 @@ public class Main
                 "\n"
                 + e.getSExpr()
                 + " caused an "
-                + e.getClass().getName()
+                + e
             );
         }
     }
