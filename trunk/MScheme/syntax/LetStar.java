@@ -75,8 +75,9 @@ final class LetStar
                 {
                     CompiledLambda.create(
                         Arity.exactly(0),
-                        compilationEnv.newChild(),
-                        body
+                        body.getCodeArray(
+                            compilationEnv.newChild()
+                        )
                     )
                 }
             );
@@ -131,7 +132,6 @@ final class LetStarHelper
 
             Code lambda = CompiledLambda.create(
                               Arity.exactly(1),
-                              innerEnvironment,
                               innerBody
                           );
 

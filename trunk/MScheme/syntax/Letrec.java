@@ -107,7 +107,6 @@ final class Letrec
             {
                 CompiledLambda.create( 
                     Arity.exactly(0),  
-                    bodyCompilationEnv,
                     compiledLetrec
                 )
             }
