@@ -61,8 +61,6 @@ public interface Code
 
     /**
      * Does the final Symbol lookup.
-     * Unbound Symbols are automatically created but not
-     * initialized in the given global environment.
      */
     Code force()
         throws SymbolNotFoundException, UnexpectedSyntax;
