@@ -12,4 +12,10 @@ public class SEmpty extends SList
 
     public Values toValues()
     { return Values.EMPTY; }
+
+
+    protected String defaultString()
+    {
+        return "()";
+    }
 }

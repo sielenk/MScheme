@@ -39,6 +39,13 @@ public abstract class Function extends SExpr
     ) throws SException {
         _checkArity(arguments);
 
+        System.err.println(
+            "call "
+            + defaultString()
+            + " with "
+            + arguments.toList()
+        );
+
         return _call(stack, environment, arguments);
     }
 
