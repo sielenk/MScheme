@@ -21,7 +21,7 @@ public class CallCCFunction
         return argument.toFunction().call(
             machine,
             ValueFactory.createList(
-                machine.getContinuation()
+                machine.getCurrentContinuation()
             )
         );
     }
