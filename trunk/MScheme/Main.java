@@ -13,14 +13,14 @@ public class Main
         Machine machine = new Machine();
 
         for (int i = 0; i < argv.length; i++) {
-		    InputPort in = InputPort.create(argv[i]);
+            InputPort in = InputPort.create(argv[i]);
 
-   	        System.out.println("parsing " + argv[i]);
+            System.out.println("parsing " + argv[i]);
 
             Value v;
-		    while ((v = in.read()) != in.EOF_VALUE) {
-    	        machine.evaluate(v);
-		    }
-	    }
+            while ((v = in.read()) != in.EOF_VALUE) {
+                machine.evaluate(v);
+            }
+        }
     }
 }
