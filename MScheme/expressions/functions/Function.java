@@ -1,16 +1,19 @@
 package MScheme.expressions.functions;
 
+
 import MScheme.expressions.SExpr;
-import MScheme.machine.Values;
+import MScheme.expressions.SFunction;
 
 import MScheme.exceptions.SException;
 import MScheme.exceptions.SWrongArgumentCountException;
 
+import MScheme.machine.Values;
 import MScheme.machine.ContinuationStack;
+
 import MScheme.environment.Environment;
 
 
-public abstract class Function extends SExpr
+public abstract class Function extends SFunction
 {
     private int _minArity;
     private int _maxArity;
