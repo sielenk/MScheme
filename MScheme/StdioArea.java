@@ -258,14 +258,23 @@ public class StdioArea
 
     public void keyPressed (KeyEvent e)
     {
+        char c = e.getKeyChar();
+
         if (
-            (e.getKeyChar() == '\n')
-            && (getCaretPosition() >= _lineBufferStart())
+            (c != KeyEvent.CHAR_UNDEFINED)
+            &&
+            (
+                (getCaretPosition() < _lineBufferStart())
+                ||
+                (c == '\n')
+            )
         )
         {
             setCaretPosition(
                 _lineBufferEnd()
             );
+            
+            _update();
         }
     }
 
@@ -432,6 +441,11 @@ public class StdioArea
         return getSelectionStart() >= _lineBufferStart();
     }
 
+    private boolean _caretInLineBuffer()
+    {
+        return getCaretPosition() >= _lineBufferStart();
+    }
+
     /***** line buffer handling end *****/
     
     /***** action event handling begin *****/
@@ -497,18 +511,11 @@ public class StdioArea
         return getSelectedText();
     }
 
-    public void select(int a, int e)
-    {
-        System.err.print(" " + a + '-' + e);
-        super.select(a, e);
-    }
-
     private synchronized void _paste(String s)
     {
-        replaceRange(
+        insert(
             s,
-            getSelectionStart(),
-            getSelectionEnd()
+            getCaretPosition()
         );
     }
 
@@ -529,7 +536,11 @@ public class StdioArea
     public void cut()
     {
         copy();
-        _paste("");
+        replaceRange(
+            "",
+            getSelectionStart(),
+            getSelectionEnd()
+        );
         _update();
     }
 
@@ -553,7 +564,7 @@ public class StdioArea
     {
         return
             (_clipboard.length() > 0)
-            && _selectionInLineBuffer();
+            && _caretInLineBuffer();
     }
 
     /***** copy and paste support end *****/
@@ -565,12 +576,17 @@ public class StdioArea
 
     public synchronized void print(String text)
     {
+        int    delta             = getCaretPosition() - _lineBufferStart();
         String lineBufferContent = _lineBuffer();
         _clearLineBuffer();
         _disableLineBuffer();
         append(text);
         _enableLineBuffer();
         append(lineBufferContent);
+        if (delta >= 0)
+        {
+            setCaretPosition(_lineBufferStart() + delta);
+        }
         _update();
     }
 
