@@ -1,11 +1,16 @@
 package MScheme;
 
+
 import MScheme.expressions.*;
 import MScheme.expressions.functions.*;
+
 import MScheme.exceptions.SException;
+
 import MScheme.environment.Environment;
 import MScheme.environment.EnvironmentFactory;
+
 import MScheme.machine.Machine;
+
 
 public class Main
 {
