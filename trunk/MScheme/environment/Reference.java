@@ -9,7 +9,7 @@ import MScheme.values.Symbol;
 import MScheme.exceptions.RuntimeError;
 
 
-public class Reference
+public final class Reference
     extends Result
 {
     public final static String id
@@ -36,4 +36,8 @@ public class Reference
     protected Value getValue(Registers state)
         throws RuntimeError
     { return state.getEnvironment().lookup(this); }
+
+
+    public String toString()
+    { return _symbol.toString(); }
 }
