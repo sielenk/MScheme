@@ -7,11 +7,12 @@ import java.io.IOException;
 import MScheme.util.Arity;
 
 import MScheme.Value;
+import MScheme.Code;
+import MScheme.Syntax;
+import MScheme.Token;
+
 import MScheme.values.Symbol;
 import MScheme.values.List;
-
-import MScheme.Code;
-import MScheme.syntax.Syntax;
 
 import MScheme.exceptions.*;
 

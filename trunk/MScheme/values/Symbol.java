@@ -7,7 +7,7 @@ import MScheme.Value;
 import MScheme.Code;
 
 import MScheme.environment.StaticEnvironment;
-import MScheme.environment.Token;
+import MScheme.Token;
 
 import MScheme.exceptions.*;
 

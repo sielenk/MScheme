@@ -2,6 +2,7 @@ package MScheme.syntax;
 
 import MScheme.Value;
 import MScheme.Code;
+import MScheme.Syntax;
 
 import MScheme.util.Arity;
 import MScheme.machine.Machine;

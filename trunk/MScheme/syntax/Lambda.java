@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import MScheme.Value;
 import MScheme.Code;
+import MScheme.Syntax;
 
 import MScheme.util.Arity;
 import MScheme.machine.Machine;

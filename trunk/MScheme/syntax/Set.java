@@ -1,6 +1,7 @@
 package MScheme.syntax;
 
 import MScheme.Code;
+import MScheme.Syntax;
 
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Reference;
