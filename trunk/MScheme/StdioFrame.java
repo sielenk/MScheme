@@ -28,14 +28,19 @@ import java.awt.TextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import java.awt.event.WindowListener;
+import java.awt.event.WindowEvent;
+
 import java.io.Reader;
 import java.io.Writer;
 import java.io.IOException;
 
+import MScheme.machine.Machine;
+
 
 public class StdioFrame
     extends Frame
-    implements ActionListener
+    implements ActionListener, WindowListener, Runnable
 {
     public final static String id
         = "$Id$";
@@ -69,21 +74,74 @@ public class StdioFrame
         else if (arg.equals(_stdio.getActionCommand()))
         {
             _pasteB.setEnabled(_stdio.canPaste());
-
-            boolean readEnable = _stdio.canCopyCut();
-
-            _copyB.setEnabled(readEnable);
-             _cutB.setEnabled(readEnable);
+             _copyB.setEnabled(_stdio.canCopy ());
+              _cutB.setEnabled(_stdio.canCut  ());
         }
+        
+        _stdio.requestFocus();
     }
 
     /***** interface ActionListener end *****/
 
-    /***** applet initialisation function begin *****/
+    /***** interface Runnable begin *****/
+
+    public void run()
+    {
+        new Machine(
+            _stdio.stdin (),
+            _stdio.stdout()
+        ).run();
+        dispose();
+    }
+
+    /***** interface Runnable end *****/
+
+    /***** interface WindowListener begin *****/
+
+    private final Thread runner = new Thread(this);
+
+    public void start()
+    {
+        if (!runner.isAlive())
+        {
+            runner.start();
+        }
+    }
+
+    public void windowOpened(WindowEvent e)
+    {
+        runner.start();
+    }
+
+    public void windowClosing(WindowEvent e)
+    {
+        runner.stop();
+        dispose();
+    }
+
+    public void windowClosed(WindowEvent e)
+    { }
+
+    public void windowActivated(WindowEvent e)
+    { }
+
+    public void windowDeactivated(WindowEvent e)
+    { }
+
+    public void windowDeiconified(WindowEvent e)
+    { }
+
+    public void windowIconified(WindowEvent e)
+    { }
+
+    /***** interface WindowListener end *****/
+    
+    /***** frame initialisation function begin *****/
      
     public StdioFrame()
     {
-        super("StdioFrame");
+        super("MScheme");
+        setSize(600, 400);
 
         {
             Panel p = new Panel();
@@ -112,10 +170,9 @@ public class StdioFrame
             _stdio.addActionListener(this);
             add(_stdio);
         }
+
+        addWindowListener(this);
     }
 
-    /***** applet initialisation function end *****/
-
-    public Reader stdin () { return _stdio.stdin (); }
-    public Writer stdout() { return _stdio.stdout(); }
+    /***** frame initialisation function end *****/
 }
