@@ -19,30 +19,48 @@ public final class ScmVector
         = "$Id$";
 
 
-    private final static ScmVector _empty = new ScmVector(0, null);
+    private final static ScmVector _empty = new ScmVector(false, 0, null);
 
     private final Value[] _data;
     
-    private ScmVector(Value[] data)
-    { _data = data; }
-
-    private ScmVector(int size, Value fill)
+    private ScmVector(boolean isConst, Value[] data)
     {
+        super(isConst);
+        _data = data;
+
+        if (isConst) {
+            for (int i = 0; i < _data.length; ++i) {
+                _data[i] = _data[i].getConst();
+            }
+        }
+    }
+
+    private ScmVector(boolean isConst, int size, Value fill)
+    {
+        super(isConst);
         _data = new Value[size];
-        
-        for (int i = 0; i < _data.length; i++) {
+
+        if (isConst) {
+            fill = fill.getConst();
+        }
+
+        for (int i = 0; i < _data.length; ++i) {
             _data[i] = fill;
         }
     }
 
-    public static ScmVector create(Value[] data)
-    { return new ScmVector(data); }
 
-    public static ScmVector create(int size)
-    { return create(size, null); }
+    public static ScmVector create()
+    { return _empty; }
+
+    public static ScmVector create(Value[] data)
+    { return new ScmVector(false, data); }
+
+    public static ScmVector createConst(Value[] data)
+    { return new ScmVector(true, data); }
 
     public static ScmVector create(int size, Value fill)
-    { return (size == 0) ? _empty : new ScmVector(size, fill); }
+    { return (size == 0) ? _empty : new ScmVector(false, size, fill); }
 
     public static ScmVector create(List list)
         throws ListExpected
@@ -52,7 +70,7 @@ public final class ScmVector
         throws ListExpected
     {
         if (list.isEmpty()) {
-            return create(index);
+            return create(index, null);
         } else {
             ScmVector result = createHelper(
                 list.getTail(),
@@ -74,13 +92,7 @@ public final class ScmVector
         throws VectorException
     {
         try {
-            Value result = _data[index];
-
-            if (result == null) {
-                throw new UninitializedVectorException(this, index);
-            }
-
-            return result;
+            return _data[index];
         }
         catch (ArrayIndexOutOfBoundsException e) {
             throw new InvalidVectorIndexException(this, index);
@@ -109,6 +121,8 @@ public final class ScmVector
     public ScmVector toScmVector()
     { return this; }
 
+    public Value getConst()
+    { return isConst() ? this : createConst(_data); }
 
     public boolean equal(Value other)
     {
@@ -164,7 +178,7 @@ public final class ScmVector
     {
         List result = Empty.create();
         for (int i = getLength() - 1; i >= 0; i--) {
-            result = ValueFactory.prepend(_data[i], result);
+            result = List.prepend(_data[i], result);
         }
         return result;
     }
