@@ -84,11 +84,6 @@ final class CodeListPair
         
         return result;        
     }
-
-
-    public Code executionStep(Machine machine)
-        throws SchemeException
-    { return machine.handleApplication(this); }
 }
 
 
@@ -116,9 +111,4 @@ final class CodeListEmpty
     
     public CodeList getReversed()
     { return this; }
-
-
-    public Code executionStep(Machine machine)
-    { throw new RuntimeException("can't execute the empty list"); }
 }
-
