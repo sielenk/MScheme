@@ -21,6 +21,7 @@ final class QuasiquoteToken
     
     protected Code checkedTranslate(
         StaticEnvironment syntax,
+	    int               len,
         List              arguments
     ) throws CompileError, TypeError
     { return qqExpand(arguments.getHead(), 0).getCode(syntax); }

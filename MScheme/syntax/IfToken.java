@@ -26,13 +26,14 @@ final class IfToken
 
     protected Code checkedTranslate(
         StaticEnvironment syntax,
+	    int               len,
         List              arguments
     ) throws CompileError, TypeError
     {
         Value flag    = arguments.getHead();
         Value onTrue  = arguments.getTail().getHead();
         Value onFalse =
-            (arguments.safeGetLength() == 2)
+            (len == 2)
             ? ScmBoolean.createFalse()
             : arguments.getTail().getTail().getHead();
 

@@ -26,6 +26,7 @@ final class LambdaToken
 
     protected Code checkedTranslate(
         StaticEnvironment environment,
+	    int               len,
         List              arguments
     ) throws CompileError, TypeError
     {

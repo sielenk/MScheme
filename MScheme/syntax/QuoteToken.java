@@ -21,6 +21,7 @@ final class QuoteToken
     
     protected Code checkedTranslate(
         StaticEnvironment syntax,
+	    int               len,
         List              arguments
     ) throws TypeError
     {

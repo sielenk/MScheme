@@ -21,9 +21,14 @@ public abstract class Syntax
     
     protected Syntax(Arity arity)
     { _arity = arity; }
-    
+
+    protected void arityError(List arguments)
+        throws SyntaxArityError
+	{ throw new SyntaxArityError(arguments, _arity); }
+
     protected abstract Code checkedTranslate(
         StaticEnvironment syntax,
+	    int               len,
         List              arguments
     ) throws CompileError, TypeError;
     
@@ -32,10 +37,12 @@ public abstract class Syntax
         List              arguments
     ) throws CompileError, TypeError
     {
-        if (!_arity.isValid(arguments.safeGetLength())) {
-            throw new SyntaxArityError(arguments, _arity);
+        int len = arguments.safeGetLength();
+	
+        if (!_arity.isValid(len)) {
+            arityError(arguments);
         }
 
-        return checkedTranslate(syntax, arguments);
+        return checkedTranslate(syntax, len, arguments);
     }
 }
