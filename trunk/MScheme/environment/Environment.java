@@ -290,7 +290,7 @@ public final class Environment
     // *** code access (compiletime) ***
 
     public Reference define(Symbol key, Value value)
-    throws CompileError
+        throws CompileError
     {
         Reference newReference = _bindings.define(key);
         assign(newReference, value);
@@ -341,13 +341,16 @@ public final class Environment
     }
 
     public Value lookup(Reference ref)
-        throws UninitializedSymbolException
+        throws RuntimeError
     {
         Value result = lookupNoThrow(ref);
 
         if (result == null)
         {
-            throw new UninitializedSymbolException(ref.getSymbol());
+            throw new RuntimeError(
+                ref.getSymbol(),
+                "uninitialized variable"
+            );
         }
 
         return result;
@@ -355,8 +358,8 @@ public final class Environment
 
     public Value lookup(Symbol key)
         throws SymbolNotFoundException,
-                UnexpectedSyntax,
-                UninitializedSymbolException
+               UnexpectedSyntax,
+               RuntimeError
     {
         return lookup(_bindings.getReferenceFor(key));
     }
