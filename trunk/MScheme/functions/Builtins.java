@@ -11,8 +11,8 @@ import MScheme.exceptions.*;
 final class Adder
     extends Reducer
 {
-    protected Value initial()
-    { return ValueFactory.createNumber(0); }
+    Adder()
+    { super(SchemeNumber.create(0)); }
 
     protected Value combine(Value fst, Value snd)
         throws NumberExpected
@@ -22,13 +22,8 @@ final class Adder
 final class Suber
     extends Reducer
 {
-    private final SchemeNumber _first;
-
     Suber(SchemeNumber first)
-    { _first = first; }
-
-    protected Value initial()
-    { return _first; }
+    { super(first); }
 
     protected Value combine(Value fst, Value snd)
         throws NumberExpected
@@ -38,8 +33,8 @@ final class Suber
 final class Multiplier
     extends Reducer
 {
-    protected Value initial()
-    { return ValueFactory.createNumber(1); }
+    Multiplier()
+    { super(SchemeNumber.create(1)); }
 
     protected Value combine(Value fst, Value snd)
         throws NumberExpected

@@ -9,8 +9,10 @@ import MScheme.exceptions.TypeError;
 
 abstract class Reducer
 {
-    protected abstract Value initial()
-        throws RuntimeError, TypeError;
+    private final Value _initial;
+
+    protected Reducer(Value initial)
+    { _initial = initial; }
 
     protected abstract Value combine(Value fst, Value snd)
         throws RuntimeError, TypeError;
@@ -20,7 +22,7 @@ abstract class Reducer
         throws RuntimeError, TypeError
     {
         if (list.isEmpty()) {
-            return initial();
+            return _initial;
         } else {
             Value result = list.getHead();
             List  tail   = list.getTail();
@@ -37,7 +39,7 @@ abstract class Reducer
     public final Value foldLeft(List list)
         throws RuntimeError, TypeError
     {
-        Value result = initial();
+        Value result = _initial;
         List  tail   = list;
 
         while (!tail.isEmpty()) {
@@ -67,7 +69,7 @@ abstract class Reducer
         throws RuntimeError, TypeError
     {
        if (list.isEmpty()) {
-            return initial();
+            return _initial;
         } else {
             return reduceRightHelper(list);
         }
@@ -77,7 +79,7 @@ abstract class Reducer
         throws RuntimeError, TypeError
     {
         if (list.isEmpty()) {
-            return initial();
+            return _initial;
         } else {
             return combine(
                 list.getHead(),
