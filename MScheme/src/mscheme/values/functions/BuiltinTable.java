@@ -47,38 +47,38 @@ class BuiltinRaw
         case 2: // list
             return Builtins.list(args);
 
-        case 6: // vector
-            return Builtins.vector(args);
-
-        case 19: // <
+        case 16: // <
             return Builtins._3C(args);
 
-        case 20: // <=
+        case 17: // <=
             return Builtins._3C_3D(args);
 
-        case 21: // =
+        case 18: // =
             return Builtins._3D(args);
 
-        case 22: // >=
+        case 19: // >=
             return Builtins._3E_3D(args);
 
-        case 23: // >
+        case 20: // >
             return Builtins._3E(args);
 
-        case 25: // +
+        case 22: // +
             return Builtins._2B(args);
 
-        case 26: // -
+        case 23: // -
             return Builtins._2D(args);
 
-        case 27: // *
+        case 24: // *
             return Builtins._2A(args);
 
-        case 28: // /
+        case 25: // /
             return Builtins._2F(args);
 
-        case 55: // string-append
+        case 53: // string-append
             return Builtins.string_2Dappend(args);
+
+        case 61: // vector
+            return Builtins.vector(args);
 
         default:
             throw new RuntimeException("unexpected Id");
@@ -171,142 +171,142 @@ class BuiltinUnary
         case 5: // read
             return Builtins.read(fst);
 
-        case 8: // not
-            return Builtins.not(fst);
-
-        case 12: // number?
+        case 9: // number?
             return Builtins.number_3F(fst);
 
-        case 13: // complex?
+        case 10: // complex?
             return Builtins.complex_3F(fst);
 
-        case 14: // real?
+        case 11: // real?
             return Builtins.real_3F(fst);
 
-        case 15: // rational?
+        case 12: // rational?
             return Builtins.rational_3F(fst);
 
-        case 16: // integer?
+        case 13: // integer?
             return Builtins.integer_3F(fst);
 
-        case 17: // exact?
+        case 14: // exact?
             return Builtins.exact_3F(fst);
 
-        case 18: // inexact?
+        case 15: // inexact?
             return Builtins.inexact_3F(fst);
 
-        case 24: // zero?
+        case 21: // zero?
             return Builtins.zero_3F(fst);
 
-        case 29: // boolean?
+        case 26: // not
+            return Builtins.not(fst);
+
+        case 27: // boolean?
             return Builtins.boolean_3F(fst);
 
-        case 30: // pair?
+        case 28: // pair?
             return Builtins.pair_3F(fst);
 
-        case 31: // car
+        case 29: // car
             return Builtins.car(fst);
 
-        case 32: // cdr
+        case 30: // cdr
             return Builtins.cdr(fst);
 
-        case 35: // null?
+        case 33: // null?
             return Builtins.null_3F(fst);
 
-        case 36: // list?
+        case 34: // list?
             return Builtins.list_3F(fst);
 
-        case 37: // symbol?
+        case 35: // symbol?
             return Builtins.symbol_3F(fst);
 
-        case 38: // symbol->string
+        case 36: // symbol->string
             return Builtins.symbol_2D_3Estring(fst);
 
-        case 39: // string->symbol
+        case 37: // string->symbol
             return Builtins.string_2D_3Esymbol(fst);
 
-        case 40: // char?
+        case 38: // char?
             return Builtins.char_3F(fst);
 
-        case 46: // char->integer
+        case 44: // char->integer
             return Builtins.char_2D_3Einteger(fst);
 
-        case 47: // integer->char
+        case 45: // integer->char
             return Builtins.integer_2D_3Echar(fst);
 
-        case 48: // char-upcase
+        case 46: // char-upcase
             return Builtins.char_2Dupcase(fst);
 
-        case 49: // char-downcase
+        case 47: // char-downcase
             return Builtins.char_2Ddowncase(fst);
 
-        case 50: // string?
+        case 48: // string?
             return Builtins.string_3F(fst);
 
-        case 52: // string-length
+        case 50: // string-length
             return Builtins.string_2Dlength(fst);
 
-        case 56: // string-copy
+        case 54: // string-copy
             return Builtins.string_2Dcopy(fst);
 
-        case 57: // string->list
+        case 55: // string->list
             return Builtins.string_2D_3Elist(fst);
 
-        case 58: // list->string
+        case 56: // list->string
             return Builtins.list_2D_3Estring(fst);
 
-        case 59: // vector?
+        case 57: // vector?
             return Builtins.vector_3F(fst);
 
-        case 61: // vector-length
+        case 59: // vector-length
             return Builtins.vector_2Dlength(fst);
 
-        case 64: // vector->list
+        case 63: // vector->list
             return Builtins.vector_2D_3Elist(fst);
 
-        case 65: // list->vector
+        case 64: // list->vector
             return Builtins.list_2D_3Evector(fst);
 
-        case 66: // procedure?
+        case 65: // procedure?
             return Builtins.procedure_3F(fst);
 
-        case 67: // scheme-report-environment
+        case 66: // scheme-report-environment
             return Builtins.scheme_2Dreport_2Denvironment(fst);
 
-        case 68: // null-environment
+        case 67: // null-environment
             return Builtins.null_2Denvironment(fst);
 
-        case 69: // port?
+        case 68: // port?
             return Builtins.port_3F(fst);
 
-        case 70: // input-port?
+        case 69: // input-port?
             return Builtins.input_2Dport_3F(fst);
 
-        case 71: // output-port?
+        case 70: // output-port?
             return Builtins.output_2Dport_3F(fst);
 
-        case 72: // open-input-file
+        case 71: // open-input-file
             return Builtins.open_2Dinput_2Dfile(fst);
 
-        case 73: // open-output-file
+        case 72: // open-output-file
             return Builtins.open_2Doutput_2Dfile(fst);
 
-        case 74: // close-input-port
+        case 73: // close-input-port
             return Builtins.close_2Dinput_2Dport(fst);
 
-        case 75: // close-output-port
+        case 74: // close-output-port
             return Builtins.close_2Doutput_2Dport(fst);
 
-        case 76: // read-char
+        case 75: // read-char
             return Builtins.read_2Dchar(fst);
 
-        case 77: // peek-char
+        case 76: // peek-char
             return Builtins.peek_2Dchar(fst);
 
-        case 78: // eof-object?
+        case 77: // eof-object?
             return Builtins.eof_2Dobject_3F(fst);
 
-        case 79: // char-ready?
+        case 78: // char-ready?
             return Builtins.char_2Dready_3F(fst);
 
         case 82: // open-input-string
@@ -354,50 +354,50 @@ class BuiltinBinary
         case 4: // cons
             return Builtins.cons(fst, snd);
 
-        case 7: // display
-            return Builtins.display(fst, snd);
-
-        case 9: // eq?
+        case 6: // eq?
             return Builtins.eq_3F(fst, snd);
 
-        case 10: // eqv?
+        case 7: // eqv?
             return Builtins.eqv_3F(fst, snd);
 
-        case 11: // equal?
+        case 8: // equal?
             return Builtins.equal_3F(fst, snd);
 
-        case 33: // set-car!
+        case 31: // set-car!
             return Builtins.set_2Dcar_21(fst, snd);
 
-        case 34: // set-cdr!
+        case 32: // set-cdr!
             return Builtins.set_2Dcdr_21(fst, snd);
 
-        case 41: // char<?
+        case 39: // char<?
             return Builtins.char_3C_3F(fst, snd);
 
-        case 42: // char<=?
+        case 40: // char<=?
             return Builtins.char_3C_3D_3F(fst, snd);
 
-        case 43: // char=?
+        case 41: // char=?
             return Builtins.char_3D_3F(fst, snd);
 
-        case 44: // char>=?
+        case 42: // char>=?
             return Builtins.char_3E_3D_3F(fst, snd);
 
-        case 45: // char>?
+        case 43: // char>?
             return Builtins.char_3E_3F(fst, snd);
 
-        case 51: // make-string
+        case 49: // make-string
             return Builtins.make_2Dstring(fst, snd);
 
-        case 53: // string-ref
+        case 51: // string-ref
             return Builtins.string_2Dref(fst, snd);
 
-        case 60: // make-vector
+        case 58: // make-vector
             return Builtins.make_2Dvector(fst, snd);
 
-        case 62: // vector-ref
+        case 60: // vector-ref
             return Builtins.vector_2Dref(fst, snd);
+
+        case 79: // display
+            return Builtins.display(fst, snd);
 
         case 80: // write-char
             return Builtins.write_2Dchar(fst, snd);
@@ -438,10 +438,10 @@ class BuiltinTernary
         throws SchemeException
     {
         switch(_id) {
-        case 54: // string-set!
+        case 52: // string-set!
             return Builtins.string_2Dset_21(fst, snd, trd);
 
-        case 63: // vector-set!
+        case 62: // vector-set!
             return Builtins.vector_2Dset_21(fst, snd, trd);
 
         default:
@@ -496,80 +496,80 @@ public interface BuiltinTable
         new BuiltinUnary(3, "reverse"),
         new BuiltinBinary(4, "cons"),
         new BuiltinUnary(5, "read"),
-        new BuiltinRaw(6, "vector"),
-        new BuiltinBinary(7, "display"),
-        new BuiltinUnary(8, "not"),
-        new BuiltinBinary(9, "eq?"),
-        new BuiltinBinary(10, "eqv?"),
-        new BuiltinBinary(11, "equal?"),
-        new BuiltinUnary(12, "number?"),
-        new BuiltinUnary(13, "complex?"),
-        new BuiltinUnary(14, "real?"),
-        new BuiltinUnary(15, "rational?"),
-        new BuiltinUnary(16, "integer?"),
-        new BuiltinUnary(17, "exact?"),
-        new BuiltinUnary(18, "inexact?"),
-        new BuiltinRaw(19, "<"),
-        new BuiltinRaw(20, "<="),
-        new BuiltinRaw(21, "="),
-        new BuiltinRaw(22, ">="),
-        new BuiltinRaw(23, ">"),
-        new BuiltinUnary(24, "zero?"),
-        new BuiltinRaw(25, "+"),
-        new BuiltinRaw(26, "-"),
-        new BuiltinRaw(27, "*"),
-        new BuiltinRaw(28, "/"),
-        new BuiltinUnary(29, "boolean?"),
-        new BuiltinUnary(30, "pair?"),
-        new BuiltinUnary(31, "car"),
-        new BuiltinUnary(32, "cdr"),
-        new BuiltinBinary(33, "set-car!"),
-        new BuiltinBinary(34, "set-cdr!"),
-        new BuiltinUnary(35, "null?"),
-        new BuiltinUnary(36, "list?"),
-        new BuiltinUnary(37, "symbol?"),
-        new BuiltinUnary(38, "symbol->string"),
-        new BuiltinUnary(39, "string->symbol"),
-        new BuiltinUnary(40, "char?"),
-        new BuiltinBinary(41, "char<?"),
-        new BuiltinBinary(42, "char<=?"),
-        new BuiltinBinary(43, "char=?"),
-        new BuiltinBinary(44, "char>=?"),
-        new BuiltinBinary(45, "char>?"),
-        new BuiltinUnary(46, "char->integer"),
-        new BuiltinUnary(47, "integer->char"),
-        new BuiltinUnary(48, "char-upcase"),
-        new BuiltinUnary(49, "char-downcase"),
-        new BuiltinUnary(50, "string?"),
-        new BuiltinBinary(51, "make-string"),
-        new BuiltinUnary(52, "string-length"),
-        new BuiltinBinary(53, "string-ref"),
-        new BuiltinTernary(54, "string-set!"),
-        new BuiltinRaw(55, "string-append"),
-        new BuiltinUnary(56, "string-copy"),
-        new BuiltinUnary(57, "string->list"),
-        new BuiltinUnary(58, "list->string"),
-        new BuiltinUnary(59, "vector?"),
-        new BuiltinBinary(60, "make-vector"),
-        new BuiltinUnary(61, "vector-length"),
-        new BuiltinBinary(62, "vector-ref"),
-        new BuiltinTernary(63, "vector-set!"),
-        new BuiltinUnary(64, "vector->list"),
-        new BuiltinUnary(65, "list->vector"),
-        new BuiltinUnary(66, "procedure?"),
-        new BuiltinUnary(67, "scheme-report-environment"),
-        new BuiltinUnary(68, "null-environment"),
-        new BuiltinUnary(69, "port?"),
-        new BuiltinUnary(70, "input-port?"),
-        new BuiltinUnary(71, "output-port?"),
-        new BuiltinUnary(72, "open-input-file"),
-        new BuiltinUnary(73, "open-output-file"),
-        new BuiltinUnary(74, "close-input-port"),
-        new BuiltinUnary(75, "close-output-port"),
-        new BuiltinUnary(76, "read-char"),
-        new BuiltinUnary(77, "peek-char"),
-        new BuiltinUnary(78, "eof-object?"),
-        new BuiltinUnary(79, "char-ready?"),
+        new BuiltinBinary(6, "eq?"),
+        new BuiltinBinary(7, "eqv?"),
+        new BuiltinBinary(8, "equal?"),
+        new BuiltinUnary(9, "number?"),
+        new BuiltinUnary(10, "complex?"),
+        new BuiltinUnary(11, "real?"),
+        new BuiltinUnary(12, "rational?"),
+        new BuiltinUnary(13, "integer?"),
+        new BuiltinUnary(14, "exact?"),
+        new BuiltinUnary(15, "inexact?"),
+        new BuiltinRaw(16, "<"),
+        new BuiltinRaw(17, "<="),
+        new BuiltinRaw(18, "="),
+        new BuiltinRaw(19, ">="),
+        new BuiltinRaw(20, ">"),
+        new BuiltinUnary(21, "zero?"),
+        new BuiltinRaw(22, "+"),
+        new BuiltinRaw(23, "-"),
+        new BuiltinRaw(24, "*"),
+        new BuiltinRaw(25, "/"),
+        new BuiltinUnary(26, "not"),
+        new BuiltinUnary(27, "boolean?"),
+        new BuiltinUnary(28, "pair?"),
+        new BuiltinUnary(29, "car"),
+        new BuiltinUnary(30, "cdr"),
+        new BuiltinBinary(31, "set-car!"),
+        new BuiltinBinary(32, "set-cdr!"),
+        new BuiltinUnary(33, "null?"),
+        new BuiltinUnary(34, "list?"),
+        new BuiltinUnary(35, "symbol?"),
+        new BuiltinUnary(36, "symbol->string"),
+        new BuiltinUnary(37, "string->symbol"),
+        new BuiltinUnary(38, "char?"),
+        new BuiltinBinary(39, "char<?"),
+        new BuiltinBinary(40, "char<=?"),
+        new BuiltinBinary(41, "char=?"),
+        new BuiltinBinary(42, "char>=?"),
+        new BuiltinBinary(43, "char>?"),
+        new BuiltinUnary(44, "char->integer"),
+        new BuiltinUnary(45, "integer->char"),
+        new BuiltinUnary(46, "char-upcase"),
+        new BuiltinUnary(47, "char-downcase"),
+        new BuiltinUnary(48, "string?"),
+        new BuiltinBinary(49, "make-string"),
+        new BuiltinUnary(50, "string-length"),
+        new BuiltinBinary(51, "string-ref"),
+        new BuiltinTernary(52, "string-set!"),
+        new BuiltinRaw(53, "string-append"),
+        new BuiltinUnary(54, "string-copy"),
+        new BuiltinUnary(55, "string->list"),
+        new BuiltinUnary(56, "list->string"),
+        new BuiltinUnary(57, "vector?"),
+        new BuiltinBinary(58, "make-vector"),
+        new BuiltinUnary(59, "vector-length"),
+        new BuiltinBinary(60, "vector-ref"),
+        new BuiltinRaw(61, "vector"),
+        new BuiltinTernary(62, "vector-set!"),
+        new BuiltinUnary(63, "vector->list"),
+        new BuiltinUnary(64, "list->vector"),
+        new BuiltinUnary(65, "procedure?"),
+        new BuiltinUnary(66, "scheme-report-environment"),
+        new BuiltinUnary(67, "null-environment"),
+        new BuiltinUnary(68, "port?"),
+        new BuiltinUnary(69, "input-port?"),
+        new BuiltinUnary(70, "output-port?"),
+        new BuiltinUnary(71, "open-input-file"),
+        new BuiltinUnary(72, "open-output-file"),
+        new BuiltinUnary(73, "close-input-port"),
+        new BuiltinUnary(74, "close-output-port"),
+        new BuiltinUnary(75, "read-char"),
+        new BuiltinUnary(76, "peek-char"),
+        new BuiltinUnary(77, "eof-object?"),
+        new BuiltinUnary(78, "char-ready?"),
+        new BuiltinBinary(79, "display"),
         new BuiltinBinary(80, "write-char"),
         new BuiltinThunks(81, "unique-id"),
         new BuiltinUnary(82, "open-input-string"),

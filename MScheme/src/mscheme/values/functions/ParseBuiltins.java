@@ -155,7 +155,7 @@ public class ParseBuiltins
                                        "fst, snd",
                                        "fst, snd, trd",
                                    };
-        final String   baseTypedArgs  = "List args";
+        final String   baseTypedArgs  = "IList args";
         final String[] arityTypedArgs = {
                                             "",
                                             "Object fst",
@@ -289,7 +289,7 @@ public class ParseBuiltins
         .append("    protected Arity getArity()\n")
         .append("    { return Arity.atLeast(0); }\n")
         .append("\n")
-        .append("    public Object call(Registers state, List args)\n")
+        .append("    public Object call(Registers state, IList args)\n")
         .append("        throws SchemeException\n")
         .append("    { return checkedCall(args); }\n")
         .append("}\n\n");
