@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import MScheme.util.Arity;
 import MScheme.machine.Machine;
+import MScheme.environment.Reference;
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.DynamicEnvironment;
 import MScheme.functions.CheckedFunction;
@@ -21,6 +22,7 @@ public final class CompiledLambda
     private final Arity             _arity;
     private final StaticEnvironment _compiledFormals;
     private final Code              _compiledBody;
+    private       Reference         _self = null;
     
     public CompiledLambda(
         Arity             arity,
@@ -47,6 +49,9 @@ public final class CompiledLambda
     ) throws CompileError, TypeError
     { this(arity, compiledFormals, body.getCodeList(compiledFormals)); }
 
+    public void setSelf(Reference self)
+    { _self = self; }
+
     final class Closure
         extends CheckedFunction
     {
@@ -68,13 +73,21 @@ public final class CompiledLambda
             List    arguments
         ) throws ListExpected
         {
-            machine.setEnvironment(
+	        DynamicEnvironment newEnvironment = 
                 _dynamicParent.newChild(
                     _compiledFormals,
                     getArity(),
                     arguments
-                )
-            );
+                );
+
+            machine.setEnvironment(newEnvironment);
+
+            if (_self != null) {
+	            newEnvironment.assign(
+		            _self,
+			        this
+		        );
+	        }
 
             return _compiledBody;
         }
