@@ -8,10 +8,10 @@ import MScheme.machine.Registers;
 
 
 final class SequenceContinuation
-    extends Continuation
+            extends Continuation
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final CodeList _todo;
@@ -20,7 +20,10 @@ final class SequenceContinuation
         Registers state,
         CodeList  todo
     )
-    { super(state); _todo = todo; }
+    {
+        super(state);
+        _todo = todo;
+    }
 
     static Code prepareNext(
         Registers state,
@@ -29,7 +32,8 @@ final class SequenceContinuation
     {
         CodeList tail = todo.getTail();
 
-        if (!tail.isEmpty()) {
+        if (!tail.isEmpty())
+        {
             new SequenceContinuation(state, tail);
         }
 
@@ -37,31 +41,52 @@ final class SequenceContinuation
     }
 
     protected Code execute(Registers state, Value value)
-    { return prepareNext(state, _todo); }
+    {
+        return prepareNext(state, _todo);
+    }
+
+
+    protected String debugString()
+    {
+        return "seqence[" + _todo + "]";
+    }
 }
 
 
 public final class Sequence
-    extends Code
+            extends Code
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final CodeList _sequence;
 
     private Sequence(CodeList sequence)
-    { _sequence = sequence; }
+    {
+        _sequence = sequence;
+    }
 
     public static Code create(CodeList sequence)
     {
-        if (sequence.getTail().isEmpty()) {
+        if (sequence.getTail().isEmpty())
+        {
             return sequence.getHead();
-        } else {
+        }
+        else
+        {
             return new Sequence(sequence);
         }
     }
 
     public Code executionStep(Registers state)
-    { return SequenceContinuation.prepareNext(state, _sequence); }
+    {
+        return SequenceContinuation.prepareNext(state, _sequence);
+    }
+
+
+    public String toString()
+    {
+        return "SEQ[" + _sequence.toString() + ']';
+    }
 }
