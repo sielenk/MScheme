@@ -14,21 +14,21 @@ public interface Environment
 {
     // *** Envrionment access ************************************************
 
-    public Environment     getParent   (              );
-    public Environment     newChild    (              );
-    public EnvironmentStub newChildStub(Values symbols)
+    Environment     getParent   (              );
+    Environment     newChild    (              );
+    EnvironmentStub newChildStub(Values symbols)
         throws SDuplicateSymbolException;
 
     // *** Envrionment access ************************************************
 
-    public boolean defined(SSymbol symbol);
+    boolean defined(SSymbol symbol);
 
-    public void    define (SSymbol symbol, SExpr value);
+    void    define (SSymbol symbol, SExpr value);
 
-    public void set(SSymbol symbol, SExpr value)
+    void set(SSymbol symbol, SExpr value)
         throws SSymbolNotFoundException;
 
-    public SExpr get(SSymbol symbol)
+    SExpr get(SSymbol symbol)
         throws SSymbolNotFoundException;
 
     // ***********************************************************************
