@@ -31,64 +31,6 @@ import MScheme.values.*;
 import MScheme.exceptions.*;
 
 
-final class Adder
-            extends Reducer
-{
-    public final static String id
-    = "$Id$";
-
-
-    Adder()
-    {
-        super(ScmNumber.create(0));
-    }
-
-    protected Value combine(Value fst, Value snd)
-    throws NumberExpected
-    {
-        return fst.toScmNumber().plus(snd.toScmNumber());
-    }
-}
-
-final class Suber
-            extends Reducer
-{
-    public final static String id
-    = "$Id$";
-
-
-    Suber(ScmNumber first)
-    {
-        super(first);
-    }
-
-    protected Value combine(Value fst, Value snd)
-    throws NumberExpected
-    {
-        return fst.toScmNumber().minus(snd.toScmNumber());
-    }
-}
-
-final class Multiplier
-            extends Reducer
-{
-    public final static String id
-    = "$Id$";
-
-
-    Multiplier()
-    {
-        super(ScmNumber.create(1));
-    }
-
-    protected Value combine(Value fst, Value snd)
-    throws NumberExpected
-    {
-        return fst.toScmNumber().times(snd.toScmNumber());
-    }
-}
-
-
 final class Order
 {
     public final static String id
@@ -265,48 +207,98 @@ public class Builtins
 
 
     public final static Value zero_3F(Value argument) // zero?
-    throws TypeError
+        throws TypeError
     {
         return ScmBoolean.create(argument.toScmNumber().getInteger() == 0);
     }
 
 
-    private final static Adder ADDER = new Adder();
-
     public final static Value _2B(List arguments) // +
-    throws RuntimeError, TypeError
+        throws RuntimeError, TypeError
     {
-        return ADDER.reduceLeft(arguments);
+        ScmNumber sum  = ScmNumber.create(0);
+        List      tail = arguments;
+            
+        while (!tail.isEmpty())
+        {
+            ScmNumber term     = tail.getHead().toScmNumber();
+            List      nextTail = tail.getTail();
+
+            sum  = sum.plus(term);
+            tail = nextTail;
+        }
+        return sum;
     }
 
-
-    private final static Arity AT_LEAST_1 = Arity.atLeast(1);
-
     public final static Value _2D(List arguments) // -
-    throws SchemeException
+        throws RuntimeError, TypeError
     {
-        int len = Function.checkArguments(AT_LEAST_1, arguments);
+        ScmNumber result = arguments.getHead().toScmNumber();
+        List      rest   = arguments.getTail();
 
-        ScmNumber first = arguments.getHead().toScmNumber();
-        if (len == 1)
+        if (!rest.isEmpty())
         {
-            return first.negated();
+            do
+            {
+                ScmNumber head = rest.getHead().toScmNumber();
+                List      tail = rest.getTail();
+
+                result = result.minus(head);
+                rest   = tail;
+            }
+            while (!rest.isEmpty());
+
+            return result;
         }
         else
         {
-            return new Suber(first).foldLeft(
-                       arguments.getTail()
-                   );
+            return result.negated();
         }
     }
 
-    private final static Multiplier MULTIPLITER = new Multiplier();
-
     public final static Value _2A(List arguments) // *
-    throws RuntimeError, TypeError
+        throws RuntimeError, TypeError
     {
-        return MULTIPLITER.reduceLeft(arguments);
+        ScmNumber product = ScmNumber.create(1);
+        List      tail    = arguments;
+
+        while (!tail.isEmpty())
+        {
+            ScmNumber factor   = tail.getHead().toScmNumber();
+            List      nextTail = tail.getTail();
+                
+            product = product.times(factor);
+            tail    = nextTail;
+        }
+        return product;
     }
+
+    public final static Value _2F(List arguments) // /
+        throws RuntimeError, TypeError
+    {
+        ScmNumber result = arguments.getHead().toScmNumber();
+        List      rest   = arguments.getTail();
+
+        if (!rest.isEmpty())
+        {
+            do
+            {
+                ScmNumber head = rest.getHead().toScmNumber();
+                List      tail = rest.getTail();
+
+                result = result.divide(head);
+                rest   = tail;
+            }
+            while (!rest.isEmpty());
+
+            return result;
+        }
+        else
+        {
+            return result.reciprocal();
+        }
+    }
+
 
     // 6.3 Other data types
 
@@ -374,7 +366,10 @@ public class Builtins
 
     public final static Value list(List argument)
     {
-        return argument;
+        // Without first-class continuations, it would be save to
+        // omit the call to getCopy(). But multiple returns have to
+        // return different lists ...
+        return argument.getCopy();
     }
 
     public final static Value length(Value argument)
