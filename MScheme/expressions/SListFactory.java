@@ -13,7 +13,22 @@ public class SListFactory
     }
 
 
-    public void append(SExpr sexpr)
+    public SListFactory prepend(SExpr sexpr)
+    {
+        SPair pair = new SPair(sexpr, SEmpty.INSTANCE);
+
+        if (_first == null) {
+            _last = pair;
+        } else {
+            pair.setCdr(_first);
+        }
+        _first = pair;
+
+        return this;
+    }
+
+
+    public SListFactory append(SExpr sexpr)
     {
         SPair pair = new SPair(sexpr, SEmpty.INSTANCE);
 
@@ -23,6 +38,8 @@ public class SListFactory
             _last.setCdr(pair);
         }
         _last = pair;
+
+        return this;
     }
 
 
