@@ -142,8 +142,6 @@ public final class Machine
 
     private final Environment _environment;
 
-    private static boolean initializing = false;
-
     private InputPort  _stdin;
     private OutputPort _stdout;
 
@@ -154,6 +152,8 @@ public final class Machine
         _stdin       = InputPort .create(new InputStreamReader (System.in ));
         _stdout      = OutputPort.create(new OutputStreamWriter(System.out));
         init();
+        
+        // I would call this(...) but it kills gcj 3.0.2 ...
     }
 
     public Machine(
@@ -176,26 +176,9 @@ public final class Machine
         _stdout      = OutputPort.create(new OutputStreamWriter(System.out));
     }
 
-    public Machine(
-        Environment environment,
-        Reader      stdin,
-        Writer      stdout
-    )
-    {
-        _environment = environment;
-        _stdin       = InputPort .create(stdin );
-        _stdout      = OutputPort.create(stdout);
-    }
 
     private void init()
     {
-        if (initializing)
-        {
-            return;
-        }
-        
-        initializing = true;
-        
         try
         {
             _environment.define(
@@ -237,8 +220,6 @@ public final class Machine
                 e.toString()
             );
         }
-
-        initializing = false;
     }
 
     public Value unprotectedRun()
@@ -259,7 +240,11 @@ public final class Machine
             unprotectedRun();
         }
         catch (Throwable t)
-        { }
+        {
+            System.err.println(
+                t.toString()
+            );
+        }
     }
 
     public Environment getEnvironment()
