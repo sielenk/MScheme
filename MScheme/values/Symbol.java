@@ -29,6 +29,7 @@ import MScheme.Value;
 
 import MScheme.environment.StaticEnvironment;
 
+import MScheme.exceptions.SchemeException;
 import MScheme.exceptions.SymbolNotFoundException;
 import MScheme.exceptions.UnexpectedSyntax;
 
@@ -113,8 +114,15 @@ public final class Symbol
     }
 
     public Syntax getSyntax(StaticEnvironment env)
-        throws SymbolNotFoundException
+        throws SchemeException
     {
-        return env.getDelayedSyntaxFor(this);
+        Syntax result = env.getSyntaxFor(this);
+
+        if (result == null)
+        {
+            result = super.getSyntax(env);
+        }
+
+        return result;
     }
 }
