@@ -15,7 +15,7 @@ public abstract class TernaryValueFunction
         = "$Id$";
 
     protected final Code checkedCall(
-        Registers registers,
+        Registers state,
         Value     fst,
         Value     snd,
         Value     trd

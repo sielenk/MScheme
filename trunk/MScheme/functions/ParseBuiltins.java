@@ -233,7 +233,7 @@ public class ParseBuiltins
             .append("    public Arity getArity()\n")
             .append("    { return Arity.atLeast(0); }\n")
             .append("\n")
-            .append("    public Code call(Registers registers, List args)\n")
+            .append("    public Code call(Registers state, List args)\n")
             .append("        throws RuntimeError, TypeError\n")
             .append("    { return checkedCall(args).getLiteral(); }\n")
             .append("}\n\n");

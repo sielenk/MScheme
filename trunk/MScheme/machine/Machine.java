@@ -16,8 +16,8 @@ final class AbortContinuation
 
     private Value _result;
 
-    AbortContinuation(Registers registers)
-    { super(registers); _result = null; }
+    AbortContinuation(Registers state)
+    { super(state); _result = null; }
 
     Value getResult()
     { return _result; }
@@ -25,7 +25,7 @@ final class AbortContinuation
     boolean hasResult()
     { return _result != null; }
 
-    protected Code execute(Registers registers, Value evaluationResult)
+    protected Code execute(Registers state, Value evaluationResult)
     { _result = evaluationResult; return null; }
 }
 
@@ -51,12 +51,12 @@ public final class Machine
     public Value execute(Code program)
         throws RuntimeError, TypeError
     {
-        Code              nextInstruction = program;
-        Registers         registers       = new Registers(getEnvironment());
-        AbortContinuation abort           = new AbortContinuation(registers);
+        Code              next  = program;
+        Registers         state = new Registers(getEnvironment());
+        AbortContinuation abort = new AbortContinuation(state);
 
         while (!abort.hasResult()) {
-            nextInstruction = nextInstruction.executionStep(registers);
+            next = next.executionStep(state);
         }
 
         return abort.getResult();

@@ -35,9 +35,9 @@ public final class Selection
     )
     { return new Selection(test, onTrue, onFalse); }
 
-    public Code executionStep(Registers registers)
+    public Code executionStep(Registers state)
     {
-        new Continuation(registers) {
+        new Continuation(state) {
             public final static String id
                 = "$Id$";
 

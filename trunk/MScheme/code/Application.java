@@ -23,24 +23,24 @@ final class PushContinuation
 
 
     private PushContinuation(
-        Registers registers,
+        Registers state,
         List      done,
         CodeList  todo
     )
     {
-        super(registers);
+        super(state);
 	    _done = done;
 	    _todo = todo;
 	}
 
     static Code prepareNext(
-        Registers registers,
+        Registers state,
         List      done,
         CodeList  todo
     )
     {
         new PushContinuation(
-            registers,
+            state,
             done,
             todo.getTail()
         );
@@ -48,14 +48,14 @@ final class PushContinuation
         return todo.getHead();
     }
 
-    protected Code execute(Registers registers, Value value)
+    protected Code execute(Registers state, Value value)
         throws RuntimeError, TypeError
     {
         if (_todo.isEmpty()) {
-            return value.toFunction().call(registers, _done);
+            return value.toFunction().call(state, _done);
         } else {
             return prepareNext(
-                registers,
+                state,
                 ValueFactory.prepend(value, _done),
                 _todo
             );
@@ -78,10 +78,10 @@ public final class Application
     public static Code create(CodeList application)
     { return new Application(application); }
     
-    public Code executionStep(Registers registers)
+    public Code executionStep(Registers state)
     {
         return PushContinuation.prepareNext(
-            registers,
+            state,
             Empty.create(),
             _permutedApplication
         );

@@ -22,13 +22,13 @@ public abstract class Thunk
     { return _none; }
 
     protected final Code checkedCall(
-        Registers registers,
+        Registers state,
         int       len,
         List      arguments
     ) throws RuntimeError, TypeError
-    { return checkedCall(registers); }
+    { return checkedCall(state); }
 
     protected abstract Code checkedCall(
-        Registers registers
+        Registers state
     ) throws RuntimeError, TypeError;
 }

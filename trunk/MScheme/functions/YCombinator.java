@@ -31,11 +31,11 @@ class YWrappedFunction
     public Arity getArity()
     { return _arity; }
 
-    public Code call(Registers registers, List arguments)
+    public Code call(Registers state, List arguments)
         throws RuntimeError, TypeError
     {
         return _f.call(
-            registers,
+            state,
             ValueFactory.prepend(this, arguments)
         );
     }

@@ -23,7 +23,7 @@ public class DynamicWindFunction
 
 
     protected Code checkedCall(
-        Registers registers,
+        Registers state,
         Value     fst,
         Value     snd,
         Value     trd
@@ -33,7 +33,7 @@ public class DynamicWindFunction
         Code thunk  = createCall(snd);
         Code after  = createCall(trd);
 
-        return WindContinuation.create(registers, before, thunk, after);
+        return WindContinuation.create(state, before, thunk, after);
     }
     
     private static Code createCall(Value v)

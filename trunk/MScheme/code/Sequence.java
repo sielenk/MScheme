@@ -16,27 +16,27 @@ final class SequenceContinuation
     private final CodeList _todo;
 
     private SequenceContinuation(
-        Registers registers,
+        Registers state,
         CodeList  todo
     )
-    { super(registers); _todo = todo; }
+    { super(state); _todo = todo; }
 
     static Code prepareNext(
-        Registers registers,
+        Registers state,
         CodeList  todo
     )
     {
         CodeList tail = todo.getTail();
 
         if (!tail.isEmpty()) {
-            new SequenceContinuation(registers, tail);
+            new SequenceContinuation(state, tail);
         }
 
         return todo.getHead();
     }
 
-    protected Code execute(Registers registers, Value value)
-    { return prepareNext(registers, _todo); }
+    protected Code execute(Registers state, Value value)
+    { return prepareNext(state, _todo); }
 }
 
 
@@ -60,6 +60,6 @@ public final class Sequence
         }
     }
 
-    public Code executionStep(Registers registers)
-    { return SequenceContinuation.prepareNext(registers, _sequence); }
+    public Code executionStep(Registers state)
+    { return SequenceContinuation.prepareNext(state, _sequence); }
 }

@@ -15,7 +15,7 @@ public abstract class BinaryValueFunction
         = "$Id$";
 
     protected final Code checkedCall(
-        Registers registers,
+        Registers state,
         Value     fst,
         Value     snd
     ) throws RuntimeError, TypeError

@@ -74,7 +74,7 @@ public final class CompiledLambda
         { return _arity; }
 
         protected Code checkedCall(
-            Registers registers,
+            Registers state,
             int       length,
             List      arguments
         ) throws ListExpected
@@ -86,12 +86,12 @@ public final class CompiledLambda
                     arguments
                 );
 
-            registers.setEnvironment(newEnvironment);
+            state.setEnvironment(newEnvironment);
 
             return _compiledBody;
         }
     }
 
-    protected Value getValue(Registers registers)
-    { return new Closure(registers.getEnvironment()); }
+    protected Value getValue(Registers state)
+    { return new Closure(state.getEnvironment()); }
 }

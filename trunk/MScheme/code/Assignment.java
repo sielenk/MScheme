@@ -31,9 +31,9 @@ public final class Assignment
     )
     { return new Assignment(binding, valueCalculation); }
 
-    public Code executionStep(Registers registers)
+    public Code executionStep(Registers state)
     {
-        new Continuation(registers) {
+        new Continuation(state) {
             public final static String id
                 = "$Id$";
 

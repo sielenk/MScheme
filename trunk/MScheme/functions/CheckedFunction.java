@@ -17,7 +17,7 @@ public abstract class CheckedFunction
         = "$Id$";
 
     protected abstract Code checkedCall(
-        Registers registers,
+        Registers state,
         int       len,
         List      args
     ) throws RuntimeError, TypeError;
@@ -25,11 +25,11 @@ public abstract class CheckedFunction
 
     // partial implementation of Function
 
-    public final Code call(Registers registers, List arguments)
+    public final Code call(Registers state, List arguments)
         throws RuntimeError, TypeError
     {
         return checkedCall(
-            registers,
+            state,
             checkArguments(getArity(), arguments),
             arguments
         );

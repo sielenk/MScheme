@@ -19,7 +19,7 @@ import MScheme.functions.ValueThunk;
 import MScheme.exceptions.*;
 
 
-public class Environment
+public final class Environment
     extends Value
 {
     public final static String id
@@ -36,8 +36,8 @@ public class Environment
 
     // *******************************************************************
 
-    private StaticEnvironment _bindings;
-    private Vector[]          _data;
+    private final StaticEnvironment _bindings;
+    private final Vector[]          _data;
 
     // *******************************************************************
 
@@ -147,8 +147,8 @@ public class Environment
                     public final static String id
                         = "$Id$";
 
-                    protected Code checkedCall(Registers registers)
-                    { return registers.getEnvironment().getLiteral(); }
+                    protected Code checkedCall(Registers state)
+                    { return state.getEnvironment().getLiteral(); }
                 }
             );
 

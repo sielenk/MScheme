@@ -23,13 +23,13 @@ public abstract class TernaryFunction
     { return _ternary; }
 
     protected final Code checkedCall(
-        Registers registers,
+        Registers state,
         int       len,
         List      arguments
     ) throws RuntimeError, TypeError
     {
         return checkedCall(
-            registers,
+            state,
             arguments.getHead(),
             arguments.getTail().getHead(),
             arguments.getTail().getTail().getHead()
@@ -37,7 +37,7 @@ public abstract class TernaryFunction
     }
 
     protected abstract Code checkedCall(
-        Registers registers,
+        Registers state,
         Value fst,
         Value snd,
         Value trd

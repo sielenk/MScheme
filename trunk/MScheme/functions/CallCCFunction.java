@@ -9,7 +9,7 @@ import MScheme.values.List;
 import MScheme.exceptions.*;
 
 
-public class CallCCFunction
+public final class CallCCFunction
     extends UnaryFunction
 {
     public final static String id
@@ -20,13 +20,13 @@ public class CallCCFunction
     private CallCCFunction()
     { }
 
-    protected Code checkedCall(Registers registers, Value argument)
+    protected Code checkedCall(Registers state, Value argument)
         throws RuntimeError, TypeError
     {
         return argument.toFunction().call(
-            registers,
+            state,
             ValueFactory.createList(
-                registers.getCurrentContinuation()
+                state.getCurrentContinuation()
             )
         );
     }
