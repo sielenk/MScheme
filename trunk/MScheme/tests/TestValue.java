@@ -20,6 +20,9 @@ Boston, MA  02111-1307, USA. */
 
 package MScheme.tests;
 
+import java.io.StringReader;
+import java.io.StringWriter;
+
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Environment;
 
@@ -239,7 +242,7 @@ public class TestValue
     public void testOutputPort()
     throws Exception
     {
-        final Value port = OutputPort.create();
+        final Value port = OutputPort.create(new StringWriter());
 
         commonTests(port);
         assert(port.isPort());
@@ -249,7 +252,7 @@ public class TestValue
     public void testInputPort()
     throws Exception
     {
-        final Value port = InputPort.create();
+        final Value port = InputPort.create(new StringReader(""));
 
         commonTests(port);
         assert(port.isPort());
