@@ -113,11 +113,10 @@ final class Let
             );
         }
 
-        return ProcedureCall.create(
-            compiledProc
-        ).translate(
-            compilationEnv,
-            inits
-        );
+	Code[] compiledLet = inits.getCodeArray(compilationEnv, 1);
+
+        compiledLet[0] = compiledProc;
+
+        return Application.create(compiledLet);
     }
 }
