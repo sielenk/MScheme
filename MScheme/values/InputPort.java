@@ -9,6 +9,8 @@ import java.io.IOException;
 
 import MScheme.Value;
 
+import MScheme.machine.Machine;
+
 import MScheme.exceptions.OpenException;
 import MScheme.exceptions.ReadException;
 import MScheme.exceptions.ParseException;
@@ -88,7 +90,7 @@ public class InputPort
 
     public static InputPort create()
     {
-        return create(new InputStreamReader(System.in));
+        return create(Machine.stdin);
     }
 
 
