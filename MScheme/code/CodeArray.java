@@ -44,7 +44,7 @@ class CodeArray
     {
         StringBuffer buffer = new StringBuffer();
         
-        buffer.append("seqence:<");
+        buffer.append("<");
         for (int i = begin;;)
         {
             buffer.append(
