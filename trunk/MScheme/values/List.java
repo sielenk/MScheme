@@ -15,15 +15,15 @@ import MScheme.exceptions.*;
 /**
  */
 public abstract class List
-    extends Value
+    extends Compound
 {
     /** The CVS id of the file containing this class. */
     String id
         = "$Id$";
 
 
-    protected List()
-    { }
+    protected List(boolean isConst)
+    { super(isConst); }
 
 
     public static Pair prepend(Value head, List tail)
