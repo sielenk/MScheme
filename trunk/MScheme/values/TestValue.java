@@ -28,7 +28,7 @@ public class TestValue
         if (v.isPair    ()) count++;
         if (v.isSymbol  ()) count++;
         if (v.isNumber  ()) count++;
-        if (v.isChar    ()) count++;
+        if (v.isScmChar ()) count++;
         if (v.isString  ()) count++;
         if (v.isVector  ()) count++;
         if (v.isPort    ()) count++;
@@ -185,7 +185,7 @@ public class TestValue
         final Value character = ValueFactory.createChar('a');
     
         commonLiteralTests(character);
-        assert(character.isChar());
+        assert(character.isScmChar());
     }
     
     public void testString()

@@ -273,7 +273,7 @@ public class Builtins
     // 6.3.4 Characters
 
     public final static Value char_3F(Value argument) // char?
-    { return ScmBoolean.create(argument.isChar()); }
+    { return ScmBoolean.create(argument.isScmChar()); }
 
     public final static Value char_3C_3F(Value fst, Value snd) // char<?
         throws CharExpected
