@@ -1,9 +1,12 @@
 package MScheme.environment;
 
 import java.util.Hashtable;
+import java.io.Writer;
+import java.io.IOException;
 
 import MScheme.util.Arity;
 
+import MScheme.values.Value;
 import MScheme.values.Symbol;
 import MScheme.values.List;
 
@@ -14,7 +17,14 @@ import MScheme.exceptions.*;
 
 
 public class StaticEnvironment
+    extends Value
 {
+    // ***********************************************************************
+
+    public void write(Writer destination)
+        throws IOException
+    { destination.write("[environment]"); }
+
     // ***********************************************************************
 
     private StaticEnvironment _parent;
@@ -119,9 +129,12 @@ public class StaticEnvironment
     {
         String  key = symbol.getKey();
 
-        if (_bindings.get(key) != null) {
-            throw new AlreadyBound(symbol);
-        }
+        {
+            Object o = _bindings.get(key);
+            if ((o != null) && !(o instanceof Syntax)) {
+                throw new AlreadyBound(symbol);
+            }
+	    }
 
         _bindings.put(key, value);
     }
