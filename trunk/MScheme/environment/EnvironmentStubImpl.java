@@ -3,7 +3,7 @@ package MScheme.environment;
 
 import java.util.Vector;
 
-import MScheme.machine.Values;
+import MScheme.util.Values;
 
 
 class EnvironmentStubImpl

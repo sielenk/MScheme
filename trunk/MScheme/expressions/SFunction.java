@@ -3,7 +3,7 @@ package MScheme.expressions;
 
 import MScheme.exceptions.SException;
 
-import MScheme.machine.Values;
+import MScheme.util.Values;
 import MScheme.machine.Machine;
 
 import MScheme.environment.Environment;

@@ -11,7 +11,7 @@ import MScheme.exceptions.SException;
 import MScheme.exceptions.SExpectedListException;
 import MScheme.exceptions.SCantEvaluateException;
 
-import MScheme.machine.Values;
+import MScheme.util.Values;
 import MScheme.machine.Machine;
 
 import MScheme.environment.Environment;

@@ -1,9 +1,8 @@
-package MScheme.machine;
+package MScheme.util;
 
 
 import MScheme.expressions.SExpr;
 import MScheme.expressions.SList;
-import MScheme.expressions.SListFactory;
 
 
 public class Values
@@ -68,7 +67,7 @@ public class Values
 
     public SList toList()
     {
-        SListFactory fab = new SListFactory();
+        ListFactory fab = new ListFactory();
 
         for (int i = _first; i < _data.length; i++) {
             fab.append(

@@ -3,7 +3,7 @@ package MScheme.expressions.functions;
 
 import MScheme.expressions.SFunction;
 
-import MScheme.machine.Values;
+import MScheme.util.Values;
 import MScheme.machine.Machine;
 
 import MScheme.environment.Environment;

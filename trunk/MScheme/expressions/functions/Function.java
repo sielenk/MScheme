@@ -7,7 +7,7 @@ import MScheme.expressions.SFunction;
 import MScheme.exceptions.SException;
 import MScheme.exceptions.SWrongArgumentCountException;
 
-import MScheme.machine.Values;
+import MScheme.util.Values;
 import MScheme.machine.Machine;
 
 import MScheme.environment.Environment;

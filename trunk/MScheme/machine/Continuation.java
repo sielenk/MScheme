@@ -1,7 +1,7 @@
 package MScheme.machine;
 
 
-import MScheme.machine.Values;
+import MScheme.util.Values;
 import MScheme.exceptions.SException;
 import MScheme.environment.Environment;
 import MScheme.expressions.SFunction;
