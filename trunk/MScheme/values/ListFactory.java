@@ -6,8 +6,10 @@ import MScheme.Value;
 public abstract class ListFactory
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
+
+    // *** List creation ***
 
     public static List prepend(Value head, List tail)
     {
@@ -42,5 +44,18 @@ public abstract class ListFactory
     )
     {
         return prepend(first, create(second, third, fourth));
+    }
+
+
+    // *** Pair creation ***
+    
+    public static Pair createPair(Value fst, Value snd)
+    {
+        return PairOrList.create(fst, snd);
+    }
+ 
+    public static Pair createConstPair(Value fst, Value snd)
+    {
+        return PairOrList.createConst(fst, snd);
     }
 }

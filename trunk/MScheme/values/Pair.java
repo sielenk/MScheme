@@ -19,17 +19,6 @@ public abstract class Pair
         = "$Id$";
 
 
-    public static Pair create(Value first, Value second)
-    {
-        return PairOrList.create(first, second);
-    }
-
-    public static Pair createConst(Value first, Value second)
-    {
-        return PairOrList.createConst(first, second);
-    }
-
-
     // specialisation of ValueImplementation
 
     private final void put(Writer destination, boolean doDisplay)
