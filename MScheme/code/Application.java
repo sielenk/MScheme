@@ -14,10 +14,10 @@ import MScheme.exceptions.*;
 
 
 final class PushContinuation
-            extends Continuation
+    extends Continuation
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     private final List     _done;
@@ -51,7 +51,7 @@ final class PushContinuation
     }
 
     protected Code execute(Registers state, Value value)
-    throws SchemeException
+        throws SchemeException
     {
         if (_todo.isEmpty())
         {
@@ -76,10 +76,10 @@ final class PushContinuation
 
 
 public final class Application
-            extends Code
+    implements Code
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     private final CodeList _permutedApplication;

@@ -27,7 +27,7 @@ import MScheme.exceptions.SchemeException;
 
 
 public final class CompiledLambda
-            extends Result
+    extends Result
 {
     public final static String id
     = "$Id$";

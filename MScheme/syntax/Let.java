@@ -117,6 +117,11 @@ final class Let
                            );
         }
 
-        return compiledProc.translate(compilationEnv, inits);
+        return ProcedureCall.create(
+            compiledProc
+        ).translate(
+            compilationEnv,
+            inits
+        );
     }
 }

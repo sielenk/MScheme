@@ -11,6 +11,8 @@ import MScheme.Code;
 import MScheme.Syntax;
 import MScheme.Translator;
 
+import MScheme.syntax.ProcedureCall;
+
 import MScheme.values.ValueDefaultImplementations;
 import MScheme.values.List;
 import MScheme.values.Symbol;
@@ -114,13 +116,13 @@ public class StaticEnvironment
     }
 
     public StaticEnvironment newChild(List symbols)
-    throws CompileError, TypeError
+        throws CompileError, TypeError
     {
         return new StaticEnvironment(this, symbols);
     }
 
     public StaticEnvironment newChild(Symbol symbol)
-    throws CompileError
+        throws CompileError
     {
         return new StaticEnvironment(this, symbol);
     }
@@ -128,7 +130,7 @@ public class StaticEnvironment
     // *** instance access ***************************************************
 
     public Reference define(Symbol symbol)
-    throws AlreadyBound
+        throws AlreadyBound
     {
         try
         {
@@ -161,7 +163,7 @@ public class StaticEnvironment
 
 
     public void defineSyntax(Symbol symbol, Syntax value)
-    throws AlreadyBound
+        throws AlreadyBound
     {
         String  key = symbol.getJavaString();
 
@@ -177,7 +179,7 @@ public class StaticEnvironment
     }
 
 
-    private Translator safeGetTranslatorFor(Symbol key)
+    private Object lookupNoThrow(Symbol key)
     {
         for (
             StaticEnvironment current = this;
@@ -185,8 +187,7 @@ public class StaticEnvironment
             current = current._parent
         )
         {
-            Translator result
-            = (Translator)current._bindings.get(key.getJavaString());
+            Object result = current._bindings.get(key.getJavaString());
 
             if (result != null)
             {
@@ -197,27 +198,36 @@ public class StaticEnvironment
         return null;
     }
 
-    public Translator getTranslatorFor(Symbol key)
-    throws SymbolNotFoundException
+    private Object lookup(Symbol key)
+        throws SymbolNotFoundException
     {
-        Translator result = safeGetTranslatorFor(key);
+        Object result = lookupNoThrow(key);
 
-        if (result != null)
-        {
-            return result;
-        }
-        else
+        if (result == null)
         {
             throw new SymbolNotFoundException(key);
         }
+        
+        return result;
+    }
+
+    public Translator getTranslatorFor(Symbol key)
+        throws SymbolNotFoundException
+    {
+        Object result = lookup(key);
+
+        return 
+            (result instanceof Reference)
+            ? ProcedureCall.create((Reference)result)
+            : (Translator)result;
     }
 
     public Reference getReferenceFor(Symbol key)
-    throws SymbolNotFoundException, UnexpectedSyntax
+        throws SymbolNotFoundException, UnexpectedSyntax
     {
         try
         {
-            return (Reference)getTranslatorFor(key);
+            return (Reference)lookup(key);
         }
         catch (ClassCastException e)
         {
@@ -227,7 +237,7 @@ public class StaticEnvironment
 
     public boolean isBound(Symbol key)
     {
-        return safeGetTranslatorFor(key) != null;
+        return lookupNoThrow(key) != null;
     }
 
     // ***********************************************************************

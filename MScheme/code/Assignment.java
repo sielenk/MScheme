@@ -9,7 +9,7 @@ import MScheme.environment.Reference;
 
 
 public final class Assignment
-            extends Code
+    implements Code
 {
     public final static String id
     = "$Id$";

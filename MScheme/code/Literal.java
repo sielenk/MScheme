@@ -9,7 +9,7 @@ import MScheme.exceptions.TypeError;
 
 
 public final class Literal
-            extends Result
+    extends Result
 {
     public final static String id
     = "$Id$";
