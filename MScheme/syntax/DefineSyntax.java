@@ -15,39 +15,15 @@ import MScheme.values.List;
 import MScheme.values.Empty;
 import MScheme.values.Pair;
 import MScheme.values.Symbol;
+import MScheme.values.InputPort;
 import MScheme.functions.ApplyFunction;
-import MScheme.functions.ValueThunk;
 
 import MScheme.exceptions.*;
 
 
-final class CreateUnique
-    extends ValueThunk
-{
-    protected Value checkedCall()
-    { return Symbol.createUnique(); }
-}
-
 final class Macro
     extends Syntax
 {
-    final static DynamicEnvironment
-        env = DynamicEnvironment.getSchemeReportEnvironment();
-
-    {
-        try {
-            env.define(
-    	        Symbol.create("unique-id"),
-    		    new CreateUnique()
-    	    );
-	    }
-	    catch (CompileError e) {
-	        throw new RuntimeException(
-		        "unexpected CompileError"
-		    );
-	    }
-    }
-
     private final static Code
         _apply = ApplyFunction.INSTANCE.getLiteral();
 
@@ -70,7 +46,9 @@ final class Macro
         try {
 	        // (apply tranformer def_env use_env args)
 	
-            return new Machine(env).execute(
+            return new Machine(
+	            DynamicEnvironment.getImplementationEnvironment()
+	        ).execute(
 	            new Application(
 		            CodeList.prepend(
 			            _apply,
@@ -99,7 +77,7 @@ final class DefineSyntax
 
     private DefineSyntax()
     { super(Arity.exactly(2)); }
-	    
+
     protected Code checkedTranslate(
         StaticEnvironment syntax,
 	    int               len,
@@ -110,16 +88,19 @@ final class DefineSyntax
         Value  value  = arguments.getTail().getHead();
 
         try {
-	        Macro macro = new Macro(
-                new Machine(Macro.env)
+            Macro macro = new Macro(
+                new Machine(DynamicEnvironment.getImplementationEnvironment())
                     .evaluate(value)
-			        .toFunction()
+                    .toFunction()
 				    .getLiteral(),
 				syntax
 	        );
 
             syntax.defineSyntax(symbol, macro);
-	        Macro.env.getStatic().defineSyntax(symbol, macro);
+	        DynamicEnvironment
+		        .getImplementationEnvironment()
+			    .getStatic()
+			    .defineSyntax(symbol, macro);
 	    }
 	    catch (RuntimeError e) {
 	        throw new CompileError(e.getCause());

@@ -5,11 +5,14 @@ import java.io.IOException;
 import java.util.Vector;
 
 import MScheme.util.Arity;
+import MScheme.machine.Machine;
 import MScheme.values.*;
 import MScheme.code.Code;
 import MScheme.syntax.Syntax;
 import MScheme.syntax.SyntaxFactory;
 import MScheme.functions.BuiltinTable;
+import MScheme.functions.Thunk;
+import MScheme.functions.ValueThunk;
 import MScheme.exceptions.*;
 
 
@@ -101,8 +104,92 @@ public class DynamicEnvironment
     }
 
 
+    private static DynamicEnvironment
+        _implementationEnvironment = getSchemeReportEnvironment();
+
+    public static DynamicEnvironment getImplementationEnvironment()
+    { return _implementationEnvironment; }
+
+
+    private static Value   _nullEnvironmentHook         = null;
+    private static Value   _schemeReportEnvironmentHook = null;
+
+    private static void initHooks()
+    {
+        if (getImplementationEnvironment() == null) {
+	        return;
+		}
+		if (_nullEnvironmentHook != null) {
+		    return;
+		}
+
+        try {
+            getImplementationEnvironment().define(
+    	        Symbol.create("unique-id"),
+    		    new ValueThunk() {
+                    protected Value checkedCall()
+                    { return Symbol.createUnique(); }
+			    }
+        	);
+
+            getImplementationEnvironment().define(
+        	    Symbol.create("current-environment"),
+        	    new Thunk() {
+			        protected Code checkedCall(Machine machine)
+                    { return machine.getEnvironment().getLiteral(); }
+			    }
+        	);
+
+    		_nullEnvironmentHook =
+		        new Machine(getImplementationEnvironment()).evaluate(
+			        InputPort.create("bootstrap_null.scm").read()
+			    );
+
+			_schemeReportEnvironmentHook =
+		        new Machine(getImplementationEnvironment()).evaluate(
+			        InputPort.create("bootstrap_sre.scm").read()
+			    );
+    	}
+    	catch (SchemeException e) {
+    	    throw new RuntimeException(
+    	        "unexpected SchemeError:\n"
+    		    + e.toString()
+    		);
+    	}
+	}
+
+    private static void callHook(DynamicEnvironment env, Value hook)
+    {
+        if (hook != null) {
+            Value null_buffer = _nullEnvironmentHook;
+            Value  sre_buffer = _schemeReportEnvironmentHook;
+			
+	        try {
+		        synchronized (DynamicEnvironment.class) {
+                    _nullEnvironmentHook         = null;
+                    _schemeReportEnvironmentHook = null;
+
+        	        new Machine(env).evaluate(hook);
+			    }
+		    }
+		    catch (SchemeException e) {
+		        throw new RuntimeException(
+			        "nullEnvironmentHook caused an exception:\n"
+				    + e.toString()
+			    );
+		    }
+		    finally {
+                _nullEnvironmentHook         = null_buffer;
+                _schemeReportEnvironmentHook =  sre_buffer;
+		    }
+    	}
+    }
+    
     public static DynamicEnvironment getEmpty()
-    { return new DynamicEnvironment(); }
+    {
+        initHooks();
+        return new DynamicEnvironment();
+	}
 
     public static DynamicEnvironment getNullEnvironment()
     {
@@ -115,14 +202,6 @@ public class DynamicEnvironment
                 Symbol.create("quote"),
                 SyntaxFactory.getQuoteToken()
             );
-//            staticBindings.defineSyntax(
-//                Symbol.create("quasiquote"),
-//                SyntaxFactory.getQuasiquoteToken()
-//            );
-//            staticBindings.defineSyntax(
-//                Symbol.create("cond"),
-//                SyntaxFactory.getCondToken()
-//            );
             staticBindings.defineSyntax(
                 Symbol.create("if"),
                 SyntaxFactory.getIfToken()
@@ -166,6 +245,8 @@ public class DynamicEnvironment
             );
         }
 
+        callHook(result, _nullEnvironmentHook);
+
         return result;
     }
 
@@ -186,6 +267,8 @@ public class DynamicEnvironment
                 "unexpected CompileError"
             );
         }
+
+        callHook(result, _schemeReportEnvironmentHook);
 
         return result;
     }
