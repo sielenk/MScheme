@@ -116,6 +116,14 @@ public final class Environment
                 SyntaxFactory.getBeginToken()
             );
             staticBindings.defineSyntax(
+                Symbol.create("and"),
+                SyntaxFactory.getAndToken()
+            );
+            staticBindings.defineSyntax(
+                Symbol.create("or"),
+                SyntaxFactory.getOrToken()
+            );
+            staticBindings.defineSyntax(
                 Symbol.create("lambda"),
                 SyntaxFactory.getLambdaToken()
             );

@@ -23,6 +23,10 @@ package MScheme.code;
 import MScheme.Code;
 import MScheme.Value;
 
+import MScheme.values.ScmBoolean;
+
+import MScheme.syntax.SequenceTags;
+
 import MScheme.exceptions.SymbolNotFoundException;
 import MScheme.exceptions.UnexpectedSyntax;
 
@@ -31,22 +35,24 @@ import MScheme.machine.Registers;
 
 
 public final class Sequence
-    implements Code
+    implements Code, SequenceTags
 {
     public final static String id
         = "$Id$";
 
 
+    private final int    _tag;
     private final Code[] _sequence;
     private final int    _index;
 
-    private Sequence(Code[] sequence, int index)
+    private Sequence(int tag, Code[] sequence, int index)
     {
+        _tag      = tag;
         _sequence = sequence;
         _index    = index;
     }
 
-    private static Code create(Code[] sequence, int index)
+    private static Code create(int tag, Code[] sequence, int index)
     {
         if (index + 1 == sequence.length)
         {
@@ -58,13 +64,25 @@ public final class Sequence
         {
             // There are at least two elements to process 
             // in sequence -> create a new one.
-            return new Sequence(sequence, index);
+            return new Sequence(tag, sequence, index);
+        }
+    }
+
+    public static Code create(int tag, Code[] sequence)
+    {
+        if (sequence.length == 0)
+        {
+            return ScmBoolean.create(tag == TAG_AND);
+        }
+        else
+        {
+        	return create(tag, sequence, 0);
         }
     }
 
     public static Code create(Code[] sequence)
     {
-    	return create(sequence, 0);
+    	return create(TAG_BEGIN, sequence);
     }
 
     public Code executionStep(Registers state)
@@ -78,12 +96,45 @@ public final class Sequence
             {
                 // _index+1 will always be < sequence.length
                 // this is enforced by create(Code[], int)
-                return create(_sequence, _index + 1);
+                
+                return
+                    (
+                        (
+                            (_tag == TAG_AND)
+                            &&
+                            !value.isTrue()
+                        )
+                        ||
+                        (
+                            (_tag == TAG_OR)
+                            &&
+                            value.isTrue()
+                        )
+                    )
+                    ? value.getLiteral()
+                    : create(_tag, _sequence, _index + 1);
             }
 
             protected String debugString()
             {
-                return "seqence:" + CodeArray.printTuple(
+                String prefix = "error";
+
+                switch (_tag)
+                {
+                case TAG_BEGIN:
+                    prefix = "seqence";
+                    break;
+
+                case TAG_AND:
+                    prefix = "conjuction";
+                    break;
+
+                case TAG_OR:
+                    prefix = "disjuction";
+                    break;
+                }
+
+                return prefix + ":" + CodeArray.printTuple(
                     _sequence, 
                     _index + 1, 
                     _sequence.length
@@ -103,6 +154,22 @@ public final class Sequence
 
     public String toString()
     {
-        return "seq:<" + CodeArray.printTuple(_sequence) + '>';
+        String prefix = "error";
+
+        switch (_tag)
+        {
+        case TAG_BEGIN:
+            prefix = "seq";
+            break;
+
+        case TAG_AND:
+            prefix = "and";
+            break;
+
+        case TAG_OR:
+            prefix = "or";
+            break;
+        }
+        return prefix + ":<" + CodeArray.printTuple(_sequence) + '>';
     }
 }
