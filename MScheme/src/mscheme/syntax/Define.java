@@ -98,7 +98,7 @@ final class Define
             {
                 return Set.translate(
                     ref,
-					Compiler.getForceable(compilationEnv, value)
+					new Compiler(compilationEnv).getForceable(value)
                 );
             }
             finally

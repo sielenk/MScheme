@@ -245,8 +245,9 @@ public abstract class PairOrList
         IList list = validate();
 
         return
-			Compiler.getTranslator(
-				compilationEnv,
+			new Compiler(
+			    compilationEnv)
+			.getTranslator(
 				list.getHead())
             .translate(
                 compilationEnv,
@@ -425,7 +426,7 @@ public abstract class PairOrList
     public Object[] getCompiledArray(StaticEnvironment compilationEnv, int index)
         throws SchemeException
     {
-        Object   compiledHead = Compiler.getForceable(compilationEnv, getHead());
+        Object   compiledHead = new Compiler(compilationEnv).getForceable(getHead());
         Object[] result       = getTail().getCompiledArray(
                                     compilationEnv,
                                     index + 1);

@@ -24,6 +24,13 @@ import mscheme.values.ValueTraits;
  */
 public class Compiler
 {
+    private final StaticEnvironment _env;
+
+    public Compiler(StaticEnvironment env)
+    {
+        _env = env;
+    }
+
     public static Object force(Object o)
         throws CompileError
     {
@@ -33,8 +40,8 @@ public class Compiler
     		: o;
     }
 
-    public static Object getForceable(StaticEnvironment compilationEnv,
-        Object object) throws SchemeException
+    public Object getForceable(Object object)
+    throws SchemeException
     {
         if (ValueTraits.isScmVector(object))
         {
@@ -42,23 +49,23 @@ public class Compiler
         }
         else if (object instanceof ICompileable)
         {
-            return ((ICompileable)object).getForceable(compilationEnv);
+            return ((ICompileable)object).getForceable(_env);
         }
         else
         {
-            compilationEnv.setStateClosed();
+            _env.setStateClosed();
             return ValueTraits.getConst(object);
         }
     }
 
-    public static ITranslator getTranslator(StaticEnvironment compilationEnv,
-        Object object) throws SchemeException
+    public ITranslator getTranslator(Object object)
+    throws SchemeException
     {
         if (object instanceof Symbol)
         {
             Symbol symbol = (Symbol)object;
             
-            ITranslator result = compilationEnv.getSyntaxFor(symbol);
+            ITranslator result = _env.getSyntaxFor(symbol);
             
             if (result != null)
             {
@@ -69,13 +76,8 @@ public class Compiler
         return ProcedureCall.create(object);
     }
 
-    public static Object compile(
-        StaticEnvironment compilationEnv,
-        Object            compilee
-    ) throws SchemeException
+    public Object compile(Object compilee) throws SchemeException
     {
-        return
-        	force(
-            	getForceable(compilationEnv, compilee));
+        return force(getForceable(compilee));
     }
 }

@@ -354,10 +354,7 @@ public final class Machine
         Object compilee
     ) throws SchemeException
     {
-        return Compiler.compile(
-            getEnvironment().getStatic(),
-            compilee
-        );
+        return new Compiler(getEnvironment().getStatic()).compile(compilee);
     }
 
     public static Object parse(

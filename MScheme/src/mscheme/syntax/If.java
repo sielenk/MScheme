@@ -56,9 +56,11 @@ final class If
             ? (Object)Boolean.FALSE
             : arguments.getTail().getTail().getHead();
 
+        Compiler compiler = new Compiler(compilationEnv);
+
         return Selection.create(
-			Compiler.getForceable(compilationEnv, flag   ),
-			Compiler.getForceable(compilationEnv, onTrue ),
-			Compiler.getForceable(compilationEnv, onFalse));
+            compiler.getForceable(flag   ),
+            compiler.getForceable(onTrue ),
+            compiler.getForceable(onFalse));
     }
 }

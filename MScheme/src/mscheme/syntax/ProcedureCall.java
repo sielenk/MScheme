@@ -56,7 +56,7 @@ public final class ProcedureCall
 
         Object[] compiledList = arguments.getCompiledArray(compilationEnv, 1);
 
-        compiledList[0] = Compiler.getForceable(compilationEnv, _head);
+        compiledList[0] = new Compiler(compilationEnv).getForceable(_head);
 
         return Application.create(compiledList);
     }

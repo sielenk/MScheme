@@ -45,7 +45,7 @@ public final class EvalFunction
     throws SchemeException
     {
         Environment newEnv  = ValueTraits.toEnvironment(snd);
-        Object      newCode = Compiler.compile(newEnv.getStatic(), fst);
+        Object      newCode = new Compiler(newEnv.getStatic()).compile(fst);
 
         state.setEnvironment(newEnv.getDynamic());
         return newCode;

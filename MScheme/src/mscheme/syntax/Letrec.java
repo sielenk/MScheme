@@ -76,6 +76,8 @@ final class Letrec
         Object[] compiledLetrec
             = new Object[numberOfFormals + compiledBody.length];
 
+        Compiler compiler = new Compiler(bodyCompilationEnv);
+
         // prepend the initialisations to the body
         int index = 0;
         while (!formals.isEmpty())
@@ -86,7 +88,7 @@ final class Letrec
             compiledLetrec[index++]
                 = Set.translate(
                       bodyCompilationEnv.getReferenceFor(formal),
-					  Compiler.getForceable(bodyCompilationEnv, init)
+                      compiler.getForceable(init)
                   );
 
             formals = formals.getTail();
