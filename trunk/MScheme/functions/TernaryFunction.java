@@ -17,10 +17,9 @@ public abstract class TernaryFunction
     public final static String id
         = "$Id$";
 
-    private final static Arity _ternary = Arity.exactly(3);
 
-    public final Arity getArity()
-    { return _ternary; }
+    protected final Arity getArity()
+    { return Arity.exactly(3); }
 
     protected final Code checkedCall(
         Registers state,

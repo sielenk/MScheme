@@ -9,6 +9,7 @@ public class MemberFunction
     public final static String id
         = "$Id$";
 
+
     public final static MemberFunction INSTANCE
         = new MemberFunction();
 

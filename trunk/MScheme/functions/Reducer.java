@@ -12,6 +12,7 @@ abstract class Reducer
     public final static String id
         = "$Id$";
 
+
     private final Value _initial;
 
     protected Reducer(Value initial)

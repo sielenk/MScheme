@@ -9,6 +9,7 @@ public class AssocFunction
     public final static String id
         = "$Id$";
 
+
     public final static AssocFunction INSTANCE
         = new AssocFunction();
 

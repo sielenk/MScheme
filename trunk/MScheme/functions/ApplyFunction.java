@@ -18,13 +18,12 @@ public class ApplyFunction
     public final static String id
         = "$Id$";
 
+
     public final static ApplyFunction INSTANCE = new ApplyFunction();
 
 
-    private final static Arity _arity = Arity.atLeast(2);
-    
-    public Arity getArity()
-    { return _arity; }
+    protected Arity getArity()
+    { return Arity.atLeast(2); }
 
     protected Code checkedCall(
         Registers state,

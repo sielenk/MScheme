@@ -17,10 +17,9 @@ public abstract class BinaryFunction
     public final static String id
         = "$Id$";
 
-    private final static Arity _binary = Arity.exactly(2);
 
-    public final Arity getArity()
-    { return _binary; }
+    protected final Arity getArity()
+    { return Arity.exactly(2); }
 
     protected final Code checkedCall(
         Registers state,

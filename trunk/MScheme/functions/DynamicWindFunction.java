@@ -18,6 +18,7 @@ public class DynamicWindFunction
     public final static String id
         = "$Id$";
 
+
     public final static DynamicWindFunction INSTANCE
         = new DynamicWindFunction();
 

@@ -19,6 +19,7 @@ final class AppendHelper1
     public final static String id
         = "$Id$";
 
+
     AppendHelper1(Value initial)
     { super(initial); }
 
@@ -32,6 +33,7 @@ final class AppendHelper2
 {
     public final static String id
         = "$Id$";
+
 
     final static AppendHelper2 INSTANCE
         = new AppendHelper2();
@@ -51,10 +53,11 @@ public final class AppendFunction
     public final static String id
         = "$Id$";
 
+
     public final static AppendFunction INSTANCE
         = new AppendFunction();
 
-    public Arity getArity()
+    protected Arity getArity()
     { return Arity.atLeast(0); }
 
     public Code call(Registers state, List arguments)
