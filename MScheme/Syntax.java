@@ -28,12 +28,12 @@ public abstract class Syntax
     { throw new SyntaxArityError(arguments, _arity); }
 
     protected abstract Code checkedTranslate(
-        StaticEnvironment syntax,
+        StaticEnvironment compilationEnv,
         List              arguments
     ) throws CompileError, TypeError;
 
     public final Code translate(
-        StaticEnvironment syntax,
+        StaticEnvironment compilationEnv,
         List              arguments
     ) throws CompileError, TypeError
     {
@@ -43,6 +43,6 @@ public abstract class Syntax
             arityError(arguments);
         }
 
-        return checkedTranslate(syntax, arguments);
+        return checkedTranslate(compilationEnv, arguments);
     }
 }

@@ -25,7 +25,7 @@ final class Quote
     { super(Arity.exactly(1)); }
     
     protected Code checkedTranslate(
-        StaticEnvironment syntax,
+        StaticEnvironment compilationEnv,
         List              arguments
     ) throws TypeError
     {
