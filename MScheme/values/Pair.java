@@ -86,7 +86,7 @@ public abstract class Pair
     public abstract boolean isList();
     
 //  public abstract List toList()
-//  throws ListExpected;
+//      throws ListExpected;
 
 
     public final boolean isPair()
@@ -132,7 +132,7 @@ public abstract class Pair
             second = second.getCopy();
         }
 
-        return create(
+        return ListFactory.createPair(
             getFirst(),
             second
         );
@@ -140,7 +140,10 @@ public abstract class Pair
 
     protected final Value getConstCopy()
     {
-        return createConst(getFirst(), getSecond());
+        return ListFactory.createConstPair(
+            getFirst(),
+            getSecond()
+        );
     }
 
 
