@@ -35,8 +35,6 @@ import MScheme.exceptions.SymbolNotFoundException;
 import MScheme.exceptions.TypeError;
 import MScheme.exceptions.UnexpectedSyntax;
 
-import MScheme.syntax.ProcedureCall;
-
 import MScheme.values.List;
 import MScheme.values.Symbol;
 import MScheme.values.ValueDefaultImplementations;
@@ -251,26 +249,15 @@ public class StaticEnvironment
         return result;
     }
 
-    public Syntax getDelayedSyntaxFor(Symbol key)
-        throws SymbolNotFoundException
-    {
-        Object result = delayedLookup(key);
-
-        return 
-            (result instanceof Reference)
-            ? ProcedureCall.create((Reference)result)
-            : (Syntax)result;
-    }
-
     public Syntax getSyntaxFor(Symbol key)
         throws SymbolNotFoundException
     {
         Object result = lookup(key);
 
         return 
-            (result instanceof Reference)
-            ? ProcedureCall.create((Reference)result)
-            : (Syntax)result;
+            (result instanceof Syntax)
+            ? (Syntax)result
+            : null;
     }
 
     public Reference getDelayedReferenceFor(Symbol key)
