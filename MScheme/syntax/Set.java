@@ -59,9 +59,9 @@ final class Set
         Value  value  = arguments.getTail().getHead();
 
         return translate(
-                   symbol.getReference(compilationEnv),
-                   value .getCode     (compilationEnv)
-               );
+            compilationEnv.getReferenceFor(symbol),
+            value.getCode(compilationEnv)
+        );
     }
 
     static Code translate(
@@ -70,8 +70,8 @@ final class Set
     )
     {
         return Assignment.create(
-                   reference,
-                   code
-               );
+            reference,
+            code
+        );
     }
 }
