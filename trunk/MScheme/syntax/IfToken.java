@@ -1,27 +1,18 @@
-package MScheme.code;
+package MScheme.syntax;
 
 import MScheme.util.Arity;
 import MScheme.machine.Machine;
-import MScheme.environment.*;
-import MScheme.exceptions.*;
-import MScheme.functions.*;
-import MScheme.values.*;
+import MScheme.code.Code;
+import MScheme.code.CodeList;
+import MScheme.environment.StaticEnvironment;
+import MScheme.functions.Selector;
+import MScheme.values.Value;
+import MScheme.values.Function;
+import MScheme.values.SchemeBoolean;
+import MScheme.values.List;
 
+import MScheme.exceptions.SchemeException;
 
-// *** if ***
-
-final class Selector
-    extends UnaryFunction
-{
-    private final Code _onTrue;
-    private final Code _onFalse;
-
-    Selector(Code onTrue, Code onFalse)
-    { _onTrue = onTrue; _onFalse = onFalse; }
-
-    protected Code checkedCall(Machine machine, Value flag)
-    { return flag.isFalse() ? _onFalse : _onTrue; }
-}
 
 final class IfToken
     extends Syntax
@@ -41,7 +32,7 @@ final class IfToken
         Value onTrue  = arguments.getTail().getHead();
         Value onFalse =
             (arguments.getLength() == 2)
-            ? ValueFactory.createFalse()
+            ? SchemeBoolean.createFalse()
             : arguments.getTail().getTail().getHead();
             
         Function selector = new Selector(

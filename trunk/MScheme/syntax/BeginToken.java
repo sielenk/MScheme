@@ -1,26 +1,14 @@
-package MScheme.code;
+package MScheme.syntax;
 
 import MScheme.util.Arity;
 import MScheme.machine.Machine;
-import MScheme.environment.*;
-import MScheme.exceptions.*;
-import MScheme.functions.*;
-import MScheme.values.*;
+import MScheme.code.Code;
+import MScheme.code.CompiledSequence;
+import MScheme.environment.StaticEnvironment;
+import MScheme.values.List;
 
+import MScheme.exceptions.SchemeException;
 
-// *** begin ***
-
-final class CompiledSequence
-    extends Code
-{
-    final private CodeList _sequence;
-
-    CompiledSequence(CodeList sequence)
-    { _sequence = sequence; }
-    
-    public Code executionStep(Machine machine)
-    { return machine.handleSequence(_sequence); }
-}
 
 final class BeginToken
     extends Syntax

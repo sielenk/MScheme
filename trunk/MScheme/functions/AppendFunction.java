@@ -5,6 +5,7 @@ import MScheme.util.Arity;
 import MScheme.values.ValueFactory;
 import MScheme.values.Value;
 import MScheme.values.List;
+import MScheme.values.Pair;
 
 import MScheme.exceptions.SchemeException;
 
@@ -21,7 +22,7 @@ class AppendHelper1
     { return _initial; }
 
     protected Value combine(Value fst, Value snd)
-    { return ValueFactory.createPair(fst, snd); }
+    { return Pair.create(fst, snd); }
 }
 
 

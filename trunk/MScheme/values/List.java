@@ -12,13 +12,16 @@ import MScheme.exceptions.*;
 public abstract class List
     extends Value
 {
-    public final static List EMPTY = new Empty();
+    private final static List EMPTY = new Empty();
 
     public static List prepend(Value head, List tail)
     { return Pair.create(head, tail); }
 
+    public static List with()
+    { return EMPTY; }
+
     public static List with(Value fst)
-    { return prepend(fst, EMPTY); }
+    { return prepend(fst, with()); }
 
     public static List with(Value fst, Value snd)
     { return prepend(fst, with(snd)); }

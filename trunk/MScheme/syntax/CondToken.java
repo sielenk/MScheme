@@ -1,11 +1,12 @@
-package MScheme.code;
+package MScheme.syntax;
 
 import MScheme.util.Arity;
-import MScheme.machine.Machine;
-import MScheme.environment.*;
-import MScheme.exceptions.*;
-import MScheme.functions.*;
-import MScheme.values.*;
+import MScheme.environment.StaticEnvironment;
+import MScheme.code.Code;
+import MScheme.values.List;
+
+import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.UnimplementedException;
 
 
 final class CondToken

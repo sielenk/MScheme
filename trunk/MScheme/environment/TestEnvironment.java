@@ -3,6 +3,8 @@ package MScheme.environment;
 import MScheme.environment.*;
 import MScheme.values.*;
 import MScheme.code.*;
+import MScheme.syntax.Syntax;
+import MScheme.syntax.SyntaxFactory;
 import MScheme.exceptions.*;
 
 

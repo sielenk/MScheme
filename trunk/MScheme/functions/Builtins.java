@@ -126,7 +126,7 @@ public class Builtins
     { return SchemeBoolean.create(argument.isNumber()); }
 
     public static Value inexact_3F(Value argument)
-    { return SchemeBoolean.False; }
+    { return SchemeBoolean.createFalse(); }
 
 
     public static Value _3C(List arguments) // <
@@ -199,7 +199,7 @@ public class Builtins
 
 
     public static Value null_3F(Value argument) // pair?
-    { return SchemeBoolean.create(argument.eq(List.EMPTY)); }
+    { return SchemeBoolean.create(argument.eq(List.with())); }
 
     public static Value list_3F(Value argument) // list?
     { return SchemeBoolean.create(argument.isList()); }

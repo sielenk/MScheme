@@ -1,11 +1,11 @@
-package MScheme.code;
+package MScheme.syntax;
 
 import MScheme.util.Arity;
 import MScheme.machine.Literal;
-import MScheme.environment.*;
-import MScheme.exceptions.*;
-import MScheme.functions.*;
-import MScheme.values.*;
+import MScheme.code.Code;
+import MScheme.environment.StaticEnvironment;
+import MScheme.values.Pair;
+import MScheme.values.List;
 
 
 // *** quote ***

@@ -46,8 +46,8 @@ public class TestValue
     public void testCastFunctions()
         throws Exception
     {
-        ValueFactory.createPair(null, null).toPair();
-        ValueFactory.createList().toList();
+        Pair.create(null, null).toPair();
+        List.with().toList();
         ValueFactory.createNumber(0).toNumber();
         ValueFactory.createChar('a').toChar();
         ValueFactory.createString("").toScmString();
@@ -85,7 +85,7 @@ public class TestValue
     public void testEmpty()
         throws Exception
     {
-        final Value empty = ValueFactory.createList();
+        final Value empty = List.with();
         
         assert(!empty.isFalse());
         
@@ -99,7 +99,7 @@ public class TestValue
     public void testPair()
         throws Exception
     {       
-        final Value pair = ValueFactory.createPair(
+        final Value pair = Pair.create(
             ValueFactory.createTrue(),
             ValueFactory.createTrue()
         );
@@ -356,8 +356,8 @@ public class TestValue
 
         assert(
             eqHelper(
-                ValueFactory.createPair(v, v),
-                ValueFactory.createPair(v, v)
+                Pair.create(v, v),
+                Pair.create(v, v)
             ) == 1
         );
         

@@ -1,10 +1,12 @@
-package MScheme.code;
+package MScheme.syntax;
 
 import java.io.Writer;
 import java.io.IOException;
 
 import MScheme.util.Arity;
 import MScheme.machine.Machine;
+import MScheme.code.Code;
+import MScheme.code.CodeList;
 import MScheme.environment.*;
 import MScheme.exceptions.*;
 import MScheme.functions.*;
