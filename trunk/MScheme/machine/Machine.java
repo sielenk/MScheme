@@ -1,28 +1,114 @@
 package MScheme.machine;
 
+
 import MScheme.environment.Environment;
+
 import MScheme.expressions.SExpr;
+import MScheme.expressions.SFunction;
 import MScheme.expressions.functions.EvalFunc;
+
 import MScheme.exceptions.SException;
 
-public class Machine
+
+class MutableContext extends Context
 {
-    public static SExpr evaluate(
-        Environment environment,
-        SExpr       sexpr
-    ) throws SException {
-        ContinuationStack stack = new ContinuationStack(environment);
-        Values            accu  = new Values(sexpr);
-
-        stack.push(
-            environment,
-            EvalFunc.INSTANCE
+    protected MutableContext(
+        Continuation continuation,
+        Environment  environment
+    ) {
+        super(
+            continuation,
+            environment
         );
+    }
 
-        while (!stack.isEmpty()) {
-            accu = stack.getTop().invoke(stack, accu);
+
+    protected void setContinuation(
+        Continuation continuation
+    ) {
+        _continuation = continuation;
+    }
+
+
+    protected void setEnvironment(
+        Environment environment
+    )
+    {
+        _environment = environment;
+    }
+
+
+    protected void setContext(
+        Context context
+    ) {
+        _continuation = context._continuation;
+        _environment  = context._environment;
+    }
+}
+
+
+public class Machine extends MutableContext
+{
+    public Machine(
+        Environment environment
+    ) {
+        super(
+            Continuation.HALT,
+            environment
+        );
+    }
+
+
+    private Continuation pop()
+    {
+        Continuation continuation = getContinuation();
+        setContext(continuation);
+        return continuation;
+    }
+
+
+    public void push(
+        SFunction function
+    ) {
+        setContinuation(
+            new Continuation(
+                getContinuation(),
+                getEnvironment(),
+                function
+            )
+        );
+    }
+
+
+    public void push(
+        SFunction   function,
+        Environment environment
+    ) {
+        setContinuation(
+            new Continuation(
+                getContinuation(),
+                environment,
+                function
+            )
+        );
+    }
+
+
+    public SExpr evaluate(
+        SExpr sexpr
+    ) throws SException {
+        Values accu  = new Values(sexpr);
+
+        push(EvalFunc.INSTANCE);
+
+        for (;;) {
+            Continuation cont = pop();
+
+            if (cont == Continuation.HALT) {
+                return accu.at(0);
+            }
+
+            accu = cont.invoke(this, accu);
         }
-
-        return accu.at(0);
     }
 }
