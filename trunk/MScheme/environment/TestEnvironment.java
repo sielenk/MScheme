@@ -32,10 +32,10 @@ import MScheme.exceptions.*;
 
 
 public class TestEnvironment
-            extends junit.framework.TestCase
+    extends junit.framework.TestCase
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     protected Environment env;
@@ -186,7 +186,7 @@ public class TestEnvironment
             env.lookup(sym1);
             fail("expected UninitializedSymbolException");
         }
-        catch (UninitializedSymbolException e)
+        catch (RuntimeError e)
         { }
 
         env.assign(sym1, val1);
