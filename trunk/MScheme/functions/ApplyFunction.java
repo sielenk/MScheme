@@ -27,24 +27,35 @@ public class ApplyFunction
     { return _arity; }
 
     protected Code checkedCall(
-        Registers registers,
+        Registers state,
         int       length,
         List      arguments
     ) throws RuntimeError, TypeError
     {
-        Function func  = arguments.getHead().toFunction();
+        // First try the cast ... if it fails, no work is lost
+        Function func = arguments.getHead().toFunction();
 
-        {
-            Pair toBeModified = arguments.toPair();
-            for (int i = length - 2; i > 0; i--) {
-                toBeModified = toBeModified.getSecond().toPair();
-            }
-            toBeModified.setSecond(
-                toBeModified.getSecond().toPair().getFirst()
-            );
+        // Since the argument list is newly allocated
+        // and mutable, it is permissible to modify it.
+        // The modification done looks like this:
+        // (f 1 (2 3)) is changed to (f 1 2 3)
+
+        Pair toBeModified = arguments.toPair();
+        for (int i = length - 2; i > 0; i--) {
+            toBeModified = toBeModified.getSecond().toPair();
         }
 
-        List args  = arguments.getTail();
-        return func.call(registers, args);
+        // Now toBeModified referes the pair containing the
+        // last but one argument. In the example it would be
+        // (1 . ((2 3) . ()))
+
+        toBeModified.setSecond(
+            toBeModified.getSecond().toPair().getFirst()
+        );
+
+        // and here it would have become
+        // (1 . (2 3)) == (1 2 3)
+
+        return func.call(state, arguments.getTail());
     }
 }
