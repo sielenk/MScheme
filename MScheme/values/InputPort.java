@@ -32,7 +32,7 @@ class EofValue
     public void write(Writer dest)
         throws IOException
     {
-        dest.write("[eof]");
+        dest.write("#[eof]");
     }
 }
 
@@ -97,7 +97,7 @@ public class InputPort
     public void write(Writer destination)
         throws IOException
     {
-        destination.write("[input port]");
+        destination.write("#[input port]");
     }
 
     public InputPort toInputPort()
@@ -146,6 +146,8 @@ public class InputPort
         return isWhitespace(c)
                || (c == '(')
                || (c == ')')
+               || (c == '[')
+               || (c == ']')
                || (c == '"')
                || (c == ';');
     }
@@ -281,12 +283,12 @@ public class InputPort
         }
     }
 
-    private Value parseList()
+    private Value parseList(char closeToken)
         throws IOException, ParseException
     {
         int la = skipWSread();
 
-        if (la == ')')
+        if (la == closeToken)
         {
             return Empty.create();
         }
@@ -325,7 +327,7 @@ public class InputPort
                 _reader.unread(la);
                 return Pair.createConst(
                            head,
-                           parseList()
+                           parseList(closeToken)
                        );
             }
         }
@@ -507,7 +509,10 @@ checkNumber:
             } // break;
 
         case '(':
-            return parseList();
+            return parseList(')');
+
+        case '[':
+            return parseList(']');
 
         case '"':
             return parseString();
