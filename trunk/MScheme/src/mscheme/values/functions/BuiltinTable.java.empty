@@ -45,7 +45,7 @@ class BuiltinRaw
 
     public Function getFunc() { return this; }
 
-    protected Object checkedCall(List args)
+    protected Object checkedCall(IList args)
         throws RuntimeError, TypeError
     {
         switch(_id) {
@@ -57,7 +57,7 @@ class BuiltinRaw
     public Arity getArity()
     { return Arity.atLeast(0); }
 
-    public Object call(Registers registers, List args)
+    public Object call(Registers registers, IList args)
         throws RuntimeError, TypeError
     { return checkedCall(args); }
 }
