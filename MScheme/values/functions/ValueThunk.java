@@ -39,7 +39,7 @@ public abstract class ValueThunk
         Registers state
     ) throws SchemeException
     {
-        return checkedCall().getLiteral();
+        return checkedCall();
     }
 
     protected abstract Value checkedCall()

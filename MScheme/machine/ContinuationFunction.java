@@ -113,7 +113,7 @@ final class ContinuationFunction
         );
         
         resultSequence[numberOfLeaveThunks + numberOfEnterThunks]
-            = result.getLiteral();
+            = result;
 
         return Sequence.create(resultSequence);
     }

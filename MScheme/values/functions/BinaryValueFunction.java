@@ -41,7 +41,7 @@ public abstract class BinaryValueFunction
         Value     snd
     ) throws SchemeException
     {
-        return checkedCall(fst, snd).getLiteral();
+        return checkedCall(fst, snd);
     }
 
     protected abstract Value checkedCall(Value fst, Value snd)

@@ -64,7 +64,7 @@ public class DynamicWindFunction
         return Application.create(
             new Code[]
             {
-                v.toFunction().getLiteral()
+                v.toFunction()
             }
         );
     }

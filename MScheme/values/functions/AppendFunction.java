@@ -95,6 +95,6 @@ public final class AppendFunction
     public Code call(Registers state, List arguments)
         throws RuntimeError, TypeError
     {
-        return AppendHelper2.INSTANCE.reduceRight(arguments).getLiteral();
+        return AppendHelper2.INSTANCE.reduceRight(arguments);
     }
 }
