@@ -14,9 +14,9 @@ import MScheme.values.*;
 // *** let ***
 
 final class LetToken
-    extends Token
+    extends Syntax
 {
-    final static Token INSTANCE = new LetToken();
+    final static Syntax INSTANCE = new LetToken();
     
     private LetToken()
     { super(Arity.atLeast(2)); }
@@ -47,17 +47,18 @@ final class LetToken
             bindings = bindings.getTail();
         }
 
+
+
         // ((lambda (<var> ...) <body>) <init> ...)
-        return ValueFactory.prepend(
-            ValueFactory.prepend(
-                SyntaxFactory.getLambdaToken().getValue(),
+        return CodeList.prepend(
+            SyntaxFactory.getLambdaToken().translateArguments(
+                syntax,
                 ValueFactory.prepend(
                     formals,
                     body
                 )
             ),
-            inits
-        ).getCode(syntax);
+            inits.getCodeList(syntax)
+        );
     }
 }
-

@@ -5,6 +5,7 @@ import java.io.StringWriter;
 import java.io.IOException;
 
 import MScheme.environment.StaticEnvironment;
+import MScheme.code.Token;
 import MScheme.code.Code;
 import MScheme.exceptions.*;
 
@@ -114,5 +115,9 @@ public abstract class Value
     
     public abstract Code getCode(StaticEnvironment e)
         throws SchemeException;
-}
 
+    public Token getToken(StaticEnvironment e)
+        throws SchemeException
+    { return getCode(e); }
+}
+ 

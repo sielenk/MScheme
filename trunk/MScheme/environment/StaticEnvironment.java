@@ -7,6 +7,7 @@ import MScheme.util.Arity;
 import MScheme.values.Symbol;
 import MScheme.values.List;
 
+import MScheme.code.Token;
 import MScheme.code.Code;
 import MScheme.code.Syntax;
 
@@ -119,14 +120,14 @@ public class StaticEnvironment
     }
 
 
-    private Code safeGetCodeFor(Symbol symbol)
+    private Token safeGetTokenFor(Symbol symbol)
     {
         for (
             StaticEnvironment current = this;
             current != null;
             current = current._parent
         ) {
-            Code result = (Code)current._bindings.get(symbol.getKey());
+            Token result = (Token)current._bindings.get(symbol.getKey());
         
             if (result != null) {
                 return result;
@@ -136,10 +137,10 @@ public class StaticEnvironment
         return null;
     }
 
-    public Code getCodeFor(Symbol symbol)
+    public Token getTokenFor(Symbol symbol)
         throws SymbolNotFoundException
     {
-        Code result = safeGetCodeFor(symbol);
+        Token result = safeGetTokenFor(symbol);
 
         if (result != null) {
             return result;
@@ -148,11 +149,11 @@ public class StaticEnvironment
         }
     }
 
-    public Reference getReferenceFor(Symbol key)
+    public Reference getCodeFor(Symbol key)
         throws SymbolNotFoundException, SyntaxException
     {
         try {
-            return (Reference)getCodeFor(key);
+            return (Reference)getTokenFor(key);
         }
         catch (ClassCastException e) {
             throw new SyntaxException(key);
@@ -160,8 +161,7 @@ public class StaticEnvironment
     }
 
     public boolean isBound(Symbol key)
-    { return safeGetCodeFor(key) != null; }
+    { return safeGetTokenFor(key) != null; }
 
     // ***********************************************************************
 }
-

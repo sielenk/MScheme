@@ -23,9 +23,10 @@ final class Assigner
 
 
     protected Code checkedCall(Machine machine, Value value)
+        throws SchemeException
     {
         machine.getEnvironment().assign(_key, value);
-        return new Quotation(value);
+        return machine.handleResult(value);
     }
 
 
@@ -37,14 +38,14 @@ final class Assigner
     {
         Symbol symbol = arguments.getHead().toSymbol();
         Value  value  = arguments.getTail().getHead();
-        
+
         Reference reference =
             isSetter
-            ? syntax.getReferenceFor(symbol)
+            ? syntax.getCodeFor(symbol)
             : syntax.define(symbol);
-    
+
         Function assigner = new Assigner(reference);
-        
+
         return CodeList.create(
             assigner.getCode(syntax),
             value   .getCode(syntax)
@@ -66,23 +67,19 @@ final class Assigner
         if (arguments.getHead().isPair()) {
             //    (define (f x y) (+ x y))
             // -> (define f (lambda (x y) (+ x y)))
-            Value symbol  = arguments.getHead().toPair().getFirst();
-            Value formals = arguments.getHead().toPair().getSecond();
-            Value body    = arguments.getTail();
+            Symbol symbol  = arguments.getHead().toPair().getFirst ().toSymbol();
+            Value  formals = arguments.getHead().toPair().getSecond();
+            Value  body    = arguments.getTail();
             
-            return create(
-                syntax,
-                ValueFactory.createList(
-                    symbol,
-                    ValueFactory.createPair(
-                        SyntaxFactory.getLambdaToken().getValue(),
-                        ValueFactory.createPair(
-                            formals,
-                            body
-                        )
+            return CodeList.create(
+                new Assigner(syntax.define(symbol)).getCode(syntax),
+                SyntaxFactory.getLambdaToken().translateArguments(
+                    syntax,
+                    Pair.create(
+                        formals,
+                        body
                     )
-                ),
-                false
+                )
             );
         } else {
             return create(syntax, arguments, false);
@@ -91,9 +88,9 @@ final class Assigner
 }
 
 final class SetToken
-    extends Token
+    extends Syntax
 {
-    final static Token INSTANCE = new SetToken();
+    final static Syntax INSTANCE = new SetToken();
     
     private SetToken()
     { super(Arity.exactly(2)); }
@@ -106,9 +103,9 @@ final class SetToken
 }
 
 final class DefineToken
-    extends Token
+    extends Syntax
 {
-    final static Token INSTANCE = new DefineToken();
+    final static Syntax INSTANCE = new DefineToken();
     
     private DefineToken()
     { super(Arity.exactly(2)); }
@@ -125,28 +122,27 @@ final class DefineToken
 
 public abstract class SyntaxFactory
 {
-    public static Token getBeginToken()
+    public static Syntax getBeginToken()
     { return BeginToken.INSTANCE; }
     
-    public static Token getCondToken()
+    public static Syntax getCondToken()
     { return CondToken.INSTANCE; }
     
-    public static Token getSetToken()
+    public static Syntax getSetToken()
     { return SetToken.INSTANCE; }
     
-    public static Token getDefineToken()
+    public static Syntax getDefineToken()
     { return DefineToken.INSTANCE; }
     
-    public static Token getLambdaToken()
+    public static Syntax getLambdaToken()
     { return LambdaToken.INSTANCE; }
     
-    public static Token getLetToken()
+    public static Syntax getLetToken()
     { return LetToken.INSTANCE; }
     
-    public static Token getIfToken()
+    public static Syntax getIfToken()
     { return IfToken.INSTANCE; }
     
-    public static Token getQuoteToken()
+    public static Syntax getQuoteToken()
     { return QuoteToken.INSTANCE; }
 }
-

@@ -5,7 +5,9 @@ import java.io.IOException;
 
 import MScheme.environment.StaticEnvironment;
 import MScheme.code.Code;
+import MScheme.code.Token;
 import MScheme.exceptions.SymbolNotFoundException;
+import MScheme.exceptions.SyntaxException;
 
 
 public final class Symbol
@@ -56,7 +58,10 @@ public final class Symbol
 
 
     public Code getCode(StaticEnvironment env)
-        throws SymbolNotFoundException
+        throws SymbolNotFoundException, SyntaxException
     { return env.getCodeFor(this); }
-}
 
+    public Token getToken(StaticEnvironment env)
+        throws SymbolNotFoundException
+    { return env.getTokenFor(this); }
+}
