@@ -1,5 +1,6 @@
 package MScheme;
 
+import java.io.StringReader;
 import junit.framework.*;
 
 import MScheme.machine.Machine;
@@ -73,6 +74,17 @@ public class TestMachine
     {
         machine = null;
         _environment = null;
+    }
+
+
+    private Value evaluate(String expression)
+        throws SchemeException
+    {
+        return machine.evaluate(
+            ValueFactory.createInputPort(
+                new StringReader(expression)
+            ).read()
+        );
     }
 
 
@@ -262,42 +274,19 @@ public class TestMachine
         throws Exception
     {
         try {
-            machine.evaluate(
-                ValueFactory.createList(
-                    ValueFactory.createSymbol("lambda"),
-                    ValueFactory.createList(),
-                    _unval
-                )
-            );
+            evaluate("(lambda () #(1 2 3))");
             fail("expected CantCompileException");
         }
         catch (CantCompileException e) { }
         
         try {
-            machine.evaluate(
-                ValueFactory.createList(
-                    ValueFactory.createSymbol("lambda"),
-                    ValueFactory.createList(
-                        ValueFactory.createTrue()
-                    ),
-                    _val1
-                )
-            );
+            evaluate("(lambda (#t) #t)");
             fail("expected SymbolExpectedException");
         }
         catch (SymbolExpectedException e) { }
         
         try {
-            machine.evaluate(
-                ValueFactory.createList(
-                    ValueFactory.createSymbol("lambda"),
-                    ValueFactory.createList(
-                        ValueFactory.createSymbol("x"),
-                        ValueFactory.createSymbol("x")
-                    ),
-                    _val1
-                )
-            );
+            evaluate("(lambda (x y x) #t)");
             fail("expected DuplicateSymbolException");
         }
         catch (DuplicateSymbolException e) { }
@@ -334,16 +323,7 @@ public class TestMachine
     public void testLambdaWithSimpleArgs()
         throws Exception
     {
-        Function func = machine.evaluate(
-            ValueFactory.createList(
-                ValueFactory.createSymbol("lambda"),
-                ValueFactory.createList(
-                    ValueFactory.createSymbol("x"),
-                    ValueFactory.createSymbol("y")
-                ),
-                ValueFactory.createSymbol("x")
-            )
-        ).toFunction();
+        Function func = evaluate("(lambda (x y) x)").toFunction();
         
         assert(
             machine.evaluate(
@@ -365,16 +345,7 @@ public class TestMachine
     public void testLambdaWithOptionalArgs()
         throws Exception
     {
-        Function func = machine.evaluate(
-            ValueFactory.createList(
-                ValueFactory.createSymbol("lambda"),
-                ValueFactory.createPair(
-                    ValueFactory.createSymbol("x"),
-                    ValueFactory.createSymbol("y")
-                ),
-                ValueFactory.createSymbol("y")
-            )
-        ).toFunction();
+        Function func = evaluate("(lambda (x . y) y)").toFunction();
         
         try {
             machine.evaluate(ValueFactory.createList(func));
@@ -395,16 +366,10 @@ public class TestMachine
         );
     }
     
-    public void testLambdaOptionalIsNew()
+    public void testLambdaOptionalIsNewList()
         throws Exception
     {
-        Function func = machine.evaluate(
-            ValueFactory.createList(
-                ValueFactory.createSymbol("lambda"),
-                ValueFactory.createSymbol("x"),
-                ValueFactory.createSymbol("x")
-            )
-        ).toFunction();
+        Function func = evaluate("(lambda x x)").toFunction();
 
         Pair pair2 = ValueFactory.createPair(
             _val2,
@@ -444,24 +409,8 @@ public class TestMachine
     public void testApplication()
         throws Exception
     {
-        Function func = machine.evaluate(
-            ValueFactory.createList(
-                ValueFactory.createSymbol("lambda"),
-                ValueFactory.createList(
-                    ValueFactory.createSymbol("x")
-                ),
-                ValueFactory.createSymbol("x")
-            )
-        ).toFunction();
-        
-        machine.evaluate(
-            ValueFactory.createList(
-                ValueFactory.createSymbol("define"),
-                ValueFactory.createSymbol("f"),
-                func
-            )
-        );
-        
+        evaluate("(define f (lambda (x) x))");
+
         assert(
             machine.evaluate(
                 ValueFactory.createList(
@@ -475,28 +424,8 @@ public class TestMachine
     public void testDefineFunction()
         throws Exception
     {
-        machine.evaluate(
-            ValueFactory.createList(
-                ValueFactory.createSymbol("define"),
-                ValueFactory.createList(
-                    ValueFactory.createSymbol("f"),
-                    ValueFactory.createSymbol("x"),
-                    ValueFactory.createSymbol("y")
-                ),
-                ValueFactory.createSymbol("x")
-            )
-        );
-        
-        machine.evaluate(
-            ValueFactory.createList(
-                ValueFactory.createSymbol("define"),
-                ValueFactory.createPair(
-                    ValueFactory.createSymbol("g"),
-                    ValueFactory.createSymbol("x")
-                ),
-                ValueFactory.createSymbol("x")
-            )
-        );
+        evaluate("(define (f x y) x)");
+        evaluate("(define (g . x) x)");
 
         assert(
             "function creation failed",
