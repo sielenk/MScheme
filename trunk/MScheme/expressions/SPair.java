@@ -1,5 +1,8 @@
 package MScheme.expressions;
 
+
+import MScheme.machine.Values;
+import MScheme.machine.ValuesFactory;
 import MScheme.exceptions.SImproperListException;
 
 public class SPair extends SList
@@ -13,28 +16,27 @@ public class SPair extends SList
         _cdr = cdr;
     }
 
-    public SValues toValues()
+    public Values toValues()
         throws SImproperListException
     {
-        SValuesFactory fab = new SValuesFactory();
+        ValuesFactory fab  = new ValuesFactory();
+        SPair         curr = this;
 
-        SPair pair = this;
-        SExpr cdr;
-        for (;;) {
-            fab.append(pair.getCar());
+        try {
+            for (;;) {
+                SExpr next = curr.getCdr();
 
-            cdr = pair.getCdr();
+                fab.append(curr.getCar());
 
-            if (cdr instanceof SPair) {
-                pair = (SPair)cdr;
-            } else {
-                break;
+                if (next == SEmpty.INSTANCE) {
+                    return fab.getValues();
+                } else {
+                    curr = (SPair)next;
+                    // throws ClassCastException
+                }
             }
         }
-
-        if (cdr == SEmpty.INSTANCE) {
-            return fab.getValues();
-        } else {
+        catch (ClassCastException e) {
             throw new SImproperListException(this);
         }
     }
@@ -47,5 +49,15 @@ public class SPair extends SList
     public SExpr getCdr()
     {
         return _cdr;
+    }
+
+    public void setCar(SExpr car)
+    {
+        _car = car;
+    }
+
+    public void setCdr(SExpr cdr)
+    {
+        _cdr = cdr;
     }
 }
