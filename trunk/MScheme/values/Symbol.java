@@ -19,6 +19,9 @@ import MScheme.exceptions.*;
 public final class Symbol
     extends Value
 {
+    public final static String id
+        = "$Id$";
+
     final private static WeakHashMap _map = new WeakHashMap();
 
     final private String _javaString;

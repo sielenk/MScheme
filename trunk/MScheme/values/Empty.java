@@ -15,6 +15,9 @@ public final class Empty
     extends    Value
     implements List
 {
+    public final static String id
+        = "$Id$";
+
     private final static Empty INSTANCE = new Empty();
 
     private Empty() { }

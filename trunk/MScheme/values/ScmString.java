@@ -11,6 +11,9 @@ import MScheme.exceptions.*;
 public final class ScmString
     extends Compound
 {
+    public final static String id
+        = "$Id$";
+
     private char[] _string;
 
 

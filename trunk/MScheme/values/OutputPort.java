@@ -15,8 +15,11 @@ import MScheme.exceptions.CloseException;
 public class OutputPort
     extends Value
 {
+    public final static String id
+        = "$Id$";
+
     private final Writer _writer;
-    
+
     private OutputPort(Writer writer)
     { _writer = writer; }
 

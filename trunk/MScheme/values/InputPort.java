@@ -20,6 +20,9 @@ import MScheme.exceptions.InvalidVectorIndexException;
 class EofValue
     extends Value
 {
+    public final static String id
+        = "$Id$";
+
     public final static EofValue INSTANCE = new EofValue();
     
     private EofValue() { }
@@ -33,6 +36,9 @@ class EofValue
 public class InputPort
     extends Value
 {
+    public final static String id
+        = "$Id$";
+
     public final static int   EOF       = -1;
     public final static Value EOF_VALUE = EofValue.INSTANCE;
 

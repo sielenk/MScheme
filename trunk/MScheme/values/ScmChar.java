@@ -9,6 +9,9 @@ import MScheme.Value;
 public final class ScmChar
     extends Value
 {
+    public final static String id
+        = "$Id$";
+
     private char _character;
     
     private ScmChar(char c)
