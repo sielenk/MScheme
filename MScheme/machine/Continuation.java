@@ -5,8 +5,7 @@ import MScheme.Code;
 
 import MScheme.code.CodeList;
 
-import MScheme.exceptions.RuntimeError;
-import MScheme.exceptions.TypeError;
+import MScheme.exceptions.SchemeException;
 
 
 /**
@@ -74,7 +73,7 @@ public abstract class Continuation
      * @return  the result of the call to {@link #execute}.
      */
     final Code invoke(Registers state, Value result)
-        throws RuntimeError, TypeError
+        throws SchemeException
     {
         state.assign(_capturedState);
         return execute(state, result);
@@ -84,5 +83,24 @@ public abstract class Continuation
      * Implements the concrete behaviour of the continuation.
      */
     protected abstract Code execute(Registers state, Value result)
-        throws RuntimeError, TypeError;
+        throws SchemeException;
+
+
+    protected abstract String debugString();
+
+    public final String toString()
+    {
+        StringBuffer buffer = new StringBuffer();
+
+        for (
+            Continuation current = this;
+            current != null;
+            current = current.getParent()
+        ) {
+            buffer.append(current.debugString());
+            buffer.append('\n');
+        }
+        
+        return buffer.toString();
+    }
 }
