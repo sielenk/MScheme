@@ -30,7 +30,6 @@ import MScheme.Value;
 
 import MScheme.exceptions.AlreadyBound;
 import MScheme.exceptions.CompileError;
-import MScheme.exceptions.DuplicateSymbolException;
 import MScheme.exceptions.SymbolNotFoundException;
 import MScheme.exceptions.TypeError;
 import MScheme.exceptions.UnexpectedSyntax;
@@ -76,8 +75,8 @@ public class StaticEnvironment
 
     StaticEnvironment(StaticEnvironment parent)
     {
-        _bindings = new Hashtable();
         _parent   = parent;
+        _bindings = new Hashtable();
         _level    = (parent == null) ? 0 : (parent.getLevel() + 1);
         _numberOfReferences = 0;
     }
@@ -88,20 +87,12 @@ public class StaticEnvironment
     {
         this(parent);
 
-        int symbolsDefined = 0;
-
         for (
             List tail = symbols;
             !tail.isEmpty();
             tail = tail.getTail())
         {
             define(tail.getHead().toSymbol());
-            symbolsDefined++;
-        }
-
-        if (getSize() != symbolsDefined)
-        {
-            throw new DuplicateSymbolException(symbols);
         }
     }
 
@@ -156,7 +147,7 @@ public class StaticEnvironment
     // *** instance access ***************************************************
 
     public Reference define(Symbol symbol)
-        throws AlreadyBound
+        throws CompileError
     {
         try
         {
@@ -177,14 +168,18 @@ public class StaticEnvironment
 
                 _bindings.put(key, ref);
                 _numberOfReferences++;
-            }
 
-            return ref;
+                return ref;
+            }
+            else if (_level == 0)
+            {
+                return ref;
+            }
         }
         catch (ClassCastException e)
-        {
-            throw new AlreadyBound(symbol);
-        }
+        { }
+
+        throw new AlreadyBound(symbol);
     }
 
 
