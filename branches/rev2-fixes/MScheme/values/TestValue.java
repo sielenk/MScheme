@@ -10,18 +10,20 @@ import MScheme.functions.CallCCFunction;
 
 
 public class TestValue
-    extends junit.framework.TestCase
+            extends junit.framework.TestCase
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     public TestValue(String name)
-    { super(name); }
+    {
+        super(name);
+    }
 
     protected void setUp()
-        throws Exception
-    { }
+    throws Exception
+        { }
 
     protected void tearDown()
     { }
@@ -31,208 +33,224 @@ public class TestValue
     {
         int count = 0;
 
-        if (v.isScmBoolean()) count++;
-        if (v.isPair      ()) count++;
-        if (v.isSymbol    ()) count++;
-        if (v.isScmNumber ()) count++;
-        if (v.isScmChar   ()) count++;
-        if (v.isScmString ()) count++;
-        if (v.isScmVector ()) count++;
-        if (v.isPort      ()) count++;
-        if (v.isFunction  ()) count++;
+        if (v.isList      ()) ++count;
+
+        if (v.isScmBoolean()) ++count;
+        if (v.isPair      ()) ++count;
+        if (v.isSymbol    ()) ++count;
+        if (v.isScmNumber ()) ++count;
+        if (v.isScmChar   ()) ++count;
+        if (v.isScmString ()) ++count;
+        if (v.isScmVector ()) ++count;
+        if (v.isPort      ()) ++count;
+        if (v.isFunction  ()) ++count;
 
         return count;
     }
 
-    private void checkNotAList(Value v)
+    private int countCasts(Value v)
     {
-        assert(!v.isList());
+        int count = 0;
+
+        try { v.toList             (); ++count; } catch (TypeError e) { }
+
+        try { v.toPair             (); ++count; } catch (TypeError e) { }
+        try { v.toSymbol           (); ++count; } catch (TypeError e) { }
+        try { v.toScmNumber        (); ++count; } catch (TypeError e) { }
+        try { v.toScmChar          (); ++count; } catch (TypeError e) { }
+        try { v.toScmString        (); ++count; } catch (TypeError e) { }
+        try { v.toScmVector        (); ++count; } catch (TypeError e) { }
+        try { v.toInputPort        (); ++count; } catch (TypeError e) { }
+        try { v.toOutputPort       (); ++count; } catch (TypeError e) { }
+        try { v.toFunction         (); ++count; } catch (TypeError e) { }
+
+        try { v.toEnvironment      (); ++count; } catch (TypeError e) { }
+        try { v.toStaticEnvironment(); ++count; } catch (TypeError e) { }
+
+        return count;
     }
 
-
-    public void testCastFunctions()
-        throws Exception
+    private void commonTests(Value v)
     {
-        Pair      .create(null, null).toPair();
-        Empty     .create().toList();
-        ScmNumber .create(0).toScmNumber();
-        ScmChar   .create('a').toScmChar();
-        ScmString .create("").toScmString();
-        ScmVector .create().toScmVector();
-        InputPort .create().toInputPort();
-        OutputPort.create().toOutputPort();
+        assert(v.isTrue());
 
-        {
-            Environment empty = Environment.getEmpty();
-
-            empty.toEnvironment();
-            empty.getStatic().toStaticEnvironment();
-        }
+        assert(countTypes(v) == 1);
+        assert(countCasts(v) == 1);
     }
 
-    public void testTrue()
-        throws Exception
-    {
-        final Value True  = ScmBoolean.createTrue();
-
-        assert(True.isTrue());
-
-        assert(True.isScmBoolean());
-        assert(countTypes(True) == 1);
-
-        checkNotAList(True);
-    }
 
     public void testFalse()
-        throws Exception
+    throws Exception
     {
         final Value False = ScmBoolean.createFalse();
 
         assert(!False.isTrue());
 
-        assert(False.isScmBoolean());
         assert(countTypes(False) == 1);
+        assert(countCasts(False) == 0);
 
-        checkNotAList(False);
+        assert(False.isScmBoolean());
+    }
+
+    public void testTrue()
+    throws Exception
+    {
+        final Value True  = ScmBoolean.createTrue();
+
+        assert(True.isTrue());
+
+        assert(countTypes(True) == 1);
+        assert(countCasts(True) == 0);
+
+        assert(True.isScmBoolean());
     }
 
     public void testEmpty()
-        throws Exception
+    throws Exception
     {
         final Value empty = Empty.create();
 
-        assert(empty.isTrue());
-
-        assert(countTypes(empty) == 0);
-
+        commonTests(empty);
         assert(empty.isList());
-
         assert(empty.toList() == empty);
     }
 
     public void testPair()
-        throws Exception
-    {       
+    throws Exception
+    {
         final Value pair = Pair.create(
-            ScmBoolean.createTrue(),
-            ScmBoolean.createTrue()
-        );
+                               ScmBoolean.createTrue(),
+                               ScmBoolean.createTrue()
+                           );
 
-        assert(pair.isTrue());
-
+        commonTests(pair);
         assert(pair.isPair());
-        assert(countTypes(pair) == 1);
-
-        checkNotAList(pair);
-
         assert(pair.toPair() == pair);
     }
 
     public void testList()
-        throws Exception
+    throws Exception
     {
         final Value list = ListFactory.create(
-            ScmBoolean.createTrue()
-        );
+                               ScmBoolean.createTrue()
+                           );
 
         assert(list.isTrue());
 
+        assert(countTypes(list) == 2);
+        assert(countCasts(list) == 2);
+
         assert(list.isPair());
-        assert(countTypes(list) == 1);
+        assert(list.toPair() == list);
 
         assert(list.isList());
-
         assert(list.toList() == list);
     }
 
     public void testSymbol()
-        throws Exception
+    throws Exception
     {
         final Value symbol = Symbol.create("test");
 
-        assert(symbol.isTrue());
-
+        commonTests(symbol);
         assert(symbol.isSymbol());
-        assert(countTypes(symbol) == 1);
-
-        checkNotAList(symbol);
-
         assert(symbol.toSymbol() == symbol);
     }
 
     public void testFunction()
-        throws Exception
+    throws Exception
     {
         final Value function = CallCCFunction.INSTANCE;
 
-        assert(function.isTrue());
-
+        commonTests(function);
         assert(function.isFunction());
-        assert(countTypes(function) == 1);
-
-        checkNotAList(function);
-
         assert(function.toFunction() == function);
     }
 
-
-    private void commonLiteralTests(Value literal)
-        throws Exception
-    {
-        assert(literal.isTrue());
-        assert(countTypes(literal) == 1);
-        checkNotAList(literal);
-    }
-
     public void testNumber()
-        throws Exception
+    throws Exception
     {
         final Value number = ScmNumber.create(49875);
 
-        commonLiteralTests(number);
+        commonTests(number);
         assert(number.isScmNumber());
+        assert(number.toScmNumber() == number);
     }
 
     public void testChar()
-        throws Exception
+    throws Exception
     {
         final Value character = ScmChar.create('a');
 
-        commonLiteralTests(character);
+        commonTests(character);
         assert(character.isScmChar());
+        assert(character.toScmChar() == character);
     }
 
     public void testString()
-        throws Exception
+    throws Exception
     {
         final Value string = ScmString.create("Hallo !");
 
-        commonLiteralTests(string);
+        commonTests(string);
         assert(string.isScmString());
+        assert(string.toScmString() == string);
     }
 
     public void testVector()
-        throws Exception
+    throws Exception
     {
         final Value vector = ScmVector.create();
 
-        commonLiteralTests(vector);
-        assert(
-            vector.isScmVector()
-        );
+        commonTests(vector);
+        assert(vector.isScmVector());
+        assert(vector.toScmVector() == vector);
     }
 
-    public void testPort()
-        throws Exception
+    public void testOutputPort()
+    throws Exception
     {
-        final Value portI = InputPort.create();
-        final Value portO = OutputPort.create();
+        final Value port = OutputPort.create();
 
-        commonLiteralTests(portI);
-        assert(portI.isPort());
+        commonTests(port);
+        assert(port.isPort());
+        assert(port.toOutputPort() == port);
+    }
 
-        commonLiteralTests(portO);
-        assert(portO.isPort());
+    public void testInputPort()
+    throws Exception
+    {
+        final Value port = InputPort.create();
+
+        commonTests(port);
+        assert(port.isPort());
+        assert(port.toInputPort() == port);
+    }
+
+    public void testEnvironment()
+    throws Exception
+    {
+        final Value environment = Environment.getEmpty();
+
+        assert(environment.isTrue());
+
+        assert(countTypes(environment) == 0);
+        assert(countCasts(environment) == 1);
+
+        assert(environment.toEnvironment() == environment);
+    }
+
+    public void testStaticEnvironment()
+    throws Exception
+    {
+        final Value environment = Environment.getEmpty().getStatic();
+
+        assert(environment.isTrue());
+
+        assert(countTypes(environment) == 0);
+        assert(countCasts(environment) == 1);
+
+        assert(environment.toStaticEnvironment() == environment);
     }
 
 
@@ -259,19 +277,26 @@ public class TestValue
         assert(!eq  | eqv  ); // aka. eq  -> eqv
         assert(!eqv | equal); // aka. eqv -> equal
 
-        if (eq) {
+        if (eq)
+        {
             return 3;
-        } else if (eqv) {
+        }
+        else if (eqv)
+        {
             return 2;
-        } else if (equal) {
+        }
+        else if (equal)
+        {
             return 1;
-        } else {
+        }
+        else
+        {
             return 0;
         }
     }
 
     public void testEq()
-        throws Exception
+    throws Exception
     {
         Value u = Symbol.create("u");
         Value v = Symbol.create("v");
@@ -329,7 +354,7 @@ public class TestValue
 
 
         // equal equivalent but eqv unspec. values
-        
+
         assert(
             eqHelper(
                 ScmVector.create(),
@@ -357,7 +382,7 @@ public class TestValue
                 ScmString.create("Hallo")
             ) >= 1
         );
-        
+
 
         // equal equivalent but eqv different values
 
@@ -367,7 +392,7 @@ public class TestValue
                 Pair.create(v, v)
             ) == 1
         );
-        
+
 
         // different values
 
