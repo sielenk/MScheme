@@ -53,8 +53,8 @@ final class Letrec
             Value formal  = binding.getHead();
             Value init    = binding.getTail().getHead();
 
-            formals  = List.prepend(formal, formals);
-            inits    = List.prepend(init  , inits  );
+            formals  = ListFactory.prepend(formal, formals);
+            inits    = ListFactory.prepend(init  , inits  );
 
             bindings = bindings.getTail();
         }

@@ -7,10 +7,11 @@ import MScheme.Syntax;
 import MScheme.util.Arity;
 import MScheme.code.CompiledLambda;
 import MScheme.environment.StaticEnvironment;
+
+import MScheme.values.ListFactory;
 import MScheme.values.List;
 import MScheme.values.Empty;
 import MScheme.values.Pair;
-import MScheme.values.ValueFactory;
 
 import MScheme.exceptions.*;
 
@@ -62,11 +63,11 @@ final class Lambda
                 Pair currentPair = current.toPair();
 
                 ++minArity;
-                result  = List.prepend(currentPair.getFirst(), result);
+                result  = ListFactory.prepend(currentPair.getFirst(), result);
                 current = currentPair.getSecond();
             }
 
-            result = List.prepend(current, result);
+            result = ListFactory.prepend(current, result);
 
             formals = result.getReversed();
             arity   = Arity.atLeast(minArity);

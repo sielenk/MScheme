@@ -5,7 +5,7 @@ import MScheme.util.Arity;
 import MScheme.machine.Registers;
 import MScheme.Code;
 import MScheme.Value;
-import MScheme.values.ValueFactory;
+import MScheme.values.ListFactory;
 import MScheme.values.List;
 import MScheme.values.Function;
 
@@ -30,7 +30,7 @@ class YWrappedFunction
     {
         return _f.call(
             state,
-            List.prepend(
+            ListFactory.prepend(
                 this,
                 arguments
             )

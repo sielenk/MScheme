@@ -8,7 +8,8 @@ import MScheme.Syntax;
 
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Reference;
-import MScheme.values.ValueFactory;
+
+import MScheme.values.ListFactory;
 import MScheme.values.List;
 import MScheme.values.Pair;
 import MScheme.values.Symbol;
@@ -44,7 +45,7 @@ final class Define
                 compilationEnv.define(symbol),
                 Lambda.INSTANCE.translate(
                     compilationEnv,
-                    List.prepend(
+                    ListFactory.prepend(
                         formals,
                         body
                     )
