@@ -17,7 +17,7 @@ final class PushContinuation
     final private CodeList _todo;
 
 
-    PushContinuation(
+    private PushContinuation(
         Machine  machine,
         List     done,
         CodeList todo
@@ -30,13 +30,13 @@ final class PushContinuation
         CodeList todo
     )
     {
-            new PushContinuation(
-                machine,
-                done,
-                todo.getTail()
-            );
+        new PushContinuation(
+            machine,
+            done,
+            todo.getTail()
+        );
             
-            return todo.getHead();
+        return todo.getHead();
     }
 
     protected Code execute(Machine machine, Value value)
