@@ -72,7 +72,7 @@ public class StaticEnvironment
 
         if (getSize() != symbolsDefined)
         {
-            throw new DuplicateSymbolException(symbols.toValue());
+            throw new DuplicateSymbolException(symbols);
         }
     }
 
