@@ -5,7 +5,7 @@ import MScheme.code.Assignment;
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Reference;
 import MScheme.values.ValueFactory;
-import MScheme.values.Value;
+import MScheme.Value;
 import MScheme.values.List;
 import MScheme.values.Pair;
 import MScheme.values.Symbol;

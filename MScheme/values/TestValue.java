@@ -1,7 +1,7 @@
 package MScheme.values;
 
 import MScheme.exceptions.*;
-import MScheme.values.Value;
+import MScheme.Value;
 
 
 public class TestValue

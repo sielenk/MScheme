@@ -3,6 +3,8 @@ package MScheme.syntax;
 import java.io.Writer;
 import java.io.IOException;
 
+import MScheme.Value;
+
 import MScheme.util.Arity;
 import MScheme.machine.Machine;
 import MScheme.code.*;

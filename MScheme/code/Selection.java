@@ -1,6 +1,6 @@
 package MScheme.code;
 
-import MScheme.values.Value;
+import MScheme.Value;
 import MScheme.machine.Registers;
 import MScheme.machine.Continuation;
 

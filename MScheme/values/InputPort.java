@@ -7,12 +7,15 @@ import java.io.InputStreamReader;
 import java.io.PushbackReader;
 import java.io.IOException;
 
+import MScheme.Value;
+
 import MScheme.exceptions.OpenException;
 import MScheme.exceptions.ReadException;
 import MScheme.exceptions.ParseException;
 import MScheme.exceptions.CloseException;
 import MScheme.exceptions.ImmutableException;
 import MScheme.exceptions.InvalidVectorIndexException;
+
 
 class EofValue
     extends Value

@@ -2,7 +2,7 @@ package MScheme.code;
 
 import MScheme.machine.Continuation;
 import MScheme.machine.Registers;
-import MScheme.values.Value;
+import MScheme.Value;
 
 
 final class SequenceContinuation

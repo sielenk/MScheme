@@ -1,10 +1,9 @@
 package MScheme.functions;
 
 import MScheme.machine.Registers;
-import MScheme.values.Value;
+import MScheme.Value;
 import MScheme.code.Code;
 import MScheme.values.ValueFactory;
-import MScheme.values.Value;
 import MScheme.values.List;
 
 import MScheme.exceptions.*;

@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import MScheme.util.Arity;
 
-import MScheme.values.Value;
+import MScheme.Value;
 import MScheme.values.Symbol;
 import MScheme.values.List;
 

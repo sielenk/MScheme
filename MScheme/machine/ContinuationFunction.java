@@ -6,7 +6,7 @@ import java.io.IOException;
 import MScheme.code.Code;
 import MScheme.code.CodeList;
 import MScheme.code.Sequence;
-import MScheme.values.Value;
+import MScheme.Value;
 import MScheme.functions.UnaryFunction;
 
 

@@ -4,7 +4,7 @@ import MScheme.util.Arity;
 
 import MScheme.machine.Registers;
 import MScheme.code.Code;
-import MScheme.values.Value;
+import MScheme.Value;
 import MScheme.values.Function;
 import MScheme.values.List;
 import MScheme.values.Pair;

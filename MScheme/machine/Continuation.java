@@ -2,7 +2,7 @@ package MScheme.machine;
 
 import MScheme.code.Code;
 import MScheme.code.CodeList;
-import MScheme.values.Value;
+import MScheme.Value;
 
 import MScheme.exceptions.RuntimeError;
 import MScheme.exceptions.TypeError;

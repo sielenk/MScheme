@@ -3,7 +3,7 @@ package MScheme.syntax;
 import MScheme.util.Arity;
 import MScheme.code.Code;
 import MScheme.environment.StaticEnvironment;
-import MScheme.values.Value;
+import MScheme.Value;
 import MScheme.values.List;
 
 import MScheme.exceptions.TypeError;
