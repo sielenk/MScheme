@@ -19,11 +19,11 @@ import MScheme.exceptions.SchemeException;
  * in the classes which implement them.
  */
 public abstract class Code
-    implements Translator
+            implements Translator
 {
     /** The CVS id of the file containing this class. */
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     /** The default constructor. */
@@ -46,7 +46,7 @@ public abstract class Code
      * @return the next instruction to execute.
      */
     public abstract Code executionStep(Registers state)
-        throws SchemeException;
+    throws SchemeException;
 
 
     /**
@@ -67,11 +67,11 @@ public abstract class Code
     ) throws SchemeException
     {
         return Application.create(
-            CodeList.prepend(
-                this,
-                arguments.getCodeList(compilationEnv)
-            )
-        );
+                   CodeList.prepend(
+                       this,
+                       arguments.getCodeList(compilationEnv)
+                   )
+               );
     }
 
 

@@ -7,41 +7,55 @@ import MScheme.Value;
 
 
 public final class ScmBoolean
-    extends ValueDefaultImplementations
+            extends ValueDefaultImplementations
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final static ScmBoolean TRUE  = new ScmBoolean();
     private final static ScmBoolean FALSE = new ScmBoolean();
-    
-    private ScmBoolean() { }
+
+    private ScmBoolean()
+    { }
 
 
     public static ScmBoolean create(boolean flag)
-    { return flag ? TRUE : FALSE; }
+    {
+        return flag ? TRUE : FALSE;
+    }
 
     public static ScmBoolean createFalse()
-    { return FALSE; }
+    {
+        return FALSE;
+    }
 
     public static ScmBoolean createTrue()
-    { return TRUE; }
+    {
+        return TRUE;
+    }
 
 
     public boolean isTrue()
-    { return (this != FALSE); }
-    
+    {
+        return (this != FALSE);
+    }
+
     public boolean isScmBoolean()
-    { return true; }
-    
+    {
+        return true;
+    }
+
     public void write(Writer destination)
-        throws IOException
+    throws IOException
     {
         destination.write('#');
-        if (isTrue()) {
+        if (isTrue())
+        {
             destination.write('t');
-        } else {
+        }
+        else
+        {
             destination.write('f');
         }
     }

@@ -14,16 +14,21 @@ import MScheme.values.Function;
 public class ParseBuiltins
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private static boolean paramsValid(Class[] params)
     {
-        if (params.length == 1) {
+        if (params.length == 1)
+        {
             return (params[0] == Value.class) || (params[0] == List.class);
-        } else {
-            for (int i = 0; i < params.length; i++) {
-                if (params[i] != Value.class) {
+        }
+        else
+        {
+            for (int i = 0; i < params.length; i++)
+            {
+                if (params[i] != Value.class)
+                {
                     return false;
                 }
             }
@@ -40,39 +45,41 @@ public class ParseBuiltins
     )
     {
         cases
-            .append("class ").append(className).append("\n")
-            .append("    extends    ").append(baseClassName).append("\n")
-            .append("    implements BuiltinTable\n")
-            .append("{\n")
-            .append("    public final static String id\n")
-            .append("        = \"$Id$\";\n")
-            .append("\n")
-            .append("\n")
-            .append("    private final int    _id;\n")
-            .append("    private final String _name;\n")
-            .append("\n")
-            .append("    ").append(className).append("(int id, String name)\n")
-            .append("    { _id = id; _name = name; }\n")
-            .append("\n")
-            .append("    public String getName() { return _name; }\n")
-            .append("\n")
-            .append("    public Function getFunc() { return this; }\n")
-            .append("\n")
-            .append("    protected Value checkedCall(")
-                .append(arguments).append(")\n")
-            .append("        throws SchemeException\n")
-            .append("    {\n")
-            .append("        switch(_id) {\n");
+        .append("class ").append(className).append("\n")
+        .append("    extends    ").append(baseClassName).append("\n")
+        .append("    implements BuiltinTable\n")
+        .append("{\n")
+        .append("    public final static String id\n")
+        .append("        = \"$Id$\";\n")
+        .append("\n")
+        .append("\n")
+        .append("    private final int    _id;\n")
+        .append("    private final String _name;\n")
+        .append("\n")
+        .append("    ").append(className).append("(int id, String name)\n")
+        .append("    { _id = id; _name = name; }\n")
+        .append("\n")
+        .append("    public String getName() { return _name; }\n")
+        .append("\n")
+        .append("    public Function getFunc() { return this; }\n")
+        .append("\n")
+        .append("    protected Value checkedCall(")
+        .append(arguments).append(")\n")
+        .append("        throws SchemeException\n")
+        .append("    {\n")
+        .append("        switch(_id) {\n");
     }
 
     private static String parseName(String name)
     {
         StringBuffer buf = new StringBuffer();
 
-        for (int index = 0; index < name.length(); index++) {
+        for (int index = 0; index < name.length(); index++)
+        {
             char c = name.charAt(index);
 
-            if (c == '_') {
+            if (c == '_')
+            {
                 buf.append(
                     (char)Integer.parseInt(
                         name.substring(index + 1, index + 3),
@@ -80,7 +87,9 @@ public class ParseBuiltins
                     )
                 );
                 index += 2;
-            } else {
+            }
+            else
+            {
                 buf.append(c);
             }
         }
@@ -89,37 +98,37 @@ public class ParseBuiltins
     }
 
     private static void parseClass(Class cls, Writer out)
-        throws IOException
+    throws IOException
     {
         final String   baseClass  = "BuiltinRaw";
         final String[] arityClass = {
-            "BuiltinThunks",
-            "BuiltinUnary",
-            "BuiltinBinary",
-            "BuiltinTernary",
-        };
+                                        "BuiltinThunks",
+                                        "BuiltinUnary",
+                                        "BuiltinBinary",
+                                        "BuiltinTernary",
+                                    };
         final String   baseClassBase  = "Function";
         final String[] arityClassBase = {
-            "ValueThunk",
-            "UnaryValueFunction",
-            "BinaryValueFunction",
-            "TernaryValueFunction",
-        };
+                                            "ValueThunk",
+                                            "UnaryValueFunction",
+                                            "BinaryValueFunction",
+                                            "TernaryValueFunction",
+                                        };
 
         final String   baseArgs  = "args";
         final String[] arityArgs = {
-            "",
-            "fst",
-            "fst, snd",
-            "fst, snd, trd",
-        };
+                                       "",
+                                       "fst",
+                                       "fst, snd",
+                                       "fst, snd, trd",
+                                   };
         final String   baseTypedArgs  = "List args";
         final String[] arityTypedArgs = {
-            "",
-            "Value fst",
-            "Value fst, Value snd",
-            "Value fst, Value snd, Value trd",
-        };
+                                            "",
+                                            "Value fst",
+                                            "Value fst, Value snd",
+                                            "Value fst, Value snd, Value trd",
+                                        };
         final int MAXARGS = arityArgs.length - 1;
 
         final String defaultCase =
@@ -134,7 +143,8 @@ public class ParseBuiltins
         int            functionIndex = 0;
 
         initClass(baseCases, baseClass, baseClassBase, baseTypedArgs);
-        for (int i = 0; i <= MAXARGS; i++) {
+        for (int i = 0; i <= MAXARGS; i++)
+        {
             arityCases[i] = new StringBuffer();
             initClass(
                 arityCases[i],
@@ -146,41 +156,48 @@ public class ParseBuiltins
 
         table.append("    BuiltinTable[] builtins = {\n");
 
-        for (int i = 0; i < fields.length; i++) {
+        for (int i = 0; i < fields.length; i++)
+        {
             Field field = fields[i];
             int   mo    = field.getModifiers();
 
-            if (!Modifier.isStatic(mo) || !Modifier.isPublic(mo)) {
+            if (!Modifier.isStatic(mo) || !Modifier.isPublic(mo))
+            {
                 continue;
             }
 
-            if (!Function.class.isAssignableFrom(field.getType())) {
+            if (!Function.class.isAssignableFrom(field.getType()))
+            {
                 continue;
             }
 
             final String       schemeName = parseName(field.getName());
 
             table
-                .append("        new BuiltinTableEntry(Builtins.")
-                .append(field.getName())
-                .append(", \"")
-                .append(schemeName)
-                .append("\"),\n");
+            .append("        new BuiltinTableEntry(Builtins.")
+            .append(field.getName())
+            .append(", \"")
+            .append(schemeName)
+            .append("\"),\n");
         }
 
-        for (int i = 0; i < methods.length; i++) {
+        for (int i = 0; i < methods.length; i++)
+        {
             Method me = methods[i];
             int    mo = me.getModifiers();
 
-            if (!Modifier.isStatic(mo) || !Modifier.isPublic(mo)) {
+            if (!Modifier.isStatic(mo) || !Modifier.isPublic(mo))
+            {
                 continue;
             }
 
-            if (!paramsValid(me.getParameterTypes())) {
+            if (!paramsValid(me.getParameterTypes()))
+            {
                 continue;
             }
 
-            if (!Value.class.isAssignableFrom(me.getReturnType())) {
+            if (!Value.class.isAssignableFrom(me.getReturnType()))
+            {
                 continue;
             }
 
@@ -190,12 +207,15 @@ public class ParseBuiltins
             final StringBuffer cases;
 
             if ((me.getParameterTypes().length == 1) &&
-                (me.getParameterTypes()[0] == List.class)
-            ) {
+                    (me.getParameterTypes()[0] == List.class)
+               )
+            {
                 cases     = baseCases;
                 arguments = baseArgs;
                 hostClass = baseClass;
-            } else {
+            }
+            else
+            {
                 int arity = me.getParameterTypes().length;
 
                 cases     = arityCases[arity];
@@ -205,41 +225,41 @@ public class ParseBuiltins
 
 
             table
-                .append("        new ")
-                .append(hostClass)
-                .append('(')
-                .append(functionIndex)
-                .append(", \"")
-                .append(schemeName)
-                .append("\"),\n");
+            .append("        new ")
+            .append(hostClass)
+            .append('(')
+            .append(functionIndex)
+            .append(", \"")
+            .append(schemeName)
+            .append("\"),\n");
 
             cases
-                .append("        case ")
-                .append(functionIndex)
-                .append(": // ")
-                .append(schemeName)
-                .append("\n")
-                .append("            return Builtins.")
-                .append(me.getName())
-                .append("(")
-                .append(arguments)
-                .append(");\n\n");
+            .append("        case ")
+            .append(functionIndex)
+            .append(": // ")
+            .append(schemeName)
+            .append("\n")
+            .append("            return Builtins.")
+            .append(me.getName())
+            .append("(")
+            .append(arguments)
+            .append(");\n\n");
 
             functionIndex++;
         }
 
         baseCases
-            .append(defaultCase)
-            .append("        }\n")
-            .append("    }\n")
-            .append("\n")
-            .append("    protected Arity getArity()\n")
-            .append("    { return Arity.atLeast(0); }\n")
-            .append("\n")
-            .append("    public Code call(Registers state, List args)\n")
-            .append("        throws SchemeException\n")
-            .append("    { return checkedCall(args).getLiteral(); }\n")
-            .append("}\n\n");
+        .append(defaultCase)
+        .append("        }\n")
+        .append("    }\n")
+        .append("\n")
+        .append("    protected Arity getArity()\n")
+        .append("    { return Arity.atLeast(0); }\n")
+        .append("\n")
+        .append("    public Code call(Registers state, List args)\n")
+        .append("        throws SchemeException\n")
+        .append("    { return checkedCall(args).getLiteral(); }\n")
+        .append("}\n\n");
 
         table.append("    };\n");
 
@@ -261,10 +281,11 @@ public class ParseBuiltins
         );
 
         out.write(baseCases.toString());
-        for (int i = 0; i <= MAXARGS; i++) {
+        for (int i = 0; i <= MAXARGS; i++)
+        {
             arityCases[i]
-                .append(defaultCase)
-                .append("        }\n    }\n}\n\n");
+            .append(defaultCase)
+            .append("        }\n    }\n}\n\n");
             out.write(arityCases[i].toString());
         }
 
@@ -301,7 +322,7 @@ public class ParseBuiltins
 
 
     public static void main(String[] argv)
-        throws IOException
+    throws IOException
     {
         Writer out = new OutputStreamWriter(System.out);
 

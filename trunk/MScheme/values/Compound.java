@@ -13,22 +13,25 @@ import MScheme.exceptions.*;
  * 
  */
 abstract class Compound
-    extends ValueDefaultImplementations
+            extends ValueDefaultImplementations
 {
     /** The CVS id of the file containing this class. */
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final boolean _isConst;
 
     protected Compound(boolean isConst)
-    { _isConst = isConst; }
+    {
+        _isConst = isConst;
+    }
 
     protected final void modify()
-        throws ImmutableException
+    throws ImmutableException
     {
-        if (_isConst) {
+        if (_isConst)
+        {
             throw new ImmutableException(this);
         }
     }
@@ -37,5 +40,7 @@ abstract class Compound
 
 
     public final Value getConst()
-    { return _isConst ? this : getConstCopy(); }
+    {
+        return _isConst ? this : getConstCopy();
+    }
 }

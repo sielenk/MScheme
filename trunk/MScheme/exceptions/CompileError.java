@@ -4,11 +4,13 @@ import MScheme.Value;
 
 
 public class CompileError
-    extends SchemeException
+            extends SchemeException
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
     public CompileError(Value cause, String message)
-    { super(cause, message); }
+    {
+        super(cause, message);
+    }
 }

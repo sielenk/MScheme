@@ -10,28 +10,34 @@ import MScheme.exceptions.TypeError;
 abstract class Reducer
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final Value _initial;
 
     protected Reducer(Value initial)
-    { _initial = initial; }
+    {
+        _initial = initial;
+    }
 
     protected abstract Value combine(Value fst, Value snd)
-        throws RuntimeError, TypeError;
+    throws RuntimeError, TypeError;
 
 
     public final Value reduceLeft(List list)
-        throws RuntimeError, TypeError
+    throws RuntimeError, TypeError
     {
-        if (list.isEmpty()) {
+        if (list.isEmpty())
+        {
             return _initial;
-        } else {
+        }
+        else
+        {
             Value result = list.getHead();
             List  tail   = list.getTail();
 
-            while (!tail.isEmpty()) {
+            while (!tail.isEmpty())
+            {
                 result = combine(result, tail.getHead());
                 tail   = tail.getTail();
             }
@@ -41,12 +47,13 @@ abstract class Reducer
     }
 
     public final Value foldLeft(List list)
-        throws RuntimeError, TypeError
+    throws RuntimeError, TypeError
     {
         Value result = _initial;
         List  tail   = list;
 
-        while (!tail.isEmpty()) {
+        while (!tail.isEmpty())
+        {
             result = combine(result, tail.getHead());
             tail   = tail.getTail();
         }
@@ -55,40 +62,49 @@ abstract class Reducer
     }
 
     private Value reduceRightHelper(List list)
-        throws RuntimeError, TypeError
+    throws RuntimeError, TypeError
     {
         List tail = list.getTail();
 
-        if (tail.isEmpty()) {
+        if (tail.isEmpty())
+        {
             return list.getHead();
-        } else {
+        }
+        else
+        {
             return combine(
-                list.getHead(),
-                reduceRightHelper(tail)
-            );
+                       list.getHead(),
+                       reduceRightHelper(tail)
+                   );
         }
     }
 
     public final Value reduceRight(List list)
-        throws RuntimeError, TypeError
+    throws RuntimeError, TypeError
     {
-       if (list.isEmpty()) {
+        if (list.isEmpty())
+        {
             return _initial;
-        } else {
+        }
+        else
+        {
             return reduceRightHelper(list);
         }
     }
 
     public Value foldRight(List list)
-        throws RuntimeError, TypeError
+    throws RuntimeError, TypeError
     {
-        if (list.isEmpty()) {
+        if (list.isEmpty())
+        {
             return _initial;
-        } else {
+        }
+        else
+        {
             return combine(
-                list.getHead(),
-                foldRight(list.getTail())
-            );
+                       list.getHead(),
+                       foldRight(list.getTail())
+                   );
         }
     }
 }

@@ -4,11 +4,13 @@ import MScheme.values.Symbol;
 
 
 public final class AlreadyBound
-    extends CompileError
+            extends CompileError
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
     public AlreadyBound(Symbol cause)
-    { super(cause, "symbol already bound"); }
+    {
+        super(cause, "symbol already bound");
+    }
 }

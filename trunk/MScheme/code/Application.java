@@ -14,10 +14,10 @@ import MScheme.exceptions.*;
 
 
 final class PushContinuation
-    extends Continuation
+            extends Continuation
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final List     _done;
@@ -31,9 +31,9 @@ final class PushContinuation
     )
     {
         super(state);
-	    _done = done;
-	    _todo = todo;
-	}
+        _done = done;
+        _todo = todo;
+    }
 
     static Code prepareNext(
         Registers state,
@@ -46,55 +46,66 @@ final class PushContinuation
             done,
             todo.getTail()
         );
-            
+
         return todo.getHead();
     }
 
     protected Code execute(Registers state, Value value)
-        throws SchemeException
+    throws SchemeException
     {
-        if (_todo.isEmpty()) {
+        if (_todo.isEmpty())
+        {
             return value.toFunction().call(state, _done);
-        } else {
+        }
+        else
+        {
             return prepareNext(
-                state,
-                ListFactory.prepend(value, _done),
-                _todo
-            );
+                       state,
+                       ListFactory.prepend(value, _done),
+                       _todo
+                   );
         }
     }
 
 
     protected String debugString()
-    { return "push[" + _todo.getReversed() + " | " + _done + "]"; }
+    {
+        return "push[" + _todo.getReversed() + " | " + _done + "]";
+    }
 }
 
 
 public final class Application
-    extends Code
+            extends Code
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final CodeList _permutedApplication;
 
     private Application(CodeList application)
-    { _permutedApplication = application.getReversed(); }
-    
+    {
+        _permutedApplication = application.getReversed();
+    }
+
     public static Code create(CodeList application)
-    { return new Application(application); }
-    
+    {
+        return new Application(application);
+    }
+
     public Code executionStep(Registers state)
     {
         return PushContinuation.prepareNext(
-            state,
-            Empty.create(),
-            _permutedApplication
-        );
+                   state,
+                   Empty.create(),
+                   _permutedApplication
+               );
     }
 
 
     public String toString()
-    { return "APPLY[" + _permutedApplication.getReversed().toString() + ']'; }
+    {
+        return "APPLY[" + _permutedApplication.getReversed().toString() + ']';
+    }
 }

@@ -4,14 +4,16 @@ import MScheme.values.ScmString;
 
 
 public class InvalidStringIndexException
-    extends StringException
+            extends StringException
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
     public InvalidStringIndexException(
         ScmString string,
         int       index
     )
-    { super(string, index); }
+    {
+        super(string, index);
+    }
 }

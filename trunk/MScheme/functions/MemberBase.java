@@ -9,10 +9,10 @@ import MScheme.exceptions.PairExpected;
 
 
 abstract class MemberBase
-    extends BinaryValueFunction
+            extends BinaryValueFunction
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     protected abstract boolean equal(Value fst, Value snd);
@@ -24,8 +24,10 @@ abstract class MemberBase
     {
         List tail = values.toList();
 
-        while (!tail.isEmpty()) {
-            if (equal(key, tail.getHead())) {
+        while (!tail.isEmpty())
+        {
+            if (equal(key, tail.getHead()))
+            {
                 return tail;
             }
 

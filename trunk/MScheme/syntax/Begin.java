@@ -13,24 +13,26 @@ import MScheme.exceptions.SchemeException;
 
 
 final class Begin
-    extends Syntax
+            extends Syntax
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     final static Syntax INSTANCE = new Begin();
-    
+
     private Begin()
-    { super(Arity.atLeast(1)); }
-    
+    {
+        super(Arity.atLeast(1));
+    }
+
     protected Code checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws SchemeException
     {
         return Sequence.create(
-            arguments.getCodeList(compilationEnv)
-        );
+                   arguments.getCodeList(compilationEnv)
+               );
     }
 }

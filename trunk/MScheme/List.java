@@ -3,7 +3,7 @@ package MScheme;
 import java.io.Writer;
 import java.io.IOException;
 
-import MScheme.Value; 
+import MScheme.Value;
 import MScheme.Code;
 
 import MScheme.environment.StaticEnvironment;
@@ -13,11 +13,11 @@ import MScheme.exceptions.*;
 
 
 public interface List
-    extends Value
+            extends Value
 {
     /** The CVS id of the file containing this class. */
     String id
-        = "$Id$";
+    = "$Id$";
 
 
     boolean isEmpty();
@@ -28,8 +28,8 @@ public interface List
     List  getTail    () throws PairExpected, ListExpected;
 
     Code getCode(StaticEnvironment env)
-        throws SchemeException;
+    throws SchemeException;
 
     CodeList getCodeList(StaticEnvironment compilationEnv)
-        throws SchemeException;
+    throws SchemeException;
 }

@@ -15,54 +15,67 @@ import MScheme.exceptions.*;
 
 
 public abstract class Pair
-    extends Compound
+            extends Compound
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     public static Pair create(Value first, Value second)
-    { return PairOrList.create(first, second); }
+    {
+        return PairOrList.create(first, second);
+    }
 
     public static Pair createConst(Value first, Value second)
-    { return PairOrList.createConst(first, second); }
+    {
+        return PairOrList.createConst(first, second);
+    }
 
 
     // specialisation of ValueImplementation
 
     private final void put(Writer destination, boolean doDisplay)
-        throws IOException
+    throws IOException
     {
         destination.write('(');
 
         Value current = this;
-        while (current instanceof Pair) {
+        while (current instanceof Pair)
+        {
             // 'this' is the first element of the list
             // and needs no leading space
             // (the opening parenthesis is a delimiter)
-            if (current != this) {
+            if (current != this)
+            {
                 destination.write(' ');
             }
 
             Pair currentPair = (Pair)current;
 
-            if (doDisplay) {
+            if (doDisplay)
+            {
                 currentPair.getFirst().display(destination);
-            } else {
+            }
+            else
+            {
                 currentPair.getFirst().write(destination);
             }
 
             current = currentPair.getSecond();
         }
 
-        if (current != Empty.create()) {
+        if (current != Empty.create())
+        {
             // 'this' is an improper list
 
             destination.write(" . ");
 
-            if (doDisplay) {
+            if (doDisplay)
+            {
                 current.display(destination);
-            } else {
+            }
+            else
+            {
                 current.write(destination);
             }
         }
@@ -71,43 +84,55 @@ public abstract class Pair
     }
 
     public final void write(Writer destination)
-        throws IOException
-    { put(destination, false); }
+    throws IOException
+    {
+        put(destination, false);
+    }
 
     public final void display(Writer destination)
-        throws IOException
-    { put(destination, true); }
+    throws IOException
+    {
+        put(destination, true);
+    }
 
 
     public final boolean isPair()
-    { return true; }
+    {
+        return true;
+    }
 
     public final Pair toPair()
-    { return this; }
+    {
+        return this;
+    }
 
 
     public final boolean equal(Value other)
     {
-        try {
+        try
+        {
             Pair otherPair = (Pair)other;
 
             return
                 (getFirst ().equal(otherPair.getFirst ())) &&
                 (getSecond().equal(otherPair.getSecond()));
         }
-        catch (ClassCastException e) { }
+        catch (ClassCastException e)
+        { }
 
         return false;
     }
 
     public abstract Code getCode(StaticEnvironment compilationEnv)
-        throws SchemeException;
+    throws SchemeException;
 
 
     // implementation of Compound
 
     protected Value getConstCopy()
-    { return createConst(getFirst(), getSecond()); }
+    {
+        return createConst(getFirst(), getSecond());
+    }
 
 
     // implementation of Pair
@@ -125,20 +150,24 @@ public abstract class Pair
     }
 
     public Value getFirst()
-    { return _first; }
+    {
+        return _first;
+    }
 
     public void setFirst(Value first)
-        throws ImmutableException
+    throws ImmutableException
     {
         modify();
         _first = first;
     }
 
     public Value getSecond()
-    { return _second; }
+    {
+        return _second;
+    }
 
     public void setSecond(Value second)
-        throws ImmutableException
+    throws ImmutableException
     {
         modify();
         _second = second;

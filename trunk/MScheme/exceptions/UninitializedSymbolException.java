@@ -4,10 +4,10 @@ import MScheme.values.Symbol;
 
 
 public class UninitializedSymbolException
-    extends RuntimeError
+            extends RuntimeError
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
     public UninitializedSymbolException(Symbol cause)
     {

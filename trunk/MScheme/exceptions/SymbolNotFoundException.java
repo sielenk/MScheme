@@ -4,11 +4,13 @@ import MScheme.Value;
 
 
 public final class SymbolNotFoundException
-    extends CompileError
+            extends CompileError
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
     public SymbolNotFoundException(Value cause)
-    { super(cause, "symbol not found"); }
+    {
+        super(cause, "symbol not found");
+    }
 }

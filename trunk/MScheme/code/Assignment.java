@@ -9,10 +9,10 @@ import MScheme.environment.Reference;
 
 
 public final class Assignment
-    extends Code
+            extends Code
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final Reference _binding;
@@ -21,7 +21,8 @@ public final class Assignment
     private Assignment(
         Reference binding,
         Code      valueCalculation
-    ) {
+    )
+    {
         _binding          = binding;
         _valueCalculation = valueCalculation;
     }
@@ -30,13 +31,16 @@ public final class Assignment
         Reference binding,
         Code      valueCalculation
     )
-    { return new Assignment(binding, valueCalculation); }
+    {
+        return new Assignment(binding, valueCalculation);
+    }
 
     public Code executionStep(Registers state)
     {
-        new Continuation(state) {
+        new Continuation(state)
+        {
             public final static String id
-                = "$Id$";
+            = "$Id$";
 
 
             protected Code execute(Registers regs, Value evaluationResult)
@@ -47,7 +51,9 @@ public final class Assignment
 
 
             protected String debugString()
-            { return "assign[" + _binding + "]"; }
+            {
+                return "assign[" + _binding + "]";
+            }
         };
 
         return _valueCalculation;
@@ -55,5 +61,7 @@ public final class Assignment
 
 
     public String toString()
-    { return "SET[" + _binding + ' ' + _valueCalculation + ']'; }
+    {
+        return "SET[" + _binding + ' ' + _valueCalculation + ']';
+    }
 }

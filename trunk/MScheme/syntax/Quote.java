@@ -14,20 +14,24 @@ import MScheme.exceptions.TypeError;
 // *** quote ***
 
 final class Quote
-    extends Syntax
+            extends Syntax
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     final static Syntax INSTANCE = new Quote();
-    
+
     private Quote()
-    { super(Arity.exactly(1)); }
-    
+    {
+        super(Arity.exactly(1));
+    }
+
     protected Code checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
     ) throws TypeError
-    { return arguments.getHead().getConst().getLiteral(); }
+    {
+        return arguments.getHead().getConst().getLiteral();
+    }
 }

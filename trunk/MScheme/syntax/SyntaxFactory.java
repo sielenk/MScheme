@@ -6,36 +6,56 @@ import MScheme.Syntax;
 public abstract class SyntaxFactory
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     public static Syntax getBeginToken()
-    { return Begin.INSTANCE; }
-    
+    {
+        return Begin.INSTANCE;
+    }
+
     public static Syntax getSetToken()
-    { return Set.INSTANCE; }
-    
+    {
+        return Set.INSTANCE;
+    }
+
     public static Syntax getDefineToken()
-    { return Define.INSTANCE; }
-    
+    {
+        return Define.INSTANCE;
+    }
+
     public static Syntax getDefineSyntaxToken()
-    { return DefineSyntax.INSTANCE; }
-    
+    {
+        return DefineSyntax.INSTANCE;
+    }
+
     public static Syntax getLambdaToken()
-    { return Lambda.INSTANCE; }
-    
+    {
+        return Lambda.INSTANCE;
+    }
+
     public static Syntax getLetToken()
-    { return Let.INSTANCE; }
-    
+    {
+        return Let.INSTANCE;
+    }
+
     public static Syntax getLetStarToken()
-    { return LetStar.INSTANCE; }
-    
+    {
+        return LetStar.INSTANCE;
+    }
+
     public static Syntax getLetrecToken()
-    { return Letrec.INSTANCE; }
-    
+    {
+        return Letrec.INSTANCE;
+    }
+
     public static Syntax getIfToken()
-    { return If.INSTANCE; }
-    
+    {
+        return If.INSTANCE;
+    }
+
     public static Syntax getQuoteToken()
-    { return Quote.INSTANCE; }
+    {
+        return Quote.INSTANCE;
+    }
 }

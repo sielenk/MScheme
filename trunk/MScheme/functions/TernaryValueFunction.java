@@ -8,10 +8,10 @@ import MScheme.exceptions.SchemeException;
 
 
 public abstract class TernaryValueFunction
-    extends TernaryFunction
+            extends TernaryFunction
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     protected final Code checkedCall(
@@ -20,8 +20,10 @@ public abstract class TernaryValueFunction
         Value     snd,
         Value     trd
     ) throws SchemeException
-    { return checkedCall(fst, snd, trd).getLiteral(); }
+    {
+        return checkedCall(fst, snd, trd).getLiteral();
+    }
 
     protected abstract Value checkedCall(Value fst, Value snd, Value trd)
-        throws SchemeException;
+    throws SchemeException;
 }

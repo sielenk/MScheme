@@ -20,16 +20,18 @@ import MScheme.values.*;
 // *** let ***
 
 final class Let
-    extends Syntax
+            extends Syntax
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     final static Syntax INSTANCE = new Let();
-    
+
     private Let()
-    { super(Arity.atLeast(2)); }
+    {
+        super(Arity.atLeast(2));
+    }
 
 
     protected Code checkedTranslate(
@@ -41,8 +43,10 @@ final class Let
         List   bindings;
         List   body;
 
-        if (arguments.getHead().isSymbol()) {
-            if (arguments.getLength() < 3) {
+        if (arguments.getHead().isSymbol())
+        {
+            if (arguments.getLength() < 3)
+            {
                 arityError(arguments);
             }
             // named let
@@ -50,7 +54,9 @@ final class Let
             name     = arguments.getHead().toSymbol();
             bindings = arguments.getTail().getHead().toList();
             body     = arguments.getTail().getTail();
-        } else {
+        }
+        else
+        {
             // (let ((<var> <init>) ...) <body>)
             name     = null;
             bindings = arguments.getHead().toList();
@@ -62,7 +68,8 @@ final class Let
         List inits   = Empty.create();
 
         // parse the initializer list
-        while (!bindings.isEmpty()) {
+        while (!bindings.isEmpty())
+        {
             List  binding = bindings.getHead().toList();
 
             Value formal  = binding.getHead();
@@ -84,7 +91,8 @@ final class Let
         formals = formals.getReversed();
         inits   = inits  .getReversed();
 
-        if (name != null) {
+        if (name != null)
+        {
             // for the named let, the usually anonymous
             // closure gets a name to be recursively callable.
             // to ensure this names uniqueness, it is prepended to
@@ -98,16 +106,17 @@ final class Let
                 ListFactory.prepend(formals, body)
             );
 
-        if (name != null) {
+        if (name != null)
+        {
             // the "raw" closure of a named-let has one additional
             // argument, which is to be bound to the "curried"
             // closure -- the YCombinator does it's magic ...
             compiledProc = Application.create(
-                CodeList.create(
-                    YCombinator.INSTANCE.getLiteral(),
-                    compiledProc
-                )
-            );
+                               CodeList.create(
+                                   YCombinator.INSTANCE.getLiteral(),
+                                   compiledProc
+                               )
+                           );
         }
 
         return compiledProc.translate(compilationEnv, inits);

@@ -18,17 +18,19 @@ import MScheme.functions.UnaryFunction;
  * are skipped.
  */
 final class ContinuationFunction
-    extends UnaryFunction
+            extends UnaryFunction
 {
     /** The CVS id of the file containing this class. */
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final Continuation _continuation;
 
     ContinuationFunction(Continuation continuation)
-    { _continuation = continuation; }
+    {
+        _continuation = continuation;
+    }
 
     private static CodeList dynamicWind(
         Continuation source,
@@ -42,16 +44,19 @@ final class ContinuationFunction
         Continuation[] stack    = new Continuation[from.getLevel()];
         int            sp       = 0;
 
-        while (from != to) {
+        while (from != to)
+        {
             Continuation newFrom = from;
             Continuation newTo   = to;
 
-            if (from.getLevel() >= to.getLevel()) {
+            if (from.getLevel() >= to.getLevel())
+            {
                 newFrom     = from.getParent();
                 stack[sp++] = from;
             }
 
-            if (to.getLevel() >= from.getLevel()) {
+            if (to.getLevel() >= from.getLevel())
+            {
                 newTo    = to.getParent();
                 sequence = to.dynamicWindEnter(sequence);
             }
@@ -60,10 +65,11 @@ final class ContinuationFunction
             to   = newTo;
         }
 
-        while (sp > 0) {
+        while (sp > 0)
+        {
             sequence = stack[--sp].dynamicWindLeave(sequence);
         }
-    
+
         return sequence;
     }
 
@@ -71,7 +77,7 @@ final class ContinuationFunction
     // implementation of Value
 
     public void write(Writer destination)
-        throws IOException
+    throws IOException
     {
         destination.write(
             "[continuation\n"
@@ -92,17 +98,17 @@ final class ContinuationFunction
     {
         Continuation source      = state.getContinuation();
         Continuation destination = _continuation;
-        
+
         state.setContinuation(destination);
 
         return Sequence.create(
-            dynamicWind(
-                source,
-                destination,
-                CodeList.create(
-                    argument.getLiteral()
-                )
-            )
-        );
+                   dynamicWind(
+                       source,
+                       destination,
+                       CodeList.create(
+                           argument.getLiteral()
+                       )
+                   )
+               );
     }
 }

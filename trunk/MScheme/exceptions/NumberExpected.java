@@ -4,11 +4,13 @@ import MScheme.Value;
 
 
 public final class NumberExpected
-    extends TypeError
+            extends TypeError
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
     public NumberExpected(Value cause)
-    { super(cause, "number"); }
+    {
+        super(cause, "number");
+    }
 }

@@ -6,22 +6,24 @@ import MScheme.Value;
 
 
 public class TestInputPort
-    extends junit.framework.TestCase
+            extends junit.framework.TestCase
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     public TestInputPort(String name)
-    { super(name); }
+    {
+        super(name);
+    }
 
 
     public void testCharIO()
-        throws Exception
+    throws Exception
     {
         StringReader source = new StringReader("test");
         InputPort in = InputPort.create(source);
-        
+
         assert(in.isReady());
         assert(in.peekChar() == 't');
         assert(in.readChar() == 't');
@@ -38,24 +40,24 @@ public class TestInputPort
         assert(in.readChar() == InputPort.EOF);
         assert(in.isReady());
     }
-    
+
     public void testWS()
-        throws Exception
+    throws Exception
     {
         StringReader source = new StringReader(
-            " \t \n ; test# 1 2 \"\"\" ;;; 3 \n  \n ;  fkdjhgd "
-        );
+                                  " \t \n ; test# 1 2 \"\"\" ;;; 3 \n  \n ;  fkdjhgd "
+                              );
         InputPort in = InputPort.create(source);
-        
+
         assert(in.read().eq(in.EOF_VALUE));
     }
-    
+
     public void testBool()
-        throws Exception
+    throws Exception
     {
         StringReader source = new StringReader(" #t #f #t#f ");
         InputPort in = InputPort.create(source);
-        
+
         assert(in.read().eq(ScmBoolean.createTrue()));
         assert(in.read().eq(ScmBoolean.createFalse()));
         assert(in.read().eq(ScmBoolean.createTrue()));
@@ -65,13 +67,13 @@ public class TestInputPort
     }
 
     public void testNumber()
-        throws Exception
+    throws Exception
     {
         StringReader source = new StringReader(
-            "-2 -1 0 1 2"
-        );
+                                  "-2 -1 0 1 2"
+                              );
         InputPort in = InputPort.create(source);
-        
+
         assert(in.read().eqv(ScmNumber.create(-2)));
         assert(in.read().eqv(ScmNumber.create(-1)));
         assert(in.read().eqv(ScmNumber.create( 0)));
@@ -79,15 +81,15 @@ public class TestInputPort
         assert(in.read().eqv(ScmNumber.create( 2)));
         assert(in.readChar() == InputPort.EOF);
     }
-    
+
     public void testChar()
-        throws Exception
+    throws Exception
     {
         StringReader source = new StringReader(
-            "#\\# #\\\\ #\\\" #\\  #\\newline #\\space #\\a"
-        );
+                                  "#\\# #\\\\ #\\\" #\\  #\\newline #\\space #\\a"
+                              );
         InputPort in = InputPort.create(source);
-        
+
         assert(in.read().eqv(ScmChar.create('#')));
         assert(in.read().eqv(ScmChar.create('\\')));
         assert(in.read().eqv(ScmChar.create('"')));
@@ -99,37 +101,37 @@ public class TestInputPort
     }
 
     public void testString()
-        throws Exception
+    throws Exception
     {
         String str1  = "";
         String str2  = " Hallo ! ";
         String str3a = " \\\\ \\\" \n ";
         String str3b = " \\ \" \n ";
-        
+
         StringReader source = new StringReader(
-              '"' + str1  + '"' + ' '
-            + '"' + str2  + '"' + ' '
-            + '"' + str3a + '"'
-        );
+                                  '"' + str1  + '"' + ' '
+                                  + '"' + str2  + '"' + ' '
+                                  + '"' + str3a + '"'
+                              );
         InputPort in = InputPort.create(source);
-        
+
         assert(in.read().equal(ScmString.create(str1)));
         assert(in.read().equal(ScmString.create(str2)));
         assert(in.read().equal(ScmString.create(str3b)));
     }
 
     public void testList()
-        throws Exception
+    throws Exception
     {
         Value one   = ScmNumber.create(1);
         Value two   = ScmNumber.create(2);
         Value three = ScmNumber.create(3);
-        
+
         StringReader source = new StringReader(
-            "()(1 .2)(1 2 3)(1 .(2 .(3 .())))"
-        );
+                                  "()(1 .2)(1 2 3)(1 .(2 .(3 .())))"
+                              );
         InputPort in = InputPort.create(source);
-        
+
         assert(in.read().equal(Empty.create()));
         assert(in.read().equal(Pair.create(one, two)));
         assert(in.read().equal(ListFactory.create(one, two, three)));
@@ -137,31 +139,31 @@ public class TestInputPort
     }
 
     public void testVector()
-        throws Exception
+    throws Exception
     {
         Value one   = ScmNumber.create(1);
         Value two   = ScmNumber.create(2);
         ScmVector v = ScmVector.create(3, one);
         v.set(2, two);
         StringReader source = new StringReader(
-            "#() #(1 1) #(1 1 2)"
-        );
+                                  "#() #(1 1) #(1 1 2)"
+                              );
         InputPort in = InputPort.create(source);
-        
+
         assert(in.read().equal(ScmVector.create()));
         assert(in.read().equal(ScmVector.create(2, one)));
         assert(in.read().equal(v));
     }
-    
+
     public void testSymbol()
-        throws Exception
+    throws Exception
     {
         Value test = Symbol.create("hallo");
         StringReader source = new StringReader(
-            "Hallo hallo HALLO HaLlO hAlLo + - ... ?12"
-        );
+                                  "Hallo hallo HALLO HaLlO hAlLo + - ... ?12"
+                              );
         InputPort in = InputPort.create(source);
-        
+
         assert(in.read().eq(test));
         assert(in.read().eq(test));
         assert(in.read().eq(test));
@@ -174,12 +176,12 @@ public class TestInputPort
     }
 
     public void testAbbrev()
-        throws Exception
+    throws Exception
     {
         Value test = Symbol.create("hallo");
         StringReader source = new StringReader(
-            "'a ' a `a ,a ,@a"
-        );
+                                  "'a ' a `a ,a ,@a"
+                              );
         InputPort in = InputPort.create(source);
 
         Symbol a   = Symbol.create("a");
@@ -187,7 +189,7 @@ public class TestInputPort
         Symbol qq  = Symbol.create("quasiquote");
         Symbol uq  = Symbol.create("unquote");
         Symbol uqs = Symbol.create("unquote-splicing");
-    
+
         assert(in.read().equal(ListFactory.create(q,   a)));
         assert(in.read().equal(ListFactory.create(q,   a)));
         assert(in.read().equal(ListFactory.create(qq,  a)));

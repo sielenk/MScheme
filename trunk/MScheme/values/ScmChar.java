@@ -7,57 +7,70 @@ import MScheme.Value;
 
 
 public final class ScmChar
-    extends ValueDefaultImplementations
+            extends ValueDefaultImplementations
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private char _character;
-    
+
     private ScmChar(char c)
-    { _character = c; }
+    {
+        _character = c;
+    }
 
     public static ScmChar create(char c)
-    { return new ScmChar(c); }
+    {
+        return new ScmChar(c);
+    }
 
     public char getJavaChar()
-    { return _character; }
+    {
+        return _character;
+    }
 
     // specialisation of Value
 
     public boolean isScmChar()
-    { return true; }
+    {
+        return true;
+    }
 
     public ScmChar toScmChar()
-    { return this; }
+    {
+        return this;
+    }
 
 
     public boolean eqv(Value other)
     {
-        try {
+        try
+        {
             ScmChar otherCharacter = (ScmChar)other;
-        
+
             return _character == otherCharacter._character;
         }
-        catch (ClassCastException e) { }
-        
+        catch (ClassCastException e)
+        { }
+
         return false;
     }
-    
+
     public void write(Writer destination)
-        throws IOException
+    throws IOException
     {
         destination.write("#\\");
-        switch (getJavaChar()) {
+        switch (getJavaChar())
+        {
         case ' ':
             destination.write("space");
             break;
-        
+
         case '\n':
             destination.write("newline");
             break;
-            
+
         default:
             destination.write(getJavaChar());
             break;
@@ -65,6 +78,8 @@ public final class ScmChar
     }
 
     public void display(Writer destination)
-        throws IOException
-    { destination.write(getJavaChar()); }
+    throws IOException
+    {
+        destination.write(getJavaChar());
+    }
 }

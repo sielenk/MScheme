@@ -11,14 +11,16 @@ import MScheme.exceptions.SchemeException;
 
 
 public abstract class BinaryFunction
-    extends CheckedFunction
+            extends CheckedFunction
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     protected final Arity getArity()
-    { return Arity.exactly(2); }
+    {
+        return Arity.exactly(2);
+    }
 
     protected final Code checkedCall(
         Registers state,
@@ -27,10 +29,10 @@ public abstract class BinaryFunction
     ) throws SchemeException
     {
         return checkedCall(
-            state,
-            arguments.getHead(),
-            arguments.getTail().getHead()
-        );
+                   state,
+                   arguments.getHead(),
+                   arguments.getTail().getHead()
+               );
     }
 
     protected abstract Code checkedCall(

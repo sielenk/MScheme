@@ -9,18 +9,20 @@ import MScheme.exceptions.SchemeException;
 
 
 public abstract class UnaryValueFunction
-    extends UnaryFunction
+            extends UnaryFunction
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     protected final Code checkedCall(
         Registers state,
         Value     fst
     ) throws SchemeException
-    { return checkedCall(fst).getLiteral(); }
+    {
+        return checkedCall(fst).getLiteral();
+    }
 
     protected abstract Value checkedCall(Value fst)
-        throws SchemeException;
+    throws SchemeException;
 }

@@ -4,11 +4,13 @@ import MScheme.values.Symbol;
 
 
 public final class UnexpectedSyntax
-    extends CompileError
+            extends CompileError
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
     public UnexpectedSyntax(Symbol cause)
-    { super(cause, "unexpected syntactic keyword"); }
+    {
+        super(cause, "unexpected syntactic keyword");
+    }
 }

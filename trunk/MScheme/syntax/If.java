@@ -17,16 +17,18 @@ import MScheme.exceptions.SchemeException;
 
 
 final class If
-    extends Syntax
+            extends Syntax
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     final static Syntax INSTANCE = new If();
-    
+
     private If()
-    { super(Arity.inRange(2, 3)); }
+    {
+        super(Arity.inRange(2, 3));
+    }
 
 
     protected Code checkedTranslate(
@@ -42,9 +44,9 @@ final class If
             : arguments.getTail().getTail().getHead();
 
         return Selection.create(
-            flag.   getCode(compilationEnv),
-            onTrue. getCode(compilationEnv),
-            onFalse.getCode(compilationEnv)
-        );
+                   flag.   getCode(compilationEnv),
+                   onTrue. getCode(compilationEnv),
+                   onFalse.getCode(compilationEnv)
+               );
     }
 }

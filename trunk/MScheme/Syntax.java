@@ -12,19 +12,23 @@ import MScheme.exceptions.SyntaxArityError;
 
 
 public abstract class Syntax
-    implements Translator
+            implements Translator
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
     private final Arity _arity;
-    
+
     protected Syntax(Arity arity)
-    { _arity = arity; }
+    {
+        _arity = arity;
+    }
 
     protected void arityError(List arguments)
-        throws SyntaxArityError
-    { throw new SyntaxArityError(arguments, _arity); }
+    throws SyntaxArityError
+    {
+        throw new SyntaxArityError(arguments, _arity);
+    }
 
     public final Code translate(
         StaticEnvironment compilationEnv,
@@ -33,7 +37,8 @@ public abstract class Syntax
     {
         int len = arguments.getLength();
 
-        if (!_arity.isValid(len)) {
+        if (!_arity.isValid(len))
+        {
             arityError(arguments);
         }
 

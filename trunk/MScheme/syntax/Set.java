@@ -16,16 +16,18 @@ import MScheme.exceptions.SchemeException;
 
 
 final class Set
-    extends Syntax
+            extends Syntax
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     final static Syntax INSTANCE = new Set();
-    
+
     private Set()
-    { super(Arity.exactly(2)); }
+    {
+        super(Arity.exactly(2));
+    }
 
     protected Code checkedTranslate(
         StaticEnvironment compilationEnv,
@@ -36,9 +38,9 @@ final class Set
         Value  value  = arguments.getTail().getHead();
 
         return translate(
-            symbol.getReference(compilationEnv),
-            value .getCode     (compilationEnv)
-        );
+                   symbol.getReference(compilationEnv),
+                   value .getCode     (compilationEnv)
+               );
     }
 
     static Code translate(
@@ -47,8 +49,8 @@ final class Set
     )
     {
         return Assignment.create(
-            reference,
-            code
-        );
+                   reference,
+                   code
+               );
     }
 }

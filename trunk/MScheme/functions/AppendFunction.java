@@ -14,53 +14,65 @@ import MScheme.exceptions.*;
 
 
 final class AppendHelper1
-    extends Reducer
+            extends Reducer
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     AppendHelper1(Value initial)
-    { super(initial); }
+    {
+        super(initial);
+    }
 
     protected Value combine(Value fst, Value snd)
-    { return Pair.create(fst, snd); }
+    {
+        return Pair.create(fst, snd);
+    }
 }
 
 
 final class AppendHelper2
-    extends Reducer
+            extends Reducer
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     final static AppendHelper2 INSTANCE
-        = new AppendHelper2();
+    = new AppendHelper2();
 
     private AppendHelper2()
-    { super(Empty.create()); }
+    {
+        super(Empty.create());
+    }
 
     protected Value combine(Value fst, Value snd)
-        throws RuntimeError, TypeError
-    { return new AppendHelper1(snd).foldRight(fst.toList()); }
+    throws RuntimeError, TypeError
+    {
+        return new AppendHelper1(snd).foldRight(fst.toList());
+    }
 }
 
 
 public final class AppendFunction
-    extends Function
+            extends Function
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     public final static AppendFunction INSTANCE
-        = new AppendFunction();
+    = new AppendFunction();
 
     protected Arity getArity()
-    { return Arity.atLeast(0); }
+    {
+        return Arity.atLeast(0);
+    }
 
     public Code call(Registers state, List arguments)
-        throws RuntimeError, TypeError
-    { return AppendHelper2.INSTANCE.reduceRight(arguments).getLiteral(); }
+    throws RuntimeError, TypeError
+    {
+        return AppendHelper2.INSTANCE.reduceRight(arguments).getLiteral();
+    }
 }

@@ -9,10 +9,10 @@ import MScheme.exceptions.*;
 
 
 public final class ScmString
-    extends Compound
+            extends Compound
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final char[]  _string;
@@ -22,7 +22,8 @@ public final class ScmString
     {
         super(isConst);
         _string = new char[size];
-        for (int i = 0; i < size; ++i) {
+        for (int i = 0; i < size; ++i)
+        {
             _string[i] = fill;
         }
     }
@@ -40,96 +41,122 @@ public final class ScmString
     }
 
     public static ScmString create(int size, char fill)
-    { return new ScmString(false, size, fill); }
+    {
+        return new ScmString(false, size, fill);
+    }
 
     public static ScmString create(String javaString)
-    { return new ScmString(false, javaString); }
+    {
+        return new ScmString(false, javaString);
+    }
 
     public static ScmString createConst(String javaString)
-    { return new ScmString(true, javaString); }
+    {
+        return new ScmString(true, javaString);
+    }
 
     public static ScmString create(Symbol schemeSymbol)
-    { return createConst(schemeSymbol.getJavaString()); }
+    {
+        return createConst(schemeSymbol.getJavaString());
+    }
 
 
     public String getJavaString()
-    { return new String(_string); }
+    {
+        return new String(_string);
+    }
 
 
     // specialisation of Value
 
     public boolean isScmString()
-    { return true; }
+    {
+        return true;
+    }
 
     public ScmString toScmString()
-    { return this; }
+    {
+        return this;
+    }
 
 
     // implementation of Compound
 
     protected Value getConstCopy()
-    { return createConst(getJavaString()); }
+    {
+        return createConst(getJavaString());
+    }
 
 
     // accessors
 
     public int getLength()
-    { return _string.length; }
-    
+    {
+        return _string.length;
+    }
+
     public void set(int index, char c)
-        throws InvalidStringIndexException, ImmutableException
+    throws InvalidStringIndexException, ImmutableException
     {
         modify();
-        try {
+        try
+        {
             _string[index] = c;
         }
-        catch (ArrayIndexOutOfBoundsException e) {
+        catch (ArrayIndexOutOfBoundsException e)
+        {
             throw new InvalidStringIndexException(this, index);
         }
     }
 
     public char get(int index)
-        throws InvalidStringIndexException
+    throws InvalidStringIndexException
     {
-        try {
+        try
+        {
             return _string[index];
         }
-        catch (ArrayIndexOutOfBoundsException e) {
+        catch (ArrayIndexOutOfBoundsException e)
+        {
             throw new InvalidStringIndexException(this, index);
         }
     }
 
     public boolean equal(Value other)
     {
-        try {
+        try
+        {
             ScmString otherString = (ScmString)other;
-        
+
             return getJavaString().compareTo(
-                otherString.getJavaString()
-            ) == 0;
+                       otherString.getJavaString()
+                   ) == 0;
         }
-        catch (ClassCastException e) { }
-        
+        catch (ClassCastException e)
+        { }
+
         return false;
     }
 
     public void write(Writer destination)
-        throws IOException
+    throws IOException
     {
         String str = getJavaString();
-            
+
         destination.write('"');
-        for (int i = 0; i < str.length(); i++) {
+        for (int i = 0; i < str.length(); i++)
+        {
             char c = str.charAt(i);
-            switch (c) {
+            switch (c)
+            {
             case '\n':
                 destination.write("\\n");
                 break;
-                
+
             case '"':
                 destination.write("\\\"");
                 break;
-                
+
             default:
                 destination.write(c);
                 break;
@@ -139,6 +166,8 @@ public final class ScmString
     }
 
     public void display(Writer destination)
-        throws IOException
-    { destination.write(getJavaString()); }
+    throws IOException
+    {
+        destination.write(getJavaString());
+    }
 }

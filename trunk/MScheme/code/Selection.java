@@ -8,10 +8,10 @@ import MScheme.machine.Continuation;
 
 
 public final class Selection
-    extends Code
+            extends Code
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final Code _test;
@@ -34,25 +34,31 @@ public final class Selection
         Code onTrue,
         Code onFalse
     )
-    { return new Selection(test, onTrue, onFalse); }
+    {
+        return new Selection(test, onTrue, onFalse);
+    }
 
     public Code executionStep(Registers state)
     {
-        new Continuation(state) {
+        new Continuation(state)
+        {
             public final static String id
-                = "$Id$";
+            = "$Id$";
 
 
             protected Code execute(
                 Registers regs,
                 Value     evaluatedTest
-            ) {
-                return evaluatedTest.isTrue() ? _onTrue : _onFalse; 
+            )
+            {
+                return evaluatedTest.isTrue() ? _onTrue : _onFalse;
             }
 
 
             protected String debugString()
-            { return "select[" + _onTrue + ", " + _onFalse + "]"; }
+            {
+                return "select[" + _onTrue + ", " + _onFalse + "]";
+            }
         };
 
         return _test;
@@ -60,5 +66,7 @@ public final class Selection
 
 
     public String toString()
-    { return "IF[" + _test + ' ' + _onTrue + ' ' + _onFalse + ']'; }
+    {
+        return "IF[" + _test + ' ' + _onTrue + ' ' + _onFalse + ']';
+    }
 }

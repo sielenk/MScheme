@@ -9,25 +9,33 @@ import MScheme.exceptions.TypeError;
 
 
 public final class Literal
-    extends Result
+            extends Result
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     private final Value _value;
 
     private Literal(Value value)
-    { _value = value; }
+    {
+        _value = value;
+    }
 
     public static Literal create(Value value)
-    { return new Literal(value); }
+    {
+        return new Literal(value);
+    }
 
 
     protected Value getValue(Registers state)
-    { return _value; }
+    {
+        return _value;
+    }
 
 
     public String toString()
-    { return _value.toString(); }
+    {
+        return _value.toString();
+    }
 }

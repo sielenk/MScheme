@@ -11,14 +11,16 @@ import MScheme.exceptions.SchemeException;
 
 
 public abstract class UnaryFunction
-    extends CheckedFunction
+            extends CheckedFunction
 {
     public final static String id
-        = "$Id$";
+    = "$Id$";
 
 
     protected final Arity getArity()
-    { return Arity.exactly(1); }
+    {
+        return Arity.exactly(1);
+    }
 
     protected final Code checkedCall(
         Registers state,
@@ -27,9 +29,9 @@ public abstract class UnaryFunction
     ) throws SchemeException
     {
         return checkedCall(
-            state,
-            arguments.getHead()
-        );
+                   state,
+                   arguments.getHead()
+               );
     }
 
     protected abstract Code checkedCall(
