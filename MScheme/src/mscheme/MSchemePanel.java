@@ -22,12 +22,14 @@
 
 package mscheme;
 
-import java.awt.Frame;
-
 import java.awt.Panel;
 import java.awt.Button;
 
+import mscheme.exceptions.SchemeException;
 import mscheme.machine.Machine;
+
+import java.awt.BorderLayout;
+import java.io.IOException;
 
 /**
  * @author sielenk
@@ -35,13 +37,14 @@ import mscheme.machine.Machine;
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
-public class StdioFrame
-        extends Frame
-        implements Runnable
+public class MSchemePanel
+        extends Panel
 {
     public final static String CVS_ID = "$Id$";
 
     private StdioArea _stdio = null;
+
+    private Button _startStopButton = null;
 
     private Panel _buttonPanel = null;
 
@@ -53,7 +56,7 @@ public class StdioFrame
 
     private Button _pasteButton = null;
 
-    public StdioFrame()
+    public MSchemePanel()
     {
         super();
         initialize();
@@ -61,24 +64,11 @@ public class StdioFrame
 
     private void initialize()
     {
+        this.setLayout(new BorderLayout());
         this.setSize(600, 400);
-        this.setTitle("MScheme Frame");
         this.add(get_buttonPanel(), java.awt.BorderLayout.SOUTH);
         this.add(get_stdio(), java.awt.BorderLayout.CENTER);
-        this.addWindowListener(new java.awt.event.WindowAdapter()
-        {
-            public void windowOpened(java.awt.event.WindowEvent e)
-            {
-                _runner.start();
-                get_stdio().requestFocus();
-            }
-
-            public void windowClosing(java.awt.event.WindowEvent e)
-            {
-                _runner.interrupt();
-                dispose();
-            }
-        });
+        get_stdio().requestFocus();
     }
 
     private Panel get_buttonPanel()
@@ -86,6 +76,8 @@ public class StdioFrame
         if (_buttonPanel == null)
         {
             _buttonPanel = new Panel();
+            _buttonPanel.setBackground(java.awt.SystemColor.control);
+            _buttonPanel.add(get_startStopButton(), null);
             _buttonPanel.add(get_clearButton(), null);
             _buttonPanel.add(get_copyButton(), null);
             _buttonPanel.add(get_cutButton(), null);
@@ -185,23 +177,80 @@ public class StdioFrame
         return _stdio;
     }
 
-    /** *** interface Runnable begin **** */
+    private Thread _runner = null;
 
-    private final Thread _runner = new Thread(this);
-
-    public void run()
+    public synchronized void start()
     {
-        new Machine(get_stdio().stdin(), get_stdio().stdout()).run();
-        dispose();
+        if (_runner != null)
+            return;
+
+        this._runner = new Thread(new Runnable()
+        {
+            public void run()
+            {
+                try
+                {
+                    get_startStopButton().setLabel("Stop");
+                    new Machine(get_stdio().stdin(), get_stdio().stdout())
+                            .unprotectedRun();
+                }
+                catch (SchemeException e)
+                {
+                    try
+                    {
+                        get_stdio().stdout().write(e.getMessage());
+                    }
+                    catch (IOException e1)
+                    {}
+                }
+                catch (InterruptedException e)
+                {}
+                finally
+                {
+                    _runner = null;
+                    get_startStopButton().setLabel("Start");
+                    get_startStopButton().setEnabled(true);
+                }
+            }
+        });
+        _runner.start();
     }
 
-    /** *** interface Runnable end **** */
-
-    public void start()
+    public void stop()
     {
-        if (!_runner.isAlive())
+        Thread _localRunner = _runner;
+
+        if (_localRunner == null || _localRunner.isInterrupted())
+            return;
+
+        get_startStopButton().setEnabled(false);
+        _localRunner.interrupt();
+    }
+
+    private void runnerStartStop()
+    {
+        if (_runner == null)
+            start();
+        else
+            stop();
+    }
+
+    private Button get_startStopButton()
+    {
+        if (_startStopButton == null)
         {
-            _runner.start();
+            _startStopButton = new Button();
+            _startStopButton.setLabel("Start");
+            _startStopButton
+                    .addActionListener(new java.awt.event.ActionListener()
+                    {
+                        public void actionPerformed(java.awt.event.ActionEvent e)
+                        {
+                            runnerStartStop();
+                            get_stdio().requestFocus();
+                        }
+                    });
         }
+        return _startStopButton;
     }
 }
