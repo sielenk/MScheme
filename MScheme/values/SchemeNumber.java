@@ -40,18 +40,20 @@ public class SchemeNumber
 
     // number specific
 
+    public boolean isLessThan(SchemeNumber other)
+    { return _value < other._value; }
+
+
+    public SchemeNumber negated()
+    { return new SchemeNumber(-_value); }
+
     public SchemeNumber plus(SchemeNumber other)
-    {
-        return new SchemeNumber(
-            _value + other._value
-        );
-    }
+    { return new SchemeNumber(_value + other._value); }
+
+    public SchemeNumber minus(SchemeNumber other)
+    { return new SchemeNumber(_value - other._value); }
 
     public SchemeNumber times(SchemeNumber other)
-    {
-        return new SchemeNumber(
-            _value * other._value
-        );
-    }
+    { return new SchemeNumber(_value * other._value); }
 }
 
