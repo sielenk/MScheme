@@ -37,26 +37,29 @@ public class ApplyFunction
         Function func = arguments.getHead().toFunction();
 
         // Since the argument list is newly allocated
-        // and mutable, it is permissible to modify it.
+        // and mutable, it is permissible to modify it. (*)
         // The modification done looks like this:
-        // (f 1 (2 3)) is changed to (f 1 2 3)
+        // (f 0 1 (2 3)) is changed to (f 0 1 2 3)
 
-        Pair toBeModified = arguments.toPair();
+        List toBeModified = arguments;
         for (int i = length - 2; i > 0; i--)
         {
-            toBeModified = toBeModified.getSecond().toPair();
+            toBeModified = toBeModified.getTail();
         }
 
         // Now toBeModified referes the pair containing the
         // last but one argument. In the example it would be
-        // (1 . ((2 3) . ()))
+        // (1 . ((2 3)))
 
-        toBeModified.setSecond(
-            toBeModified.getSecond().toPair().getFirst()
+        toBeModified.toPair().setSecond(
+            toBeModified.getTail().getHead().toList().getCopy()
         );
 
         // and here it would have become
         // (1 . (2 3)) == (1 2 3)
+        
+        // the call to getCopy() is necessary, because of the
+        // statement marked with (*) above.
 
         return func.call(state, arguments.getTail());
     }
