@@ -182,6 +182,43 @@
 
   (define update-scheme-report-environment
     (let ()
+      (define (time f . args)
+        (ticker)
+	    (let* ((result (apply f args))
+	           (t      (ticker)))
+	      (cons result (- t 11))))
+
+      (define (caar x) (car (car x)))
+      (define (cadr x) (car (cdr x)))
+      (define (cdar x) (cdr (car x)))
+      (define (cddr x) (cdr (cdr x)))
+
+      (define (caaar x) (car (car (car x))))
+      (define (caadr x) (car (car (cdr x))))
+      (define (cadar x) (car (cdr (car x))))
+      (define (caddr x) (car (cdr (cdr x))))
+      (define (cdaar x) (cdr (car (car x))))
+      (define (cdadr x) (cdr (car (cdr x))))
+      (define (cddar x) (cdr (cdr (car x))))
+      (define (cdddr x) (cdr (cdr (cdr x))))
+
+      (define (caaaar x) (car (car (car (car x)))))
+      (define (caaadr x) (car (car (car (cdr x)))))
+      (define (caadar x) (car (car (cdr (car x)))))
+      (define (caaddr x) (car (car (cdr (cdr x)))))
+      (define (cadaar x) (car (cdr (car (car x)))))
+      (define (cadadr x) (car (cdr (car (cdr x)))))
+      (define (caddar x) (car (cdr (cdr (car x)))))
+      (define (cadddr x) (car (cdr (cdr (cdr x)))))
+      (define (cdaaar x) (cdr (car (car (car x)))))
+      (define (cdaadr x) (cdr (car (car (cdr x)))))
+      (define (cdadar x) (cdr (car (cdr (car x)))))
+      (define (cdaddr x) (cdr (car (cdr (cdr x)))))
+      (define (cddaar x) (cdr (cdr (car (car x)))))
+      (define (cddadr x) (cdr (cdr (car (cdr x)))))
+      (define (cdddar x) (cdr (cdr (cdr (car x)))))
+      (define (cddddr x) (cdr (cdr (cdr (cdr x)))))
+
       (define (primitve-map f l)
         (fold-right
           (lambda (x r)
@@ -252,82 +289,111 @@
               (func obj (current-output-port))
               (apply func obj args))))
 
-        (define read        (wrap-cip basic-read       ))
-        (define read-char   (wrap-cip basic-read-char  ))
-        (define peek-char   (wrap-cip basic-peek-char  ))
-        (define char-ready? (wrap-cip basic-char-ready?))
-        (define write       (wrap-cop basic-write      ))
-        (define display     (wrap-cop basic-display    ))
-        (define write-char  (wrap-cop basic-write-char ))
+        (let ([read        (wrap-cip basic-read       )]
+              [read-char   (wrap-cip basic-read-char  )]
+              [peek-char   (wrap-cip basic-peek-char  )]
+              [char-ready? (wrap-cip basic-char-ready?)]
+              [write       (wrap-cop basic-write      )]
+              [display     (wrap-cop basic-display    )]
+              [write-char  (wrap-cop basic-write-char )])
 
-        (define with-input-from-file
-          (lambda (filename thunk)
-            (call-with-input-file
-              filename
-              (lambda (new-cip)
-                (let ([old-cip (current-input-port)])
-                  (dynamic-wind
-                    (lambda () (reset-input-port new-cip))
-                    thunk
-                    (lambda () (reset-input-port old-cip))))))))
+          (define with-input-from-file
+            (lambda (filename thunk)
+              (call-with-input-file
+                filename
+                (lambda (new-cip)
+                  (let ([old-cip (current-input-port)])
+                    (dynamic-wind
+                      (lambda () (reset-input-port new-cip))
+                      thunk
+                      (lambda () (reset-input-port old-cip))))))))
 
-        (define with-output-to-file
-          (lambda (filename thunk)
-            (call-with-output-file
-              filename
-              (lambda (new-cop)
-                (let ([old-cop (current-output-port)])
-                  (dynamic-wind
-                    (lambda () (reset-output-port new-cop))
-                    thunk
-                    (lambda () (reset-output-port old-cop))))))))
+          (define with-output-to-file
+            (lambda (filename thunk)
+              (call-with-output-file
+                filename
+                (lambda (new-cop)
+                  (let ([old-cop (current-output-port)])
+                    (dynamic-wind
+                      (lambda () (reset-output-port new-cop))
+                      thunk
+                      (lambda () (reset-output-port old-cop))))))))
 
-        (define (newline . args) (apply display #\newline args))
+          (define (newline . args) (apply display #\newline args))
 
-        (define (make-load env)
-          (lambda (filename)
-            (let ([port (open-input-file filename)])
-              (let eval-expr ([expr (read port)] [result '()])
-                (if (eof-object? expr)
-                  result
-                  (eval-expr (read port) (eval expr env)))))))
+          (define (make-load env)
+            (lambda (filename)
+              (let ([port (open-input-file filename)])
+                (let eval-expr ([expr (read port)] [result '()])
+                  (if (eof-object? expr)
+                    result
+                    (eval-expr (read port) (eval expr env)))))))
 
-        (define (null-environment version)
-          (update-null-environment
-            (basic-null-environment version)))
-
-        (define (scheme-report-environment version)
-          (update-scheme-report-environment
+          (define (null-environment version)
             (update-null-environment
-              (basic-scheme-report-environment version))))
+              (basic-null-environment version)))
 
-        (define definition-list
-          (cons 'begin
-            (map (lambda (p) (list 'define (car p) (cdr p)))
-              (list
-                (cons 'map                       map)
-                (cons 'for-each                  for-each)
-                (cons 'force                     force)
-                (cons 'call-with-input-file      call-with-input-file)
-                (cons 'call-with-output-file     call-with-output-file)
-                (cons 'current-input-port        current-input-port)
-                (cons 'current-output-port       current-output-port)
-                (cons 'with-input-from-file      with-input-from-file)
-                (cons 'with-output-to-file       with-output-to-file)
-                (cons 'read                      read)
-                (cons 'read-char                 read-char)
-                (cons 'peek-char                 peek-char)
-                (cons 'char-ready?               char-ready?)
-                (cons 'write                     write)
-                (cons 'display                   display)
-                (cons 'write-char                write-char)
-                (cons 'newline                   newline)
-                (cons 'null-environment          null-environment)
-                (cons 'scheme-report-environment scheme-report-environment)))))
+          (define (scheme-report-environment version)
+            (update-scheme-report-environment
+              (update-null-environment
+                (basic-scheme-report-environment version))))
 
-        (lambda (env)
-          (eval definition-list env)
-          (eval (list 'define 'load (make-load env)) env)
-          env))))
+          (let ([definition-list
+            (cons 'begin
+              (map (lambda (p) (list 'define (car p) (cdr p)))
+                (list
+                  (cons 'time                      time)
+                  (cons 'caar                      caar)
+                  (cons 'cadr                      cadr)
+                  (cons 'cdar                      cdar)
+                  (cons 'cddr                      cddr)
+                  (cons 'caaar                     caaar)
+                  (cons 'caadr                     caadr)
+                  (cons 'cadar                     cadar)
+                  (cons 'caddr                     caddr)
+                  (cons 'cdaar                     cdaar)
+                  (cons 'cdadr                     cdadr)
+                  (cons 'cddar                     cddar)
+                  (cons 'cdddr                     cdddr)
+                  (cons 'caaaar                    caaaar)
+                  (cons 'caaadr                    caaadr)
+                  (cons 'caadar                    caadar)
+                  (cons 'caaddr                    caaddr)
+                  (cons 'cadaar                    cadaar)
+                  (cons 'cadadr                    cadadr)
+                  (cons 'caddar                    caddar)
+                  (cons 'cadddr                    cadddr)
+                  (cons 'cdaaar                    cdaaar)
+                  (cons 'cdaadr                    cdaadr)
+                  (cons 'cdadar                    cdadar)
+                  (cons 'cdaddr                    cdaddr)
+                  (cons 'cddaar                    cddaar)
+                  (cons 'cddadr                    cddadr)
+                  (cons 'cdddar                    cdddar)
+                  (cons 'cddddr                    cddddr)
+                  (cons 'map                       map)
+                  (cons 'for-each                  for-each)
+                  (cons 'force                     force)
+                  (cons 'call-with-input-file      call-with-input-file)
+                  (cons 'call-with-output-file     call-with-output-file)
+                  (cons 'current-input-port        current-input-port)
+                  (cons 'current-output-port       current-output-port)
+                  (cons 'with-input-from-file      with-input-from-file)
+                  (cons 'with-output-to-file       with-output-to-file)
+                  (cons 'read                      read)
+                  (cons 'read-char                 read-char)
+                  (cons 'peek-char                 peek-char)
+                  (cons 'char-ready?               char-ready?)
+                  (cons 'write                     write)
+                  (cons 'display                   display)
+                  (cons 'write-char                write-char)
+                  (cons 'newline                   newline)
+                  (cons 'null-environment          null-environment)
+                  (cons 'scheme-report-environment scheme-report-environment))))])
+
+            (lambda (env)
+              (eval definition-list env)
+              (eval (list 'define 'load (make-load env)) env)
+              env))))))
 
   (update-scheme-report-environment machine-environment))

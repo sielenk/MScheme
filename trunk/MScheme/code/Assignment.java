@@ -26,8 +26,7 @@ import MScheme.Value;
 import MScheme.environment.Environment;
 import MScheme.environment.Reference;
 
-import MScheme.exceptions.SymbolNotFoundException;
-import MScheme.exceptions.UnexpectedSyntax;
+import MScheme.exceptions.CompileError;
 
 import MScheme.machine.Continuation;
 import MScheme.machine.Registers;
@@ -65,7 +64,7 @@ public final class Assignment
         new Continuation(state)
         {
             public final static String id
-            = "$Id$";
+                = "$Id$";
 
 
             protected Code executionStep(Registers regs, Value evaluationResult)
@@ -87,7 +86,7 @@ public final class Assignment
     }
 
     public Code force()
-        throws SymbolNotFoundException, UnexpectedSyntax
+        throws CompileError
     {
         _binding          = _binding         .forceRef();
         _valueCalculation = _valueCalculation.force();

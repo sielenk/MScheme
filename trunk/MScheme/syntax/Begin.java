@@ -53,6 +53,14 @@ final class Begin
         _tag = tag;
     }
 
+    protected void preTranslate(StaticEnvironment compilationEnv)
+    {
+        if (_tag != TAG_BEGIN)
+        {
+            super.preTranslate(compilationEnv);
+        }
+    }
+
     protected Code checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments

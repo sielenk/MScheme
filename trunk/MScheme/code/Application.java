@@ -24,8 +24,7 @@ import MScheme.Code;
 import MScheme.Value;
 
 import MScheme.exceptions.SchemeException;
-import MScheme.exceptions.SymbolNotFoundException;
-import MScheme.exceptions.UnexpectedSyntax;
+import MScheme.exceptions.CompileError;
 
 import MScheme.machine.Continuation;
 import MScheme.machine.Registers;
@@ -115,10 +114,10 @@ public final class Application
     }
 
     public Code force()
-        throws SymbolNotFoundException, UnexpectedSyntax
+        throws CompileError
     {
         CodeArray.force(_application);
-	    return this;
+        return this;
     }
 
     public String toString()

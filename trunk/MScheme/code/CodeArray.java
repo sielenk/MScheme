@@ -22,8 +22,8 @@ package MScheme.code;
 
 import MScheme.Code;
 
-import MScheme.exceptions.SymbolNotFoundException;
-import MScheme.exceptions.UnexpectedSyntax;
+import MScheme.exceptions.CompileError;
+
 
 class CodeArray
 {
@@ -63,7 +63,7 @@ class CodeArray
     }
 
     static void force(Code[] array)
-        throws SymbolNotFoundException, UnexpectedSyntax
+        throws CompileError
     {
         for (int i = 0; i < array.length; ++i)
         {

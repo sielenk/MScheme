@@ -86,9 +86,9 @@ public final class WindContinuation
 
     protected int dynamicWindLeave(Code[] sequence, int index)
     {
-	sequence[index++] = _after;
+        sequence[index++] = _after;
 
-	return super.dynamicWindLeave(
+        return super.dynamicWindLeave(
             sequence,
             index
         );

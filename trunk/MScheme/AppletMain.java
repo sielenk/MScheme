@@ -23,7 +23,7 @@ package MScheme;
 import java.applet.Applet;
 
 public final class AppletMain
-	extends Applet
+    extends Applet
 {
     public final static String id
         = "$Id$";

@@ -110,6 +110,7 @@ public final class Symbol
     public Code getCompiled(StaticEnvironment env)
         throws SymbolNotFoundException, UnexpectedSyntax
     {
+        env.setStateClosed();
         return env.getDelayedReferenceFor(this);
     }
 

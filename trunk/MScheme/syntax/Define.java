@@ -25,8 +25,10 @@ import MScheme.Syntax;
 import MScheme.Value;
 
 import MScheme.environment.StaticEnvironment;
+import MScheme.environment.Reference;
 
 import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.CompileError;
 
 import MScheme.util.Arity;
 
@@ -50,6 +52,10 @@ final class Define
         super(Arity.atLeast(2));
     }
 
+
+    protected void preTranslate(StaticEnvironment compilationEnv)
+    { }
+
     protected Code checkedTranslate(
         StaticEnvironment compilationEnv,
         List              arguments
@@ -63,27 +69,49 @@ final class Define
             Value  formals = arguments.getHead().toPair().getSecond();
             List   body    = arguments.getTail();
 
-            return Set.translate(
-                       compilationEnv.define(symbol),
-                       Lambda.INSTANCE.translate(
-                           compilationEnv,
-                           ListFactory.prepend(
-                               formals,
-                               body
-                           )
-                       )
-                   );
+            Reference ref = compilationEnv.define(symbol);
+            compilationEnv.setStateDefinitionBody(symbol);
+            try
+            {
+                return Set.translate(
+                    ref,
+                    Lambda.INSTANCE.translate(
+                        compilationEnv,
+                        ListFactory.prepend(
+                            formals,
+                            body
+                        )
+                    )
+                );
+            }
+            finally
+            {
+                compilationEnv.setStateOpen(symbol);
+            }
         }
         else
         {
-            compilationEnv.define(arguments.getHead().toSymbol());
+            if (!arguments.getTail().getTail().isEmpty())
+            {
+                arityError(arguments, Arity.exactly(2));
+            }
 
-            // call the translate instead of checkedTranslate
-            // to let Set check the argument count again
-            return Set.INSTANCE.translate(
-                       compilationEnv,
-                       arguments
-                   );
+            Symbol symbol = arguments.getHead().toSymbol();
+            Value  value  = arguments.getTail().getHead();
+
+            Reference ref = compilationEnv.define(symbol);
+            compilationEnv.setStateDefinitionBody(symbol);
+            try
+            {
+                return Set.translate(
+                    ref,
+                    value.getCompiled(compilationEnv)
+                );
+            }
+            finally
+            {
+                compilationEnv.setStateOpen(symbol);
+            }
         }
     }
 }

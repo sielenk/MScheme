@@ -217,7 +217,7 @@ public final class Environment
     }
 
     public Value assign(Symbol key, Value value)
-        throws SymbolNotFoundException, UnexpectedSyntax
+        throws CompileError
     {
         return assign(_bindings.getReferenceFor(key), value);
     }
@@ -245,8 +245,7 @@ public final class Environment
     }
 
     public Value lookup(Symbol key)
-        throws SymbolNotFoundException,
-               UnexpectedSyntax,
+        throws CompileError,
                RuntimeError
     {
         return lookup(_bindings.getReferenceFor(key));
