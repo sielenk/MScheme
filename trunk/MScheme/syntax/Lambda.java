@@ -1,7 +1,6 @@
 package MScheme.syntax;
 
 import MScheme.Value;
-import MScheme.List;
 import MScheme.Code;
 import MScheme.Syntax;
 
@@ -10,6 +9,7 @@ import MScheme.code.CompiledLambda;
 import MScheme.environment.StaticEnvironment;
 
 import MScheme.values.ListFactory;
+import MScheme.values.List;
 import MScheme.values.Empty;
 import MScheme.values.Pair;
 

@@ -1,8 +1,9 @@
 package MScheme.syntax;
 
-import MScheme.List;
 import MScheme.Code;
 import MScheme.Syntax;
+
+import MScheme.values.List;
 
 import MScheme.util.Arity;
 import MScheme.code.Sequence;

@@ -9,7 +9,8 @@ import MScheme.Syntax;
 import MScheme.code.Assignment;
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Reference;
-import MScheme.List;
+
+import MScheme.values.List;
 import MScheme.values.Symbol;
 
 import MScheme.exceptions.SchemeException;

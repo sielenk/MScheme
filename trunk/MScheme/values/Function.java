@@ -4,7 +4,6 @@ import java.io.Writer;
 import java.io.IOException;
 
 import MScheme.Value;
-import MScheme.List;
 import MScheme.Code;
 
 import MScheme.util.Arity;
