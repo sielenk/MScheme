@@ -3,7 +3,6 @@ package MScheme.util;
 
 import MScheme.expressions.SExpr;
 import MScheme.expressions.SList;
-import MScheme.expressions.SValues;
 
 
 public class ValuesFactory
@@ -51,7 +50,7 @@ public class ValuesFactory
     }
 
 
-    public SValues getValues()
+    public Values getValues()
     {
         int length = _length;
 
@@ -60,10 +59,10 @@ public class ValuesFactory
 
         switch (length) {
         case 0:
-            return SValues.EMPTY;
+            return Values.EMPTY;
 
         case 1:
-            return new SValues(_first.head);
+            return new Values(_first.head);
 
         default:
             {
@@ -75,7 +74,7 @@ public class ValuesFactory
                     _first    = _first.tail;
                 } while (i < length);
 
-                return new SValues(data);
+                return new Values(data);
             }
         }
     }

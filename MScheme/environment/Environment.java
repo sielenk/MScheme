@@ -1,7 +1,7 @@
 package MScheme.environment;
 
 
-import MScheme.machine.Values;
+import MScheme.util.Values;
 
 import MScheme.expressions.SExpr;
 import MScheme.expressions.SSymbol;

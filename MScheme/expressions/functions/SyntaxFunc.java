@@ -7,9 +7,10 @@ import MScheme.expressions.SPair;
 import MScheme.expressions.SBool;
 import MScheme.expressions.SSymbol;
 
-import MScheme.machine.Values;
-import MScheme.machine.ValuesFactory;
+import MScheme.util.Values;
 import MScheme.machine.Machine;
+
+import MScheme.util.ValuesFactory;
 
 import MScheme.environment.Environment;
 import MScheme.environment.EnvironmentStub;

@@ -1,9 +1,11 @@
 package MScheme.expressions;
 
 
-import MScheme.machine.Values;
-import MScheme.machine.ValuesFactory;
+import MScheme.util.Values;
 import MScheme.exceptions.SImproperListException;
+
+import MScheme.util.ValuesFactory;
+
 
 public class SPair extends SList
 {

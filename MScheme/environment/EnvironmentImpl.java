@@ -10,7 +10,7 @@ import MScheme.expressions.SSymbol;
 import MScheme.exceptions.SSymbolNotFoundException;
 import MScheme.exceptions.SDuplicateSymbolException;
 
-import MScheme.machine.Values;
+import MScheme.util.Values;
 
 
 class EnvironmentImpl

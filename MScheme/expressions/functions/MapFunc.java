@@ -5,9 +5,10 @@ import MScheme.expressions.SExpr;
 import MScheme.expressions.SBool;
 import MScheme.expressions.SFunction;
 
-import MScheme.machine.ValuesFactory;
-import MScheme.machine.ValuePair;
-import MScheme.machine.Values;
+import MScheme.util.ValuesFactory;
+import MScheme.util.ValuePair;
+
+import MScheme.util.Values;
 import MScheme.machine.Machine;
 
 import MScheme.environment.Environment;

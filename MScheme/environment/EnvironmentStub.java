@@ -1,7 +1,7 @@
 package MScheme.environment;
 
 
-import MScheme.machine.Values;
+import MScheme.util.Values;
 
 
 public interface EnvironmentStub
