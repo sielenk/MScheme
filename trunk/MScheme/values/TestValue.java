@@ -48,7 +48,7 @@ public class TestValue
     {
         Pair.create(null, null).toPair();
         Empty.create().toList();
-        SchemeNumber.create(0).toScmNumber();
+        ScmNumber.create(0).toScmNumber();
         ScmChar.create('a').toScmChar();
         ValueFactory.createString("").toScmString();
         ValueFactory.createVector().toScmVector();

@@ -10,14 +10,14 @@ import MScheme.code.*;
 import MScheme.exceptions.*;
 
 
-public final class SchemeVector
+public final class ScmVector
     extends Compound
 {
-    private final static SchemeVector _empty = new SchemeVector(0, null);
+    private final static ScmVector _empty = new ScmVector(0, null);
 
     private final Value[] _data;
     
-    private SchemeVector(int size, Value fill)
+    private ScmVector(int size, Value fill)
     {
         _data = new Value[size];
         
@@ -26,23 +26,23 @@ public final class SchemeVector
         }
     }
 
-    public static SchemeVector create(int size)
+    public static ScmVector create(int size)
     { return create(size, null); }
     
-    public static SchemeVector create(int size, Value fill)
-    { return (size == 0) ? _empty : new SchemeVector(size, fill); }
+    public static ScmVector create(int size, Value fill)
+    { return (size == 0) ? _empty : new ScmVector(size, fill); }
     
-    public static SchemeVector create(List list)
+    public static ScmVector create(List list)
         throws ListExpected
     { return createHelper(list, 0); }
     
-    private static SchemeVector createHelper(List list, int index)
+    private static ScmVector createHelper(List list, int index)
         throws ListExpected
     {
         if (list.isEmpty()) {
             return create(index);
         } else {
-            SchemeVector result = createHelper(
+            ScmVector result = createHelper(
                 list.getTail(),
                 index + 1
             );
@@ -94,14 +94,14 @@ public final class SchemeVector
     public boolean isScmVector()
     { return true; }
     
-    public SchemeVector toScmVector()
+    public ScmVector toScmVector()
     { return this; }
 
     
     public boolean equal(Value other)
     {
         try {
-            SchemeVector otherVector = (SchemeVector)other;
+            ScmVector otherVector = (ScmVector)other;
         
             if (_data.length == otherVector._data.length) {
                 for (int i = 0; i < _data.length; i++) {

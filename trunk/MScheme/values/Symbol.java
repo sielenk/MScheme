@@ -22,7 +22,7 @@ public final class Symbol
     public static Symbol create(String javaString)
     { return new Symbol(javaString); }
 
-    public static Symbol create(SchemeString schemeString)
+    public static Symbol create(ScmString schemeString)
     { return create(schemeString.getJavaString()); }
 
 

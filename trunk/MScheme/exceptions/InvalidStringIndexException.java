@@ -1,14 +1,14 @@
 package MScheme.exceptions;
 
-import MScheme.values.SchemeString;
+import MScheme.values.ScmString;
 
 
 public class InvalidStringIndexException
     extends StringException
 {
     public InvalidStringIndexException(
-        SchemeString string,
-        int          index
+        ScmString string,
+        int       index
     )
     { super(string, index); }
 }

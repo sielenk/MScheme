@@ -1,14 +1,14 @@
 package MScheme.exceptions;
 
-import MScheme.values.SchemeVector;
+import MScheme.values.ScmVector;
 
 
 public class InvalidVectorIndexException
     extends VectorException
 {
     public InvalidVectorIndexException(
-        SchemeVector vector,
-        int index
+        ScmVector vector,
+        int       index
     )
     { super(vector, index); }
 }

@@ -55,7 +55,7 @@ public abstract class Value
         throws SymbolExpected
     { throw new SymbolExpected(this); }
 
-    public SchemeNumber toScmNumber()
+    public ScmNumber toScmNumber()
         throws NumberExpected
     { throw new NumberExpected(this); }
 
@@ -63,11 +63,11 @@ public abstract class Value
         throws CharExpected
     { throw new CharExpected(this); }
 
-    public SchemeString toScmString()
+    public ScmString toScmString()
         throws StringExpected
     { throw new StringExpected(this); }
 
-    public SchemeVector toScmVector()
+    public ScmVector toScmVector()
         throws VectorExpected
     { throw new VectorExpected(this); }
 

@@ -1,6 +1,6 @@
 package MScheme.exceptions;
 
-import MScheme.values.SchemeVector;
+import MScheme.values.ScmVector;
 
 
 public class VectorException
@@ -9,8 +9,8 @@ public class VectorException
     private final int _index;
     
     public VectorException(
-        SchemeVector vector,
-        int          index
+        ScmVector vector,
+        int       index
     )
     { super(vector); _index = index; }
 }

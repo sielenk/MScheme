@@ -12,7 +12,7 @@ final class Adder
     extends Reducer
 {
     Adder()
-    { super(SchemeNumber.create(0)); }
+    { super(ScmNumber.create(0)); }
 
     protected Value combine(Value fst, Value snd)
         throws NumberExpected
@@ -22,7 +22,7 @@ final class Adder
 final class Suber
     extends Reducer
 {
-    Suber(SchemeNumber first)
+    Suber(ScmNumber first)
     { super(first); }
 
     protected Value combine(Value fst, Value snd)
@@ -34,7 +34,7 @@ final class Multiplier
     extends Reducer
 {
     Multiplier()
-    { super(SchemeNumber.create(1)); }
+    { super(ScmNumber.create(1)); }
 
     protected Value combine(Value fst, Value snd)
         throws NumberExpected
@@ -60,7 +60,7 @@ final class Order {
             throw new RuntimeArityError(arguments, _arity);
         }
 
-        SchemeNumber curr = arguments.getHead().toScmNumber();
+        ScmNumber curr = arguments.getHead().toScmNumber();
         List         tail = arguments.getTail();
 
         boolean rising  = true;
@@ -68,7 +68,7 @@ final class Order {
         boolean falling = true;
 
         do {
-            SchemeNumber next = tail.getHead().toScmNumber();
+            ScmNumber next = tail.getHead().toScmNumber();
                          tail = tail.getTail();
 
             if (curr.isEqualTo(next)) {
@@ -177,7 +177,7 @@ public class Builtins
     {
         int len = Function.checkArguments(AT_LEAST_1, arguments);
 
-        SchemeNumber first = arguments.getHead().toScmNumber();
+        ScmNumber first = arguments.getHead().toScmNumber();
         if (len == 1) {
             return first.negated();
         } else {
@@ -240,7 +240,7 @@ public class Builtins
 
     public final static Value length(Value argument)
         throws ListExpected
-    { return SchemeNumber.create(argument.toList().getLength()); }
+    { return ScmNumber.create(argument.toList().getLength()); }
 
     public final static Function append = AppendFunction.INSTANCE;
 
@@ -263,7 +263,7 @@ public class Builtins
 
     public final static Value symbol_2D_3Estring(Value argument) // symbol->string
         throws SymbolExpected
-    { return SchemeString.create(argument.toSymbol()); }
+    { return ScmString.create(argument.toSymbol()); }
 
     public final static Value string_2D_3Esymbol(Value argument) // string->symbol
         throws StringExpected
@@ -297,7 +297,7 @@ public class Builtins
 
     public final static Value char_2D_3Einteger(Value argument)
         throws CharExpected
-    { return SchemeNumber.create(argument.toScmChar().getJavaChar()); }
+    { return ScmNumber.create(argument.toScmChar().getJavaChar()); }
 
     public final static Value integer_2D_3Echar(Value argument)
         throws NumberExpected
@@ -325,7 +325,7 @@ public class Builtins
 
     public final static Value vector(List arguments) // vector
         throws ListExpected
-    { return SchemeVector.create(arguments); }
+    { return ScmVector.create(arguments); }
 
     public final static Value vector_2D_3Elist(Value argument) // vector->list
         throws VectorExpected
@@ -333,7 +333,7 @@ public class Builtins
 
     public final static Value list_2D_3Evector(Value argument) // list->vector
         throws ListExpected
-    { return SchemeVector.create(argument.toList()); }
+    { return ScmVector.create(argument.toList()); }
 
     // 6.4 Control features
 

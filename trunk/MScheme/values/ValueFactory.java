@@ -58,23 +58,23 @@ public abstract class ValueFactory
     }
     
     
-    public static SchemeNumber createNumber(int value)
-    { return SchemeNumber.create(value); }
+    public static ScmNumber createNumber(int value)
+    { return ScmNumber.create(value); }
     
     public static ScmChar createChar(char c)
     { return ScmChar.create(c); }
     
-    public static SchemeString createString(String javaString)
-    { return SchemeString.create(javaString); }
+    public static ScmString createString(String javaString)
+    { return ScmString.create(javaString); }
 
-    public static SchemeVector createVector()
-    { return SchemeVector.create(0); }
+    public static ScmVector createVector()
+    { return ScmVector.create(0); }
 
-    public static SchemeVector createVector(int size)
-    { return SchemeVector.create(size); }
+    public static ScmVector createVector(int size)
+    { return ScmVector.create(size); }
 
-    public static SchemeVector createVector(int size, Value fill)
-    { return SchemeVector.create(size, fill); }
+    public static ScmVector createVector(int size, Value fill)
+    { return ScmVector.create(size, fill); }
 
     
     public static InputPort createInputPort()

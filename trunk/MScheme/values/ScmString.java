@@ -6,13 +6,13 @@ import java.io.IOException;
 import MScheme.exceptions.*;
 
 
-public final class SchemeString
+public final class ScmString
     extends Compound
 {
     private char[] _string;
 
 
-    private SchemeString(String value)
+    private ScmString(String value)
     {
         _string = new char[value.length()];
         value.getChars(
@@ -23,12 +23,12 @@ public final class SchemeString
         );
     }
 
-    public static SchemeString create(String javaString)
-    { return new SchemeString(javaString); }
+    public static ScmString create(String javaString)
+    { return new ScmString(javaString); }
 
-    public static SchemeString create(Symbol schemeSymbol)
+    public static ScmString create(Symbol schemeSymbol)
     {
-        SchemeString result = new SchemeString(schemeSymbol.getKey());
+        ScmString result = new ScmString(schemeSymbol.getKey());
         result.setConst();
         return result;
     }
@@ -43,7 +43,7 @@ public final class SchemeString
     public boolean isScmString()
     { return true; }
 
-    public SchemeString toScmString()
+    public ScmString toScmString()
     { return this; }
 
 
@@ -64,7 +64,7 @@ public final class SchemeString
     public boolean equal(Value other)
     {
         try {
-            SchemeString otherString = (SchemeString)other;
+            ScmString otherString = (ScmString)other;
         
             return getJavaString().compareTo(
                 otherString.getJavaString()
