@@ -3,7 +3,7 @@ package MScheme.functions;
 import MScheme.machine.Registers;
 import MScheme.Value;
 import MScheme.Code;
-import MScheme.values.ValueFactory;
+import MScheme.values.ListFactory;
 import MScheme.values.List;
 
 import MScheme.exceptions.*;
@@ -26,7 +26,7 @@ public final class CallCCFunction
     {
         return argument.toFunction().call(
             state,
-            ValueFactory.createList(
+            ListFactory.create(
                 state.getCurrentContinuation()
             )
         );

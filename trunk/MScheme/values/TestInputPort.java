@@ -132,8 +132,8 @@ public class TestInputPort
         
         assert(in.read().equal(Empty.create()));
         assert(in.read().equal(Pair.create(one, two)));
-        assert(in.read().equal(ValueFactory.createList(one, two, three)));
-        assert(in.read().equal(ValueFactory.createList(one, two, three)));
+        assert(in.read().equal(ListFactory.create(one, two, three)));
+        assert(in.read().equal(ListFactory.create(one, two, three)));
     }
 
     public void testVector()
@@ -188,10 +188,10 @@ public class TestInputPort
         Symbol uq  = Symbol.create("unquote");
         Symbol uqs = Symbol.create("unquote-splicing");
     
-        assert(in.read().equal(ValueFactory.createList(q,   a)));
-        assert(in.read().equal(ValueFactory.createList(q,   a)));
-        assert(in.read().equal(ValueFactory.createList(qq,  a)));
-        assert(in.read().equal(ValueFactory.createList(uq,  a)));
-        assert(in.read().equal(ValueFactory.createList(uqs, a)));
+        assert(in.read().equal(ListFactory.create(q,   a)));
+        assert(in.read().equal(ListFactory.create(q,   a)));
+        assert(in.read().equal(ListFactory.create(qq,  a)));
+        assert(in.read().equal(ListFactory.create(uq,  a)));
+        assert(in.read().equal(ListFactory.create(uqs, a)));
     }
 }
