@@ -14,7 +14,7 @@ import MScheme.exceptions.*;
 
 
 public class DynamicEnvironment
-    extends SelfEvaluatingValue
+    extends Value
 {
     // *******************************************************************
 

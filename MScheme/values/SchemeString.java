@@ -7,7 +7,7 @@ import MScheme.exceptions.ImmutableException;
 
 
 public final class SchemeString
-    extends SelfEvaluatingValue
+    extends Value
 {
     private String  _string;
     private boolean _isConst = false;

@@ -5,7 +5,7 @@ import java.io.IOException;
 
 
 public class SchemeNumber
-    extends SelfEvaluatingValue
+    extends Value
 {
     private int _value;
     

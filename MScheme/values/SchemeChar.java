@@ -5,7 +5,7 @@ import java.io.IOException;
 
 
 public final class SchemeChar
-    extends SelfEvaluatingValue
+    extends Value
 {
     private char _character;
     

@@ -15,7 +15,7 @@ import MScheme.exceptions.ImmutableException;
 import MScheme.exceptions.InvalidVectorIndexException;
 
 class EofValue
-    extends SelfEvaluatingValue
+    extends Value
 {
     public final static EofValue INSTANCE = new EofValue();
     
