@@ -12,6 +12,7 @@ public final class ScmChar
     public final static String id
         = "$Id$";
 
+
     private char _character;
     
     private ScmChar(char c)
@@ -67,4 +68,3 @@ public final class ScmChar
         throws IOException
     { destination.write(getJavaChar()); }
 }
-

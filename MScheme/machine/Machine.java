@@ -14,6 +14,7 @@ final class AbortContinuation
     public final static String id
         = "$Id$";
 
+
     private Value _result;
 
     AbortContinuation(Registers state)
@@ -34,6 +35,7 @@ public final class Machine
 {
     public final static String id
         = "$Id$";
+
 
     private final Environment _environment;
     

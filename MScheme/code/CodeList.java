@@ -10,6 +10,7 @@ public abstract class CodeList
     public final static String id
         = "$Id$";
 
+
     protected CodeList()
     { }
 
@@ -58,6 +59,7 @@ final class CodeListPair
     public final static String id
         = "$Id$";
 
+
     private final Code     _head;
     private final CodeList _tail;
 
@@ -102,6 +104,7 @@ final class CodeListEmpty
 {
     public final static String id
         = "$Id$";
+
 
     // construction
 

@@ -18,6 +18,7 @@ final class PushContinuation
     public final static String id
         = "$Id$";
 
+
     private final List     _done;
     private final CodeList _todo;
 
@@ -69,6 +70,7 @@ public final class Application
 {
     public final static String id
         = "$Id$";
+
 
     private final CodeList _permutedApplication;
 

@@ -9,6 +9,7 @@ public class TestArity
     public final static String id
         = "$Id$";
 
+
     public TestArity(String name)
     { super(name); }
     
@@ -64,4 +65,3 @@ public class TestArity
         assert(!arity.isValid(4));      
     }
 }
-

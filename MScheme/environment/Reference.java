@@ -15,6 +15,7 @@ public class Reference
     public final static String id
         = "$Id$";
 
+
     private final Symbol _symbol;
     private final int    _level;
     private final int    _index;

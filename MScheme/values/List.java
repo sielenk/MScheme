@@ -20,6 +20,7 @@ public interface List
     String id
         = "$Id$";
 
+
     /**
      * Returns a reference to {@link Value}.
      */

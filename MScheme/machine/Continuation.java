@@ -18,6 +18,7 @@ public abstract class Continuation
     public final static String id
         = "$Id$";
 
+
     private final int       _level;
     private final Registers _capturedState;
 

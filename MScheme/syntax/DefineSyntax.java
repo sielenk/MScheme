@@ -29,6 +29,7 @@ final class Macro
     public final static String id
         = "$Id$";
 
+
     private final static Code
         _apply = ApplyFunction.INSTANCE.getLiteral();
 
@@ -88,6 +89,7 @@ final class DefineSyntax
 {
     public final static String id
         = "$Id$";
+
 
     final static Syntax INSTANCE = new DefineSyntax();
 

@@ -8,6 +8,7 @@ public abstract class SyntaxFactory
     public final static String id
         = "$Id$";
 
+
     public static Syntax getBeginToken()
     { return Begin.INSTANCE; }
     

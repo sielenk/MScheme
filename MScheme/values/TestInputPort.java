@@ -11,6 +11,7 @@ public class TestInputPort
     public final static String id
         = "$Id$";
 
+
     public TestInputPort(String name)
     { super(name); }
 
@@ -194,4 +195,3 @@ public class TestInputPort
         assert(in.read().equal(ValueFactory.createList(uqs, a)));
     }
 }
-

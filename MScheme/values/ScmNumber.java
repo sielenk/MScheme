@@ -12,6 +12,7 @@ public class ScmNumber
     public final static String id
         = "$Id$";
 
+
     private int _value;
     
     private ScmNumber(int v)

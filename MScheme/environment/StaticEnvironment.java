@@ -23,6 +23,7 @@ public class StaticEnvironment
     public final static String id
         = "$Id$";
 
+
     // ***********************************************************************
 
     public void write(Writer destination)

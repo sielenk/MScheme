@@ -17,6 +17,7 @@ public class TestEnvironment
     public final static String id
         = "$Id$";
 
+
     protected Environment env;
     protected Symbol sym1;
     protected Symbol sym2;

@@ -18,6 +18,7 @@ public final class Empty
     public final static String id
         = "$Id$";
 
+
     private final static Empty INSTANCE = new Empty();
 
     private Empty() { }

@@ -26,6 +26,7 @@ final class Letrec
     public final static String id
         = "$Id$";
 
+
     final static Syntax INSTANCE = new Letrec();
     
     private Letrec()
