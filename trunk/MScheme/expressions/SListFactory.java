@@ -15,7 +15,7 @@ public class SListFactory
 
     public SListFactory prepend(SExpr sexpr)
     {
-        SPair pair = new SPair(sexpr, SEmpty.INSTANCE);
+        SPair pair = new SPair(sexpr, SList.EMPTY);
 
         if (_first == null) {
             _last = pair;
@@ -30,7 +30,7 @@ public class SListFactory
 
     public SListFactory append(SExpr sexpr)
     {
-        SPair pair = new SPair(sexpr, SEmpty.INSTANCE);
+        SPair pair = new SPair(sexpr, SList.EMPTY);
 
         if (_first == null) {
             _first = pair;
@@ -46,7 +46,7 @@ public class SListFactory
     public SList getList()
     {
         if (_first == null) {
-            return SEmpty.INSTANCE;
+            return SList.EMPTY;
         } else {
             SList result = _first;
 
