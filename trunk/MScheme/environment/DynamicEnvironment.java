@@ -167,8 +167,8 @@ public class DynamicEnvironment
         {"<=",  "NumberLE"},
         {">=",  "NumberGE"},
 
-        {"+",   "Plus"},
-        {"*",   "Times"},
+//      {"+",   "Plus"},
+//      {"*",   "Times"},
 
         {"-",   "Minus"},
 //      {"/",   "Slash"},
@@ -270,14 +270,14 @@ public class DynamicEnvironment
         {"string-set!",   "StringSet"},
 
         // 6.3.6 Vectors
-//      {"vector?",     "IsVector"},
+//      {"vector?",       "IsVector"},
         {"make-vector",   "MakeVector"},
         {"vector-length", "VectorLength"},
         {"vector-ref",    "VectorRef"},
         {"vector-set!",   "VectorSet"},
 
         // 6.4 Control features
-        {"procedure?",    "IsProcedure"},
+//      {"procedure?",    "IsProcedure"},
         {"apply",         "Apply"},
 //      {"force",         "Force"},
         {"call-with-current-continuation", "CallCC"},
@@ -288,15 +288,15 @@ public class DynamicEnvironment
         // 6.6 Input and output
 
         // 6.6.1 Ports
-        {"port?",        "IsPort"},
-        {"input-port?",  "IsInputPort"},
-        {"output-port?", "IsOutputPort"},
+//      {"port?",        "IsPort"},
+//      {"input-port?",  "IsInputPort"},
+//      {"output-port?", "IsOutputPort"},
 
-        {"open-input-file",   "OpenInput"},
-        {"open-output-file",  "OpenOutput"},
+//      {"open-input-file",   "OpenInput"},
+//      {"open-output-file",  "OpenOutput"},
 
-        {"close-input-port",  "CloseInput"},
-        {"close-output-port", "CloseOutput"},
+//      {"close-input-port",  "CloseInput"},
+//      {"close-output-port", "CloseOutput"},
 
         // 6.6.2 Input
 //      {"read",         "Read"},
