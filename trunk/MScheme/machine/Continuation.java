@@ -119,17 +119,17 @@ public abstract class Continuation
     /**
      *
      */
-    CodeList dynamicWindLeave(CodeList sequence)
+    int dynamicWindLeave(Code[] sequence, int index)
     {
-        return sequence;
+        return index;
     }
 
     /**
      *
      */
-    CodeList dynamicWindEnter(CodeList sequence)
+    int dynamicWindEnter(Code[] sequence, int index)
     {
-        return sequence;
+        return index;
     }
 
 
