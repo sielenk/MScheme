@@ -22,6 +22,9 @@ public abstract class Value
     public final static String id
         = "$Id$";
 
+    protected Value()
+    { }
+
     /**
      * Changes a value to be immutable.
      * Since mutation only makes sense for compound values,

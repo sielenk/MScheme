@@ -27,6 +27,8 @@ public abstract class Code
     public final static String id
         = "$Id$";
 
+    protected Code()
+    { }
 
     /**
      * Executes some calculation.

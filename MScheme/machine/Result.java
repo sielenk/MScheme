@@ -13,6 +13,9 @@ public abstract class Result
     public final static String id
         = "$Id$";
 
+    protected Result()
+    { }
+
     protected abstract Value getValue(Registers registers)
         throws RuntimeError;
 
