@@ -77,7 +77,7 @@
          env)
         env)))
 
-  (update-null-environment (current-environment))
+  (update-null-environment machine-environment)
 
 
   ;procedure+: reduce <procedure> <initial> <list> 
@@ -323,24 +323,33 @@
             (update-null-environment
               (basic-scheme-report-environment version))))
 
-        (define (make-definition sym)
-          (list 'define sym (eval sym (current-environment))))
-
         (define definition-list
           (cons 'begin
-            (map make-definition 
-              '(map for-each force 
-                call-with-input-file call-with-output-file 
-                current-input-port current-output-port 
-                with-input-from-file with-output-to-file 
-                read read-char peek-char char-ready? 
-                write display write-char newline
-                null-environment
-                scheme-report-environment))))
+            (map (lambda (p) (list 'define (car p) (cdr p)))
+              (list
+                (cons 'map                       map)
+                (cons 'for-each                  for-each)
+                (cons 'force                     force)
+                (cons 'call-with-input-file      call-with-input-file)
+                (cons 'call-with-output-file     call-with-output-file)
+                (cons 'current-input-port        current-input-port)
+                (cons 'current-output-port       current-output-port)
+                (cons 'with-input-from-file      with-input-from-file)
+                (cons 'with-output-to-file       with-output-to-file)
+                (cons 'read                      read)
+                (cons 'read-char                 read-char)
+                (cons 'peek-char                 peek-char)
+                (cons 'char-ready?               char-ready?)
+                (cons 'write                     write)
+                (cons 'display                   display)
+                (cons 'write-char                write-char)
+                (cons 'newline                   newline)
+                (cons 'null-environment          null-environment)
+                (cons 'scheme-report-environment scheme-report-environment)))))
 
         (lambda (env)
           (eval definition-list env)
           (eval (list 'define 'load (make-load env)) env)
           env))))
 
-  (update-scheme-report-environment (current-environment)))
+  (update-scheme-report-environment machine-environment))
