@@ -46,7 +46,7 @@ class CodeArray
     {
         StringBuffer buffer = new StringBuffer();
         
-        buffer.append("<");
+        buffer.append('<');
         for (int i = begin;;)
         {
             buffer.append(
@@ -62,16 +62,12 @@ class CodeArray
         return buffer.toString(); 
     }
 
-    static Code[] force(Code[] array)
+    static void force(Code[] array)
         throws SymbolNotFoundException, UnexpectedSyntax
     {
-        Code[] result = new Code[array.length];
-
         for (int i = 0; i < array.length; ++i)
         {
-            result[i] = array[i].force();
+            array[i] = array[i].force();
         }
-
-        return result;
     }
 }

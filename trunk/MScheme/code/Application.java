@@ -117,9 +117,8 @@ public final class Application
     public Code force()
         throws SymbolNotFoundException, UnexpectedSyntax
     {
-        return create(
-            CodeArray.force(_application)
-        );
+        CodeArray.force(_application);
+	    return this;
     }
 
     public String toString()

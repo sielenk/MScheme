@@ -152,7 +152,6 @@ final class ForcedReference
     }
 
     public Code force()
-        throws SymbolNotFoundException, UnexpectedSyntax
     {
         return this;
     }

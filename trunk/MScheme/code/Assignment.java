@@ -37,11 +37,11 @@ public final class Assignment
     implements Code
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     private final Reference _binding;
-    private final Code      _valueCalculation;
+    private       Code      _valueCalculation;
 
     private Assignment(
         Reference binding,
@@ -90,10 +90,8 @@ public final class Assignment
     public Code force()
         throws SymbolNotFoundException, UnexpectedSyntax
     {
-        return create(
-            _binding,
-            _valueCalculation.force()
-        );
+        _valueCalculation = _valueCalculation.force();
+        return this;
     }
 
     public String toString()
