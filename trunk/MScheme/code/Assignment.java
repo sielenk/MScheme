@@ -44,8 +44,16 @@ public final class Assignment
                 regs.getEnvironment().assign(_binding, evaluationResult);
                 return evaluationResult.getLiteral();
             }
+
+
+            protected String debugString()
+            { return "assign[" + _binding + "]"; }
         };
 
         return _valueCalculation;
     }
+
+
+    public String toString()
+    { return "(SET! " + _binding + ' ' + _valueCalculation + ")"; }
 }

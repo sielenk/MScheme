@@ -38,6 +38,10 @@ final class SequenceContinuation
 
     protected Code execute(Registers state, Value value)
     { return prepareNext(state, _todo); }
+
+
+    protected String debugString()
+    { return "seqence[" + _todo + "]"; }
 }
 
 
@@ -64,4 +68,8 @@ public final class Sequence
 
     public Code executionStep(Registers state)
     { return SequenceContinuation.prepareNext(state, _sequence); }
+
+
+    public String toString()
+    { return "(BEGIN " + _sequence.toString() + ")"; }
 }
