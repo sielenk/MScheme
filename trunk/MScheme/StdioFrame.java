@@ -111,11 +111,12 @@ public class StdioFrame
     public void windowOpened(WindowEvent e)
     {
         runner.start();
+        _stdio.requestFocus();
     }
 
     public void windowClosing(WindowEvent e)
     {
-        runner.stop();
+        runner.interrupt();
         dispose();
     }
 
