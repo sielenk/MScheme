@@ -29,7 +29,7 @@ abstract class AssocBase
         ) {
             Pair pair = tail.getHead().toPair();
 
-            if (equal(key, pair.getHead())) {
+            if (equal(key, pair.getFirst())) {
                 return pair;
             }
         }
