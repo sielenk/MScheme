@@ -8,7 +8,7 @@ import MScheme.exceptions.ListExpectedException;
 
 
 abstract class MemberBase
-    extends BinaryFunction
+    extends BinaryValueFunction
 {
     protected abstract boolean equal(Value fst, Value snd);
 

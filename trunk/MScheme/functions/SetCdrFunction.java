@@ -7,7 +7,7 @@ import MScheme.exceptions.SchemeException;
 
 
 public class SetCdrFunction
-    extends BinaryFunction
+    extends BinaryValueFunction
 {
     public final static SetCdrFunction INSTANCE
         = new SetCdrFunction();

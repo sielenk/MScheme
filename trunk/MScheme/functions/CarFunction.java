@@ -7,7 +7,7 @@ import MScheme.exceptions.PairExpectedException;
 
 
 public class CarFunction
-    extends UnaryFunction
+    extends UnaryValueFunction
 {
     public final static CarFunction INSTANCE
         = new CarFunction();
@@ -18,4 +18,3 @@ public class CarFunction
     ) throws PairExpectedException
     { return argument.toPair().getFirst(); }
 }
-

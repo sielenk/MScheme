@@ -6,7 +6,7 @@ import MScheme.exceptions.SchemeException;
 
 
 public class ReadFunction
-    extends UnaryFunction
+    extends UnaryValueFunction
 {
     public final static ReadFunction INSTANCE
         = new ReadFunction();
@@ -16,4 +16,3 @@ public class ReadFunction
     ) throws SchemeException
     { return argument.toPort().toInput().read(); }
 }
-

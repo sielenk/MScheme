@@ -6,7 +6,7 @@ import MScheme.exceptions.SchemeException;
 
 
 public class OpenOutputFunction
-    extends UnaryFunction
+    extends UnaryValueFunction
 {
     public final static OpenOutputFunction INSTANCE
         = new OpenOutputFunction();
@@ -20,4 +20,3 @@ public class OpenOutputFunction
         );
     }
 }
-

@@ -6,7 +6,7 @@ import MScheme.exceptions.SchemeException;
 
 
 public class ReadCharFunction
-    extends UnaryFunction
+    extends UnaryValueFunction
 {
     public final static ReadCharFunction INSTANCE
         = new ReadCharFunction();
@@ -24,4 +24,3 @@ public class ReadCharFunction
         }
     }
 }
-

@@ -6,7 +6,7 @@ import MScheme.exceptions.SchemeException;
 
 
 public class SymbolToStringFunction
-    extends UnaryFunction
+    extends UnaryValueFunction
 {
     public final static SymbolToStringFunction INSTANCE
         = new SymbolToStringFunction();

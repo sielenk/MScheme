@@ -7,7 +7,7 @@ import MScheme.exceptions.PairExpectedException;
 
 
 public class CdrFunction
-    extends UnaryFunction
+    extends UnaryValueFunction
 {
     public final static CdrFunction INSTANCE
         = new CdrFunction();
@@ -18,4 +18,3 @@ public class CdrFunction
     ) throws PairExpectedException
     { return argument.toPair().getSecond(); }
 }
-

@@ -7,7 +7,7 @@ import MScheme.exceptions.ListExpectedException;
 
 
 public class ReverseFunction
-    extends UnaryFunction
+    extends UnaryValueFunction
 {
     public final static ReverseFunction INSTANCE
         = new ReverseFunction();
@@ -18,4 +18,3 @@ public class ReverseFunction
     ) throws ListExpectedException
     { return argument.toList().getReversed(); }
 }
-

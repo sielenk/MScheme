@@ -6,7 +6,7 @@ import MScheme.exceptions.SchemeException;
 
 
 public class CloseInputFunction
-    extends UnaryFunction
+    extends UnaryValueFunction
 {
     public final static CloseInputFunction INSTANCE
         = new CloseInputFunction();
