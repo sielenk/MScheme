@@ -43,40 +43,25 @@ public final class Sequence
 
     private final int    _tag;
     private final Code[] _sequence;
-    private final int    _index;
 
-    private Sequence(int tag, Code[] sequence, int index)
+    private Sequence(int tag, Code[] sequence)
     {
         _tag      = tag;
         _sequence = sequence;
-        _index    = index;
-    }
-
-    private static Code create(int tag, Code[] sequence, int index)
-    {
-        if (index + 1 == sequence.length)
-        {
-            // index denotes the last element
-            // don't create a new Sequence object
-            return sequence[index];
-        }
-        else
-        {
-            // There are at least two elements to process 
-            // in sequence -> create a new one.
-            return new Sequence(tag, sequence, index);
-        }
     }
 
     public static Code create(int tag, Code[] sequence)
     {
-        if (sequence.length == 0)
+        switch (sequence.length)
         {
+        case 0:
             return ScmBoolean.create(tag == TAG_AND);
-        }
-        else
-        {
-        	return create(tag, sequence, 0);
+
+        case 1:
+            return sequence[0];
+
+        default:
+            return new Sequence(tag, sequence);
         }
     }
 
@@ -85,64 +70,72 @@ public final class Sequence
     	return create(TAG_BEGIN, sequence);
     }
 
-    public Code executionStep(Registers state)
+
+    private Code prepareNext(
+        Registers state,
+        final int index
+    )
     {
-        new Continuation(state) {
-            public final static String id
-                = "$Id$";
+        if (index + 1 < _sequence.length)
+        {
+            new Continuation(state)
+            {
+                public final static String id
+                    = "$Id$";
 
  
-            protected Code execute(Registers innerState, Value value)
-            {
-                // _index+1 will always be < sequence.length
-                // this is enforced by create(Code[], int)
-                
-                return
-                    (
-                        (
-                            (_tag == TAG_AND)
-                            &&
-                            !value.isTrue()
-                        )
-                        ||
-                        (
-                            (_tag == TAG_OR)
-                            &&
-                            value.isTrue()
-                        )
-                    )
-                    ? value.getLiteral()
-                    : create(_tag, _sequence, _index + 1);
-            }
+                private final int _index = index + 1;
 
-            protected String debugString()
-            {
-                String prefix = "error";
-
-                switch (_tag)
+                protected Code execute(Registers innerState, Value value)
                 {
-                case TAG_BEGIN:
-                    prefix = "seqence";
-                    break;
-
-                case TAG_AND:
-                    prefix = "conjuction";
-                    break;
-
-                case TAG_OR:
-                    prefix = "disjuction";
-                    break;
+                    if (
+                        ((_tag == TAG_AND) && !value.isTrue())
+                        ||
+                        ((_tag == TAG_OR ) &&  value.isTrue())
+                    )
+                    {
+                        return value.getLiteral();
+                    }
+                    else
+                    {
+                        return prepareNext(innerState, _index);
+                    }
                 }
 
-                return prefix + ":" + CodeArray.printTuple(
-                    _sequence, 
-                    _index + 1, 
-                    _sequence.length
-                );
-            }
-        };
+                protected String debugString()
+                {
+                    String prefix = "unknown tag";
 
-        return _sequence[_index];
+                    switch (_tag)
+                    {
+                    case TAG_BEGIN:
+                        prefix = "seqence";
+                        break;
+
+                    case TAG_AND:
+                        prefix = "conjuction";
+                        break;
+
+                    case TAG_OR:
+                        prefix = "disjuction";
+                        break;
+                    }
+
+                    return prefix + ":" + CodeArray.printTuple(
+                        _sequence, 
+                        _index, 
+                        _sequence.length
+                    );
+                }
+            };
+        }
+
+        return _sequence[index];
+    }
+
+    public Code executionStep(Registers state)
+    {
+        return prepareNext(state, 0);
     }
 
     public Code force()
