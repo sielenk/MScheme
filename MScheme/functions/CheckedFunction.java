@@ -13,6 +13,9 @@ import MScheme.exceptions.*;
 public abstract class CheckedFunction
     extends Function
 {
+    public final static String id
+        = "$Id$";
+
     protected abstract Code checkedCall(
         Registers registers,
         int       len,

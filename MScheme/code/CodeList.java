@@ -7,6 +7,9 @@ import MScheme.exceptions.*;
 
 abstract public class CodeList
 {
+    public final static String id
+        = "$Id$";
+
     // static creation functions
     
     public static CodeList prepend(
@@ -49,6 +52,9 @@ abstract public class CodeList
 final class CodeListPair
     extends CodeList
 {
+    public final static String id
+        = "$Id$";
+
     private final Code     _head;
     private final CodeList _tail;
     
@@ -91,6 +97,9 @@ final class CodeListPair
 final class CodeListEmpty
     extends CodeList
 {
+    public final static String id
+        = "$Id$";
+
     // construction
 
     private final static CodeListEmpty

@@ -12,6 +12,9 @@ import MScheme.exceptions.*;
 final class Adder
     extends Reducer
 {
+    public final static String id
+        = "$Id$";
+
     Adder()
     { super(ScmNumber.create(0)); }
 
@@ -23,6 +26,9 @@ final class Adder
 final class Suber
     extends Reducer
 {
+    public final static String id
+        = "$Id$";
+
     Suber(ScmNumber first)
     { super(first); }
 
@@ -34,6 +40,9 @@ final class Suber
 final class Multiplier
     extends Reducer
 {
+    public final static String id
+        = "$Id$";
+
     Multiplier()
     { super(ScmNumber.create(1)); }
 
@@ -44,6 +53,9 @@ final class Multiplier
 
 
 final class Order {
+    public final static String id
+        = "$Id$";
+
     private final static Arity _arity = Arity.atLeast(2);
 
     public final static int LT = -2;
@@ -104,6 +116,9 @@ final class Order {
 
 public class Builtins
 {
+    public final static String id
+        = "$Id$";
+
     // 6. Standard procedures
 
     // 6.1 Equivalence predicates
@@ -468,4 +483,3 @@ public class Builtins
         throws RuntimeError, TypeError
     { snd.toOutputPort().writeScmChar(fst.toScmChar()); return snd; }
 }
-

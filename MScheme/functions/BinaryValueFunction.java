@@ -11,6 +11,9 @@ import MScheme.exceptions.TypeError;
 abstract public class BinaryValueFunction
     extends BinaryFunction
 {
+    public final static String id
+        = "$Id$";
+
     final protected Code checkedCall(
         Registers registers,
         Value     fst,

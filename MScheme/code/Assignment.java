@@ -11,6 +11,9 @@ import MScheme.environment.Reference;
 final public class Assignment
     extends Code
 {
+    public final static String id
+        = "$Id$";
+
     final private Reference _binding;
     final private Code      _valueCalculation;
 

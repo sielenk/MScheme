@@ -14,6 +14,9 @@ import MScheme.functions.UnaryFunction;
 class ContinuationFunction
     extends UnaryFunction
 {
+    public final static String id
+        = "$Id$";
+
     final private Continuation _continuation;
 
     ContinuationFunction(Continuation continuation)

@@ -6,6 +6,9 @@ import junit.framework.*;
 public class TestArity
     extends TestCase
 {
+    public final static String id
+        = "$Id$";
+
     public TestArity(String name)
     { super(name); }
     

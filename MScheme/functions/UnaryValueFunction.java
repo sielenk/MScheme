@@ -12,6 +12,9 @@ import MScheme.exceptions.TypeError;
 abstract public class UnaryValueFunction
     extends UnaryFunction
 {
+    public final static String id
+        = "$Id$";
+
     final protected Code checkedCall(
         Registers registers,
         Value     fst

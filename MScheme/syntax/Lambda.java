@@ -17,6 +17,9 @@ import MScheme.exceptions.*;
 final class Lambda
     extends Syntax
 {
+    public final static String id
+        = "$Id$";
+
     final static Syntax INSTANCE = new Lambda();
     
     private Lambda()

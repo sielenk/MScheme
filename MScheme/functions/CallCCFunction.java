@@ -12,6 +12,9 @@ import MScheme.exceptions.*;
 public class CallCCFunction
     extends UnaryFunction
 {
+    public final static String id
+        = "$Id$";
+
     public final static CallCCFunction INSTANCE = new CallCCFunction();
 
     protected Code checkedCall(Registers registers, Value argument)

@@ -11,6 +11,9 @@ import MScheme.exceptions.TypeError;
 
 public abstract class Continuation
 {
+    public final static String id
+        = "$Id$";
+
     final private int       _level;
     final private Registers _capturedRegisters;
 

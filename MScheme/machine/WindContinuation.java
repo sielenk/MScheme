@@ -13,6 +13,9 @@ import MScheme.exceptions.TypeError;
 final public class WindContinuation
     extends Continuation
 {
+    public final static String id
+        = "$Id$";
+
     final private Code _before;
     final private Code _after;
 

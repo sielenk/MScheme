@@ -10,6 +10,9 @@ import MScheme.exceptions.ListExpected;
 abstract class MemberBase
     extends BinaryValueFunction
 {
+    public final static String id
+        = "$Id$";
+
     protected abstract boolean equal(Value fst, Value snd);
 
     protected final Value checkedCall(

@@ -6,6 +6,9 @@ import MScheme.Value;
 public class SchemeException
     extends Exception
 {
+    public final static String id
+        = "$Id$";
+
     private final Value _cause;
     
     public SchemeException(Value cause)

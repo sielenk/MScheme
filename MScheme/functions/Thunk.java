@@ -13,6 +13,9 @@ import MScheme.exceptions.TypeError;
 public abstract class Thunk
     extends CheckedFunction
 {
+    public final static String id
+        = "$Id$";
+
     private final static Arity _none = Arity.exactly(0);
 
     public final Arity getArity()

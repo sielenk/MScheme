@@ -11,6 +11,9 @@ import MScheme.exceptions.TypeError;
 abstract public class ValueThunk
     extends Thunk
 {
+    public final static String id
+        = "$Id$";
+
     final protected Code checkedCall(
         Registers registers
     ) throws RuntimeError, TypeError

@@ -11,6 +11,9 @@ import MScheme.exceptions.TypeError;
 public final class Literal
     extends Result
 {
+    public final static String id
+        = "$Id$";
+
     private final Value _value;
 
     private Literal(Value value)

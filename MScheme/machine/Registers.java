@@ -6,6 +6,9 @@ import MScheme.functions.UnaryFunction;
 
 public class Registers
 {
+    public final static String id
+        = "$Id$";
+
     private Continuation _continuation;
     private Environment  _environment;
 

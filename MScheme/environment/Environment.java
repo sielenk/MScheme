@@ -22,6 +22,9 @@ import MScheme.exceptions.*;
 public class Environment
     extends Value
 {
+    public final static String id
+        = "$Id$";
+
     // *******************************************************************
 
     public void write(Writer destination)

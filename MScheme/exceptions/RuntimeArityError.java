@@ -7,6 +7,9 @@ import MScheme.values.List;
 public class RuntimeArityError
     extends RuntimeError
 {
+    public final static String id
+        = "$Id$";
+
     private final Arity _expected;
     
     public RuntimeArityError(List arguments, Arity expected)

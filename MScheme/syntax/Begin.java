@@ -15,6 +15,9 @@ import MScheme.exceptions.TypeError;
 final class Begin
     extends Syntax
 {
+    public final static String id
+        = "$Id$";
+
     final static Syntax INSTANCE = new Begin();
     
     private Begin()

@@ -12,6 +12,9 @@ import MScheme.exceptions.RuntimeError;
 public class Reference
     extends Result
 {
+    public final static String id
+        = "$Id$";
+
     private final Symbol _symbol;
     private final int    _level;
     private final int    _index;
