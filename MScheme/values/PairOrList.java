@@ -1,5 +1,8 @@
 package MScheme.values;
 
+import java.io.Writer;
+import java.io.IOException;
+
 import MScheme.Value;
 import MScheme.Code;
 
@@ -10,16 +13,22 @@ import MScheme.exceptions.*;
 
 
 final class PairOrList
-    extends Pair
-    implements List
+    extends Compound
+    implements List, Pair
 {
     public final static String id
         = "$Id$";
 
 
+    private Value _first;
+    private Value _second;
+
     private PairOrList(boolean isConst, Value first, Value second)
     {
-        super(isConst, first, second);
+        super(isConst);
+
+        _first  = first;
+        _second = second;
     }
 
 
@@ -39,6 +48,161 @@ final class PairOrList
     }
 
 
+    // implementation of Value
+
+    private void put(Writer destination, boolean doDisplay)
+        throws IOException
+    {
+        destination.write('(');
+
+        Value current = this;
+        while (current instanceof Pair)
+        {
+            // 'this' is the first element of the list
+            // and needs no leading space
+            // (the opening parenthesis is a delimiter)
+            if (current != this)
+            {
+                destination.write(' ');
+            }
+
+            Pair currentPair = (Pair)current;
+
+            if (doDisplay)
+            {
+                currentPair.getFirst().display(destination);
+            }
+            else
+            {
+                currentPair.getFirst().write(destination);
+            }
+
+            current = currentPair.getSecond();
+        }
+
+        if (!current.isEmpty())
+        {
+            // 'this' is an improper list
+
+            destination.write(" . ");
+
+            if (doDisplay)
+            {
+                current.display(destination);
+            }
+            else
+            {
+                current.write(destination);
+            }
+        }
+
+        destination.write(')');
+    }
+
+    public void write(Writer destination)
+        throws IOException
+    {
+        put(destination, false);
+    }
+
+    public void display(Writer destination)
+        throws IOException
+    {
+        put(destination, true);
+    }
+
+    public boolean equal(Value other)
+    {
+        try
+        {
+            Pair otherPair = (Pair)other;
+
+            return
+                (getFirst ().equal(otherPair.getFirst ())) &&
+                (getSecond().equal(otherPair.getSecond()));
+        }
+        catch (ClassCastException e)
+        { }
+
+        return false;
+    }
+
+    public Code getCode(StaticEnvironment compilationEnv)
+        throws SchemeException
+    {
+        return
+            getHead()
+            .getSyntax(compilationEnv)
+            .translate(
+                compilationEnv,
+                getTail()
+            );
+    }
+
+
+    // implementation of Compound
+
+    public Value getCopy()
+    {
+        Value second = getSecond();
+
+        if (second.isPair())
+        {
+            second = second.getCopy();
+        }
+
+        return create(
+            getFirst(),
+            second
+        );
+    }
+
+    protected final Value getConstCopy()
+    {
+        return createConst(
+            getFirst(),
+            getSecond()
+        );
+    }
+
+
+    // implementation of Pair
+
+    public final boolean isPair()
+    {
+        return true;
+    }
+
+    public final Pair toPair()
+    {
+        return this;
+    }
+
+    public final Value getFirst()
+    {
+        return _first;
+    }
+
+    public final void setFirst(Value first)
+        throws ImmutableException
+    {
+        modify();
+        _first = first;
+    }
+
+    public final Value getSecond()
+    {
+        return _second;
+    }
+
+    public final void setSecond(Value second)
+        throws ImmutableException
+    {
+        modify();
+        _second = second;
+    }
+
+
     // implementation of List
 
     public boolean isList()
@@ -50,6 +214,17 @@ final class PairOrList
         throws ListExpected
     {
         return isList() ? this : super.toList();
+    }
+
+    public Value getHead()
+    {
+        return getFirst();
+    }
+
+    public List getTail()
+        throws ListExpected
+    {
+        return getSecond().toList();
     }
 
     public int getLength()
@@ -105,31 +280,6 @@ final class PairOrList
                       "unexpected PairExpected"
                   );
         }
-    }
-
-
-    public Value getHead()
-    {
-        return getFirst();
-    }
-
-    public List getTail()
-        throws ListExpected
-    {
-        return getSecond().toList();
-    }
-
-
-    public Code getCode(StaticEnvironment compilationEnv)
-        throws SchemeException
-    {
-        return
-            getHead()
-            .getSyntax(compilationEnv)
-            .translate(
-                compilationEnv,
-                getTail()
-            );
     }
 
     public CodeList getCodeList(StaticEnvironment compilationEnv)
