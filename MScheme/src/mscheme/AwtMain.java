@@ -42,6 +42,7 @@ public final class AwtMain
             	public void windowClosing(java.awt.event.WindowEvent e) {    
             		get_panel().stop();
             		get_frame().hide();
+                    get_frame().dispose();
             	}
                 public void windowClosed(java.awt.event.WindowEvent e)
                 {
