@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 #
 # This script translates *.scm files into String members of an interface.
 #  Copyright (C) 2001  Marvin H. Sielenkemper

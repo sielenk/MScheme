@@ -143,12 +143,15 @@ PACKAGES =	MScheme				\
 		MScheme.code			\
 		MScheme.tests
 
-# JAVAC=javac -g
-JAVAC=jikes +P -bootclasspath /usr/lib/jdk1.1/lib/classes.zip
-# JAVAC=gcj -v -W -Wall -C
+JAVAC=/usr/lib/j2sdk1.4.1_01/bin/javac
+#JAVAC=jikes +P -bootclasspath /usr/lib/jdk1.1/lib/classes.zip
+#JAVAC=gcj -v -W -Wall -C
+
+JAVA=/usr/lib/j2sdk1.4.1_01/bin/java
+
 
 run: all
-	time java MScheme.TestMScheme
+	time $(JAVA) MScheme.TestMScheme
 
 all: Init.java values/functions/BuiltinTable.java
 	$(JAVAC) `find . -name "*.java"`
@@ -156,11 +159,11 @@ all: Init.java values/functions/BuiltinTable.java
 values/functions/BuiltinTable.java: values/functions/ParseBuiltins.java values/functions/Builtins.java
 	cp values/functions/BuiltinTable.java.empty values/functions/BuiltinTable.java
 	$(JAVAC) values/functions/ParseBuiltins.java
-	java MScheme.values.functions.ParseBuiltins > values/functions/BuiltinTable.java
+	$(JAVA) MScheme.values.functions.ParseBuiltins > values/functions/BuiltinTable.java
 	$(JAVAC) values/functions/BuiltinTable.java
 
 Init.java: bootstrap.scm rep.scm
-	mkinit.pl $^ > $@
+	./mkinit.pl $^ > $@
 
 doc:
 	if [ \! -e doc ]; then mkdir doc; fi
