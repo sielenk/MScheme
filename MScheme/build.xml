@@ -8,7 +8,7 @@
 
   <target name="init">
     <uptodate property="uptodate.Init"
-              targetfile="${srcdir}/mscheme/Init.java">
+              targetfile="${srcdir}/mscheme/IInit.java">
       <srcfiles dir="${schemedir}"
                 includes="bootstrap.scm,rep.scm"/>
     </uptodate>
@@ -21,14 +21,14 @@
   </target>
 
   <target name="updateInit" depends="init" unless="uptodate.Init">
-    <delete file="${srcdir}/mscheme/Init.java"/>
+    <delete file="${srcdir}/mscheme/IInit.java"/>
     <exec dir="${schemedir}"
           executable="${basedir}/mkinit.pl"
-          output="${srcdir}/mscheme/Init.java">
+          output="${srcdir}/mscheme/IInit.java">
       <arg value="bootstrap.scm"/>
       <arg value="rep.scm"/>
     </exec>
-    <delete file="${classdir}/mscheme/Init.class"/>
+    <delete file="${classdir}/mscheme/IInit.class"/>
   </target>
 
   <target name="updateBuiltin" depends="init" unless="uptodate.BuiltinTable">
