@@ -40,13 +40,27 @@ class SelectFunc extends Function
     ) {
         SExpr flag = arguments.at(0);
 
-        stack.push(EvalFunc.INSTANCE);
+        stack.push(
+            environment,
+            EvalFunc.INSTANCE
+        );
 
         return new Values(
             (flag != SBool.FALSE)
             ? _trueExpr
             : _falseExpr
         );
+    }
+
+
+    protected String defaultString()
+    {
+        return
+            "[select "
+            + _trueExpr
+            + " "
+            + _falseExpr
+            + "]";
     }
 }
 
@@ -70,12 +84,32 @@ class AssignFunc extends Function
         ContinuationStack stack,
         Environment       environment,
         Values            arguments
-    ) {
+    ) throws SException {
         SExpr value = arguments.at(0);
 
+        if (_isDefine) {
+            environment.define(
+                _symbol,
+                value
+            );
+        } else {
+            environment.set(
+                _symbol,
+                value
+            );
+        }
+
+        return Values.EMPTY;
+    }
 
 
-        return null;
+    protected String defaultString()
+    {
+        return
+            "["
+            + (_isDefine ? "define " : "set! ")
+            + _symbol
+            + "]";
     }
 }
 
@@ -147,14 +181,21 @@ public class SyntaxFunc
             {
                 int i = arguments.getLength();
 
-                stack.push(EvalFunc.INSTANCE);
-                while (i > 0) {
+                stack.push(
+                    environment,
+                    EvalFunc.INSTANCE
+                );
+                while (i > 1) {
                     stack.push(
+                        environment,
                         new ConstFunc(
                             arguments.at(--i)
                         )
                     );
-                    stack.push(EvalFunc.INSTANCE);
+                    stack.push(
+                        environment,
+                        EvalFunc.INSTANCE
+                    );
                 }
                 return new Values(
                     arguments.at(0 /* = i */)
@@ -206,15 +247,6 @@ public class SyntaxFunc
                 EnvironmentStub stub
                     = environment.newChildStub(symbols);
 
-                if (stub.getSize() != symbols.getLength()) {
-                    // some symbols occured more than once in
-                    // the formal arguments
-
-                    throw new SImproperFormalsException(
-                        arguments.at(0)
-                    );
-                }
-
                 Values  body = arguments.getTail();
 
                 return new Values(
@@ -237,6 +269,7 @@ public class SyntaxFunc
                 SExpr   value  = arguments.at(1);
 
                 stack.push(
+                    environment,
                     new AssignFunc(
                         symbol,
                         (id() == DEFINE)
@@ -244,6 +277,7 @@ public class SyntaxFunc
                 );
 
                 stack.push(
+                    environment,
                     EvalFunc.INSTANCE
                 );
                 return new Values(value);
@@ -261,16 +295,18 @@ public class SyntaxFunc
                 SExpr trueCase  = arguments.at(1);
                 SExpr falseCase =
                     (arguments.getLength() == 3)
-                    ? arguments.at(3)
+                    ? arguments.at(2)
                     : null;
 
                 stack.push(
+                    environment,
                     new SelectFunc(
                         trueCase,
                         falseCase
                     )
                 );
                 stack.push(
+                    environment,
                     EvalFunc.INSTANCE
                 );
                 return new Values(
