@@ -7,20 +7,17 @@ import MScheme.expressions.SExpr;
 import MScheme.expressions.SSymbol;
 
 import MScheme.exceptions.SSymbolNotFoundException;
+import MScheme.exceptions.SDuplicateSymbolException;
 
 
 public interface Environment
 {
-    // *** instance access ***************************************************
-
-    public int getLevel();
-    public int getSize ();
-
     // *** Envrionment access ************************************************
 
     public Environment     getParent   (              );
     public Environment     newChild    (              );
-    public EnvironmentStub newChildStub(Values symbols);
+    public EnvironmentStub newChildStub(Values symbols)
+        throws SDuplicateSymbolException;
 
     // *** Envrionment access ************************************************
 
