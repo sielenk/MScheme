@@ -46,7 +46,6 @@ public abstract class TernaryFunction
 
     protected final Code checkedCall(
         Registers state,
-        int       len,
         List      arguments
     ) throws SchemeException
     {
