@@ -5,7 +5,7 @@ import MScheme.util.Arity;
 import MScheme.machine.Machine;
 import MScheme.code.Code;
 import MScheme.code.CodeList;
-import MScheme.code.CompiledApplication;
+import MScheme.code.Application;
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.DynamicEnvironment;
 import MScheme.environment.Reference;
@@ -71,7 +71,7 @@ final class Macro
 	        // (apply tranformer def_env use_env args)
 	
             return new Machine(env).execute(
-	            new CompiledApplication(
+	            new Application(
 		            CodeList.prepend(
 			            _apply,
     		            CodeList.prepend(
@@ -92,12 +92,12 @@ final class Macro
     }
 }
 
-final class DefineSyntaxToken
+final class DefineSyntax
     extends Syntax
 {
-    final static Syntax INSTANCE = new DefineSyntaxToken();
+    final static Syntax INSTANCE = new DefineSyntax();
 
-    private DefineSyntaxToken()
+    private DefineSyntax()
     { super(Arity.exactly(2)); }
 	    
     protected Code checkedTranslate(

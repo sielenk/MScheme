@@ -5,7 +5,7 @@ import MScheme.machine.Machine;
 import MScheme.code.Code;
 import MScheme.code.CodeList;
 import MScheme.environment.StaticEnvironment;
-import MScheme.code.CompiledSelector;
+import MScheme.code.Selection;
 import MScheme.values.Value;
 import MScheme.values.Function;
 import MScheme.values.ScmBoolean;
@@ -15,12 +15,12 @@ import MScheme.exceptions.CompileError;
 import MScheme.exceptions.TypeError;
 
 
-final class IfToken
+final class If
     extends Syntax
 {
-    final static Syntax INSTANCE = new IfToken();
+    final static Syntax INSTANCE = new If();
     
-    private IfToken()
+    private If()
     { super(Arity.inRange(2, 3)); }
 
 
@@ -37,7 +37,7 @@ final class IfToken
             ? ScmBoolean.createFalse()
             : arguments.getTail().getTail().getHead();
 
-        return new CompiledSelector(
+        return new Selection(
             flag.   getCode(syntax),
             onTrue. getCode(syntax),
             onFalse.getCode(syntax)

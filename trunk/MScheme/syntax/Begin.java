@@ -3,19 +3,19 @@ package MScheme.syntax;
 import MScheme.util.Arity;
 import MScheme.machine.Machine;
 import MScheme.code.Code;
-import MScheme.code.CompiledSequence;
+import MScheme.code.Sequence;
 import MScheme.environment.StaticEnvironment;
 import MScheme.values.List;
 
 import MScheme.exceptions.CompileError;
 import MScheme.exceptions.TypeError;
 
-final class BeginToken
+final class Begin
     extends Syntax
 {
-    final static Syntax INSTANCE = new BeginToken();
+    final static Syntax INSTANCE = new Begin();
     
-    private BeginToken()
+    private Begin()
     { super(Arity.atLeast(1)); }
     
     protected Code checkedTranslate(
@@ -24,7 +24,7 @@ final class BeginToken
         List              arguments
     ) throws CompileError, TypeError
     {
-        return CompiledSequence.create(
+        return Sequence.create(
             arguments.getCodeList(syntax)
         );
     }

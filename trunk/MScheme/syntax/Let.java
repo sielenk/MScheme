@@ -14,12 +14,12 @@ import MScheme.values.*;
 
 // *** let ***
 
-final class LetToken
+final class Let
     extends Syntax
 {
-    final static Syntax INSTANCE = new LetToken();
+    final static Syntax INSTANCE = new Let();
     
-    private LetToken()
+    private Let()
     { super(Arity.atLeast(2)); }
 
 
@@ -79,7 +79,7 @@ final class LetToken
 		    // match. But if it can be called by the user the
 		    // order has to match the definition order.
 		    // And since the parsing above reverses the lists,
-		    // the have to be reversed again here.
+		    // they have to be reversed again here.
 		    formals = formals.getReversed();
 		    inits   = inits  .getReversed();
 	    }
@@ -100,7 +100,7 @@ final class LetToken
 			);
 	    }
 
-        return new CompiledApplication(
+        return new Application(
             CodeList.prepend(
 		        compiledProc,
 		        inits.getCodeList(environment)

@@ -12,14 +12,14 @@ import MScheme.functions.*;
 import MScheme.values.*;
 
 
-// *** let ***
+// *** letrec ***
 
-final class LetrecToken
+final class Letrec
     extends Syntax
 {
-    final static Syntax INSTANCE = new LetrecToken();
+    final static Syntax INSTANCE = new Letrec();
     
-    private LetrecToken()
+    private Letrec()
     { super(Arity.atLeast(2)); }
 
 
@@ -62,7 +62,7 @@ final class LetrecToken
             Value  init   = inits  .getHead();
 
             compiledBody = CodeList.prepend(
-                new CompiledAssignment(
+                new Assignment(
                     newEnvironment.getCodeFor(formal),
                     init.getCode(newEnvironment)
                 ),
@@ -73,7 +73,7 @@ final class LetrecToken
             inits   = inits  .getTail();
         }
 
-        return new CompiledApplication(
+        return new Application(
             CodeList.create(
                 new CompiledLambda(
                     Arity.exactly(0),

@@ -11,12 +11,12 @@ import MScheme.exceptions.TypeError;
 
 // *** quote ***
 
-final class QuoteToken
+final class Quote
     extends Syntax
 {
-    final static Syntax INSTANCE = new QuoteToken();
+    final static Syntax INSTANCE = new Quote();
     
-    private QuoteToken()
+    private Quote()
     { super(Arity.exactly(1)); }
     
     protected Code checkedTranslate(

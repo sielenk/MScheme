@@ -1,7 +1,7 @@
 package MScheme.syntax;
 
 import MScheme.code.Code;
-import MScheme.code.CompiledAssignment;
+import MScheme.code.Assignment;
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Reference;
 import MScheme.values.ValueFactory;
@@ -13,10 +13,10 @@ import MScheme.values.Symbol;
 import MScheme.exceptions.*;
 
 
-final class DefineToken
-    extends AssignToken
+final class Define
+    extends Assign
 {
-    final static Syntax INSTANCE = new DefineToken();
+    final static Syntax INSTANCE = new Define();
     
     protected Reference getReference(
         StaticEnvironment syntax,
@@ -37,9 +37,9 @@ final class DefineToken
             Value  formals = arguments.getHead().toPair().getSecond();
             List   body    = arguments.getTail();
 
-            return new CompiledAssignment(
+            return new Assignment(
                 getReference(syntax, symbol),
-                LambdaToken.INSTANCE.translate(
+                Lambda.INSTANCE.translate(
                     syntax,
                     ValueFactory.prepend(
                         formals,
