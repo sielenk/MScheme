@@ -22,12 +22,12 @@
 
 ; $Id$
 
-(let* ([user-env    (scheme-report-environment 5)]
-       [user-eval   (lambda (expr)
-                      (eval expr user-env))]
-       [user-define (lambda (sym val)
-                      (user-eval (list 'define sym val)))]
-       [user-load   (user-eval 'load)])
+(let* ((user-env    (scheme-report-environment 5))
+       (user-eval   (lambda (expr)
+                      (eval expr user-env)))
+       (user-define (lambda (sym val)
+                      (user-eval (list 'define sym val))))
+       (user-load   (user-eval 'load)))
 
   (define (cadr   x) (car (cdr           x  )))
   (define (caddr  x) (car (cdr (cdr      x ))))
@@ -43,9 +43,9 @@
     (newline))
 
   (define (print-error error)
-    (let ([cause   (error->cause        error)]
-          [message (error->message      error)]
-          [stack   (error->continuation error)])
+    (let ((cause   (error->cause        error))
+          (message (error->message      error))
+          (stack   (error->continuation error)))
       (display-nl "error     : " message)
       (display    "caused by : ")
       (write cause)
@@ -56,7 +56,7 @@
 
   (define (on-error f)
     (lambda ()
-      (let ([error (last-error)])
+      (let ((error (last-error)))
         (if error
           (begin
             (print-error error)
@@ -71,8 +71,8 @@
   (define (create-label)
     (call-with-current-continuation
       (lambda (k)
-        (define (retry) (k retry))
-        retry)))
+        (define (label) (k label))
+        label)))
 
   (define (retry-on-error thunk)
     (define retry 'dummy)
@@ -84,7 +84,7 @@
         (retry))))
 
   (define (REP-read depth prompt quit-thunk)
-    (let* ([query
+    (let* ((query
             (lambda ()
               (if prompt
                 (begin
@@ -94,8 +94,8 @@
                       (display depth)
                       (display #\])))
                   (prompt)))
-              (read))]
-           [input (retry-on-error query)])
+              (read)))
+           (input (retry-on-error query)))
       (if (eof-object? input)
         (begin
           (display-nl "<Ctrl-D>")
@@ -120,10 +120,10 @@
     expr)
 
   (define (REP prompt)
-    (let internal-REP ([level 0])
+    (let internal-REP ((level 0))
       (call-with-current-continuation
         (lambda (quit)
-          (let loop ([result #f])
+          (let loop ((result #f))
             (loop
               (REP-print
                 (REP-eval
