@@ -34,10 +34,10 @@ import MScheme.exceptions.*;
 
 
 public final class Symbol
-            extends ValueDefaultImplementations
+    extends ValueDefaultImplementations
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     private final String _javaString;
@@ -58,6 +58,7 @@ public final class Symbol
     }
 
     private static int _index = 0;
+
     public static Symbol createUnique()
     {
         return create("#[" + _index++ + "]");
@@ -99,27 +100,21 @@ public final class Symbol
 
 
     public void write(Writer destination)
-    throws IOException
+        throws IOException
     {
         destination.write(getJavaString());
     }
 
 
-    public Reference getReference(StaticEnvironment env)
-    throws SymbolNotFoundException, UnexpectedSyntax
-    {
-        return env.getReferenceFor(this);
-    }
-
     public Code getCode(StaticEnvironment env)
-    throws SymbolNotFoundException, UnexpectedSyntax
+        throws SymbolNotFoundException, UnexpectedSyntax
     {
-        return getReference(env);
+        return env.getDelayedReferenceFor(this);
     }
 
     public Syntax getSyntax(StaticEnvironment env)
-    throws SymbolNotFoundException
+        throws SymbolNotFoundException
     {
-        return env.getSyntaxFor(this);
+        return env.getDelayedSyntaxFor(this);
     }
 }
