@@ -24,8 +24,10 @@ import java.io.Writer;
 import java.io.IOException;
 
 import MScheme.Value;
+import MScheme.Code;
 
 import MScheme.environment.StaticEnvironment;
+
 import MScheme.code.CodeList;
 
 import MScheme.exceptions.ListExpected;
@@ -47,5 +49,8 @@ public interface List
     List  getTail    () throws PairExpected, ListExpected;
 
     CodeList getCodeList(StaticEnvironment compilationEnv)
+        throws SchemeException;
+
+    Code[] getCodeArray(StaticEnvironment compilationEnv)
         throws SchemeException;
 }
