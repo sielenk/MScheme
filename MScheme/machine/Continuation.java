@@ -25,7 +25,7 @@ class ContinuationFunction
     private static CodeList dynamicWind(
         Continuation source,
         Continuation destination,
-	    CodeList     tail
+        CodeList     tail
     )
     {
         CodeList       sequence = tail;
@@ -55,8 +55,8 @@ class ContinuationFunction
         while (sp > 0) {
             sequence = stack[--sp].dynamicWindLeave(sequence);
         }
-	
-	    return sequence;
+    
+        return sequence;
     }
 
 
@@ -77,14 +77,14 @@ class ContinuationFunction
         machine.setContinuation(destination);
 
         return Sequence.create(
-	        dynamicWind(
-    	        source,
-    		    destination,
-    		    CodeList.create(
-		            argument.getLiteral()
-			    )
-		    )
-		);
+            dynamicWind(
+                source,
+                destination,
+                CodeList.create(
+                    argument.getLiteral()
+                )
+            )
+        );
     }
 }
 
@@ -118,7 +118,7 @@ public abstract class Continuation
     final UnaryFunction getFunction()
     { return new ContinuationFunction(this); }
 
-    final public Code invoke(Machine machine, Value value)
+    final Code invoke(Machine machine, Value value)
         throws RuntimeError, TypeError
     {
         machine.setEnvironment (_capturedEnvironment);
@@ -133,9 +133,9 @@ public abstract class Continuation
         Value   value
     ) throws RuntimeError, TypeError;
 
-	protected CodeList dynamicWindLeave(CodeList sequence)
-	{ return sequence; }
-	
+    protected CodeList dynamicWindLeave(CodeList sequence)
+    { return sequence; }
+    
     protected CodeList dynamicWindEnter(CodeList sequence)
     { return sequence; }
 }
