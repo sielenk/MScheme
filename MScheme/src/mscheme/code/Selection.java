@@ -29,17 +29,17 @@ import mscheme.values.ValueTraits;
 
 
 public final class Selection
-    implements IForceable, IReduceable
+    implements IReduceable
 {
     public final static String CVS_ID
         = "$Id$";
 
 
-    private Object _test;
-    private Object _onTrue;
-    private Object _onFalse;
+    private final Object _test;
+    private final Object _onTrue;
+    private final Object _onFalse;
 
-    public Selection(
+    protected Selection(
 		Object test,
 		Object onTrue,
 		Object onFalse
@@ -50,22 +50,13 @@ public final class Selection
         _onFalse = onFalse;
     }
 
-    public static Selection create(
+    public static Object create(
 		Object test,
 		Object onTrue,
 		Object onFalse
     )
     {
-        return new Selection(test, onTrue, onFalse);
-    }
-
-    public Object force()
-        throws CompileError
-    {
-        _test    = Compiler.force(_test);
-        _onTrue  = Compiler.force(_onTrue);
-        _onFalse = Compiler.force(_onFalse);
-        return this;
+        return new ForceableSelection(test, onTrue, onFalse);
     }
 
     public String toString()
@@ -94,4 +85,36 @@ public final class Selection
 
 		return _test;
 	}
+}
+
+final class ForceableSelection
+implements IForceable
+{
+    public final static String CVS_ID
+    	= "$Id$";
+
+
+    private final Object _test;
+    private final Object _onTrue;
+    private final Object _onFalse;
+
+    public ForceableSelection(
+        Object test,
+        Object onTrue,
+        Object onFalse
+    )
+    {
+        _test    = test;
+        _onTrue  = onTrue;
+        _onFalse = onFalse;
+    }
+
+    public Object force()
+    throws CompileError
+    {
+        return new Selection(
+        	Compiler.force(_test),
+        	Compiler.force(_onTrue),
+        	Compiler.force(_onFalse));
+    }
 }
