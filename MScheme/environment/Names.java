@@ -59,25 +59,23 @@ class Names
 
     protected int define(SSymbol symbol)
     {
-        String key   = symbol.getKey();
-        int    index = -1;
-
-        Integer i = (Integer)_bindings.get(key);
+        String  key = symbol.getKey();
+        Integer i   = (Integer)_bindings.get(key);
 
         if (i != null) {
             // the symbol is already bound in the
             // current frame. This define is really
             // a set!.
 
-            index = i.intValue();
-        }
+            return i.intValue();
+        } else {
+            int index = _bindings.size();
 
-        if (index == -1) {
-            index = _bindings.size();
             _bindings.put(key, new Integer(index));
+
+            return index;
         }
 
-        return index;
     }
 
 
