@@ -18,7 +18,7 @@ import MScheme.exceptions.InvalidVectorIndexException;
 
 
 class EofValue
-    extends ValueImplementation
+    extends ValueDefaultImplementations
 {
     public final static String id
         = "$Id$";
@@ -35,7 +35,7 @@ class EofValue
 
 
 public class InputPort
-    extends ValueImplementation
+    extends ValueDefaultImplementations
 {
     public final static String id
         = "$Id$";

@@ -13,7 +13,7 @@ import MScheme.exceptions.*;
 
 
 public final class Empty
-    extends ValueImplementation
+    extends ValueDefaultImplementations
     implements List
 {
     public final static String id

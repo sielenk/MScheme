@@ -14,7 +14,7 @@ import MScheme.exceptions.*;
 
 
 public abstract class Function
-    extends ValueImplementation
+    extends ValueDefaultImplementations
 {
     public final static String id
         = "$Id$";

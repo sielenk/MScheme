@@ -7,7 +7,7 @@ import MScheme.Value;
 
 
 public final class ScmBoolean
-    extends ValueImplementation
+    extends ValueDefaultImplementations
 {
     public final static String id
         = "$Id$";

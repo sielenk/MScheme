@@ -7,7 +7,7 @@ import MScheme.Value;
 
 
 public class ScmNumber
-    extends ValueImplementation
+    extends ValueDefaultImplementations
 {
     public final static String id
         = "$Id$";
