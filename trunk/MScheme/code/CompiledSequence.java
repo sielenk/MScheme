@@ -20,7 +20,7 @@ final class SequenceContinuation
     }
 
     protected Code execute(Machine machine, Value value)
-    { return new CompiledSequence(_unevaluatedTail); }
+    { return new CompiledSequence(_unevaluatedTail).executionStep(machine); }
 }
 
 

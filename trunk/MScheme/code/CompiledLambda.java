@@ -23,12 +23,12 @@ public final class CompiledLambda
     public CompiledLambda(
         Arity             arity,
         StaticEnvironment compiledFormals,
-        Code              compiledBody
+        CodeList          compiledBody
     )
     {
         _arity           = arity;
         _compiledFormals = compiledFormals;
-        _compiledBody    = compiledBody;
+        _compiledBody    = new CompiledSequence(compiledBody);
     }
 
     final class Closure
