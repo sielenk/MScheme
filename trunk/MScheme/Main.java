@@ -11,6 +11,8 @@ import MScheme.environment.EnvironmentFactory;
 
 import MScheme.machine.Machine;
 
+import MScheme.util.ListFactory;
+
 
 public class Main
 {
@@ -18,17 +20,17 @@ public class Main
     {
         Environment env  = EnvironmentFactory.getEmpty();
         SExpr       expr =
-            new SListFactory()
+            new ListFactory()
             .append(SyntaxFunc.BEGIN_FUNC)
             .append(
-                new SListFactory()
+                new ListFactory()
                 .append(SyntaxFunc.DEFINE_FUNC)
                 .append(new SSymbol("f"))
                 .append(
-                    new SListFactory()
+                    new ListFactory()
                     .append(SyntaxFunc.LAMBDA_FUNC)
                     .append(
-                            new SListFactory()
+                            new ListFactory()
                             .append(new SSymbol("x"))
                             .append(new SSymbol("y"))
                             .append(new SSymbol("z"))
@@ -40,11 +42,11 @@ public class Main
                 .getList()
             )
             .append(
-                new SListFactory()
+                new ListFactory()
                 .append(new SSymbol("f"))
                 .append(SBool.FALSE)
                 .append(
-                        new SListFactory()
+                        new ListFactory()
                         .append(SyntaxFunc.QUOTE_FUNC)
                         .append(new SSymbol("f"))
                         .getList()
@@ -53,7 +55,7 @@ public class Main
                 .getList()
             )
             .append(
-                new SListFactory()
+                new ListFactory()
                 .append(new MapFunc(EvalFunc.INSTANCE))
                 .append(new SSymbol("f"))
                 .append(SBool.FALSE)
