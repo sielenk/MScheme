@@ -22,6 +22,11 @@ package MScheme.code;
 
 import MScheme.Code;
 
+import MScheme.environment.StaticEnvironment;
+
+import MScheme.exceptions.SymbolNotFoundException;
+import MScheme.exceptions.UnexpectedSyntax;
+
 
 class CodeArray
 {
@@ -58,5 +63,18 @@ class CodeArray
         buffer.append('>');
 
         return buffer.toString(); 
+    }
+
+    static Code[] force(Code[] array, StaticEnvironment global)
+        throws SymbolNotFoundException, UnexpectedSyntax
+    {
+        Code[] result = new Code[array.length];
+
+        for (int i = 0; i < array.length; ++i)
+        {
+            result[i] = array[i].force(global);
+        }
+
+        return result;
     }
 }

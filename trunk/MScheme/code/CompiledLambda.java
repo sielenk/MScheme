@@ -43,6 +43,8 @@ import MScheme.exceptions.ListExpected;
 import MScheme.exceptions.PairExpected;
 import MScheme.exceptions.CompileError;
 import MScheme.exceptions.TypeError;
+import MScheme.exceptions.SymbolNotFoundException;
+import MScheme.exceptions.UnexpectedSyntax;
 import MScheme.exceptions.SchemeException;
 
 
@@ -144,6 +146,15 @@ public final class CompiledLambda
         return new Closure(state.getEnvironment());
     }
 
+    public Code force(StaticEnvironment global)
+        throws SymbolNotFoundException, UnexpectedSyntax
+    {
+        return create(
+            _arity,
+            _compiledFormals,
+            _compiledBody.force(global)
+        );
+    }
 
     public String toString()
     {

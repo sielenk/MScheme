@@ -22,8 +22,11 @@ package MScheme;
 
 import MScheme.machine.Registers;
 
-import MScheme.exceptions.SchemeException;
+import MScheme.environment.StaticEnvironment;
 
+import MScheme.exceptions.SchemeException;
+import MScheme.exceptions.SymbolNotFoundException;
+import MScheme.exceptions.UnexpectedSyntax;
 
 /**
  * The abstract base class for scheme machine instructions.
@@ -56,4 +59,12 @@ public interface Code
      */
     Code executionStep(Registers state)
         throws SchemeException;
+
+    /**
+     * Does the final Symbol lookup.
+     * Unbound Symbols are automatically created but not
+     * initialized in the given global environment.
+     */
+    Code force(StaticEnvironment global)
+        throws SymbolNotFoundException, UnexpectedSyntax;
 }
