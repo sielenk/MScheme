@@ -52,15 +52,16 @@ final class LetToken
 
 
         // ((lambda (<var> ...) <body>) <init> ...)
-        return CodeList.prepend(
-            SyntaxFactory.getLambdaToken().translateArguments(
+        return SyntaxFactory.getLambdaToken(
+            ).translateArguments(
                 syntax,
                 ValueFactory.prepend(
                     formals,
                     body
                 )
-            ),
-            inits.getCodeList(syntax)
-        );
+            ).translateArguments(
+                syntax,
+                inits
+            );
     }
 }

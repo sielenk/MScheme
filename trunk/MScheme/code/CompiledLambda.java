@@ -12,12 +12,12 @@ final public class CompiledLambda
 {
     private final Arity             _arity;
     private final StaticEnvironment _compiledFormals;
-    private final CodeList          _compiledBody;
+    private final Code              _compiledBody;
     
     public CompiledLambda(
         Arity             arity,
         StaticEnvironment compiledFormals,
-        CodeList          compiledBody
+        Code              compiledBody
     )
     {
         _arity           = arity;

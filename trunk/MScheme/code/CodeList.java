@@ -5,7 +5,6 @@ import MScheme.exceptions.*;
 
 
 abstract public class CodeList
-    extends Code
 {
     // static creation functions
     
