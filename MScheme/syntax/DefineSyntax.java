@@ -53,6 +53,8 @@ final class Macro
         = "$Id$";
 
 
+    final static Machine machine = new Machine();
+
     private final static Code _apply
         = ApplyFunction.INSTANCE.getLiteral();
 
@@ -72,7 +74,7 @@ final class Macro
     {
         // (apply tranformer def_env use_env args)
 
-        Pair result = Machine.execute(
+        Pair result = machine.execute(
             Application.create(
                 CodeList.prepend(
                     _apply,
@@ -83,8 +85,7 @@ final class Macro
                         arguments.getLiteral()
                     )
                 )
-            ),
-            Environment.getImplementationEnvironment()
+            )
         ).toPair();
 
         return
@@ -102,7 +103,7 @@ final class DefineSyntax
     extends CheckedSyntax
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     final static Syntax INSTANCE = new DefineSyntax();
@@ -121,9 +122,8 @@ final class DefineSyntax
         Value  value  = arguments.getTail().getHead();
 
         Macro macro = new Macro(
-            Machine.evaluate(
-                value,
-                Environment.getImplementationEnvironment()
+            Macro.machine.evaluate(
+                value
             )
             .toFunction()
             .getLiteral(),
@@ -131,10 +131,11 @@ final class DefineSyntax
         );
 
         compilationEnv.defineSyntax(symbol, macro);
-        Environment
-        .getImplementationEnvironment()
-        .getStatic()
-        .defineSyntax(symbol, macro);
+        Macro
+            .machine
+            .getEnvironment()
+            .getStatic()
+            .defineSyntax(symbol, macro);
 
         return Empty.create().getLiteral();
     }
