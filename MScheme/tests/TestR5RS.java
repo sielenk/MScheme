@@ -430,7 +430,7 @@ public class TestR5RS
 
         try
         {
-            eval("(set!   x 1 2 3)");
+            eval("(set! x 1 2 3)");
             fail();
         }
         catch (SyntaxArityError e)
@@ -440,6 +440,20 @@ public class TestR5RS
             "(begin (define (f x) x x x x x) (f 1))",
             "1"
         );
+
+        try {
+            check(
+                "(let ((a 1))"+
+                "  (define (f x)"+
+                "    (define b (+ a x))"+
+                "    (define a 5)"+
+                "    (+ a b))"+
+                "  (f 10))",
+                "20"
+            );
+        }
+        catch (SchemeException e)
+        { }
     }
 
 
