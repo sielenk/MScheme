@@ -11,7 +11,7 @@ public final class Pair
 {
     private Value   _first;
     private Value   _second;
-    private boolean _isLiteral = false;
+    private boolean _isConst = false;
   
 
     private Pair(Value first, Value second)
@@ -24,8 +24,8 @@ public final class Pair
     { return new Pair(first, second); }
 
 
-    public Value setLiteral()
-    { _isLiteral = true; return this; }
+    public Value setConst()
+    { _isConst = true; return this; }
 
 
     // implementation of List
@@ -77,7 +77,7 @@ public final class Pair
     public void setFirst(Value first)
         throws ImmutableException
     {
-        if (_isLiteral) {
+        if (_isConst) {
             throw new ImmutableException(this);
         }
 
@@ -90,7 +90,7 @@ public final class Pair
     public void setSecond(Value second)
         throws ImmutableException
     {
-        if (_isLiteral) {
+        if (_isConst) {
             throw new ImmutableException(this);
         }
 

@@ -15,7 +15,7 @@ public final class SchemeVector
     private final static SchemeVector _empty = new SchemeVector(0, null);
 
     private final Value[] _data;
-    private boolean       _isLiteral = false;
+    private boolean       _isConst = false;
     
     private SchemeVector(int size, Value fill)
     {
@@ -33,8 +33,8 @@ public final class SchemeVector
     { return (size == 0) ? _empty : new SchemeVector(size, fill); }
     
 
-    public Value setLiteral()
-    { _isLiteral = true; return this; }
+    public Value setConst()
+    { _isConst = true; return this; }
 
 
     public int getLength()
@@ -61,7 +61,7 @@ public final class SchemeVector
     public void set(int index, Value value)
         throws InvalidVectorIndexException, ImmutableException
     {
-        if (_isLiteral) {
+        if (_isConst) {
             throw new ImmutableException(this);
         }
 
