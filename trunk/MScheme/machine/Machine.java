@@ -1,5 +1,10 @@
 package MScheme.machine;
 
+import java.io.Reader;
+import java.io.Writer;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+
 import MScheme.Value;
 import MScheme.Code;
 
@@ -16,16 +21,16 @@ import MScheme.environment.Environment;
 import MScheme.exceptions.*;
 
 
-final class AbortContinuation
+final class StopContinuation
             extends Continuation
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     private Value _result;
 
-    AbortContinuation(Registers state)
+    StopContinuation(Registers state)
     {
         super(state);
         _result = null;
@@ -58,7 +63,7 @@ final class AbortContinuation
 public final class Machine
 {
     public final static String id
-    = "$Id$";
+        = "$Id$";
 
 
     private final Environment _environment;
@@ -103,6 +108,9 @@ public final class Machine
     }
 
 
+    public static Reader stdin  = new InputStreamReader (System.in );
+    public static Writer stdout = new OutputStreamWriter(System.out);
+
     private static SchemeException   lastError      = null;
     private static Value             lastErrorValue = null;
 
@@ -112,24 +120,24 @@ public final class Machine
     )
         throws SchemeException
     {
-        Code              next  = program;
-        Registers         state = new Registers(executionEnv);
-        AbortContinuation abort = new AbortContinuation(state);
+        Code             current = program;
+        Registers        state   = new Registers(executionEnv);
+        StopContinuation stop    = new StopContinuation(state);
 
         lastError      = null;
         lastErrorValue = null;
 
-        while (!abort.hasResult())
+        while (!stop.hasResult())
         {
             try
             {
-                next = next.executionStep(state);
+                current = current.executionStep(state);
             }
             catch (SchemeException error)
             {
                 // the Java stack is unwound
                 // now go for the Scheme's ...
-
+                
                 // remember what happened, to be able
                 // to "rethrow" the caught exception again
                 // after the scheme stack is unwound
@@ -138,13 +146,16 @@ public final class Machine
                     ListFactory.create(
                         error.getCauseValue(),
                         error.getMessageValue(),
-                        state.getCurrentContinuation()
+                        state.getCurrentContinuation(),
+                        ScmBoolean.create(
+                            error instanceof RuntimeError
+                        )
                     );
 
                 // collect dynamic-wind thunks
                 // and let the machine handle them
-                next = new ContinuationFunction(
-                    abort
+                current = new ContinuationFunction(
+                    stop
                 ).call(
                     state,
                     ListFactory.create(
@@ -154,7 +165,7 @@ public final class Machine
             }
         }
 
-        Value result = abort.getResult();
+        Value result = stop.getResult();
         
         if (result == lastErrorValue)
         {
