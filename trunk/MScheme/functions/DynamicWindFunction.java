@@ -2,7 +2,7 @@ package MScheme.functions;
 
 import MScheme.machine.Registers;
 import MScheme.machine.WindContinuation;
-import MScheme.code.Code;
+import MScheme.Code;
 import MScheme.code.CodeList;
 import MScheme.code.Application;
 import MScheme.values.ValueFactory;

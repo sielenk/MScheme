@@ -1,12 +1,13 @@
 package MScheme.syntax;
 
+import MScheme.Value;
+import MScheme.Code;
+
 import MScheme.util.Arity;
 import MScheme.machine.Machine;
-import MScheme.code.Code;
 import MScheme.code.CodeList;
 import MScheme.environment.StaticEnvironment;
 import MScheme.code.Selection;
-import MScheme.Value;
 import MScheme.values.Function;
 import MScheme.values.ScmBoolean;
 import MScheme.values.List;

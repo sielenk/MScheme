@@ -1,7 +1,7 @@
 package MScheme.machine;
 
-import MScheme.code.Code;
 import MScheme.Value;
+import MScheme.Code;
 
 import MScheme.exceptions.RuntimeError;
 import MScheme.exceptions.TypeError;

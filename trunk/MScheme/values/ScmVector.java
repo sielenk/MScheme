@@ -4,6 +4,7 @@ import java.io.Writer;
 import java.io.IOException;
 
 import MScheme.Value;
+import MScheme.Code; 
 
 import MScheme.environment.StaticEnvironment;
 import MScheme.values.List;

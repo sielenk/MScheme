@@ -1,11 +1,12 @@
 package MScheme.syntax;
 
-import MScheme.code.Code;
+import MScheme.Value;
+import MScheme.Code;
+
 import MScheme.code.Assignment;
 import MScheme.environment.StaticEnvironment;
 import MScheme.environment.Reference;
 import MScheme.values.ValueFactory;
-import MScheme.Value;
 import MScheme.values.List;
 import MScheme.values.Pair;
 import MScheme.values.Symbol;

@@ -1,8 +1,9 @@
 package MScheme.functions;
 
-import MScheme.machine.Registers;
-import MScheme.code.Code;
 import MScheme.Value;
+import MScheme.Code;
+
+import MScheme.machine.Registers;
 
 import MScheme.exceptions.RuntimeError;
 import MScheme.exceptions.TypeError;
