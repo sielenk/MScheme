@@ -122,6 +122,11 @@ public class ScmNumber
         return new ScmNumber(_value.subtract(other._value));
     }
 
+    public ScmNumber reciprocal()
+    {
+        return new ScmNumber(BigInteger.valueOf(1).divide(_value));
+    }
+
     public ScmNumber times(ScmNumber other)
     {
         return new ScmNumber(_value.multiply(other._value));
