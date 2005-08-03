@@ -6,8 +6,10 @@ package mscheme.values;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import mscheme.environment.Environment;
 import mscheme.environment.StaticEnvironment;
@@ -20,12 +22,14 @@ import mscheme.exceptions.ListExpected;
 import mscheme.exceptions.NumberExpected;
 import mscheme.exceptions.OutputPortExpected;
 import mscheme.exceptions.PairExpected;
+import mscheme.exceptions.RuntimeArityError;
 import mscheme.exceptions.RuntimeError;
 import mscheme.exceptions.SchemeException;
 import mscheme.exceptions.StringExpected;
 import mscheme.exceptions.SymbolExpected;
 import mscheme.exceptions.VectorExpected;
 import mscheme.machine.Registers;
+import mscheme.util.Arity;
 
 /**
  * @author sielenk
@@ -52,18 +56,27 @@ public class ValueTraits
     {
         if (function instanceof Method)
         {
-            Method m = (Method) function;
+            Method method = (Method)function;
 
             try
             {
                 if (arguments.isEmpty())
                 {
-                    return m.invoke(null, null);
+                    return method.invoke(
+                            null,
+                            null);
+                }
+                else if (Modifier.isStatic(method.getModifiers()))
+                {
+                    return method.invoke(
+                            null,
+                            arguments.getArray());
                 }
                 else
                 {
-                    return m.invoke(arguments.getHead(), arguments.getTail()
-                            .getArray());
+                    return method.invoke(
+                            arguments.getHead(),
+                            arguments.getTail().getArray());                    
                 }
             }
             catch (IllegalArgumentException e1)
@@ -77,6 +90,36 @@ public class ValueTraits
             catch (InvocationTargetException e1)
             {
                 throw new RuntimeError(function, e1.toString());
+            }
+        }
+        else if (function instanceof Field)
+        {
+            Field field = (Field)function;
+
+            try
+            {
+                if (Modifier.isStatic(field.getModifiers()))
+                {
+                    if (!arguments.isEmpty())
+                        throw new RuntimeArityError(arguments, Arity.exactly(0));
+
+                    return field.get(null);
+                }
+                else
+                {
+                    if (!arguments.getTail().isEmpty())
+                        throw new RuntimeArityError(arguments, Arity.exactly(1));
+
+                    return field.get(arguments.getHead());
+                }
+            }
+            catch (IllegalArgumentException e)
+            {
+                throw new RuntimeError(function, e.toString());
+            }
+            catch (IllegalAccessException e)
+            {
+                throw new RuntimeError(function, e.toString());
             }
         }
         else if (function instanceof Function)
