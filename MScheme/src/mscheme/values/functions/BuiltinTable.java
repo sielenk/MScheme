@@ -159,7 +159,7 @@ class BuiltinUnary
     }
 
     protected Object checkedCall(Object fst)
-        throws SchemeException, InterruptedException
+        throws SchemeException
     {
         switch(_id) {
         case 0: // length

@@ -30,7 +30,6 @@ import mscheme.util.Arity;
 import mscheme.values.IList;
 import mscheme.values.ListFactory;
 import mscheme.values.IPair;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 import mscheme.values.functions.ApplyFunction;
 
@@ -105,7 +104,7 @@ final class DefineSyntax
         IList              arguments
     ) throws SchemeException, InterruptedException
     {
-        Symbol symbol = ValueTraits.toSymbol(arguments.getHead());
+        String symbol = ValueTraits.toSymbol(arguments.getHead());
         Object value  = arguments.getTail().getHead();
 
         Macro macro = new Macro(

@@ -27,7 +27,6 @@ import mscheme.exceptions.AlreadyBound;
 import mscheme.exceptions.CompileError;
 import mscheme.exceptions.RuntimeError;
 import mscheme.syntax.TranslatorFactory;
-import mscheme.values.Symbol;
 import mscheme.values.functions.BuiltinTable;
 
 
@@ -88,51 +87,51 @@ public final class Environment
             StaticEnvironment staticBindings = result.getStatic();
 
             staticBindings.defineSyntax(
-                Symbol.create("quote"),
+                "quote",
                 TranslatorFactory.getQuoteToken()
             );
             staticBindings.defineSyntax(
-                Symbol.create("if"),
+                "if",
                 TranslatorFactory.getIfToken()
             );
             staticBindings.defineSyntax(
-                Symbol.create("begin"),
+                "begin",
                 TranslatorFactory.getBeginToken()
             );
             staticBindings.defineSyntax(
-                Symbol.create("and"),
+                "and",
                 TranslatorFactory.getAndToken()
             );
             staticBindings.defineSyntax(
-                Symbol.create("or"),
+                "or",
                 TranslatorFactory.getOrToken()
             );
             staticBindings.defineSyntax(
-                Symbol.create("lambda"),
+                "lambda",
                 TranslatorFactory.getLambdaToken()
             );
             staticBindings.defineSyntax(
-                Symbol.create("let"),
+                "let",
                 TranslatorFactory.getLetToken()
             );
             staticBindings.defineSyntax(
-                Symbol.create("let*"),
+                "let*",
                 TranslatorFactory.getLetStarToken()
             );
             staticBindings.defineSyntax(
-                Symbol.create("letrec"),
+                "letrec",
                 TranslatorFactory.getLetrecToken()
             );
             staticBindings.defineSyntax(
-                Symbol.create("define"),
+                "define",
                 TranslatorFactory.getDefineToken()
             );
             staticBindings.defineSyntax(
-                Symbol.create("set!"),
+                "set!",
                 TranslatorFactory.getSetToken()
             );
             staticBindings.defineSyntax(
-                Symbol.create("define-syntax"),
+                "define-syntax",
                 TranslatorFactory.getDefineSyntaxToken()
             );
         }
@@ -155,7 +154,7 @@ public final class Environment
             for (int i = 0; i < BuiltinTable.builtins.length; i++)
             {
                 result.define(
-                    Symbol.create(BuiltinTable.builtins[i].getName()),
+                    BuiltinTable.builtins[i].getName(),
                     BuiltinTable.builtins[i].getFunc()
                 );
             }
@@ -185,7 +184,7 @@ public final class Environment
 
     // *** code access (compiletime) ***
 
-    public Reference define(Symbol key, Object value)
+    public Reference define(String key, Object value)
         throws CompileError
     {
         Reference newReference = _bindings.define(key);
@@ -200,7 +199,7 @@ public final class Environment
         return _values.assign(key, value);
     }
 
-    public Object assign(Symbol key, Object value)
+    public Object assign(String key, Object value)
         throws CompileError
     {
         return assign(_bindings.getReferenceFor(key), value);
@@ -228,7 +227,7 @@ public final class Environment
         return result;
     }
 
-    public Object lookup(Symbol key)
+    public Object lookup(String key)
         throws CompileError,
                RuntimeError
     {

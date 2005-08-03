@@ -27,7 +27,6 @@ import mscheme.exceptions.UnexpectedSyntax;
 import mscheme.syntax.ITranslator;
 import mscheme.syntax.TranslatorFactory;
 import mscheme.values.ListFactory;
-import mscheme.values.Symbol;
 
 
 public class TestEnvironment
@@ -38,8 +37,8 @@ public class TestEnvironment
 
 
     protected Environment env;
-    protected Symbol sym1;
-    protected Symbol sym2;
+    protected String sym1;
+    protected String sym2;
     protected Object val1;
     protected Object val2;
 
@@ -52,8 +51,8 @@ public class TestEnvironment
     {
         env = Environment.getEmpty();
 
-        sym1 = Symbol.create("test1");
-        sym2 = Symbol.create("test2");
+        sym1 = "test1";
+        sym2 = "test2";
 
         val1 = ListFactory.create();
         val2 = Boolean.TRUE;

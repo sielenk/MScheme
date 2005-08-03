@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.exceptions;
 
-import mscheme.values.Symbol;
-
 
 public final class UnexpectedSyntax
     extends CompileError
@@ -29,7 +27,7 @@ public final class UnexpectedSyntax
     public final static String CVS_ID
         = "$Id$";
 
-    public UnexpectedSyntax(Symbol cause)
+    public UnexpectedSyntax(String cause)
     {
         super(cause, "unexpected syntactic keyword");
     }

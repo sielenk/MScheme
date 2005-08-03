@@ -222,17 +222,24 @@ public class ValueTraits
         }
     }
 
-    public static Symbol toSymbol(Object o)
+    public static String toSymbol(Object o)
             throws SymbolExpected
     {
-        if (o instanceof Symbol)
+        if (o instanceof String)
         {
-            return (Symbol) o;
+            return (String) o;
         }
         else
         {
             throw new SymbolExpected(o);
         }
+    }
+    
+    private static int _index = 0;
+
+    public static String createUniqueSymbol()
+    {
+        return "#[" + _index++ + "]";
     }
 
     public static Boolean toScmBoolean(boolean b)
@@ -353,7 +360,7 @@ public class ValueTraits
 
     public static boolean isSymbol(Object o)
     {
-        return o instanceof Symbol;
+        return o instanceof String;
     }
 
     public static boolean isScmNumber(Object o)

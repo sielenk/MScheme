@@ -33,7 +33,6 @@ import mscheme.values.OutputPort;
 import mscheme.values.ScmNumber;
 import mscheme.values.ScmString;
 import mscheme.values.ScmVector;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
 import mscheme.values.functions.CallCCFunction;
@@ -189,7 +188,7 @@ public class TestValue
     public void testSymbol()
     throws Exception
     {
-        final Object symbol = Symbol.create("test");
+        final Object symbol = "test";
 
         commonTests(symbol);
         assertTrue(ValueTraits.isSymbol(symbol));
@@ -336,8 +335,8 @@ public class TestValue
     public void testEq()
         throws Exception
     {
-		Object u = Symbol.create("u");
-		Object v = Symbol.create("v");
+		Object u = "u";
+		Object v = "v";
 
         // eq equivalent values
 
@@ -361,8 +360,8 @@ public class TestValue
 
         assertTrue(
             eqHelper(
-                Symbol.create("a"),
-                Symbol.create("a")
+                "a",
+                "a"
             ) == 3
         );
 
@@ -443,8 +442,8 @@ public class TestValue
 
         assertTrue(
             eqHelper(
-                Symbol.create("u"),
-                Symbol.create("v")
+                "u",
+                "v"
             ) == 0
         );
 

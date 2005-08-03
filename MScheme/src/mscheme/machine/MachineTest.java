@@ -14,7 +14,6 @@ import mscheme.code.Sequence;
 import mscheme.environment.Environment;
 import mscheme.environment.Reference;
 import mscheme.exceptions.SchemeException;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 import mscheme.values.functions.AppendFunction;
 
@@ -56,7 +55,7 @@ public class MachineTest
 		super.setUp();
 
 		_environment = Environment.getNullEnvironment();
-		_key         = _environment.define(Symbol.createUnique(), O1);
+		_key         = _environment.define(ValueTraits.createUniqueSymbol(), O1);
 		_machine     = new Machine(_environment);
 	}
 

@@ -13,7 +13,6 @@ import mscheme.exceptions.SchemeException;
 import mscheme.syntax.ITranslator;
 import mscheme.syntax.ProcedureCall;
 import mscheme.values.ICompileable;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
 /**
@@ -44,6 +43,11 @@ public class Compiler
         {
             throw new CantCompileException(object);
         }
+        if (ValueTraits.isSymbol(object))
+        {
+            _env.setStateClosed();
+            return _env.getDelayedReferenceFor((String)object);
+        }
         else if (object instanceof ICompileable)
         {
             return ((ICompileable) object).getForceable(_env);
@@ -58,9 +62,9 @@ public class Compiler
     public ITranslator getTranslator(Object object)
             throws SchemeException
     {
-        if (object instanceof Symbol)
+        if (object instanceof String)
         {
-            Symbol symbol = (Symbol) object;
+            String symbol = (String) object;
 
             ITranslator result = _env.getSyntaxFor(symbol);
 

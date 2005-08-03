@@ -47,8 +47,8 @@ public class TestList
     {
         emptyList = ListFactory.create();
 
-        firstElement = Symbol.create("x");
-        secondElement = Symbol.create("y");
+        firstElement = "x";
+        secondElement = "y";
         lastElement = secondElement;
         occupiedList = ListFactory.create(firstElement, secondElement);
         occupiedListLength = 2;

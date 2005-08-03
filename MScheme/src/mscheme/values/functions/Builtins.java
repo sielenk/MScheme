@@ -52,7 +52,6 @@ import mscheme.values.OutputPort;
 import mscheme.values.ScmNumber;
 import mscheme.values.ScmString;
 import mscheme.values.ScmVector;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
 final class Order
@@ -438,14 +437,14 @@ public class Builtins
             // symbol->string
             throws SymbolExpected
     {
-        return ScmString.create(ValueTraits.toSymbol(argument));
+        return ScmString.createConst(ValueTraits.toSymbol(argument));
     }
 
     public final static Object string_2D_3Esymbol(Object argument)
             // string->symbol
             throws StringExpected
     {
-        return Symbol.create(ValueTraits.toScmString(argument));
+        return ValueTraits.toScmString(argument).getJavaString();
     }
 
     // 6.3.4 Characters
@@ -764,9 +763,16 @@ public class Builtins
     // 6.6.2 Input
 
     public final static Object read(Object fst)
-            throws RuntimeError, TypeError, InterruptedException
+            throws RuntimeError, TypeError
     {
-        return ValueTraits.toInputPort(fst).read();
+        try
+        {
+            return ValueTraits.toInputPort(fst).read();
+        }
+        catch (InterruptedException e)
+        {
+            throw new RuntimeError(fst, e.toString());
+        }
     }
 
     public final static Object read_2Dchar(Object fst)
@@ -820,7 +826,7 @@ public class Builtins
 
     public final static Object __unique_2Did()
     {
-        return Symbol.createUnique();
+        return ValueTraits.createUniqueSymbol();
     }
 
     public final static Function __spawn = SpawnFunction.INSTANCE;

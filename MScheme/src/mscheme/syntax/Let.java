@@ -31,7 +31,6 @@ import mscheme.util.Arity;
 
 import mscheme.values.IList;
 import mscheme.values.ListFactory;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
 import mscheme.values.functions.YCombinator;
@@ -59,7 +58,7 @@ final class Let
         IList              arguments
     ) throws SchemeException, InterruptedException
     {
-        Symbol name;
+        String name;
         if (ValueTraits.isSymbol(arguments.getHead()))
         {
             if (arguments.getLength() < 3)

@@ -20,8 +20,6 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.exceptions;
 
-import mscheme.values.Symbol;
-
 
 public final class AlreadyBound
     extends CompileError
@@ -29,7 +27,7 @@ public final class AlreadyBound
     public final static String CVS_ID
         = "$Id$";
 
-    public AlreadyBound(Symbol cause)
+    public AlreadyBound(String cause)
     {
         super(cause, "symbol already bound");
     }

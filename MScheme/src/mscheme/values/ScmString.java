@@ -139,12 +139,6 @@ public abstract class ScmString
         return new ConstScmString(javaString);
     }
 
-    public static ScmString create(Symbol schemeSymbol)
-    {
-        return createConst(schemeSymbol.getJavaString());
-    }
-
-
     abstract public String getJavaString();
 
 

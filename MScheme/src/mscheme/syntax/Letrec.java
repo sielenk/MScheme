@@ -33,7 +33,6 @@ import mscheme.exceptions.SchemeException;
 import mscheme.util.Arity;
 
 import mscheme.values.IList;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
 
@@ -82,7 +81,7 @@ final class Letrec
         int index = 0;
         while (!formals.isEmpty())
         {
-            Symbol formal = ValueTraits.toSymbol(formals.getHead());
+            String formal = ValueTraits.toSymbol(formals.getHead());
             Object init   = inits  .getHead();
 
             compiledLetrec[index++]
