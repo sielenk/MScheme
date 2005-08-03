@@ -31,7 +31,6 @@ import mscheme.exceptions.TypeError;
 import mscheme.exceptions.UnexpectedSyntax;
 import mscheme.syntax.ITranslator;
 import mscheme.values.IList;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
 
@@ -97,7 +96,7 @@ public class StaticEnvironment
         }
     }
 
-    StaticEnvironment(StaticEnvironment parent, Symbol symbol)
+    StaticEnvironment(StaticEnvironment parent, String symbol)
         throws CompileError
     {
         this(parent);
@@ -139,7 +138,7 @@ public class StaticEnvironment
         return new StaticEnvironment(this, symbols);
     }
 
-    public StaticEnvironment createChild(Symbol symbol)
+    public StaticEnvironment createChild(String symbol)
         throws CompileError
     {
         return new StaticEnvironment(this, symbol);
@@ -201,7 +200,7 @@ public class StaticEnvironment
         }
     }
 
-    public final Reference define(Symbol symbol)
+    public final Reference define(String symbol)
         throws CompileError
     {
         if (_state != OPEN)
@@ -214,7 +213,7 @@ public class StaticEnvironment
 
         try
         {
-            String    key = symbol.getJavaString();
+            String    key = symbol;
             Reference ref = (Reference)_bindings.get(key);
 
             // if ref is != null
@@ -246,10 +245,10 @@ public class StaticEnvironment
     }
 
 
-    public void defineSyntax(Symbol symbol, ITranslator value)
+    public void defineSyntax(String symbol, ITranslator value)
         throws AlreadyBound
     {
-        String  key = symbol.getJavaString();
+        String  key = symbol;
 
         {
             Object o = _bindings.get(key);
@@ -263,7 +262,7 @@ public class StaticEnvironment
     }
 
 
-    private Object lookupNoThrow(Symbol key)
+    private Object lookupNoThrow(String key)
     {
         for (
             StaticEnvironment current = this;
@@ -271,7 +270,7 @@ public class StaticEnvironment
             current = current._parent
         )
         {
-            Object result = current._bindings.get(key.getJavaString());
+            Object result = current._bindings.get(key);
 
             if (result != null)
             {
@@ -282,7 +281,7 @@ public class StaticEnvironment
         return null;
     }
 
-    private Object delayedLookup(Symbol key)
+    private Object delayedLookup(String key)
     {
         Object result = lookupNoThrow(key);
 
@@ -294,7 +293,7 @@ public class StaticEnvironment
         return result;
     }
 
-    private Object lookup(Symbol key)
+    private Object lookup(String key)
         throws SymbolNotFoundException
     {
         Object result = lookupNoThrow(key);
@@ -307,7 +306,7 @@ public class StaticEnvironment
         return result;
     }
 
-    public ITranslator getSyntaxFor(Symbol key)
+    public ITranslator getSyntaxFor(String key)
         throws SymbolNotFoundException
     {
         Object result = lookup(key);
@@ -318,7 +317,7 @@ public class StaticEnvironment
             : null;
     }
 
-    public Reference getDelayedReferenceFor(Symbol key)
+    public Reference getDelayedReferenceFor(String key)
         throws UnexpectedSyntax
     {
         try
@@ -331,7 +330,7 @@ public class StaticEnvironment
         }
     }
 
-    public Reference getReferenceFor(Symbol key, boolean restricted)
+    public Reference getReferenceFor(String key, boolean restricted)
         throws CompileError
     {
         try
@@ -355,13 +354,13 @@ public class StaticEnvironment
         }
     }
 
-    public Reference getReferenceFor(Symbol key)
+    public Reference getReferenceFor(String key)
         throws CompileError
     {
         return getReferenceFor(key, false);
     }
 
-    public boolean isBound(Symbol key)
+    public boolean isBound(String key)
     {
         return lookupNoThrow(key) != null;
     }

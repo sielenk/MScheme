@@ -31,7 +31,6 @@ import mscheme.exceptions.SchemeException;
 import mscheme.util.Arity;
 
 import mscheme.values.IList;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
 final class Set
@@ -50,7 +49,7 @@ final class Set
             IList arguments)
             throws SchemeException, InterruptedException
     {
-        Symbol symbol = ValueTraits.toSymbol(arguments.getHead());
+        String symbol = ValueTraits.toSymbol(arguments.getHead());
         Object value = arguments.getTail().getHead();
 
         return translate(compilationEnv.getDelayedReferenceFor(symbol),

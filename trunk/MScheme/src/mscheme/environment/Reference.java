@@ -25,7 +25,6 @@ import mscheme.compiler.IForceable;
 import mscheme.exceptions.CompileError;
 import mscheme.exceptions.RuntimeError;
 import mscheme.machine.Registers;
-import mscheme.values.Symbol;
 
 
 public abstract class Reference
@@ -35,15 +34,15 @@ public abstract class Reference
         = "$Id$";
 
 
-    private final Symbol _symbol;
+    private final String _symbol;
 
-    protected Reference(Symbol symbol)
+    protected Reference(String symbol)
     {
         _symbol = symbol;
     }
 
     static Reference create(
-        Symbol            key,
+        String            key,
         StaticEnvironment env,
         boolean           restricted
     )
@@ -51,12 +50,12 @@ public abstract class Reference
         return new DelayedReference(key, env, restricted);
     }
 
-    static Reference create(Symbol key, int level, int index)
+    static Reference create(String key, int level, int index)
     {
         return new ForcedReference(key, level, index);
     }
 
-    public final Symbol getSymbol()
+    public final String getSymbol()
     {
         return _symbol;
     }
@@ -102,7 +101,7 @@ final class DelayedReference
 
 
     DelayedReference(
-        Symbol            key,
+        String            key,
         StaticEnvironment env,
         boolean           restricted
     )
@@ -146,7 +145,7 @@ final class ForcedReference
     private final int _level;
     private final int _index;
 
-    protected ForcedReference(Symbol symbol, int level, int index)
+    protected ForcedReference(String symbol, int level, int index)
     {
         super(symbol);
         _level  = level;

@@ -27,7 +27,6 @@ import mscheme.exceptions.SchemeException;
 import mscheme.util.Arity;
 import mscheme.values.IList;
 import mscheme.values.ListFactory;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
 final class Define
@@ -53,7 +52,7 @@ final class Define
         {
             //    (define (f x y) (+ x y))
             // -> (define f (lambda (x y) (+ x y)))
-            Symbol symbol = ValueTraits.toSymbol(ValueTraits.toConstPair(
+            String symbol = ValueTraits.toSymbol(ValueTraits.toConstPair(
                     arguments.getHead()).getFirst());
             Object formals = ValueTraits.toConstPair(arguments.getHead())
                     .getSecond();
@@ -78,7 +77,7 @@ final class Define
                 arityError(arguments, Arity.exactly(2));
             }
 
-            Symbol symbol = ValueTraits.toSymbol(arguments.getHead());
+            String symbol = ValueTraits.toSymbol(arguments.getHead());
             Object value = arguments.getTail().getHead();
 
             Reference ref = compilationEnv.define(symbol);

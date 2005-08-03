@@ -39,7 +39,6 @@ import mscheme.values.InputPort;
 import mscheme.values.ListFactory;
 import mscheme.values.OutputPort;
 import mscheme.values.ScmNumber;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 import mscheme.values.functions.UnaryValueFunction;
 import mscheme.values.functions.ValueThunk;
@@ -90,7 +89,7 @@ public final class Machine
     {
         try
         {
-            _environment.define(Symbol.create("current-input-port"),
+            _environment.define("current-input-port",
                     new ValueThunk()
                     {
                         protected Object checkedCall()
@@ -99,7 +98,7 @@ public final class Machine
                         }
                     });
 
-            _environment.define(Symbol.create("reset-input-port"),
+            _environment.define("reset-input-port",
                     new UnaryValueFunction()
                     {
                         protected Object checkedCall(Object argument)
@@ -111,7 +110,7 @@ public final class Machine
                         }
                     });
 
-            _environment.define(Symbol.create("current-output-port"),
+            _environment.define("current-output-port",
                     new ValueThunk()
                     {
                         protected Object checkedCall()
@@ -120,7 +119,7 @@ public final class Machine
                         }
                     });
 
-            _environment.define(Symbol.create("reset-output-port"),
+            _environment.define("reset-output-port",
                     new UnaryValueFunction()
                     {
                         protected Object checkedCall(Object argument)
@@ -132,7 +131,7 @@ public final class Machine
                         }
                     });
 
-            _environment.define(Symbol.create("current-error-handler"),
+            _environment.define("current-error-handler",
                     new ValueThunk()
                     {
                         protected Object checkedCall()
@@ -145,7 +144,7 @@ public final class Machine
                         }
                     });
 
-            _environment.define(Symbol.create("reset-error-handler"),
+            _environment.define("reset-error-handler",
                     new UnaryValueFunction()
                     {
                         protected Object checkedCall(Object argument)
@@ -165,20 +164,22 @@ public final class Machine
                         }
                     });
 
-            _environment.define(Symbol.create("machine-environment"),
+            _environment.define("machine-environment",
                     _environment);
 
-            _environment.define(Symbol.create("ticker"), new ValueThunk()
-            {
-                protected Object checkedCall()
-                {
-                    int tRed = _tickerRed;
-                    int tInv = _tickerInv;
-                    _tickerRed = _tickerInv = 0;
-                    return ListFactory.create(ScmNumber.create(tRed), ScmNumber
-                            .create(tInv));
-                }
-            });
+            _environment.define(
+                    "ticker",
+                    new ValueThunk()
+                    {
+                        protected Object checkedCall()
+                        {
+                            int tRed = _tickerRed;
+                            int tInv = _tickerInv;
+                            _tickerRed = _tickerInv = 0;
+                            return ListFactory.create(ScmNumber.create(tRed), ScmNumber
+                                    .create(tInv));
+                        }
+                    });
 
             evaluate(InputPort.create(new StringReader(IInit.BOOTSTRAP)).read());
         }

@@ -59,9 +59,12 @@ public class InputPort
         = "$Id$";
 
 
-    public final static int     EOF       = -1;
+    public final static int    EOF       = -1;
     public final static Object EOF_VALUE = EofValue.INSTANCE;
 
+    private static final Object _plus = "+".intern();
+    private static final Object _minus = "-".intern();
+    private static final Object _ellipsis = "...".intern();
 
     private final PushbackReader _reader;
 
@@ -423,15 +426,15 @@ public class InputPort
 
         if (str.equals("+"))
         {
-            return Symbol.create("+");
+            return _plus; // "+";
         }
         else if (str.equals("-"))
         {
-            return Symbol.create("-");
+            return _minus; // "-";
         }
         else if (str.equals("..."))
         {
-            return Symbol.create("...");
+            return _ellipsis; // "...";
         }
 
 checkNumber:
@@ -477,7 +480,7 @@ checkNumber:
             }
         }
 
-        return Symbol.create(str);
+        return str.intern();
     }
 
     private Object parseDatum()
@@ -524,29 +527,29 @@ checkNumber:
 
         case '\'':
             return ListFactory.createConst(
-                       Symbol.create("quote"),
+                       "quote",
                        parseDatum()
                    );
 
         case '`':
             return ListFactory.createConst(
-                       Symbol.create("quasiquote"),
+                       "quasiquote",
                        parseDatum()
                    );
 
         case ',':
             {
                 int la2 = _reader.read();
-                Symbol sym;
+                String sym;
 
                 if (la2 == '@')
                 {
-                    sym = Symbol.create("unquote-splicing");
+                    sym = "unquote-splicing";
                 }
                 else
                 {
                     _reader.unread(la2);
-                    sym = Symbol.create("unquote");
+                    sym = "unquote";
                 }
 
                 return ListFactory.createConst(

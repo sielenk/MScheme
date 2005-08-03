@@ -32,7 +32,6 @@ import mscheme.exceptions.SchemeException;
 import mscheme.util.Arity;
 
 import mscheme.values.IList;
-import mscheme.values.Symbol;
 import mscheme.values.ValueTraits;
 
 // *** let* ***
@@ -96,7 +95,7 @@ final class LetStarHelper
         {
             IList binding = ValueTraits.toList(bindings.getHead());
 
-            Symbol formal = ValueTraits.toSymbol(binding.getHead());
+            String formal = ValueTraits.toSymbol(binding.getHead());
             Object init = binding.getTail().getHead();
 
             StaticEnvironment innerEnvironment = outerEnvironment
