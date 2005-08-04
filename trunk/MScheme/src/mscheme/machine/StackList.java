@@ -13,14 +13,14 @@ import mscheme.exceptions.RuntimeError;
  */
 class StackList implements IStack
 {
-	private final Entry _root;
+	private final Slice _root;
 	private final Mark  _call_cc_mark;
-	private Entry       _head;
+	private Slice       _head;
 
 	StackList()
 	{
-		_root         = new Entry();
-		_head         = new Entry(_root);
+		_root         = new Slice();
+		_head         = new Slice(_root);
 		_call_cc_mark = _head._mark;
 	}
 
@@ -40,9 +40,9 @@ class StackList implements IStack
 		_head._stack.push(f);
 	}
 
-	private Entry getTosEntry()
+	private Slice getTosEntry()
 	{
-		Entry e = _head;
+        Slice e = _head;
 		
 		while (e._stack.isEmpty() && (e._next != _root))
 		{
@@ -62,8 +62,8 @@ class StackList implements IStack
 	{
 		public Slice cutSlice(StackList l) throws RuntimeError
 		{
-			final Entry leaf = l._head;
-			      Entry root = leaf;
+			final Slice leaf = l._head;
+                  Slice root = leaf;
 
 			while ((root._mark != this)  && (root._next != null))
 			{
@@ -74,7 +74,7 @@ class StackList implements IStack
 			{
 				l._head = root._next;
 				root._next= null;
-				return new Slice(root, leaf);
+				return leaf;
 			}
 			else
 			{
@@ -84,45 +84,33 @@ class StackList implements IStack
 	}
 
     public static class Slice
-    {
-		private final Entry _root;
-    	private final Entry _leaf;
-
-		Slice(Entry root, Entry leaf)
-		{
-			_root = root;
-			_leaf = leaf;
-		}
-    }
-
-	private static class Entry
 	{
 		public final static String CVS_ID
 		   = "$Id$";
 
-		Entry            _next;
+        Slice            _next;
         final Mark       _mark;
 		final StackPlain _stack;
 
-		Entry()
+        Slice()
 		{
 			_next  = null;
 			_mark  = null;
 			_stack = new StackPlain();
 		}
 
-		Entry(Entry next)
+        Slice(Slice next)
 		{
 			_next  = next;
 			_mark  = new Mark();
 			_stack = new StackPlain();
 		}
 
-		Entry(Entry leaf, Entry base)
+        Slice(Slice leaf, Slice base)
 		{
 			_next  = (leaf._next == null)
 			         ? base
-			         : new Entry(leaf._next, base);
+			         : new Slice(leaf._next, base);
 			_mark  = leaf._mark;
 			_stack = leaf._stack.getCopy();
 		}
@@ -137,12 +125,12 @@ class StackList implements IStack
 
 	public Mark createMark()
 	{
-		_head = new Entry(_head);
+		_head = new Slice(_head);
 		return _head._mark;
 	}
 
 	public void reinstate(Slice slice)
 	{
-		_head = new Entry(slice._leaf, _head);
+		_head = new Slice(slice, _head);
 	}
 }
