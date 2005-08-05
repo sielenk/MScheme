@@ -34,7 +34,7 @@ public final class SpawnFunction
     public final static SpawnFunction INSTANCE = new SpawnFunction();
 
     private SpawnFunction()
-    {}
+    { }
 
     protected Object checkedCall(Registers state, Object argument)
             throws SchemeException, InterruptedException
