@@ -52,16 +52,10 @@ class StackPlain implements IStack
 
 	public void push(StackFrame frame)
 	{
-		try
-		{
-			_stack[_sp] = frame;
-		}
-		catch (ArrayIndexOutOfBoundsException e)
-		{
-			enlarge();
-			_stack[_sp] = frame;
-		}
-		++_sp;
+        if (_sp >= _stack.length)
+            enlarge();
+
+		_stack[_sp++] = frame;
 	}
 
 
