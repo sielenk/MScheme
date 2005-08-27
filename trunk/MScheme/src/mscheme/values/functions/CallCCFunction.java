@@ -43,7 +43,7 @@ public final class CallCCFunction
                 state,
                 argument,
                 ListFactory.create(
-                        new Continuation(
+                        new Subcontinuation(
                                 state)));
     }
 }
