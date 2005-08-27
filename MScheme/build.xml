@@ -12,12 +12,6 @@
       <srcfiles dir="${schemedir}"
                 includes="bootstrap.scm,rep.scm"/>
     </uptodate>
-
-    <uptodate property="uptodate.BuiltinTable"
-              targetfile="${srcdir}/mscheme/values/functions/BuiltinTable.java">
-      <srcfiles dir="${srcdir}/mscheme/values/functions" 
-                includes="ParseBuiltins.java,Builtins.java"/>
-    </uptodate>
   </target>
 
   <target name="updateInit" depends="init" unless="uptodate.Init">
@@ -31,14 +25,7 @@
     <delete file="${classdir}/mscheme/IInit.class"/>
   </target>
 
-  <target name="updateBuiltin" depends="init" unless="uptodate.BuiltinTable">
-    <copy
-      file="${srcdir}/mscheme/values/functions/BuiltinTable.java.empty"
-      tofile="${srcdir}/mscheme/values/functions/BuiltinTable.java"
-      overwrite="yes"/>
-  </target>
-
-  <target name="compileMScheme" depends="init,updateInit,updateBuiltin">
+  <target name="compileMScheme" depends="init,updateInit">
     <mkdir dir="${classdir}"/>
     <javac srcdir="${srcdir}"
            destdir="${classdir}"
@@ -47,19 +34,7 @@
            debug="on"/>
   </target>
 
-  <target name="compileBuiltin" depends="compileMScheme" unless="uptodate.BuiltinTable">
-    <java classname="mscheme.values.functions.ParseBuiltins"
-          classpath="${classdir}"
-          output="${srcdir}/mscheme/values/functions/BuiltinTable.java"/>
-    <delete file="${classdir}/mscheme/values/functions/BuiltinTable.class"/>
-    <javac srcdir="${srcdir}"
-           destdir="${classdir}"
-           classpath="${classdir}"
-           includes="mscheme/values/functions/BuiltinTable.java"
-           debug="on"/>
-  </target>
-
-  <target name="compile" depends="compileMScheme,compileBuiltin"/>
+  <target name="compile" depends="compileMScheme"/>
 
   <target name="check" depends="compile">
     <junit>

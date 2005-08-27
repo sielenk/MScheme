@@ -21,11 +21,15 @@
 package mscheme.values.functions;
 
 import java.io.StringReader;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import mscheme.environment.Environment;
 
 import mscheme.exceptions.CharExpected;
 import mscheme.exceptions.CloseException;
+import mscheme.exceptions.CompileError;
 import mscheme.exceptions.ImmutableException;
 import mscheme.exceptions.InvalidStringIndexException;
 import mscheme.exceptions.ListExpected;
@@ -848,4 +852,121 @@ public class Builtins
     //          new StringWriter()
     //      );
     //  }
+
+    public static void getBuiltins(Environment target) throws CompileError
+    {
+        Field[]  fields = Builtins.class.getFields();
+        for (int i = 0; i < fields.length; i++)
+        {
+            Field field = fields[i];
+            int   mo    = field.getModifiers();
+
+            if (!Modifier.isStatic(mo) || !Modifier.isPublic(mo))
+            {
+                continue;
+            }
+
+            if (!Function.class.isAssignableFrom(field.getType()))
+            {
+                continue;
+            }
+
+            final String schemeName = parseName(field.getName());
+            try
+            {
+                final Object value = field.get(null);
+                target.define(schemeName, value);
+            }
+            catch (Exception e)
+            {
+            }
+        }
+
+        Method[] methods       = Builtins.class.getMethods();
+        for (int i = 0; i < methods.length; i++)
+        {
+            Method me = methods[i];
+            int    mo = me.getModifiers();
+
+            if (!Modifier.isStatic(mo) || !Modifier.isPublic(mo))
+            {
+                continue;
+            }
+
+            if (!paramsValid(me.getParameterTypes()))
+            {
+                continue;
+            }
+
+            if (!Object.class.isAssignableFrom(me.getReturnType()))
+            {
+                continue;
+            }
+
+            final String schemeName = parseName(me.getName());
+
+            if ((me.getParameterTypes().length == 1) &&
+                    (me.getParameterTypes()[0] == IList.class)
+               )
+            {
+                target.define(schemeName, me);
+            }
+            else
+            {
+                target.define(schemeName, me);
+            }
+        }
+
+    }
+
+    private static String parseName(String name)
+    {
+        StringBuffer buf = new StringBuffer();
+
+        for (
+            int index = name.startsWith("__") ? 2 : 0;
+            index < name.length();
+            ++index
+        )
+        {
+            char c = name.charAt(index);
+
+            if (c == '_')
+            {
+                buf.append(
+                    (char)Integer.parseInt(
+                        name.substring(index + 1, index + 3),
+                        16
+                    )
+                );
+                index += 2;
+            }
+            else
+            {
+                buf.append(c);
+            }
+        }
+
+        return buf.toString();
+    }
+
+    private static boolean paramsValid(Class[] params)
+    {
+        if (params.length == 1)
+        {
+            return (params[0] == Object.class) || (params[0] == IList.class);
+        }
+        else
+        {
+            for (int i = 0; i < params.length; i++)
+            {
+                if (params[i] != Object.class)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 }

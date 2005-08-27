@@ -27,7 +27,7 @@ import mscheme.exceptions.AlreadyBound;
 import mscheme.exceptions.CompileError;
 import mscheme.exceptions.RuntimeError;
 import mscheme.syntax.TranslatorFactory;
-import mscheme.values.functions.BuiltinTable;
+import mscheme.values.functions.Builtins;
 
 
 public final class Environment
@@ -151,13 +151,7 @@ public final class Environment
 
         try
         {
-            for (int i = 0; i < BuiltinTable.builtins.length; i++)
-            {
-                result.define(
-                    BuiltinTable.builtins[i].getName(),
-                    BuiltinTable.builtins[i].getFunc()
-                );
-            }
+            Builtins.getBuiltins(result);
         }
         catch (CompileError e)
         {
