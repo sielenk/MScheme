@@ -22,7 +22,7 @@ package mscheme.code;
 
 import mscheme.compiler.IForceable;
 import mscheme.exceptions.CompileError;
-import mscheme.machine.IInvokeable;
+import mscheme.machine.IContinuation;
 import mscheme.machine.Registers;
 import mscheme.syntax.ISequenceTags;
 import mscheme.values.ValueTraits;
@@ -119,7 +119,7 @@ public final class Sequence
 		if (index + 1 < _sequence.length)
 		{
 			registers.push(
-			    new IInvokeable()
+			    new IContinuation()
 			    {
 					public final static String CVS_ID
 						= "$Id$";

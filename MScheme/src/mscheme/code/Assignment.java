@@ -24,7 +24,7 @@ import mscheme.compiler.Compiler;
 import mscheme.compiler.IForceable;
 import mscheme.environment.Reference;
 import mscheme.exceptions.CompileError;
-import mscheme.machine.IInvokeable;
+import mscheme.machine.IContinuation;
 import mscheme.machine.Registers;
 
 
@@ -72,7 +72,7 @@ public final class Assignment
 	public Object reduce(Registers registers)
 	{
 		registers.push(
-			new IInvokeable()
+			new IContinuation()
 			{
 				public Object invoke(
 					Registers registers,
