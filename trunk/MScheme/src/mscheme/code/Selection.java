@@ -23,7 +23,7 @@ package mscheme.code;
 import mscheme.compiler.Compiler;
 import mscheme.compiler.IForceable;
 import mscheme.exceptions.CompileError;
-import mscheme.machine.IInvokeable;
+import mscheme.machine.IContinuation;
 import mscheme.machine.Registers;
 import mscheme.values.ValueTraits;
 
@@ -70,7 +70,7 @@ public final class Selection
 	public Object reduce(Registers registers)
 	{
 		registers.push(
-			new IInvokeable()
+			new IContinuation()
 			{
 				public Object invoke(
 					Registers registers,

@@ -23,7 +23,7 @@ package mscheme.code;
 import mscheme.compiler.IForceable;
 import mscheme.exceptions.CompileError;
 import mscheme.exceptions.SchemeException;
-import mscheme.machine.IInvokeable;
+import mscheme.machine.IContinuation;
 import mscheme.machine.Registers;
 import mscheme.values.IList;
 import mscheme.values.ListFactory;
@@ -64,9 +64,9 @@ public final class Application
                 _application.length - 1);
     }
 
-    public static IInvokeable createCall(final IList done)
+    public static IContinuation createCall(final IList done)
     {
-        return new IInvokeable()
+        return new IContinuation()
         {
             public final static String CVS_ID = "$Id$";
 
@@ -78,9 +78,9 @@ public final class Application
         };
     }
 
-    private IInvokeable createPush(final IList done, final int index)
+    private IContinuation createPush(final IList done, final int index)
     {
-        return new IInvokeable()
+        return new IContinuation()
         {
             public final static String CVS_ID = "$Id$";
 
