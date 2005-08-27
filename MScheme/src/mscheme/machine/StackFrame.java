@@ -14,17 +14,17 @@ import mscheme.environment.DynamicEnvironment;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-class StackFrame
+public class StackFrame
 {
 	public final static String CVS_ID
 	    = "$Id$";
 
 	final DynamicEnvironment environment;
-	final IInvokeable         invokeable;
+	final IContinuation      continuation;
 
-	StackFrame(DynamicEnvironment e, IInvokeable i)
+	public StackFrame(DynamicEnvironment e, IContinuation k)
 	{
-		environment = e;
-		invokeable  = i;
+		environment  = e;
+		continuation = k;
 	}
 }

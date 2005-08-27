@@ -8,7 +8,7 @@ package mscheme.machine;
 
 import mscheme.environment.DynamicEnvironment;
 import mscheme.environment.Reference;
-import mscheme.exceptions.RuntimeError;
+import mscheme.machine.stack.Stack;
 
 /**
  * @author sielenk
@@ -20,17 +20,17 @@ public class Registers
 		= "$Id$";
 
 
-	private StackList          _stack;
+	private Stack              _stack;
 	private DynamicEnvironment _environment;
 
 
 	Registers(DynamicEnvironment environment)
 	{
-		_stack       = new StackList();
+		_stack       = new Stack();
 		_environment = environment;
 	}
-	
-	StackList getStack()
+
+	public Stack getStack()
 	{
 		return _stack;	
 	}
@@ -45,23 +45,12 @@ public class Registers
 		return _environment;
 	}
 
-	public void push(IInvokeable k)
+	public void push(IContinuation k)
 	{
 		_stack.push(new StackFrame(_environment, k));
 	}
 
 	public Object assign(Reference key, Object value) {
 		return _environment.assign(key, value);
-	}
-
-
-	public Controller getController()
-	{
-		return new Controller(_stack.createMark());
-	}
-
-	public Continuation getCurrentContinuation() throws RuntimeError
-	{
-		return _stack.getCurrentContinuation();		
 	}
 }

@@ -33,6 +33,7 @@ import mscheme.environment.Environment;
 import mscheme.exceptions.RuntimeError;
 import mscheme.exceptions.SchemeException;
 import mscheme.exceptions.TypeError;
+import mscheme.machine.stack.Stack;
 import mscheme.values.Function;
 import mscheme.values.IList;
 import mscheme.values.InputPort;
@@ -40,6 +41,7 @@ import mscheme.values.ListFactory;
 import mscheme.values.OutputPort;
 import mscheme.values.ScmNumber;
 import mscheme.values.ValueTraits;
+import mscheme.values.functions.Continuation;
 import mscheme.values.functions.UnaryValueFunction;
 import mscheme.values.functions.ValueThunk;
 
@@ -260,7 +262,7 @@ public final class Machine
         private Object invoke(Object current)
                 throws SchemeException, InterruptedException
         {
-            IStack stack = _state.getStack();
+            Stack stack = _state.getStack();
 
             if (!stack.isEmpty())
             {
@@ -268,7 +270,7 @@ public final class Machine
 
                 _state.setEnvironment(frame.environment);
 
-                current = frame.invokeable.invoke(_state, current);
+                current = frame.continuation.invoke(_state, current);
             }
             else
             {
@@ -283,9 +285,12 @@ public final class Machine
         {
             if (_errorHandler != null)
             {
-                IList errorValue = ListFactory.create(error.getCauseValue(),
-                        error.getMessage(), _state.getCurrentContinuation(),
-                        Boolean.valueOf(error instanceof RuntimeError));
+                IList errorValue = ListFactory.create(
+                        error.getCauseValue(),
+                        error.getMessage(),
+                        new Continuation(_state),
+                        Boolean.valueOf(
+                                error instanceof RuntimeError));
 
                 // Avoid endless loop if the
                 // handler is buggy:
