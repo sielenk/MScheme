@@ -39,7 +39,11 @@ public final class CallCCFunction
     protected Object checkedCall(Registers state, Object argument)
             throws SchemeException, InterruptedException
     {
-        return ValueTraits.apply(state, argument, ListFactory.create(state
-                .getCurrentContinuation()));
+        return ValueTraits.apply(
+                state,
+                argument,
+                ListFactory.create(
+                        new Continuation(
+                                state)));
     }
 }
