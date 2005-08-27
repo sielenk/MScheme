@@ -57,26 +57,44 @@ public class ValueTraits
         if (function instanceof Method)
         {
             Method method = (Method)function;
+            boolean methodExpectsIList = (
+                    (method.getParameterTypes().length == 1) &&
+                    (method.getParameterTypes()[0] == IList.class));
 
             try
             {
                 if (arguments.isEmpty())
                 {
-                    return method.invoke(
-                            null,
-                            (Object[])null);
+                    if (methodExpectsIList)
+                    {
+                        return method.invoke(null, arguments);
+                    }
+                    else
+                    {
+                        return method.invoke(null, (Object[])null);
+                    }
                 }
                 else if (Modifier.isStatic(method.getModifiers()))
                 {
-                    return method.invoke(
-                            null,
-                            arguments.getArray());
+                    if (methodExpectsIList)
+                    {
+                        return method.invoke(null, arguments);
+                    }
+                    else
+                    {
+                        return method.invoke(null, arguments.getArray());                        
+                    }
                 }
                 else
                 {
-                    return method.invoke(
-                            arguments.getHead(),
-                            arguments.getTail().getArray());                    
+                    if (methodExpectsIList)
+                    {
+                        return method.invoke(arguments.getHead(), arguments.getTail());
+                    }
+                    else
+                    {
+                        return method.invoke(arguments.getHead(), arguments.getTail().getArray());
+                    }
                 }
             }
             catch (IllegalArgumentException e1)
@@ -390,7 +408,7 @@ public class ValueTraits
 
     public static boolean isFunction(Object o)
     {
-        return o instanceof Function;
+        return o instanceof Function || o instanceof Method || o instanceof Field;
     }
 
     public static void output(Writer destination, boolean doWrite, Object o)
