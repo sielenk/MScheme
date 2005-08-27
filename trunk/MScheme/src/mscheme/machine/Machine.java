@@ -288,7 +288,8 @@ public final class Machine
                 IList errorValue = ListFactory.create(
                         error.getCauseValue(),
                         error.getMessage(),
-                        new Subcontinuation(_state),
+                        new Subcontinuation(
+                                _state.getStack().getContinuation()),
                         Boolean.valueOf(
                                 error instanceof RuntimeError));
 

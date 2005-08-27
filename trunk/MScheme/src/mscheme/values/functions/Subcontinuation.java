@@ -6,7 +6,6 @@
  */
 package mscheme.values.functions;
 
-import mscheme.exceptions.RuntimeError;
 import mscheme.exceptions.SchemeException;
 import mscheme.machine.Registers;
 import mscheme.machine.stack.Stack.Slice;
@@ -21,12 +20,7 @@ public class Subcontinuation
 
 	private final Slice _slice;
 
-    public Subcontinuation(Registers state) throws RuntimeError
-    {
-        _slice = state.getStack().getContinuation();
-    }
-
-	Subcontinuation(Slice slice)
+	public Subcontinuation(Slice slice)
 	{
 		_slice = slice;
 	}
