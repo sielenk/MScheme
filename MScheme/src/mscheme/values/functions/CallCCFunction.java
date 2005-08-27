@@ -44,6 +44,6 @@ public final class CallCCFunction
                 argument,
                 ListFactory.create(
                         new Subcontinuation(
-                                state)));
+                                state.getStack().getContinuation())));
     }
 }
