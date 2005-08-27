@@ -39,14 +39,14 @@ public final class DynamicEnvironment
 
     // *******************************************************************
 
-    private final Vector     _globals;
-    private final Object[][] _frames;
+    private final Vector<Object> _globals;
+    private final Object[][]     _frames;
 
     // *******************************************************************
 
     private DynamicEnvironment(
-        Vector     globals,
-        Object[][] frames
+        Vector<Object> globals,
+        Object[][]     frames
     )
     {
         _globals = globals;
@@ -112,7 +112,7 @@ public final class DynamicEnvironment
     public static DynamicEnvironment create()
     {
         return new DynamicEnvironment(
-            new Vector(),
+            new Vector<Object>(),
             new Object[0][]
         );
     }
@@ -148,18 +148,15 @@ public final class DynamicEnvironment
 			result = _frames[level - 1][index];
 			_frames[level - 1][index] = value;
 		}
-		else
+		else if (index < _globals.size())
 		{
-			try
-			{
-				result = _globals.elementAt(index);
-				_globals.setElementAt(value, index);
-			}
-			catch (ArrayIndexOutOfBoundsException e)
-			{
-				_globals.setSize(index + 1);
-				_globals.setElementAt(value, index);
-			}
+			result = _globals.elementAt(index);
+			_globals.setElementAt(value, index);
+		}
+        else
+		{
+			_globals.setSize(index + 1);
+			_globals.setElementAt(value, index);
 		}
 
 		return (result != null) ? result : value;
@@ -167,24 +164,24 @@ public final class DynamicEnvironment
 
     public Object lookupNoThrow(Reference ref)
     {
-        try
+        final int level = ref.getLevel();
+        final int index = ref.getIndex();
+
+        if (0 < level && level <= _frames.length)
         {
-            int level = ref.getLevel();
-            int index = ref.getIndex();
-            
-            if (level > 0)
+            final Object[] frame = _frames[level - 1];
+
+            if (0 <= index && index < frame.length)
             {
-                return _frames[level - 1][index];
-            }
-            else
-            {
-                return _globals.elementAt(index);
+                return frame[index];
             }
         }
-        catch (ArrayIndexOutOfBoundsException e)
+        else if (0 <= index && index < _globals.size())
         {
-            return null;
+            return _globals.elementAt(index);
         }
+
+        return null;
     }
 
     public Object lookup(Reference ref)
