@@ -39,7 +39,11 @@ public final class SpawnFunction
     protected Object checkedCall(Registers state, Object argument)
             throws SchemeException, InterruptedException
     {
-        return ValueTraits.apply(state, argument, ListFactory.create(state
-                .getController()));
+        return ValueTraits.apply(
+                state,
+                argument,
+                ListFactory.create(
+                        new SubcontinuationController(
+                                state)));
     }
 }
