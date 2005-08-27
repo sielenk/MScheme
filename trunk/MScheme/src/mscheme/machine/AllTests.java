@@ -6,6 +6,8 @@
  */
 package mscheme.machine;
 
+import mscheme.machine.stack.StackListTest;
+import mscheme.machine.stack.StackPlainTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
