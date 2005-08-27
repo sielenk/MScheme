@@ -64,7 +64,7 @@ public class ValueTraits
                 {
                     return method.invoke(
                             null,
-                            null);
+                            (Object[])null);
                 }
                 else if (Modifier.isStatic(method.getModifiers()))
                 {
