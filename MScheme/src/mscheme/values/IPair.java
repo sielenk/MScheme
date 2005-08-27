@@ -1,4 +1,4 @@
-/* TODO Add short description of this file here.
+/* Interface for a pair.
  Copyright (C) 2004 Marvin H. Sielenkemper
 
  This file is part of MScheme.
@@ -24,9 +24,6 @@ package mscheme.values;
 
 /**
  * @author sielenk
- * 
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
  */
 public interface IPair
 {

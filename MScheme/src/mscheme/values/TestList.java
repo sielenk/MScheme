@@ -107,7 +107,7 @@ public class TestList
     {
         try
         {
-            Object dummy = emptyList.getHead();
+            emptyList.getHead();
             fail("PairExpected expected");
         }
         catch (PairExpected e)

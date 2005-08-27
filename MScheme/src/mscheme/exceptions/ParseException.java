@@ -27,7 +27,7 @@ public class ParseException
     public final static String CVS_ID
         = "$Id$";
 
-    private final String _message;
+    public final String _message;
 
     public ParseException(Object port, String message)
     {

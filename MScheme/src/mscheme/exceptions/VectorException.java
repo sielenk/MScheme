@@ -29,7 +29,7 @@ public class VectorException
     public final static String CVS_ID
         = "$Id$";
 
-    private final int _index;
+    public final int _index;
 
     public VectorException(
         ScmVector vector,
