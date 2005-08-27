@@ -59,11 +59,11 @@ public class StaticEnvironment
     private final static int DEF_BODY = 1;
     private final static int CLOSED   = 2;
 
-    private StaticEnvironment _parent;
-    private Hashtable         _bindings;
-    private int               _level;
-    private int               _numberOfReferences;
-    private int               _state;
+    private StaticEnvironment         _parent;
+    private Hashtable<String, Object> _bindings;
+    private int                       _level;
+    private int                       _numberOfReferences;
+    private int                       _state;
 
     // *** constructors ******************************************************
 
@@ -75,7 +75,7 @@ public class StaticEnvironment
     StaticEnvironment(StaticEnvironment parent)
     {
         _parent   = parent;
-        _bindings = new Hashtable();
+        _bindings = new Hashtable<String, Object>();
         _level    = (parent == null) ? 0 : (parent.getLevel() + 1);
         _numberOfReferences = 0;
         _state              = OPEN;
@@ -320,11 +320,13 @@ public class StaticEnvironment
     public Reference getDelayedReferenceFor(String key)
         throws UnexpectedSyntax
     {
-        try
+        Object o = delayedLookup(key);
+
+        if (o instanceof Reference)
         {
-            return (Reference)delayedLookup(key);
+            return (Reference)o;
         }
-        catch (ClassCastException e)
+        else
         {
             throw new UnexpectedSyntax(key);
         }
@@ -333,9 +335,11 @@ public class StaticEnvironment
     public Reference getReferenceFor(String key, boolean restricted)
         throws CompileError
     {
-        try
+        Object o = lookup(key);
+        
+        if (o instanceof Reference)
         {
-            Reference result = (Reference)lookup(key);
+            Reference result = (Reference)o;
 
             if (
                 restricted
@@ -348,7 +352,7 @@ public class StaticEnvironment
 
             return result;
         }
-        catch (ClassCastException e)
+        else
         {
             throw new UnexpectedSyntax(key);
         }
