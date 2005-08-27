@@ -196,7 +196,6 @@ public class TestInputPort
     public void testAbbrev()
     throws Exception
     {
-        Object test = "hallo";
         StringReader source = new StringReader(
                                   "'a ' a `a ,a ,@a"
                               );
