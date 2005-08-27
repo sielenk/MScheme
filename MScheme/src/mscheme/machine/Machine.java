@@ -41,7 +41,7 @@ import mscheme.values.ListFactory;
 import mscheme.values.OutputPort;
 import mscheme.values.ScmNumber;
 import mscheme.values.ValueTraits;
-import mscheme.values.functions.Continuation;
+import mscheme.values.functions.Subcontinuation;
 import mscheme.values.functions.UnaryValueFunction;
 import mscheme.values.functions.ValueThunk;
 
@@ -288,7 +288,7 @@ public final class Machine
                 IList errorValue = ListFactory.create(
                         error.getCauseValue(),
                         error.getMessage(),
-                        new Continuation(_state),
+                        new Subcontinuation(_state),
                         Boolean.valueOf(
                                 error instanceof RuntimeError));
 
