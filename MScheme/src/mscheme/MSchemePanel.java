@@ -40,6 +40,11 @@ import java.io.IOException;
 public class MSchemePanel
         extends Panel
 {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public final static String CVS_ID = "$Id$";
 
     private StdioArea _stdio = null;

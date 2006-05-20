@@ -24,6 +24,10 @@ package mscheme.exceptions;
 public final class PairExpected
     extends TypeError
 {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     public final static String CVS_ID
         = "$Id$";
 

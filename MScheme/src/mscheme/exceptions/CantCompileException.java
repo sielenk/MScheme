@@ -24,6 +24,10 @@ package mscheme.exceptions;
 public final class CantCompileException
     extends CompileError
 {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     public final static String CVS_ID
         = "$Id$";
 

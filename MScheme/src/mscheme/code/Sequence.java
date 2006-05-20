@@ -121,7 +121,8 @@ public final class Sequence
 			registers.push(
 			    new IContinuation()
 			    {
-					public final static String CVS_ID
+					@SuppressWarnings("unused")
+                    public final static String CVS_ID
 						= "$Id$";
  
  

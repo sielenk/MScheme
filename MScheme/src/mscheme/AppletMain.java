@@ -34,6 +34,11 @@ import java.awt.BorderLayout;
 public class AppletMain
         extends Applet
 {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public final static String CVS_ID = "$Id$";
 
     private MSchemePanel _panel = null; //  @jve:decl-index=0:visual-constraint="-132,-123"

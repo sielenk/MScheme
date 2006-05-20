@@ -26,6 +26,11 @@ import mscheme.values.ScmString;
 public class StringException
     extends RuntimeError
 {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public final static String CVS_ID
         = "$Id$";
 

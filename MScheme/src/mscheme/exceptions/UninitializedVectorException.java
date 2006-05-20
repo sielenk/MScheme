@@ -26,6 +26,10 @@ import mscheme.values.ScmVector;
 public final class UninitializedVectorException
             extends VectorException
 {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     public final static String CVS_ID
     = "$Id$";
 

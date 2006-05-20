@@ -68,6 +68,7 @@ public final class Application
     {
         return new IContinuation()
         {
+            @SuppressWarnings("unused")
             public final static String CVS_ID = "$Id$";
 
             public Object invoke(Registers registers, Object value)
@@ -82,6 +83,7 @@ public final class Application
     {
         return new IContinuation()
         {
+            @SuppressWarnings("unused")
             public final static String CVS_ID = "$Id$";
 
             public Object invoke(Registers registers, Object value)
