@@ -24,6 +24,10 @@ package mscheme.exceptions;
 public class CompileError
     extends SchemeException
 {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     public final static String CVS_ID
         = "$Id$";
 

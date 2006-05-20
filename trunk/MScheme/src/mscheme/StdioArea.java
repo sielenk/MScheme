@@ -213,6 +213,10 @@ public class StdioArea
     extends    TextArea
     implements FocusListener, KeyListener, MouseListener, TextListener
 {
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
     public final static String CVS_ID
         = "$Id$";
 
