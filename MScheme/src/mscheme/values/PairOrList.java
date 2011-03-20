@@ -102,7 +102,7 @@ class MutablePairOrList
 }
 
 class ListEnumerator
-        implements Enumeration
+        implements Enumeration<Object>
 {
     private Object _tortoise;
 
