@@ -50,7 +50,8 @@ public class Registers
 		_stack.push(new StackFrame(_environment, k));
 	}
 
-	public Object assign(Reference key, Object value) {
+	public Object assign(Reference key, Object value)
+	{
 		return _environment.assign(key, value);
 	}
 }

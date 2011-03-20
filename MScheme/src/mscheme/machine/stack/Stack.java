@@ -70,7 +70,9 @@ public class Stack implements IStack
 	{
         Slice slice = _top;
         while (slice._next != null && slice._stack.isEmpty())
+        {
             slice = slice._next;
+        }
 
         return slice._stack.isEmpty();
 	}
@@ -133,7 +135,10 @@ public class Stack implements IStack
             srcSlice = srcSlice._next;
             dstSlice = dstSlice._next = new Slice(srcSlice);
         }
+        
         if (dstSlice._mark != null)
+        {
             dstSlice._next = oldTop;
+        }
 	}
 }
