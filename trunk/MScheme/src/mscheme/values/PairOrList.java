@@ -105,7 +105,6 @@ class ListEnumerator
         implements Enumeration<Object>
 {
     private Object _tortoise;
-
     private Object _hare;
 
     ListEnumerator(Object o)
@@ -134,16 +133,23 @@ class ListEnumerator
         if (_tortoise instanceof IPair)
         {
             if (_hare instanceof IPair)
+            {
                 _hare = ((IPair) _hare).getSecond();
+            }
+            
             if (_hare instanceof IPair)
+            {
                 _hare = ((IPair) _hare).getSecond();
+            }
 
             IPair pair = (IPair) _tortoise;
             _tortoise = pair.getSecond();
             return pair.getFirst();
         }
         else
+        {
             return _tortoise;
+        }
     }
 }
 
@@ -186,7 +192,9 @@ public abstract class PairOrList
         for (boolean first = true; enumerator.hasMoreElements(); first = false)
         {
             if (!first)
+            {
                 destination.write(' ');
+            }
 
             ValueTraits
                     .output(destination, doDisplay, enumerator.nextElement());
@@ -195,7 +203,9 @@ public abstract class PairOrList
         if (!enumerator.isValid())
         {
             if (enumerator.isCyclic())
+            {
                 destination.write(" . [ cyclic ]");
+            }
             else
             {
                 destination.write(" . ");
@@ -252,20 +262,30 @@ public abstract class PairOrList
         Object hare = getSecond();
 
         if (hare instanceof Empty)
+        {
             return true;
+        }
 
         Object tortoise = hare;
         do
         {
             if (hare instanceof IPair)
+            {
                 hare = ((IPair) hare).getSecond();
+            }
             else
+            {
                 return (hare instanceof Empty);
+            }
 
             if (hare instanceof IPair)
+            {
                 hare = ((IPair) hare).getSecond();
+            }
             else
+            {
                 return (hare instanceof Empty);
+            }
 
             tortoise = ((IPair) tortoise).getSecond();
         }
@@ -278,7 +298,9 @@ public abstract class PairOrList
             throws ListExpected
     {
         if (!isValid())
+        {
             throw new ListExpected(this);
+        }
 
         return this;
     }
