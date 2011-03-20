@@ -950,7 +950,7 @@ public class Builtins
         return buf.toString();
     }
 
-    private static boolean paramsValid(Class[] params)
+    private static boolean paramsValid(Class<?>[] params)
     {
         if (params.length == 1)
         {
