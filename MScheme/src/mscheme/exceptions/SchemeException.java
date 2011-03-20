@@ -24,6 +24,8 @@ package mscheme.exceptions;
 public abstract class SchemeException
 	extends Exception
 {
+    private static final long serialVersionUID = 1L;
+
     public final static String CVS_ID
     = "$Id$";
 
