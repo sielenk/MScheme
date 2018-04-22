@@ -38,11 +38,11 @@ task createInit {
                 inputFiles.collect {
                     def name = (it.name - '.scm').toUpperCase()
                     def value = it.text
-                            .replaceAll(/;.*/, '')
-                            .replaceAll(/(["\\])/, /\\$1/)
-                            .replace('\n', ' ')
-                            .replaceAll(/\s+/, ' ')
-                            .replaceAll(/ ?(\(|\)|\[|\]) ?/, /$1/)
+                            .replaceAll(/;.*/, '') // remove comments
+                            .replaceAll(/(["\\])/, /\\$1/) // quote quotes and backslashes
+                            .replace('\n', ' ') // convert to one line
+                            .replaceAll(/\s+/, ' ') // squeeze whitespace
+                            .replaceAll(/ ?(\(|\)|\[|\]) ?/, /$1/) // remove whitespace around parenthesis
 
                     "    String $name = \"$value\";"
                 }
@@ -56,12 +56,21 @@ task createInit {
                 '}'
         ].flatten()
 
-        new File(outputDir, 'IInit.java')
+        mkdir "$outputDir/mscheme"
+
+        new File(outputDir, 'mscheme/IInit.java')
                 .write(fileContent.join('\n'))
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir createInit.outputs
+        }
     }
 }
 
 compileJava {
     dependsOn createInit
-    source createInit.outputs.files
 }
