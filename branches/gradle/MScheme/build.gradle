@@ -1,6 +1,6 @@
 apply plugin: 'java'
 
-def mainClass = 'mscheme.Main'
+String mainClass = 'mscheme.Main'
 
 repositories {
     mavenCentral()
@@ -22,4 +22,46 @@ task execute(type: JavaExec, dependsOn: jar) {
     main = mainClass
 
     enableAssertions = true
+}
+
+task createInit {
+    def inputFiles = fileTree('src/main/scheme') {
+        include '**/*.scm'
+    }
+    def outputDir = file("$buildDir/generated-src")
+
+    inputs.files inputFiles
+    outputs.dir outputDir
+
+    doLast {
+        def body =
+                inputFiles.collect {
+                    def name = (it.name - '.scm').toUpperCase()
+                    def value = it.text
+                            .replaceAll(/;.*/, '')
+                            .replaceAll(/(["\\])/, /\\$1/)
+                            .replace('\n', ' ')
+                            .replaceAll(/\s+/, ' ')
+                            .replaceAll(/ ?(\(|\)|\[|\]) ?/, /$1/)
+
+                    "    String $name = \"$value\";"
+                }
+
+        def fileContent = [
+                'package mscheme;',
+                '',
+                'public interface IInit',
+                '{',
+                body,
+                '}'
+        ].flatten()
+
+        new File(outputDir, 'IInit.java')
+                .write(fileContent.join('\n'))
+    }
+}
+
+compileJava {
+    dependsOn createInit
+    source createInit.outputs.files, sourceSets.main.java
 }
