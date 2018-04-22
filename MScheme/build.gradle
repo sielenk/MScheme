@@ -1,6 +1,8 @@
 apply plugin: 'java'
 
-String mainClass = 'mscheme.Main'
+def mainClass = 'mscheme.Main'
+def generatedDir = file("$buildDir/generated-src")
+
 
 repositories {
     mavenCentral()
@@ -28,10 +30,10 @@ task createInit {
     def inputFiles = fileTree('src/main/scheme') {
         include '**/*.scm'
     }
-    def outputDir = file("$buildDir/generated-src")
+    def outputFile = new File(generatedDir, "mscheme/IInit.java")
 
     inputs.files inputFiles
-    outputs.dir outputDir
+    outputs.files outputFile
 
     doLast {
         def body =
@@ -56,17 +58,16 @@ task createInit {
                 '}'
         ].flatten()
 
-        mkdir "$outputDir/mscheme"
+        mkdir outputFile.parent
 
-        new File(outputDir, 'mscheme/IInit.java')
-                .write(fileContent.join('\n'))
+        outputFile.write(fileContent.join('\n'))
     }
 }
 
 sourceSets {
     main {
         java {
-            srcDir createInit.outputs
+            srcDir generatedDir
         }
     }
 }
