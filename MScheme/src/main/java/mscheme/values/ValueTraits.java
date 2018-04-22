@@ -33,7 +33,7 @@ import mscheme.util.Arity;
 
 /**
  * @author sielenk
- *  
+ *
  */
 public class ValueTraits
 {
@@ -82,7 +82,7 @@ public class ValueTraits
                     }
                     else
                     {
-                        return method.invoke(null, arguments.getArray());                        
+                        return method.invoke(null, arguments.getArray());
                     }
                 }
                 else
@@ -97,15 +97,7 @@ public class ValueTraits
                     }
                 }
             }
-            catch (IllegalArgumentException e1)
-            {
-                throw new RuntimeError(function, e1.toString());
-            }
-            catch (IllegalAccessException e1)
-            {
-                throw new RuntimeError(function, e1.toString());
-            }
-            catch (InvocationTargetException e1)
+            catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e1)
             {
                 throw new RuntimeError(function, e1.toString());
             }
@@ -131,11 +123,7 @@ public class ValueTraits
                     return field.get(arguments.getHead());
                 }
             }
-            catch (IllegalArgumentException e)
-            {
-                throw new RuntimeError(function, e.toString());
-            }
-            catch (IllegalAccessException e)
+            catch (IllegalArgumentException | IllegalAccessException e)
             {
                 throw new RuntimeError(function, e.toString());
             }
@@ -171,8 +159,7 @@ public class ValueTraits
 
     public static boolean equal(Object fst, Object snd)
     {
-        return (fst instanceof IComparable) ? ((IComparable) fst).equals(snd)
-                : fst.equals(snd);
+        return fst.equals(snd);
     }
 
     public static boolean isList(Object o)
@@ -252,7 +239,7 @@ public class ValueTraits
             throw new SymbolExpected(o);
         }
     }
-    
+
     private static int _index = 0;
 
     public static String createUniqueSymbol()
@@ -262,12 +249,12 @@ public class ValueTraits
 
     public static Boolean toScmBoolean(boolean b)
     {
-        return Boolean.valueOf(b);
+        return b;
     }
 
     public static Boolean toScmBoolean(Object o)
     {
-        return Boolean.valueOf(isTrue(o));
+        return isTrue(o);
     }
 
     public static ScmNumber toScmNumber(Object o)
@@ -303,7 +290,7 @@ public class ValueTraits
 
     public static Character toScmChar(char c)
     {
-        return new Character(c);
+        return c;
     }
 
     public static ScmString toScmString(Object o)
@@ -416,7 +403,7 @@ public class ValueTraits
     {
         if (o instanceof Character)
         {
-            final char c = ((Character) o).charValue();
+            final char c = (Character) o;
 
             if (doWrite)
             {

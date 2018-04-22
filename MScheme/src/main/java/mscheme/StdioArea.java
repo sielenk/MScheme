@@ -153,8 +153,8 @@ class StdioWriter extends Writer
         = "$Id$";
 
 
-    private boolean   _closed;
-    private StdioArea _owner;
+    private boolean         _closed;
+    private final StdioArea _owner;
 
     public StdioWriter(StdioArea owner)
     {
@@ -572,8 +572,8 @@ public class StdioArea
 
     /***** text io begin *****/
 
-    private StdioReader _stdin  = new StdioReader();
-    private StdioWriter _stdout = new StdioWriter(this);
+    private final StdioReader _stdin  = new StdioReader();
+    private final StdioWriter  _stdout = new StdioWriter(this);
 
     public synchronized void print(String text)
     {

@@ -44,7 +44,7 @@ task createInit {
                             .replaceAll(/(["\\])/, /\\$1/) // quote quotes and backslashes
                             .replace('\n', ' ') // convert to one line
                             .replaceAll(/\s+/, ' ') // squeeze whitespace
-                            .replaceAll(/ ?(\(|\)|\[|\]) ?/, /$1/) // remove whitespace around parenthesis
+                            .replaceAll(/ ?([()\[\]]) ?/, /$1/) // remove whitespace around parenthesis
 
                     "    String $name = \"$value\";"
                 }

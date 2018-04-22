@@ -101,8 +101,8 @@ public class TestValue
     {
         assertTrue(ValueTraits.isTrue(v));
 
-        assertTrue(countTypes(v) == 1);
-        assertTrue(countCasts(v) == castCount);
+        assertEquals(1, countTypes(v));
+        assertEquals(countCasts(v), castCount);
     }
 
 	private void commonTests(Object v)
@@ -118,8 +118,8 @@ public class TestValue
 
         assertFalse(ValueTraits.isTrue(False));
 
-        assertTrue(countTypes(False) == 1);
-        assertTrue(countCasts(False) == 0);
+        assertEquals(1, countTypes(False));
+        assertEquals(0, countCasts(False));
 
         assertTrue(ValueTraits.isScmBoolean(False));
     }
@@ -131,8 +131,8 @@ public class TestValue
 
         assertTrue(ValueTraits.isTrue(True));
 
-        assertTrue(countTypes(True) == 1);
-        assertTrue(countCasts(True) == 0);
+        assertEquals(1, countTypes(True));
+        assertEquals(0, countCasts(True));
 
         assertTrue(ValueTraits.isScmBoolean(True));
     }
@@ -144,13 +144,13 @@ public class TestValue
 
         assertTrue(ValueTraits.isTrue(empty));
 
-        assertTrue(countTypes(empty) == 1); // List
-        assertTrue(countCasts(empty) == 1);
+        assertEquals(1, countTypes(empty)); // List
+        assertEquals(1, countCasts(empty));
 
         assertTrue(ValueTraits.isEmpty(empty));
 
         assertTrue(ValueTraits.isList(empty));
-        assertTrue(ValueTraits.toList(empty) == empty);
+        assertSame(ValueTraits.toList(empty), empty);
     }
 
     public void testPair()
@@ -163,7 +163,7 @@ public class TestValue
 
         commonTests(pair);
         assertTrue(ValueTraits.isPair(pair));
-        assertTrue(ValueTraits.toConstPair(pair) == pair);
+        assertSame(ValueTraits.toConstPair(pair), pair);
     }
 
     public void testList()
@@ -175,14 +175,14 @@ public class TestValue
 
         assertTrue(ValueTraits.isTrue(list));
 
-        assertTrue(countTypes(list) == 2); // List and Pair
-        assertTrue(countCasts(list) == 2);
+        assertEquals(2, countTypes(list)); // List and Pair
+        assertEquals(2, countCasts(list));
 
         assertTrue(ValueTraits.isPair(list));
-        assertTrue(ValueTraits.toConstPair(list) == list);
+        assertSame(ValueTraits.toConstPair(list), list);
 
         assertTrue(ValueTraits.isList(list));
-        assertTrue(ValueTraits.toList(list) == list);
+        assertSame(ValueTraits.toList(list), list);
     }
 
     public void testSymbol()
@@ -192,7 +192,7 @@ public class TestValue
 
         commonTests(symbol);
         assertTrue(ValueTraits.isSymbol(symbol));
-        assertTrue(ValueTraits.toSymbol(symbol) == symbol);
+        assertSame(ValueTraits.toSymbol(symbol), symbol);
     }
 
     public void testFunction()
@@ -211,7 +211,7 @@ public class TestValue
 
         commonTests(number);
         assertTrue(ValueTraits.isScmNumber(number));
-        assertTrue(ValueTraits.toScmNumber(number) == number);
+        assertSame(ValueTraits.toScmNumber(number), number);
     }
 
     public void testChar()
@@ -221,7 +221,7 @@ public class TestValue
 
         commonTests(character);
         assertTrue(ValueTraits.isScmChar(character));
-        assertTrue(ValueTraits.toScmChar(character) == character);
+        assertSame(ValueTraits.toScmChar(character), character);
     }
 
     public void testString()
@@ -231,7 +231,7 @@ public class TestValue
 
         commonTests(string);
         assertTrue(ValueTraits.isScmString(string));
-        assertTrue(ValueTraits.toScmString(string) == string);
+        assertSame(ValueTraits.toScmString(string), string);
     }
 
     public void testVector()
@@ -241,7 +241,7 @@ public class TestValue
 
         commonTests(vector);
         assertTrue(ValueTraits.isScmVector(vector));
-        assertTrue(ValueTraits.toScmVector(vector) == vector);
+        assertSame(ValueTraits.toScmVector(vector), vector);
     }
 
     public void testOutputPort()
@@ -251,7 +251,7 @@ public class TestValue
 
         commonTests(port);
         assertTrue(ValueTraits.isPort(port));
-        assertTrue(ValueTraits.toOutputPort(port) == port);
+        assertSame(ValueTraits.toOutputPort(port), port);
     }
 
     public void testInputPort()
@@ -261,7 +261,7 @@ public class TestValue
 
         commonTests(port);
         assertTrue(ValueTraits.isPort(port));
-        assertTrue(ValueTraits.toInputPort(port) == port);
+        assertSame(ValueTraits.toInputPort(port), port);
     }
 
     public void testEnvironment()
@@ -271,10 +271,10 @@ public class TestValue
 
         assertTrue(ValueTraits.isTrue(environment));
 
-        assertTrue(countTypes(environment) == 0);
-        assertTrue(countCasts(environment) == 1);
+        assertEquals(0, countTypes(environment));
+        assertEquals(1, countCasts(environment));
 
-        assertTrue(ValueTraits.toEnvironment(environment) == environment);
+        assertSame(ValueTraits.toEnvironment(environment), environment);
     }
 
     public void testStaticEnvironment()
@@ -284,10 +284,10 @@ public class TestValue
 
         assertTrue(ValueTraits.isTrue(environment));
 
-        assertTrue(countTypes(environment) == 0);
-        assertTrue(countCasts(environment) == 1);
+        assertEquals(0, countTypes(environment));
+        assertEquals(1, countCasts(environment));
 
-        assertTrue(ValueTraits.toStaticEnvironment(environment) == environment);
+        assertSame(ValueTraits.toStaticEnvironment(environment), environment);
     }
 
 
@@ -306,9 +306,9 @@ public class TestValue
         assertTrue(ValueTraits.equal(snd, snd));
 
         // symmetry
-        assertTrue(eq    == ValueTraits.eq   (snd, fst));
-        assertTrue(eqv   == ValueTraits.eqv  (snd, fst));
-        assertTrue(equal == ValueTraits.equal(snd, fst));
+        assertEquals(eq, ValueTraits.eq(snd, fst));
+        assertEquals(eqv, ValueTraits.eqv(snd, fst));
+        assertEquals(equal, ValueTraits.equal(snd, fst));
 
 
         assertTrue(!eq  | eqv  ); // aka. eq  -> eqv
@@ -340,37 +340,27 @@ public class TestValue
 
         // eq equivalent values
 
-        assertTrue(
-            eqHelper(v, v) == 3
-        );
+        assertEquals(3, eqHelper(v, v));
 
-        assertTrue(
-            eqHelper(
-				ValueTraits.TRUE,
-				ValueTraits.TRUE
-            ) == 3
-        );
+        assertEquals(3, eqHelper(
+                ValueTraits.TRUE,
+                ValueTraits.TRUE
+        ));
 
-        assertTrue(
-            eqHelper(
-				ValueTraits.FALSE,
-				ValueTraits.FALSE
-            ) == 3
-        );
+        assertEquals(3, eqHelper(
+                ValueTraits.FALSE,
+                ValueTraits.FALSE
+        ));
 
-        assertTrue(
-            eqHelper(
+        assertEquals(3, eqHelper(
                 "a",
                 "a"
-            ) == 3
-        );
+        ));
 
-        assertTrue(
-            eqHelper(
+        assertEquals(3, eqHelper(
                 ListFactory.create(),
                 ListFactory.create()
-            ) == 3
-        );
+        ));
 
 
         // eqv equivalent values
@@ -423,49 +413,37 @@ public class TestValue
 
         // equal equivalent but eqv different values
 
-        assertTrue(
-            eqHelper(
+        assertEquals(1, eqHelper(
                 ListFactory.createPair(v, v),
                 ListFactory.createPair(v, v)
-            ) == 1
-        );
+        ));
 
 
         // different values
 
-        assertTrue(
-            eqHelper(
-				ValueTraits.TRUE,
+        assertEquals(0, eqHelper(
+                ValueTraits.TRUE,
                 ValueTraits.FALSE
-            ) == 0
-        );
+        ));
 
-        assertTrue(
-            eqHelper(
+        assertEquals(0, eqHelper(
                 "u",
                 "v"
-            ) == 0
-        );
+        ));
 
-        assertTrue(
-            eqHelper(
+        assertEquals(0, eqHelper(
                 ScmVector.create(5, u),
                 ScmVector.create(5, v)
-            ) == 0
-        );
+        ));
 
-        assertTrue(
-            eqHelper(
+        assertEquals(0, eqHelper(
                 ScmVector.create(7, v),
                 ScmVector.create(5, v)
-            ) == 0
-        );
+        ));
 
-        assertTrue(
-            eqHelper(
+        assertEquals(0, eqHelper(
                 ScmString.create("Hallo 1"),
                 ScmString.create("Hallo 2")
-            ) == 0
-        );
+        ));
     }
 }

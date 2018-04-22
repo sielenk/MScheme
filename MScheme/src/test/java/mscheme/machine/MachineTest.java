@@ -91,7 +91,7 @@ public class MachineTest
 		assertSame(O3, _machine.execute(O3));
 	}
 
-	final private Object execSelection(
+	private Object execSelection(
 		Object test,
 		Object onTrue,
 		Object onFalse) throws Exception
@@ -110,7 +110,7 @@ public class MachineTest
 		assertSame(O1, execSelection(O3, O1, O2));
 	}
 
-	final private Object execAssign(
+	private Object execAssign(
 		Object    value) throws Exception
 	{
 		_machine.execute(
@@ -130,7 +130,7 @@ public class MachineTest
 		Object[]  sequence = { Assignment.create(_key, O3), O2 };
 		
 		assertSame(O1, _environment.lookup(_key));
-		assertSame(O2, _machine.execute((Object)Sequence.create(sequence)));
+		assertSame(O2, _machine.execute(Sequence.create(sequence)));
 		assertSame(O3, _environment.lookup(_key));
 	}
 
@@ -141,9 +141,9 @@ public class MachineTest
 		Object[]  sequence2  = { Boolean.TRUE,  assignment };
 
 		assertSame(O1, _environment.lookup(_key));
-		_machine.execute((Object)Sequence.createConj(sequence1));
+		_machine.execute(Sequence.createConj(sequence1));
 		assertSame(O1, _environment.lookup(_key));
-		_machine.execute((Object)Sequence.createConj(sequence2));
+		_machine.execute(Sequence.createConj(sequence2));
 		assertSame(O2, _environment.lookup(_key));
 	}
 
@@ -154,9 +154,9 @@ public class MachineTest
 		Object[]  sequence2  = { Boolean.FALSE, assignment };
 
 		assertSame(O1, _environment.lookup(_key));
-		_machine.execute((Object)Sequence.createDisj(sequence1));
+		_machine.execute(Sequence.createDisj(sequence1));
 		assertSame(O1, _environment.lookup(_key));
-		_machine.execute((Object)Sequence.createDisj(sequence2));
+		_machine.execute(Sequence.createDisj(sequence2));
 		assertSame(O2, _environment.lookup(_key));
 	}
 
@@ -166,6 +166,6 @@ public class MachineTest
 
 		assertTrue(
 			ValueTraits.isEmpty(
-			    _machine.execute((Object)Application.create(sequence))));
+			    _machine.execute(Application.create(sequence))));
 	}
 }

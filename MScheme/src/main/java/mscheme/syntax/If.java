@@ -53,7 +53,7 @@ final class If
         Object onTrue  = arguments.getTail().getHead();
         Object onFalse =
             arguments.getTail().getTail().isEmpty()
-            ? (Object)Boolean.FALSE
+            ? Boolean.FALSE
             : arguments.getTail().getTail().getHead();
 
         Compiler compiler = new Compiler(compilationEnv);

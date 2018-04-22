@@ -24,7 +24,6 @@ import mscheme.compiler.Compiler;
 import mscheme.compiler.IForceable;
 import mscheme.environment.Reference;
 import mscheme.exceptions.CompileError;
-import mscheme.machine.IContinuation;
 import mscheme.machine.Registers;
 
 
@@ -72,15 +71,7 @@ public final class Assignment
 	public Object reduce(Registers registers)
 	{
 		registers.push(
-			new IContinuation()
-			{
-				public Object invoke(
-					Registers registers,
-				    Object    value)
-				{
-					return registers.assign(_binding, value);
-				}				
-			});
+				(registers1, value) -> registers1.assign(_binding, value));
 
 		return _expression;
 	}

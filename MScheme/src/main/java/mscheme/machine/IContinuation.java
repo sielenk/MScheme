@@ -16,7 +16,7 @@ import mscheme.exceptions.SchemeException;
  */
 public interface IContinuation
 {
-	public final static String CVS_ID
+	String CVS_ID
 		= "$Id$";
 
 

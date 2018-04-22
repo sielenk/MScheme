@@ -185,11 +185,7 @@ public final class Machine
 
             evaluate(InputPort.create(new StringReader(IInit.BOOTSTRAP)).read());
         }
-        catch (SchemeException e)
-        {
-            throw new RuntimeException(e.toString());
-        }
-        catch (InterruptedException e)
+        catch (SchemeException | InterruptedException e)
         {
             throw new RuntimeException(e.toString());
         }
@@ -222,7 +218,7 @@ public final class Machine
     {
         private boolean _done;
 
-        private Registers _state;
+        private final Registers _state;
 
         Executor(DynamicEnvironment environment)
         {
@@ -290,8 +286,7 @@ public final class Machine
                         error.getMessage(),
                         new Subcontinuation(
                                 _state.getStack().getContinuation()),
-                        Boolean.valueOf(
-                                error instanceof RuntimeError));
+                        error instanceof RuntimeError);
 
                 // Avoid endless loop if the
                 // handler is buggy:

@@ -59,11 +59,11 @@ public class StaticEnvironment
     private final static int DEF_BODY = 1;
     private final static int CLOSED   = 2;
 
-    private StaticEnvironment         _parent;
-    private Hashtable<String, Object> _bindings;
-    private int                       _level;
-    private int                       _numberOfReferences;
-    private int                       _state;
+    private final StaticEnvironment         _parent;
+    private final Hashtable<String, Object> _bindings;
+    private final int                       _level;
+    private int                             _numberOfReferences;
+    private int                             _state;
 
     // *** constructors ******************************************************
 
@@ -75,7 +75,7 @@ public class StaticEnvironment
     StaticEnvironment(StaticEnvironment parent)
     {
         _parent   = parent;
-        _bindings = new Hashtable<String, Object>();
+        _bindings = new Hashtable<>();
         _level    = (parent == null) ? 0 : (parent.getLevel() + 1);
         _numberOfReferences = 0;
         _state              = OPEN;

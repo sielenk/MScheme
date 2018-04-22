@@ -97,13 +97,9 @@ public class MSchemePanel
         {
             _copyButton = new Button();
             _copyButton.setLabel("Copy");
-            _copyButton.addActionListener(new java.awt.event.ActionListener()
-            {
-                public void actionPerformed(java.awt.event.ActionEvent e)
-                {
-                    get_stdio().copy();
-                    get_stdio().requestFocus();
-                }
+            _copyButton.addActionListener(e -> {
+                get_stdio().copy();
+                get_stdio().requestFocus();
             });
         }
         return _copyButton;
@@ -115,13 +111,9 @@ public class MSchemePanel
         {
             _cutButton = new Button();
             _cutButton.setLabel("Cut");
-            _cutButton.addActionListener(new java.awt.event.ActionListener()
-            {
-                public void actionPerformed(java.awt.event.ActionEvent e)
-                {
-                    get_stdio().cut();
-                    get_stdio().requestFocus();
-                }
+            _cutButton.addActionListener(e -> {
+                get_stdio().cut();
+                get_stdio().requestFocus();
             });
         }
         return _cutButton;
@@ -133,13 +125,9 @@ public class MSchemePanel
         {
             _clearButton = new Button();
             _clearButton.setLabel("Clear");
-            _clearButton.addActionListener(new java.awt.event.ActionListener()
-            {
-                public void actionPerformed(java.awt.event.ActionEvent e)
-                {
-                    get_stdio().clear();
-                    get_stdio().requestFocus();
-                }
+            _clearButton.addActionListener(e -> {
+                get_stdio().clear();
+                get_stdio().requestFocus();
             });
         }
         return _clearButton;
@@ -151,13 +139,9 @@ public class MSchemePanel
         {
             _pasteButton = new Button();
             _pasteButton.setLabel("Paste");
-            _pasteButton.addActionListener(new java.awt.event.ActionListener()
-            {
-                public void actionPerformed(java.awt.event.ActionEvent e)
-                {
-                    get_stdio().paste();
-                    get_stdio().requestFocus();
-                }
+            _pasteButton.addActionListener(e -> {
+                get_stdio().paste();
+                get_stdio().requestFocus();
             });
         }
         return _pasteButton;
@@ -168,15 +152,11 @@ public class MSchemePanel
         if (_stdio == null)
         {
             _stdio = new StdioArea();
-            _stdio.addActionListener(new java.awt.event.ActionListener()
-            {
-                public void actionPerformed(java.awt.event.ActionEvent e)
-                {
-                    get_pasteButton().setEnabled(get_stdio().canPaste());
-                    get_copyButton().setEnabled(get_stdio().canCopy());
-                    get_cutButton().setEnabled(get_stdio().canCut());
-                    get_stdio().requestFocus();
-                }
+            _stdio.addActionListener(e -> {
+                get_pasteButton().setEnabled(get_stdio().canPaste());
+                get_copyButton().setEnabled(get_stdio().canCopy());
+                get_cutButton().setEnabled(get_stdio().canCut());
+                get_stdio().requestFocus();
             });
         }
         return _stdio;
@@ -189,33 +169,29 @@ public class MSchemePanel
         if (_runner != null)
             return;
 
-        this._runner = new Thread(new Runnable()
-        {
-            public void run()
+        this._runner = new Thread(() -> {
+            try
+            {
+                get_startStopButton().setLabel("Stop");
+                new Machine(get_stdio().stdin(), get_stdio().stdout())
+                        .unprotectedRun();
+            }
+            catch (SchemeException e)
             {
                 try
                 {
-                    get_startStopButton().setLabel("Stop");
-                    new Machine(get_stdio().stdin(), get_stdio().stdout())
-                            .unprotectedRun();
+                    get_stdio().stdout().write(e.getMessage());
                 }
-                catch (SchemeException e)
-                {
-                    try
-                    {
-                        get_stdio().stdout().write(e.getMessage());
-                    }
-                    catch (IOException e1)
-                    {}
-                }
-                catch (InterruptedException e)
+                catch (IOException e1)
                 {}
-                finally
-                {
-                    _runner = null;
-                    get_startStopButton().setLabel("Start");
-                    get_startStopButton().setEnabled(true);
-                }
+            }
+            catch (InterruptedException e)
+            {}
+            finally
+            {
+                _runner = null;
+                get_startStopButton().setLabel("Start");
+                get_startStopButton().setEnabled(true);
             }
         });
         _runner.start();
@@ -247,13 +223,9 @@ public class MSchemePanel
             _startStopButton = new Button();
             _startStopButton.setLabel("Start");
             _startStopButton
-                    .addActionListener(new java.awt.event.ActionListener()
-                    {
-                        public void actionPerformed(java.awt.event.ActionEvent e)
-                        {
-                            runnerStartStop();
-                            get_stdio().requestFocus();
-                        }
+                    .addActionListener(e -> {
+                        runnerStartStop();
+                        get_stdio().requestFocus();
                     });
         }
         return _startStopButton;

@@ -43,19 +43,19 @@ public class TestInputPort
         InputPort in = InputPort.create(source);
 
         assertTrue(in.isReady());
-        assertTrue(in.peekChar() == 't');
-        assertTrue(in.readChar() == 't');
+        assertEquals('t', in.peekChar());
+        assertEquals('t', in.readChar());
         assertTrue(in.isReady());
-        assertTrue(in.peekChar() == 'e');
-        assertTrue(in.readChar() == 'e');
+        assertEquals('e', in.peekChar());
+        assertEquals('e', in.readChar());
         assertTrue(in.isReady());
-        assertTrue(in.readChar() == 's');
-        assertTrue(in.peekChar() == 't');
+        assertEquals('s', in.readChar());
+        assertEquals('t', in.peekChar());
         assertTrue(in.isReady());
-        assertTrue(in.readChar() == 't');
+        assertEquals('t', in.readChar());
         assertTrue(in.isReady());
-        assertTrue(in.peekChar() == InputPort.EOF);
-        assertTrue(in.readChar() == InputPort.EOF);
+        assertEquals(in.peekChar(), InputPort.EOF);
+        assertEquals(in.readChar(), InputPort.EOF);
         assertTrue(in.isReady());
     }
 
@@ -80,8 +80,8 @@ public class TestInputPort
         assertTrue(ValueTraits.eq(in.read(), ValueTraits.FALSE));
         assertTrue(ValueTraits.eq(in.read(), ValueTraits.TRUE));
         assertTrue(ValueTraits.eq(in.read(), ValueTraits.FALSE));
-        assertTrue(in.readChar() == ' ');
-        assertTrue(in.readChar() == InputPort.EOF);
+        assertEquals(' ', in.readChar());
+        assertEquals(in.readChar(), InputPort.EOF);
     }
 
     public void testNumber()
@@ -97,7 +97,7 @@ public class TestInputPort
         assertTrue(ValueTraits.eqv(in.read(), ScmNumber.create( 0)));
         assertTrue(ValueTraits.eqv(in.read(), ScmNumber.create( 1)));
         assertTrue(ValueTraits.eqv(in.read(), ScmNumber.create( 2)));
-        assertTrue(in.readChar() == InputPort.EOF);
+        assertEquals(in.readChar(), InputPort.EOF);
     }
 
     public void testChar()
@@ -115,7 +115,7 @@ public class TestInputPort
         assertTrue(ValueTraits.eqv(in.read(), ValueTraits.toScmChar('\n')));
         assertTrue(ValueTraits.eqv(in.read(), ValueTraits.toScmChar(' ')));
         assertTrue(ValueTraits.eqv(in.read(), ValueTraits.toScmChar('a')));
-        assertTrue(in.readChar() == InputPort.EOF);
+        assertEquals(in.readChar(), InputPort.EOF);
     }
 
     public void testString()

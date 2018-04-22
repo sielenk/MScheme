@@ -49,7 +49,7 @@ public final class Sequence
         switch (sequence.length)
         {
         case 0:
-            return Boolean.valueOf(tag == TAG_AND);
+            return tag == TAG_AND;
 
         case 1:
             return sequence[0];

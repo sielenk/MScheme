@@ -68,9 +68,9 @@ public class TestEnvironment
 
     public void testTestPattern()
     {
-        assertTrue("different symbols are equal (==)", sym1 != sym2);
+        assertNotSame("different symbols are equal (==)", sym1, sym2);
         assertTrue("different symbols are equal (equals)", !sym1.equals(sym2));
-        assertTrue("different entities are equal (==)", val1 != val2);
+        assertNotSame("different entities are equal (==)", val1, val2);
         assertTrue("different entities are equals (equals)", !val1.equals(val2));
     }
 
@@ -95,17 +95,11 @@ public class TestEnvironment
 
         env.define(sym1, val1);
 
-        assertTrue(
-            "lookup failed",
-            env.lookup(sym1) == val1
-        );
+        assertSame("lookup failed", env.lookup(sym1), val1);
 
         env.assign(sym1, val2);
 
-        assertTrue(
-            "assign failed",
-            env.lookup(sym1) == val2
-        );
+        assertSame("assign failed", env.lookup(sym1), val2);
     }
 
     public void testSyntax()
@@ -132,7 +126,7 @@ public class TestEnvironment
         ITranslator    token = TranslatorFactory.getBeginToken();
         env.defineSyntax(sym1, token);
 
-        assertTrue(env.getSyntaxFor(sym1) == token);
+        assertSame(env.getSyntaxFor(sym1), token);
 
         try
         {
@@ -144,7 +138,7 @@ public class TestEnvironment
 
         Reference reference = env.define(sym2);
 
-        assertTrue(env.getReferenceFor (sym2) == reference);
+        assertSame(env.getReferenceFor(sym2), reference);
     }
 
     public void testExtendedStatic()
@@ -162,9 +156,7 @@ public class TestEnvironment
 
         env.assign(sym1, val1);
 
-        assertTrue(
-            env.lookup(sym1) == val1
-        );
+        assertSame(env.lookup(sym1), val1);
     }
 
     public void testDynamic()

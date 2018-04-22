@@ -33,7 +33,7 @@ public class ScmNumber
         = "$Id$";
 
 
-    private BigInteger _value;
+    private final BigInteger _value;
 
     private ScmNumber(BigInteger v)
     {

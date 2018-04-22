@@ -115,14 +115,14 @@ final class DelayedReference
     int getLevel()
     {
         throw new RuntimeException(
-            getSymbol().toString() + " delayed reference"
+            getSymbol() + " delayed reference"
         );
     }
     
     int getIndex()
     {
         throw new RuntimeException(
-            getSymbol().toString() + " delayed reference"
+            getSymbol() + " delayed reference"
         );
     }
 

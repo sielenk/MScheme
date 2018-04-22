@@ -20,7 +20,7 @@ public class Registers
 		= "$Id$";
 
 
-	private Stack              _stack;
+	private final Stack        _stack;
 	private DynamicEnvironment _environment;
 
 

@@ -112,7 +112,7 @@ public final class DynamicEnvironment
     public static DynamicEnvironment create()
     {
         return new DynamicEnvironment(
-            new Vector<Object>(),
+            new Vector<>(),
             new Object[0][]
         );
     }

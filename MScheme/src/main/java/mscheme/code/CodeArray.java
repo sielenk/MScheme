@@ -43,7 +43,7 @@ class CodeArray
         int      end
     )
     {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         
         buffer.append('<');
         for (int i = begin;;)

@@ -118,7 +118,7 @@ public class OutputPort
     public void writeScmChar(Character c)
     throws WriteException
     {
-        writeChar(c.charValue());
+        writeChar(c);
     }
 
     public void write(Object datum)

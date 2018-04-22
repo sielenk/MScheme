@@ -29,7 +29,7 @@ public class Main
         = "$Id$";
 
 
-    public final static void main(String[] argv)
+    public static void main(String[] argv)
         throws Exception
     {
         new Machine().unprotectedRun();

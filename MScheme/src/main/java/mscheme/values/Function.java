@@ -33,7 +33,7 @@ public abstract class Function
         = "$Id$";
 
 
-    public final static int checkArguments(Arity arity, IList arguments)
+    public static int checkArguments(Arity arity, IList arguments)
         throws SchemeException
     {
         int len = arguments.getLength();

@@ -62,9 +62,9 @@ public class InputPort
     public final static int    EOF       = -1;
     public final static Object EOF_VALUE = EofValue.INSTANCE;
 
-    private static final Object _plus = "+".intern();
-    private static final Object _minus = "-".intern();
-    private static final Object _ellipsis = "...".intern();
+    private static final Object _plus = "+";
+    private static final Object _minus = "-";
+    private static final Object _ellipsis = "...";
 
     private final PushbackReader _reader;
 
@@ -220,7 +220,7 @@ public class InputPort
 
         if ((c == 's') || (c == 'n'))
         {
-            StringBuffer charName = new StringBuffer();
+            StringBuilder charName = new StringBuilder();
 
             do
             {
@@ -236,28 +236,20 @@ public class InputPort
 
             String name = charName.toString();
 
-            if (name.equals("s"))
-            {
-                return ValueTraits.toScmChar('s');
-            }
-            else if (name.equals("n"))
-            {
-                return ValueTraits.toScmChar('n');
-            }
-            else if (name.equals("space"))
-            {
-                return ValueTraits.toScmChar(' ');
-            }
-            else if (name.equals("newline"))
-            {
-                return ValueTraits.toScmChar('\n');
-            }
-            else
-            {
-                throw new ParseException(
-                          this,
-                          "invalid character name '" + name + "'"
-                      );
+            switch (name) {
+                case "s":
+                    return ValueTraits.toScmChar('s');
+                case "n":
+                    return ValueTraits.toScmChar('n');
+                case "space":
+                    return ValueTraits.toScmChar(' ');
+                case "newline":
+                    return ValueTraits.toScmChar('\n');
+                default:
+                    throw new ParseException(
+                            this,
+                            "invalid character name '" + name + "'"
+                    );
             }
         }
         else
@@ -348,7 +340,7 @@ public class InputPort
     private ScmString parseString()
         throws IOException, ParseException
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
 
         for (;;)
         {
@@ -402,7 +394,7 @@ public class InputPort
     private Object parseNumOrSym(char initial)
         throws IOException, ParseException
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         initial = Character.toLowerCase(initial);
         buf.append(initial);
         for (;;)
@@ -424,17 +416,16 @@ public class InputPort
 
         String str = buf.toString();
 
-        if (str.equals("+"))
-        {
-            return _plus; // "+";
-        }
-        else if (str.equals("-"))
-        {
-            return _minus; // "-";
-        }
-        else if (str.equals("..."))
-        {
-            return _ellipsis; // "...";
+        switch (str) {
+            case "+":
+                return _plus; // "+";
+
+            case "-":
+                return _minus; // "-";
+
+            case "...":
+                return _ellipsis; // "...";
+
         }
 
 checkNumber:

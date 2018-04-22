@@ -66,25 +66,24 @@ public class TestList
     {
         assertTrue(occupiedListLength >= 2);
 
-        assertTrue(firstElement != secondElement);
+        assertNotSame(firstElement, secondElement);
 
-        assertTrue(firstElement != lastElement);
+        assertNotSame(firstElement, lastElement);
     }
 
     public void testEmptyIsUnique()
             throws Exception
     {
-        assertTrue("empty isn't unique", emptyList == ListFactory.create());
+        assertSame("empty isn't unique", emptyList, ListFactory.create());
     }
 
     public void testOccupiedList()
             throws Exception
     {
-        assertTrue("occupied list equals (==) empty list",
-                occupiedList != emptyList);
+        assertNotSame("occupied list equals (==) empty list", occupiedList, emptyList);
 
-        assertTrue("toPair returned somethig wrong", ValueTraits.toConstPair(
-                occupiedList).getFirst() == occupiedList.getHead());
+        assertSame("toPair returned somethig wrong", ValueTraits.toConstPair(
+                occupiedList).getFirst(), occupiedList.getHead());
     }
 
     public void testIsEmpty()
@@ -97,9 +96,9 @@ public class TestList
     public void testGetLength()
             throws Exception
     {
-        assertTrue(emptyList.getLength() == 0);
+        assertEquals(0, emptyList.getLength());
 
-        assertTrue(occupiedList.getLength() == occupiedListLength);
+        assertEquals(occupiedList.getLength(), occupiedListLength);
     }
 
     public void testGetHead()
@@ -113,7 +112,7 @@ public class TestList
         catch (PairExpected e)
         {}
 
-        assertTrue("getHead failed", occupiedList.getHead() == firstElement);
+        assertSame("getHead failed", occupiedList.getHead(), firstElement);
     }
 
     public void testGetTail()
@@ -121,26 +120,24 @@ public class TestList
     {
         try
         {
-            assertTrue(emptyList.getTail() != null);
+            assertNotNull(emptyList.getTail());
             fail("PairExpected expected");
         }
         catch (PairExpected e)
         {}
 
-        assertTrue("getTail failed",
-                occupiedList.getTail().getHead() == secondElement);
+        assertSame("getTail failed", occupiedList.getTail().getHead(), secondElement);
     }
 
     public void testGetReversed()
             throws Exception
     {
-        assertTrue("failed on emptyList", emptyList.getReversed() == emptyList);
+        assertSame("failed on emptyList", emptyList.getReversed(), emptyList);
 
-        assertTrue("length mismatch ",
-                occupiedList.getReversed().getLength() == occupiedListLength);
+        assertEquals("length mismatch ", occupiedList.getReversed().getLength(), occupiedListLength);
 
-        assertTrue("previous last isn't first now", occupiedList.getReversed()
-                .getHead() == lastElement);
+        assertSame("previous last isn't first now", occupiedList.getReversed()
+                .getHead(), lastElement);
     }
 
     public void testGetCodeList()

@@ -72,7 +72,7 @@ final class Order
 
     public final static int GT = 2;
 
-    public final static boolean check(IList arguments, int mode)
+    public static boolean check(IList arguments, int mode)
             throws RuntimeError, TypeError
     {
         final Arity arity = Arity.atLeast(2);
@@ -145,17 +145,17 @@ public class Builtins
     // 6. Standard procedures
 
     // 6.1 Equivalence predicates
-    public final static Object eq_3F(Object fst, Object snd)
+    public static Object eq_3F(Object fst, Object snd)
     {
         return ValueTraits.toScmBoolean(ValueTraits.eq(fst, snd));
     }
 
-    public final static Object eqv_3F(Object fst, Object snd)
+    public static Object eqv_3F(Object fst, Object snd)
     {
         return ValueTraits.toScmBoolean(ValueTraits.eqv(fst, snd));
     }
 
-    public final static Object equal_3F(Object fst, Object snd)
+    public static Object equal_3F(Object fst, Object snd)
     {
         return ValueTraits.toScmBoolean(ValueTraits.equal(fst, snd));
     }
@@ -163,77 +163,77 @@ public class Builtins
     // 6.2 Numbers
 
     // 6.2.5 Numerical operations
-    public final static Object number_3F(Object argument)
+    public static Object number_3F(Object argument)
     {
         return ValueTraits.toScmBoolean(ValueTraits.isScmNumber(argument));
     }
 
-    public final static Object complex_3F(Object argument)
+    public static Object complex_3F(Object argument)
     {
         return ValueTraits.toScmBoolean(ValueTraits.isScmNumber(argument));
     }
 
-    public final static Object real_3F(Object argument)
+    public static Object real_3F(Object argument)
     {
         return ValueTraits.toScmBoolean(ValueTraits.isScmNumber(argument));
     }
 
-    public final static Object rational_3F(Object argument)
+    public static Object rational_3F(Object argument)
     {
         return ValueTraits.toScmBoolean(ValueTraits.isScmNumber(argument));
     }
 
-    public final static Object integer_3F(Object argument)
+    public static Object integer_3F(Object argument)
     {
         return ValueTraits.toScmBoolean(ValueTraits.isScmNumber(argument));
     }
 
-    public final static Object exact_3F(Object argument)
+    public static Object exact_3F(Object argument)
     {
         return ValueTraits.toScmBoolean(ValueTraits.isScmNumber(argument));
     }
 
-    public final static Object inexact_3F(Object argument)
+    public static Object inexact_3F(Object argument)
     {
         return ValueTraits.FALSE;
     }
 
-    public final static Object _3C(IList arguments)
+    public static Object _3C(IList arguments)
             // <
             throws RuntimeError, TypeError
     {
         return ValueTraits.toScmBoolean(Order.check(arguments, Order.LT));
     }
 
-    public final static Object _3C_3D(IList arguments)
+    public static Object _3C_3D(IList arguments)
             // <=
             throws RuntimeError, TypeError
     {
         return ValueTraits.toScmBoolean(Order.check(arguments, Order.LE));
     }
 
-    public final static Object _3D(IList arguments)
+    public static Object _3D(IList arguments)
             // =
             throws RuntimeError, TypeError
     {
         return ValueTraits.toScmBoolean(Order.check(arguments, Order.EQ));
     }
 
-    public final static Object _3E_3D(IList arguments)
+    public static Object _3E_3D(IList arguments)
             // >=
             throws RuntimeError, TypeError
     {
         return ValueTraits.toScmBoolean(Order.check(arguments, Order.GE));
     }
 
-    public final static Object _3E(IList arguments)
+    public static Object _3E(IList arguments)
             // >
             throws RuntimeError, TypeError
     {
         return ValueTraits.toScmBoolean(Order.check(arguments, Order.GT));
     }
 
-    public final static Object zero_3F(Object argument)
+    public static Object zero_3F(Object argument)
             // zero?
             throws TypeError
     {
@@ -241,7 +241,7 @@ public class Builtins
                 .getInteger() == 0);
     }
 
-    public final static Object _2B(IList arguments)
+    public static Object _2B(IList arguments)
             // +
             throws RuntimeError, TypeError
     {
@@ -259,7 +259,7 @@ public class Builtins
         return sum;
     }
 
-    public final static Object _2D(IList arguments)
+    public static Object _2D(IList arguments)
             // -
             throws RuntimeError, TypeError
     {
@@ -286,7 +286,7 @@ public class Builtins
         }
     }
 
-    public final static Object _2A(IList arguments)
+    public static Object _2A(IList arguments)
             // *
             throws RuntimeError, TypeError
     {
@@ -305,7 +305,7 @@ public class Builtins
         return product;
     }
 
-    public final static Object _2F(IList arguments)
+    public static Object _2F(IList arguments)
             // /
             throws RuntimeError, TypeError
     {
@@ -336,41 +336,41 @@ public class Builtins
 
     // 6.3.1 Booleans
 
-    public final static Object not(Object argument)
+    public static Object not(Object argument)
     {
         return ValueTraits.toScmBoolean(!ValueTraits.isTrue(argument));
     }
 
-    public final static Object boolean_3F(Object argument) // boolean?
+    public static Object boolean_3F(Object argument) // boolean?
     {
         return ValueTraits.toScmBoolean(ValueTraits.isScmBoolean(argument));
     }
 
     // 6.3.2 Pairs and lists
 
-    public final static Object pair_3F(Object argument) // pair?
+    public static Object pair_3F(Object argument) // pair?
     {
         return ValueTraits.toScmBoolean(ValueTraits.isPair(argument));
     }
 
-    public final static Object cons(Object fst, Object snd)
+    public static Object cons(Object fst, Object snd)
     {
         return ListFactory.createPair(fst, snd);
     }
 
-    public final static Object car(Object argument)
+    public static Object car(Object argument)
             throws PairExpected
     {
         return ValueTraits.toConstPair(argument).getFirst();
     }
 
-    public final static Object cdr(Object argument)
+    public static Object cdr(Object argument)
             throws PairExpected
     {
         return ValueTraits.toConstPair(argument).getSecond();
     }
 
-    public final static Object set_2Dcar_21(Object fst, Object snd)
+    public static Object set_2Dcar_21(Object fst, Object snd)
             // set-car!
             throws PairExpected, ImmutableException
     {
@@ -378,7 +378,7 @@ public class Builtins
         return snd;
     }
 
-    public final static Object set_2Dcdr_21(Object fst, Object snd)
+    public static Object set_2Dcdr_21(Object fst, Object snd)
             // set-car!
             throws PairExpected, ImmutableException
     {
@@ -386,17 +386,17 @@ public class Builtins
         return snd;
     }
 
-    public final static Object null_3F(Object argument) // null?
+    public static Object null_3F(Object argument) // null?
     {
         return ValueTraits.toScmBoolean(argument instanceof Empty);
     }
 
-    public final static Object list_3F(Object argument) // list?
+    public static Object list_3F(Object argument) // list?
     {
         return ValueTraits.toScmBoolean(ValueTraits.isList(argument));
     }
 
-    public final static Object list(IList argument)
+    public static Object list(IList argument)
             throws ListExpected
     {
         // Without first-class continuations, it would be save to
@@ -405,7 +405,7 @@ public class Builtins
         return argument.getCopy();
     }
 
-    public final static Object length(Object argument)
+    public static Object length(Object argument)
             throws ListExpected
     {
         return ScmNumber.create(ValueTraits.toList(argument).getLength());
@@ -413,7 +413,7 @@ public class Builtins
 
     public final static Function append = AppendFunction.INSTANCE;
 
-    public final static Object reverse(Object argument)
+    public static Object reverse(Object argument)
             throws ListExpected
     {
         return ValueTraits.toList(argument).getReversed();
@@ -432,19 +432,19 @@ public class Builtins
     public final static Function assoc = AssocFunction.INSTANCE;
 
     // 6.3.3 Symbols
-    public final static Object symbol_3F(Object argument) // symbol?
+    public static Object symbol_3F(Object argument) // symbol?
     {
         return ValueTraits.toScmBoolean(ValueTraits.isSymbol(argument));
     }
 
-    public final static Object symbol_2D_3Estring(Object argument)
+    public static Object symbol_2D_3Estring(Object argument)
             // symbol->string
             throws SymbolExpected
     {
         return ScmString.createConst(ValueTraits.toSymbol(argument));
     }
 
-    public final static Object string_2D_3Esymbol(Object argument)
+    public static Object string_2D_3Esymbol(Object argument)
             // string->symbol
             throws StringExpected
     {
@@ -453,30 +453,30 @@ public class Builtins
 
     // 6.3.4 Characters
 
-    public final static Object char_3F(Object argument) // char?
+    public static Object char_3F(Object argument) // char?
     {
         return ValueTraits.toScmBoolean(ValueTraits.isScmChar(argument));
     }
 
-    public final static Object char_3C_3F(Object fst, Object snd)
+    public static Object char_3C_3F(Object fst, Object snd)
             // char<?
             throws CharExpected
     {
         return ValueTraits
-                .toScmBoolean(ValueTraits.toScmChar(fst).charValue() < ValueTraits
-                        .toScmChar(snd).charValue());
+                .toScmBoolean(ValueTraits.toScmChar(fst) < ValueTraits
+                        .toScmChar(snd));
     }
 
-    public final static Object char_3C_3D_3F(Object fst, Object snd)
+    public static Object char_3C_3D_3F(Object fst, Object snd)
             // char<=?
             throws CharExpected
     {
         return ValueTraits
-                .toScmBoolean(ValueTraits.toScmChar(fst).charValue() <= ValueTraits
-                        .toScmChar(snd).charValue());
+                .toScmBoolean(ValueTraits.toScmChar(fst) <= ValueTraits
+                        .toScmChar(snd));
     }
 
-    public final static Object char_3D_3F(Object fst, Object snd)
+    public static Object char_3D_3F(Object fst, Object snd)
             // char=?
             throws CharExpected
     {
@@ -485,92 +485,92 @@ public class Builtins
                         .toScmChar(snd).charValue());
     }
 
-    public final static Object char_3E_3D_3F(Object fst, Object snd)
+    public static Object char_3E_3D_3F(Object fst, Object snd)
             // char>=?
             throws CharExpected
     {
         return ValueTraits
-                .toScmBoolean(ValueTraits.toScmChar(fst).charValue() >= ValueTraits
-                        .toScmChar(snd).charValue());
+                .toScmBoolean(ValueTraits.toScmChar(fst) >= ValueTraits
+                        .toScmChar(snd));
     }
 
-    public final static Object char_3E_3F(Object fst, Object snd)
+    public static Object char_3E_3F(Object fst, Object snd)
             // char>?
             throws CharExpected
     {
         return ValueTraits
-                .toScmBoolean(ValueTraits.toScmChar(fst).charValue() > ValueTraits
-                        .toScmChar(snd).charValue());
+                .toScmBoolean(ValueTraits.toScmChar(fst) > ValueTraits
+                        .toScmChar(snd));
     }
 
-    public final static Object char_2D_3Einteger(Object argument)
+    public static Object char_2D_3Einteger(Object argument)
             throws CharExpected
     {
-        return ScmNumber.create(ValueTraits.toScmChar(argument).charValue());
+        return ScmNumber.create(ValueTraits.toScmChar(argument));
     }
 
-    public final static Object integer_2D_3Echar(Object argument)
+    public static Object integer_2D_3Echar(Object argument)
             throws NumberExpected
     {
         return ValueTraits.toScmChar((char) ValueTraits.toScmNumber(argument)
                 .getInteger());
     }
 
-    public final static Object char_2Dupcase(Object argument)
+    public static Object char_2Dupcase(Object argument)
             throws CharExpected
     {
         return ValueTraits.toScmChar(Character.toUpperCase(ValueTraits
-                .toScmChar(argument).charValue()));
+                .toScmChar(argument)));
     }
 
-    public final static Object char_2Ddowncase(Object argument)
+    public static Object char_2Ddowncase(Object argument)
             throws CharExpected
     {
         return ValueTraits.toScmChar(Character.toLowerCase(ValueTraits
-                .toScmChar(argument).charValue()));
+                .toScmChar(argument)));
     }
 
     // 6.3.5 Strings
 
-    public final static Object string_3F(Object argument) // string?
+    public static Object string_3F(Object argument) // string?
     {
         return ValueTraits.toScmBoolean(ValueTraits.isScmString(argument));
     }
 
-    public final static Object make_2Dstring(Object k, Object c)
+    public static Object make_2Dstring(Object k, Object c)
             throws TypeError
     {
         return ScmString.create(ValueTraits.toScmNumber(k).getInteger(),
-                ValueTraits.toScmChar(c).charValue());
+                ValueTraits.toScmChar(c));
     }
 
-    public final static Object string_2Dlength(Object str)
+    public static Object string_2Dlength(Object str)
             throws TypeError
     {
         return ScmNumber.create(ValueTraits.toScmString(str).getLength());
     }
 
-    public final static Object string_2Dref(Object str, Object k)
+    public static Object string_2Dref(Object str, Object k)
             throws TypeError, InvalidStringIndexException
     {
         return ValueTraits.toScmChar(ValueTraits.toScmString(str).get(
                 ValueTraits.toScmNumber(k).getInteger()));
     }
 
-    public final static Object string_2Dset_21(Object str, Object k, Object c)
+    public static Object string_2Dset_21(Object str, Object k, Object c)
             throws TypeError, InvalidStringIndexException, ImmutableException
     {
         ValueTraits.toScmString(str).set(
                 ValueTraits.toScmNumber(k).getInteger(),
-                ValueTraits.toScmChar(c).charValue());
+                ValueTraits.toScmChar(c));
 
         return c;
     }
 
-    public final static Object string_2Dappend(IList arguments)
+    public static Object string_2Dappend(IList arguments)
             throws TypeError, InvalidStringIndexException, ImmutableException
     {
-        StringBuffer accu = new StringBuffer();
+        StringBuilder accu = new StringBuilder();
 
         for (IList rest = arguments; !rest.isEmpty(); rest = rest.getTail())
         {
@@ -582,14 +582,14 @@ public class Builtins
         return ScmString.create(accu.toString());
     }
 
-    public final static Object string_2Dcopy(Object string)
+    public static Object string_2Dcopy(Object string)
             throws TypeError, InvalidStringIndexException, ImmutableException
     {
         return ScmString
                 .create(ValueTraits.toScmString(string).getJavaString());
     }
 
-    public final static Object string_2D_3Elist(Object scmString)
+    public static Object string_2D_3Elist(Object scmString)
             throws TypeError, InvalidStringIndexException, ImmutableException
     {
         String javaString = ValueTraits.toScmString(scmString).getJavaString();
@@ -604,10 +604,10 @@ public class Builtins
         return result;
     }
 
-    public final static Object list_2D_3Estring(Object list)
+    public static Object list_2D_3Estring(Object list)
             throws TypeError, InvalidStringIndexException, ImmutableException
     {
-        StringBuffer accu = new StringBuffer();
+        StringBuilder accu = new StringBuilder();
 
         for (IList rest = ValueTraits.toList(list); !rest.isEmpty(); rest = rest
                 .getTail())
@@ -620,32 +620,32 @@ public class Builtins
 
     // 6.3.6 Vectors
 
-    public final static Object vector_3F(Object argument) // vector?
+    public static Object vector_3F(Object argument) // vector?
     {
         return ValueTraits.toScmBoolean(ValueTraits.isScmVector(argument));
     }
 
-    public final static Object make_2Dvector(Object k, Object obj)
+    public static Object make_2Dvector(Object k, Object obj)
             throws TypeError
     {
         return ScmVector.create(ValueTraits.toScmNumber(k).getInteger(), obj);
     }
 
-    public final static Object vector_2Dlength(Object str)
+    public static Object vector_2Dlength(Object str)
             throws TypeError
     {
         return ScmNumber.create(ValueTraits.toScmVector(str).getLength());
     }
 
-    public final static Object vector_2Dref(Object vector, Object k)
+    public static Object vector_2Dref(Object vector, Object k)
             throws TypeError, VectorException
     {
         return ValueTraits.toScmVector(vector).get(
                 ValueTraits.toScmNumber(k).getInteger());
     }
 
-    public final static Object vector_2Dset_21(Object vector, Object k,
-            Object obj)
+    public static Object vector_2Dset_21(Object vector, Object k,
+                                         Object obj)
             throws TypeError, VectorException, ImmutableException
     {
         ValueTraits.toScmVector(vector).set(
@@ -654,21 +654,21 @@ public class Builtins
         return obj;
     }
 
-    public final static Object vector(IList arguments)
+    public static Object vector(IList arguments)
             // vector
             throws ListExpected
     {
         return ScmVector.create(arguments);
     }
 
-    public final static Object vector_2D_3Elist(Object argument)
+    public static Object vector_2D_3Elist(Object argument)
             // vector->list
             throws VectorExpected
     {
         return ValueTraits.toScmVector(argument).getList();
     }
 
-    public final static Object list_2D_3Evector(Object argument)
+    public static Object list_2D_3Evector(Object argument)
             // list->vector
             throws ListExpected
     {
@@ -677,7 +677,7 @@ public class Builtins
 
     // 6.4 Control features
 
-    public final static Object procedure_3F(Object argument) // procedure?
+    public static Object procedure_3F(Object argument) // procedure?
     {
         return ValueTraits.toScmBoolean(ValueTraits.isFunction(argument));
     }
@@ -693,7 +693,7 @@ public class Builtins
 
     public final static Function eval = EvalFunction.INSTANCE;
 
-    public final static Object scheme_2Dreport_2Denvironment(Object fst)
+    public static Object scheme_2Dreport_2Denvironment(Object fst)
             throws RuntimeError, TypeError
     {
         if (ValueTraits.toScmNumber(fst).getInteger() != 5)
@@ -704,7 +704,7 @@ public class Builtins
         return Environment.getSchemeReportEnvironment();
     }
 
-    public final static Object null_2Denvironment(Object fst)
+    public static Object null_2Denvironment(Object fst)
             throws RuntimeError, TypeError
     {
         if (ValueTraits.toScmNumber(fst).getInteger() != 5)
@@ -719,45 +719,45 @@ public class Builtins
 
     // 6.6.1 Ports
 
-    public final static Object port_3F(Object argument) // port?
+    public static Object port_3F(Object argument) // port?
     {
         return ValueTraits.toScmBoolean(ValueTraits.isPort(argument));
     }
 
-    public final static Object input_2Dport_3F(Object argument)
+    public static Object input_2Dport_3F(Object argument)
             // input-port?
             throws PortExpected
     {
         return ValueTraits.toScmBoolean(argument instanceof InputPort);
     }
 
-    public final static Object output_2Dport_3F(Object argument)
+    public static Object output_2Dport_3F(Object argument)
             // output-port?
             throws PortExpected
     {
         return ValueTraits.toScmBoolean(argument instanceof OutputPort);
     }
 
-    public final static Object open_2Dinput_2Dfile(Object argument)
+    public static Object open_2Dinput_2Dfile(Object argument)
             throws StringExpected, OpenException
     {
         return InputPort.create(ValueTraits.toScmString(argument));
     }
 
-    public final static Object open_2Doutput_2Dfile(Object argument)
+    public static Object open_2Doutput_2Dfile(Object argument)
             throws StringExpected, OpenException
     {
         return OutputPort.create(ValueTraits.toScmString(argument));
     }
 
-    public final static Object close_2Dinput_2Dport(Object argument)
+    public static Object close_2Dinput_2Dport(Object argument)
             throws PortExpected, CloseException
     {
         ValueTraits.toInputPort(argument).close();
         return argument;
     }
 
-    public final static Object close_2Doutput_2Dport(Object argument)
+    public static Object close_2Doutput_2Dport(Object argument)
             throws PortExpected, CloseException
     {
         ValueTraits.toOutputPort(argument).close();
@@ -766,7 +766,7 @@ public class Builtins
 
     // 6.6.2 Input
 
-    public final static Object read(Object fst)
+    public static Object read(Object fst)
             throws RuntimeError, TypeError
     {
         try
@@ -779,25 +779,25 @@ public class Builtins
         }
     }
 
-    public final static Object read_2Dchar(Object fst)
+    public static Object read_2Dchar(Object fst)
             throws RuntimeError, TypeError
     {
         return ValueTraits.toInputPort(fst).readScmChar();
     }
 
-    public final static Object peek_2Dchar(Object fst)
+    public static Object peek_2Dchar(Object fst)
             throws RuntimeError, TypeError
     {
         return ValueTraits.toInputPort(fst).peekScmChar();
     }
 
-    public final static Object eof_2Dobject_3F(Object fst)
+    public static Object eof_2Dobject_3F(Object fst)
     {
         return ValueTraits.toScmBoolean(ValueTraits
                 .eq(fst, InputPort.EOF_VALUE));
     }
 
-    public final static Object char_2Dready_3F(Object fst)
+    public static Object char_2Dready_3F(Object fst)
             throws TypeError
     {
         return ValueTraits.toScmBoolean(ValueTraits.toInputPort(fst).isReady());
@@ -805,21 +805,21 @@ public class Builtins
 
     // 6.6.3 Output
 
-    public final static Object write(Object fst, Object snd)
+    public static Object write(Object fst, Object snd)
             throws RuntimeError, TypeError
     {
         ValueTraits.toOutputPort(snd).write(fst);
         return snd;
     }
 
-    public final static Object display(Object fst, Object snd)
+    public static Object display(Object fst, Object snd)
             throws RuntimeError, TypeError
     {
         ValueTraits.toOutputPort(snd).display(fst);
         return snd;
     }
 
-    public final static Object write_2Dchar(Object fst, Object snd)
+    public static Object write_2Dchar(Object fst, Object snd)
             throws RuntimeError, TypeError
     {
         ValueTraits.toOutputPort(snd).writeScmChar(ValueTraits.toScmChar(fst));
@@ -828,7 +828,7 @@ public class Builtins
 
     // additional functions
 
-    public final static Object __unique_2Did()
+    public static Object __unique_2Did()
     {
         return ValueTraits.createUniqueSymbol();
     }
@@ -837,7 +837,7 @@ public class Builtins
 
     public final static Function __y_2Dcombinator = YCombinator.INSTANCE;
 
-    public final static Object __open_2Dinput_2Dstring(Object argument)
+    public static Object __open_2Dinput_2Dstring(Object argument)
             throws TypeError
     {
         return InputPort.create(new StringReader(ValueTraits.toScmString(
@@ -856,50 +856,38 @@ public class Builtins
     public static void getBuiltins(Environment target) throws CompileError
     {
         Field[]  fields = Builtins.class.getFields();
-        for (int i = 0; i < fields.length; i++)
-        {
-            Field field = fields[i];
-            int   mo    = field.getModifiers();
+        for (Field field : fields) {
+            int mo = field.getModifiers();
 
-            if (!Modifier.isStatic(mo) || !Modifier.isPublic(mo))
-            {
+            if (!Modifier.isStatic(mo) || !Modifier.isPublic(mo)) {
                 continue;
             }
 
-            if (!Function.class.isAssignableFrom(field.getType()))
-            {
+            if (!Function.class.isAssignableFrom(field.getType())) {
                 continue;
             }
 
             final String schemeName = parseName(field.getName());
-            try
-            {
+            try {
                 final Object value = field.get(null);
                 target.define(schemeName, value);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
             }
         }
 
         Method[] methods       = Builtins.class.getMethods();
-        for (int i = 0; i < methods.length; i++)
-        {
-            Method me = methods[i];
-            int    mo = me.getModifiers();
+        for (Method me : methods) {
+            int mo = me.getModifiers();
 
-            if (!Modifier.isStatic(mo) || !Modifier.isPublic(mo))
-            {
+            if (!Modifier.isStatic(mo) || !Modifier.isPublic(mo)) {
                 continue;
             }
 
-            if (!paramsValid(me.getParameterTypes()))
-            {
+            if (!paramsValid(me.getParameterTypes())) {
                 continue;
             }
 
-            if (!Object.class.isAssignableFrom(me.getReturnType()))
-            {
+            if (!Object.class.isAssignableFrom(me.getReturnType())) {
                 continue;
             }
 
@@ -907,12 +895,9 @@ public class Builtins
 
             if ((me.getParameterTypes().length == 1) &&
                     (me.getParameterTypes()[0] == IList.class)
-               )
-            {
+                    ) {
                 target.define(schemeName, me);
-            }
-            else
-            {
+            } else {
                 target.define(schemeName, me);
             }
         }
@@ -921,7 +906,7 @@ public class Builtins
 
     private static String parseName(String name)
     {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
 
         for (
             int index = name.startsWith("__") ? 2 : 0;
@@ -958,10 +943,8 @@ public class Builtins
         }
         else
         {
-            for (int i = 0; i < params.length; i++)
-            {
-                if (params[i] != Object.class)
-                {
+            for (Class<?> param : params) {
+                if (param != Object.class) {
                     return false;
                 }
             }
