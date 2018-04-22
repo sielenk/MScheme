@@ -1,0 +1,70 @@
+<project name="MScheme" default="all">
+  <property file="${basedir}/build.properties"/>
+  <property name="srcdir"      value="${basedir}/src" />
+  <property name="classdir"    value="${basedir}/bin" />
+  <property name="docdir"      value="${basedir}/doc" />
+  <property name="schemedir"   value="${srcdir}/scm" />
+  <property name="jarname"     value="mscheme.jar"    />
+
+  <target name="init">
+    <uptodate property="uptodate.Init"
+              targetfile="${srcdir}/mscheme/IInit.java">
+      <srcfiles dir="${schemedir}"
+                includes="bootstrap.scm,rep.scm"/>
+    </uptodate>
+  </target>
+
+  <target name="updateInit" depends="init" unless="uptodate.Init">
+    <delete file="${srcdir}/mscheme/IInit.java"/>
+    <exec dir="${schemedir}"
+          executable="${basedir}/mkinit.pl"
+          output="${srcdir}/mscheme/IInit.java">
+      <arg value="bootstrap.scm"/>
+      <arg value="rep.scm"/>
+    </exec>
+    <delete file="${classdir}/mscheme/IInit.class"/>
+  </target>
+
+  <target name="compileMScheme" depends="init,updateInit">
+    <mkdir dir="${classdir}"/>
+    <javac srcdir="${srcdir}"
+           destdir="${classdir}"
+           classpath="${classdir}"
+           includes="mscheme/**/*.java"
+           debug="on"/>
+  </target>
+
+  <target name="compile" depends="compileMScheme"/>
+
+  <target name="check" depends="compile">
+    <junit>
+      <classpath>
+        <pathelement location="${classdir}"/>
+        <pathelement path="${java.class.path}"/>
+      </classpath>
+
+      <formatter type="plain"/>
+
+      <test name="mscheme.util.TestArity"/>
+
+      <test name="mscheme.values.TestList"/>
+      <test name="mscheme.values.TestInputPort"/>
+
+      <test name="mscheme.environment.TestEnvironment"/>
+
+      <test name="mscheme.tests.TestR5RS"/>
+      <test name="mscheme.tests.TestMachine"/>
+      <test name="mscheme.tests.TestValue"/>
+      <test name="mscheme.tests.TestBugs"/>
+    </junit>
+  </target>
+
+  <target name="jar" depends="compile">
+    <jar jarfile="${classdir}/${jarname}"
+         basedir="${classdir}/mscheme"
+         excludes="**/Test*.class"
+    />
+  </target>
+
+  <target name="all" depends="compile,check,jar"/>
+</project>

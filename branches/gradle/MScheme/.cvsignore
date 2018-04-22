@@ -1,0 +1,4 @@
+*.class
+bin
+TEST-*.txt
+.byecycle
