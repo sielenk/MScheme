@@ -63,5 +63,5 @@ task createInit {
 
 compileJava {
     dependsOn createInit
-    source createInit.outputs.files, sourceSets.main.java
+    source createInit.outputs.files
 }
