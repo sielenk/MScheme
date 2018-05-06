@@ -1,6 +1,6 @@
 apply plugin: 'java'
+apply plugin: 'application'
 
-def mainClass = 'mscheme.Main'
 def generatedDir = file("$buildDir/generated-src")
 
 
@@ -12,19 +12,8 @@ dependencies {
     testImplementation group: 'junit', name: 'junit', version: '4.12'
 }
 
-jar {
-    manifest {
-        attributes 'Main-Class': mainClass
-    }
-}
+mainClassName = 'mscheme.Main'
 
-
-task execute(type: JavaExec, dependsOn: jar) {
-    classpath = sourceSets.main.runtimeClasspath
-    main = mainClass
-
-    enableAssertions = true
-}
 
 task createInit {
     def inputFiles = fileTree('src/main/scheme') {
