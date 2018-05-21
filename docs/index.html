@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta NAME="description" CONTENT="Homepage of the MScheme scheme interpreter.">
+<meta NAME="keywords" CONTENT="scheme, interpreter">
+
+<title>MScheme Homepage</title>
+
+<body bgcolor="ffffff">
+<h1>MScheme</h1>
+
+<h2>What is MScheme?</h2>
+<p>
+MScheme is a Scheme interpreter implemented in Java.
+The project goals are
+</p>
+<ul>
+<li>to comply with the
+  <a href="http://www.schemers.org/Documents/Standards/R5RS/">
+  Revised<sup>5</sup> Report on the Algorithmic Language Scheme</a>,</li>
+<li>to develop a modular, clear and object-oriented design
+  based on the core-scheme defined in article
+  <a href="https://www.researchgate.net/publication/2728133_Proper_Tail_Recursion_and_Space_Efficiency">Proper Tail Recursion and Space Efficiency</a> by
+  <a href="https://en.wikipedia.org/wiki/William_Clinger_(computer_scientist)">William Clinger</a>
+  and</li>
+<li>to implement it (in Java for now).</li>
+</ul>
+
+<h2>What is already done, what is left to do?</h2>
+
+<h3>Already done:</h3>
+<ul>
+<li>... unit tests with <a href="http://www.junit.org/">JUnit</a>,</li>
+<li>... some builtin procedures,</li>
+<li>... integer numbers,</li>
+<li>... file io procedures including <code>read</code> and <code>load</code>,</li>
+<li>... first-class, user-defined functions with <code>lambda</code>,</li>
+<li>... a cycle safe <code>list?</code>,</li>
+<li>... proper tail recursion,</li>
+<li>... first-class continuations with 
+    <code>call-with-current-continuation</code> and
+    <code>dynamic-wind</code>,
+</li>
+<li>... compilation to intermediate code for efficient execution,</li>
+<li>... syntax check and symbol lookup at compile time,</li>
+<li>... proper 
+        <a href="http://mitpress.mit.edu/sites/default/files/sicp/full-text/book/book-Z-H-26.html#%_sec_4.1.6"
+        >internal definition</a>
+        handling by two pass compilation,
+
+</li>
+<li>... a low level macro system with <code>define-syntax</code>.</li>
+<li>... a (german) Diplomarbeit available as 
+        <a href="http://prdownloads.sourceforge.net/mscheme/Diplomarbeit.ps?download">ps</a>
+        and
+        <a href="http://prdownloads.sourceforge.net/mscheme/Diplomarbeit.pdf?download">pdf</a>
+        file.</li>
+</ul>
+
+<h3>Left to do:</h3>
+<ul>
+<li>... saving and loading of intermediate code,</li>
+<li>... some primitive and library procedures,</li>
+<li>... rational, floatingpoint and complex numbers,</li>
+<li>... <code>let-syntax</code> and <code>letrec-syntax</code>,</li>
+<li>... hygienic macros with <code>syntax-rules</code>,</li>
+<li>... maybe some <a href="http://srfi.schemers.org/">SRFI</a>s:
+  <ul>
+        <li><a href="http://srfi.schemers.org/srfi-6/srfi-6.html">SRFI-6</a>,
+            Basic string ports are easily implemented since
+            I use Java's <code>java.io.Reader</code>/<code>Writer</code>
+            in my implementation of ports and there are
+            <code>java.io.StringReader</code>/<code>StringWriter</code>
+            readily available ...</li>
+        <li><a href="http://srfi.schemers.org/srfi-16/srfi-16.html">SRFI-16</a>,
+            <code>case-lambda</code> would be nice,</li>
+  </ul>
+</li>
+<li>... a <a href="http://people.csail.mit.edu/jaffer/SLIB">SLib</a>
+    configuration file - and get hygienic macros for free!
+</li>
+</ul>
+
+
+<h2>Why is it called MScheme?</h2>
+<p>
+It is called <b>MS</b>cheme because
+</p>
+<ul>
+<li> the project was started at the
+     <a href="http://www.uni-muenster.de">Westf&auml;lische Wilhelms-Universit&auml;t</a>
+     in <a href="http://www.muenster.de"><b>M</b>&uuml;n<b>s</b>ter</a>,
+</li>
+<li> I'm <b>M</b>arvin <b>S</b>ielenkemper and</li>
+<li> this name wasn't occupied yet ...</li>
+</ul>
+
+<h2>Links</h2>
+<ul>
+<li>The <a href="https://sourceforge.net/projects/mscheme">Project page</a>
+    at <a href="https://sourceforge.net">Sourceforge</a>
+</li>
+<li>The <a href="http://mitpress.mit.edu/sicp/">Wizard Book</a>, aka.
+    <em>Structure and Interpretation of Computer Programs</em> online</li>
+<li><a href="http://www.schemers.org/"><code>(schemers . org)</code></a></li>
+<li>For the brave (those surfing with Java enabled): 
+    An <a href="http://mscheme.sourceforge.net/MScheme.html">Applet</a>
+    running MScheme in an AWT console window.</li>
+</ul>
+
+<p>
+This page is hosted by<br>
+<a href="https://sourceforge.net">
+  <img alt="SourceForge Logo"
+       src="https://sourceforge.net/sflogo.php?type=17&amp;group_id=38346"
+	   width=200></a><br>
+and is<br>
+<a id="validator-link" href="http://validator.w3.org/check?uri=referer"><img
+        src="https://www.w3.org/Icons/valid-html401"
+        alt="Valid HTML 4.01 Transitional" height="31" width="88"></a>
+    <script type="text/javascript">
+        document.getElementById('validator-link').href =
+            'http://validator.w3.org/check?uri=' + encodeURI(window.location.href);
+    </script>
+</p>
+<p>last update: 2018-05-18 by <a href="mailto:sielenk@users.sourceforge.net">sielenk</a></p>
+</body>
+</html>
