@@ -20,7 +20,7 @@
  */
 
 plugins {
-    id("java")
+    kotlin("jvm").version("2.2.0")
     id("application")
 }
 
@@ -87,6 +87,6 @@ sourceSets {
     }
 }
 
-tasks.compileJava.configure {
+tasks.compileKotlin.configure {
     dependsOn(createInit)
 }
