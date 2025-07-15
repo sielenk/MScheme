@@ -25,11 +25,11 @@ package mscheme.values;
 /**
  * @author sielenk
  */
-public interface IPair
-{
-    String CVS_ID = "$Id$";
+public interface IPair {
 
-    Object getFirst();
+  String CVS_ID = "$Id$";
 
-    Object getSecond();
+  Object getFirst();
+
+  Object getSecond();
 }

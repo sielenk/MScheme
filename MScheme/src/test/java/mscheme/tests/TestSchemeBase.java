@@ -21,71 +21,62 @@ Boston, MA  02111-1307, USA. */
 package mscheme.tests;
 
 import junit.framework.TestCase;
-
 import mscheme.exceptions.SchemeException;
-
 import mscheme.machine.Machine;
 import mscheme.values.ValueTraits;
 
 
 public abstract class TestSchemeBase
-    extends TestCase
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends TestCase {
 
-    private Machine machine;
+  public final static String CVS_ID
+      = "$Id$";
+
+  private Machine machine;
 
 
-    public TestSchemeBase(String name)
-    {
-        super(name);
+  public TestSchemeBase(String name) {
+    super(name);
+  }
+
+
+  protected void setUp()
+      throws Exception {
+    machine = new Machine();
+  }
+
+  protected void tearDown() {
+    machine = null;
+  }
+
+
+  public Object quote(String expression)
+      throws SchemeException, InterruptedException {
+    return Machine.parse(expression);
+  }
+
+  public Object eval(String expression)
+      throws SchemeException, InterruptedException {
+    return machine.evaluate(expression);
+  }
+
+  public void check(String in, String out)
+      throws SchemeException, InterruptedException {
+    Object value = eval(in);
+    boolean success = ValueTraits.equal(value, quote(out));
+
+    if (!success) {
+      System.out.println(
+          "*** evaluation of ***\n" +
+              in + '\n' +
+              "*** returned ***\n" +
+              value + '\n' +
+              "*** expected was ***\n" +
+              out + '\n' +
+              "*** end ***"
+      );
     }
 
-
-    protected void setUp()
-        throws Exception
-    {
-        machine = new Machine();
-    }
-
-    protected void tearDown()
-    {
-        machine = null;
-    }
-
-
-    public Object quote(String expression)
-        throws SchemeException, InterruptedException
-    {
-        return Machine.parse(expression);
-    }
-
-    public Object eval(String expression)
-        throws SchemeException, InterruptedException
-    {
-        return machine.evaluate(expression);
-    }
-
-    public void check(String in, String out)
-        throws SchemeException, InterruptedException
-    {
-        Object  value   = eval(in);
-        boolean success = ValueTraits.equal(value, quote(out));
-
-        if (!success)
-        {
-            System.out.println(
-                "*** evaluation of ***\n" +
-                in + '\n' +
-                "*** returned ***\n" +
-                value + '\n' +
-                "*** expected was ***\n" +
-                out + '\n' +
-                "*** end ***"
-            );
-        }
-
-        assertTrue(success);
-    }
+    assertTrue(success);
+  }
 }

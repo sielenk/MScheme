@@ -21,66 +21,61 @@ Boston, MA  02111-1307, USA. */
 package mscheme.syntax;
 
 import mscheme.exceptions.SchemeException;
-
 import mscheme.util.Arity;
-
 import mscheme.values.IList;
 import mscheme.values.ListFactory;
 import mscheme.values.ValueTraits;
 
 
 abstract class LetBase
-    extends CheckedTranslator
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends CheckedTranslator {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    protected LetBase(Arity arity)
-    {
-        super(arity);
+  protected LetBase(Arity arity) {
+    super(arity);
+  }
+
+
+  protected static IList[] splitArguments(IList arguments)
+      throws SchemeException {
+    IList bindings = ValueTraits.toList(arguments.getHead());
+    IList body = arguments.getTail();
+
+    IList formals = ListFactory.create();
+    IList inits = ListFactory.create();
+
+    // parse the initializer list
+    while (!bindings.isEmpty()) {
+      IList binding = ValueTraits.toList(bindings.getHead());
+
+      Object formal = binding.getHead();
+      Object init = binding.getTail().getHead();
+
+      formals = ListFactory.prepend(formal, formals);
+      inits = ListFactory.prepend(init, inits);
+
+      bindings = bindings.getTail();
     }
 
+    // If the closure is anonymous, the order of the
+    // arguments is irrelevant, as long as the inits
+    // and formals match. But if it can be called by
+    // the user the order has to match the definition
+    // order. And a named-let-closure can be called ...
+    // Since the parsing above reverses the lists,
+    // they have to be reversed again here.
+    formals = formals.getReversed();
+    inits = inits.getReversed();
 
-    protected static IList[] splitArguments(IList arguments)
-        throws SchemeException
-    {
-        IList bindings = ValueTraits.toList(arguments.getHead());
-        IList body     = arguments.getTail();
-
-        IList formals = ListFactory.create();
-        IList inits   = ListFactory.create();
-
-        // parse the initializer list
-        while (!bindings.isEmpty())
-        {
-            IList  binding = ValueTraits.toList(bindings.getHead());
-
-            Object formal  = binding.getHead();
-            Object init    = binding.getTail().getHead();
-
-            formals  = ListFactory.prepend(formal, formals);
-            inits    = ListFactory.prepend(init  , inits  );
-
-            bindings = bindings.getTail();
-        }
-
-        // If the closure is anonymous, the order of the
-        // arguments is irrelevant, as long as the inits
-        // and formals match. But if it can be called by
-        // the user the order has to match the definition
-        // order. And a named-let-closure can be called ...
-        // Since the parsing above reverses the lists,
-        // they have to be reversed again here.
-        formals = formals.getReversed();
-        inits   = inits  .getReversed();
-
-        return 
-            new IList[]
+    return
+        new IList[]
             {
                 formals,
                 inits,
                 body
             };
-    }
+  }
 }

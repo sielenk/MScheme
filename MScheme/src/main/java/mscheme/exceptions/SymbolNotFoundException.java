@@ -22,17 +22,16 @@ package mscheme.exceptions;
 
 
 public final class SymbolNotFoundException
-    extends CompileError
-{
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
-    public final static String CVS_ID
-        = "$Id$";
+    extends CompileError {
 
-    public SymbolNotFoundException(String cause)
-    {
-        super(cause, "symbol not found");
-    }
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
+  public final static String CVS_ID
+      = "$Id$";
+
+  public SymbolNotFoundException(String cause) {
+    super(cause, "symbol not found");
+  }
 }

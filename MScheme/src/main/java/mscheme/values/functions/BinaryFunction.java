@@ -22,39 +22,35 @@ package mscheme.values.functions;
 
 import mscheme.exceptions.SchemeException;
 import mscheme.machine.Registers;
-
 import mscheme.util.Arity;
-
 import mscheme.values.IList;
 
 
 public abstract class BinaryFunction
-            extends CheckedFunction
-{
-    public final static String CVS_ID
-	    = "$Id$";
+    extends CheckedFunction {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    protected final Arity getArity()
-    {
-        return Arity.exactly(2);
-    }
+  protected final Arity getArity() {
+    return Arity.exactly(2);
+  }
 
-    protected final Object checkedCall(
-        Registers state,
-        IList      arguments
-    ) throws SchemeException, InterruptedException
-    {
-        return checkedCall(
-                   state,
-                   arguments.getHead(),
-                   arguments.getTail().getHead()
-               );
-    }
+  protected final Object checkedCall(
+      Registers state,
+      IList arguments
+  ) throws SchemeException, InterruptedException {
+    return checkedCall(
+        state,
+        arguments.getHead(),
+        arguments.getTail().getHead()
+    );
+  }
 
-    protected abstract Object checkedCall(
-		Registers state,
-        Object    fst,
-        Object    snd
-    ) throws SchemeException, InterruptedException;
+  protected abstract Object checkedCall(
+      Registers state,
+      Object fst,
+      Object snd
+  ) throws SchemeException, InterruptedException;
 }

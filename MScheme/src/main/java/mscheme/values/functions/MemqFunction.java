@@ -24,17 +24,16 @@ import mscheme.values.ValueTraits;
 
 
 public final class MemqFunction
-	extends MemberBase
-{
-    public final static String  CVS_ID
-    	= "$Id$";
+    extends MemberBase {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    public final static MemqFunction INSTANCE
-    	= new MemqFunction();
+  public final static MemqFunction INSTANCE
+      = new MemqFunction();
 
-    protected boolean equal(Object fst, Object snd)
-    {
-        return ValueTraits.eq(fst, snd);
-    }
+  protected boolean equal(Object fst, Object snd) {
+    return ValueTraits.eq(fst, snd);
+  }
 }

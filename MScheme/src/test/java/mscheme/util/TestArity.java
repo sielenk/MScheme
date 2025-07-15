@@ -23,66 +23,62 @@ package mscheme.util;
 import junit.framework.TestCase;
 
 public class TestArity
-    extends TestCase
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends TestCase {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    public TestArity(String name)
-    {
-        super(name);
-    }
+  public TestArity(String name) {
+    super(name);
+  }
 
 
-    public void testExactly()
-    {
-        Arity arity0 = Arity.exactly(0);
-        Arity arity1 = Arity.exactly(1);
-        Arity arity2 = Arity.exactly(2);
+  public void testExactly() {
+    Arity arity0 = Arity.exactly(0);
+    Arity arity1 = Arity.exactly(1);
+    Arity arity2 = Arity.exactly(2);
 
-        assertTrue( arity0.isValid(0));
-        assertTrue(!arity0.isValid(1));
-        assertTrue(!arity0.isValid(2));
+    assertTrue(arity0.isValid(0));
+    assertFalse(arity0.isValid(1));
+    assertFalse(arity0.isValid(2));
 
-        assertTrue(!arity1.isValid(0));
-        assertTrue( arity1.isValid(1));
-        assertTrue(!arity1.isValid(2));
+    assertFalse(arity1.isValid(0));
+    assertTrue(arity1.isValid(1));
+    assertFalse(arity1.isValid(2));
 
-        assertTrue(!arity2.isValid(0));
-        assertTrue(!arity2.isValid(1));
-        assertTrue( arity2.isValid(2));
-        assertTrue(!arity2.isValid(3));
-    }
+    assertFalse(arity2.isValid(0));
+    assertFalse(arity2.isValid(1));
+    assertTrue(arity2.isValid(2));
+    assertFalse(arity2.isValid(3));
+  }
 
-    public void testAtLeast()
-    {
-        Arity arity0 = Arity.atLeast(0);
-        Arity arity1 = Arity.atLeast(1);
-        Arity arity2 = Arity.atLeast(2);
+  public void testAtLeast() {
+    Arity arity0 = Arity.atLeast(0);
+    Arity arity1 = Arity.atLeast(1);
+    Arity arity2 = Arity.atLeast(2);
 
-        assertTrue( arity0.isValid(0));
-        assertTrue( arity0.isValid(1));
-        assertTrue( arity0.isValid(2));
+    assertTrue(arity0.isValid(0));
+    assertTrue(arity0.isValid(1));
+    assertTrue(arity0.isValid(2));
 
-        assertTrue(!arity1.isValid(0));
-        assertTrue( arity1.isValid(1));
-        assertTrue( arity1.isValid(2));
+    assertFalse(arity1.isValid(0));
+    assertTrue(arity1.isValid(1));
+    assertTrue(arity1.isValid(2));
 
-        assertTrue(!arity2.isValid(0));
-        assertTrue(!arity2.isValid(1));
-        assertTrue( arity2.isValid(2));
-        assertTrue( arity2.isValid(3));
-    }
+    assertFalse(arity2.isValid(0));
+    assertFalse(arity2.isValid(1));
+    assertTrue(arity2.isValid(2));
+    assertTrue(arity2.isValid(3));
+  }
 
-    public void testInarity()
-    {
-        Arity arity = Arity.inRange(2, 3);
+  public void testInarity() {
+    Arity arity = Arity.inRange(2, 3);
 
-        assertTrue(!arity.isValid(0));
-        assertTrue(!arity.isValid(1));
-        assertTrue( arity.isValid(2));
-        assertTrue( arity.isValid(3));
-        assertTrue(!arity.isValid(4));
-    }
+    assertFalse(arity.isValid(0));
+    assertFalse(arity.isValid(1));
+    assertTrue(arity.isValid(2));
+    assertTrue(arity.isValid(3));
+    assertFalse(arity.isValid(4));
+  }
 }

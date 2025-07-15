@@ -22,15 +22,14 @@ package mscheme.exceptions;
 
 
 public abstract class PortExpected
-    extends TypeError
-{
-    private static final long serialVersionUID = 1L;
-    
-    public final static String CVS_ID
-        = "$Id$";
+    extends TypeError {
 
-    public PortExpected(Object cause, String message)
-    {
-        super(cause, message);
-    }
+  private static final long serialVersionUID = 1L;
+
+  public final static String CVS_ID
+      = "$Id$";
+
+  public PortExpected(Object cause, String message) {
+    super(cause, message);
+  }
 }

@@ -24,20 +24,19 @@ import mscheme.values.ScmString;
 
 
 public class InvalidStringIndexException
-    extends StringException
-{
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
-    public final static String CVS_ID
-        = "$Id$";
+    extends StringException {
 
-    public InvalidStringIndexException(
-        ScmString string,
-        int       index
-    )
-    {
-        super(string, index);
-    }
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
+  public final static String CVS_ID
+      = "$Id$";
+
+  public InvalidStringIndexException(
+      ScmString string,
+      int index
+  ) {
+    super(string, index);
+  }
 }

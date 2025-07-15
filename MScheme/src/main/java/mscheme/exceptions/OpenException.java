@@ -22,17 +22,16 @@ package mscheme.exceptions;
 
 
 public final class OpenException
-    extends SchemeIOException
-{
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
-    public final static String  CVS_ID
-        = "$Id$";
+    extends SchemeIOException {
 
-    public OpenException(Object cause)
-    {
-        super(cause);
-    }
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
+  public final static String CVS_ID
+      = "$Id$";
+
+  public OpenException(Object cause) {
+    super(cause);
+  }
 }

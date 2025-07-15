@@ -14,23 +14,22 @@ import junit.framework.TestCase;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class ValueTraitsTest extends TestCase
-{
-	/**
-	 * Constructor for ValueTraitsTest.
-	 * @param name
-	 */
-	public ValueTraitsTest(String name) {
-		super(name);
-	}
+public class ValueTraitsTest extends TestCase {
 
-	final public void testIsTrue() {
-		assertTrue (ValueTraits.isTrue(Boolean.TRUE ));
-		assertFalse(ValueTraits.isTrue(Boolean.FALSE));
-		
-		assertTrue (ValueTraits.isTrue(ValueTraits.TRUE ));
-		assertFalse(ValueTraits.isTrue(ValueTraits.FALSE));
+  /**
+   * Constructor for ValueTraitsTest.
+   */
+  public ValueTraitsTest(String name) {
+    super(name);
+  }
 
-		assertTrue(ValueTraits.isTrue(new Object()));
-	}
+  final public void testIsTrue() {
+    assertTrue(ValueTraits.isTrue(Boolean.TRUE));
+    assertFalse(ValueTraits.isTrue(Boolean.FALSE));
+
+    assertTrue(ValueTraits.isTrue(ValueTraits.TRUE));
+    assertFalse(ValueTraits.isTrue(ValueTraits.FALSE));
+
+    assertTrue(ValueTraits.isTrue(new Object()));
+  }
 }

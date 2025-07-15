@@ -23,30 +23,28 @@ package mscheme;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-public class TestMScheme
-{
-    public final static String CVS_ID
-       = "$Id$";
+public class TestMScheme {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    public static Test suite()
-    {
-        TestSuite suite = new TestSuite("All MScheme Tests");
+  public static Test suite() {
+    TestSuite suite = new TestSuite("All MScheme Tests");
 
-        suite.addTestSuite(mscheme.util.TestArity.class);
-		suite.addTestSuite(mscheme.environment.TestEnvironment.class);
+    suite.addTestSuite(mscheme.util.TestArity.class);
+    suite.addTestSuite(mscheme.environment.TestEnvironment.class);
 
-		suite.addTest(mscheme.machine.AllTests.suite());
-        suite.addTest(mscheme.values. AllTests.suite());
-        suite.addTest(mscheme.tests.  AllTests.suite());        
+    suite.addTest(mscheme.machine.AllTests.suite());
+    suite.addTest(mscheme.values.AllTests.suite());
+    suite.addTest(mscheme.tests.AllTests.suite());
 
-        return suite;
-    }
+    return suite;
+  }
 
-    public static void main (String[] args)
-    {
-        junit.textui.TestRunner.run(
-            suite()
-        );
-    }
+  public static void main(String[] args) {
+    junit.textui.TestRunner.run(
+        suite()
+    );
+  }
 }

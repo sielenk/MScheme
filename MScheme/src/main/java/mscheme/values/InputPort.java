@@ -26,601 +26,500 @@ import java.io.InterruptedIOException;
 import java.io.PushbackReader;
 import java.io.Reader;
 import java.io.Writer;
-
 import mscheme.exceptions.CloseException;
 import mscheme.exceptions.OpenException;
 import mscheme.exceptions.ParseException;
 import mscheme.exceptions.ReadException;
 
 class EofValue
-	implements IOutputable
-{
-    public final static String CVS_ID
-        = "$Id$";
+    implements IOutputable {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    public final static EofValue INSTANCE = new EofValue();
+  public final static EofValue INSTANCE = new EofValue();
 
-    private EofValue()
-    { }
+  private EofValue() {
+  }
 
-    public void outputOn(Writer dest, boolean ignored)
-        throws IOException
-    {
-        dest.write("#[eof]");
-    }
+  public void outputOn(Writer dest, boolean ignored)
+      throws IOException {
+    dest.write("#[eof]");
+  }
 }
 
 
 public class InputPort
-    extends Port
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends Port {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    public final static int    EOF       = -1;
-    public final static Object EOF_VALUE = EofValue.INSTANCE;
+  public final static int EOF = -1;
+  public final static Object EOF_VALUE = EofValue.INSTANCE;
 
-    private static final Object _plus = "+";
-    private static final Object _minus = "-";
-    private static final Object _ellipsis = "...";
+  private static final Object _plus = "+";
+  private static final Object _minus = "-";
+  private static final Object _ellipsis = "...";
 
-    private final PushbackReader _reader;
+  private final PushbackReader _reader;
 
-    private InputPort(PushbackReader reader)
-    {
-        _reader = reader;
+  private InputPort(PushbackReader reader) {
+    _reader = reader;
+  }
+
+
+  public static InputPort create(Reader reader) {
+    return new InputPort(
+        reader instanceof PushbackReader
+            ? (PushbackReader) reader
+            : new PushbackReader(reader)
+    );
+  }
+
+  public static InputPort create(ScmString filename)
+      throws OpenException {
+    return create(filename.getJavaString());
+  }
+
+  public static InputPort create(String filename)
+      throws OpenException {
+    try {
+      return create(new FileReader(filename));
+    } catch (IOException e) {
+      throw new OpenException(
+          ScmString.create(filename)
+      );
     }
+  }
+
+  // specialisation of Port
+
+  public void writeOn(Writer destination)
+      throws IOException {
+    destination.write("#[input port]");
+  }
 
 
-    public static InputPort create(Reader reader)
-    {
-        return new InputPort(
-                   reader instanceof PushbackReader
-                   ? (PushbackReader)reader
-                   : new PushbackReader(reader)
-               );
+  public void close()
+      throws CloseException {
+    try {
+      _reader.close();
+    } catch (IOException e) {
+      throw new CloseException(this);
     }
+  }
 
-    public static InputPort create(ScmString filename)
-        throws OpenException
-    {
-        return create(filename.getJavaString());
+  // input port
+
+  public Object read()
+      throws ReadException, ParseException, InterruptedException {
+    try {
+      return parseDatum();
+    } catch (InterruptedIOException e) {
+      throw new InterruptedException(e.getMessage());
+    } catch (IOException e) {
+      throw new ReadException(this);
     }
+  }
 
-    public static InputPort create(String filename)
-        throws OpenException
-    {
-        try
-        {
-            return create(new FileReader(filename));
+
+  private boolean isWhitespace(int c) {
+    return (c == ' ') || (c == '\t') || (c == '\n');
+  }
+
+  private boolean isDelimiter(int c) {
+    return isWhitespace(c)
+        || (c == '(')
+        || (c == ')')
+        || (c == '[')
+        || (c == ']')
+        || (c == '"')    // "
+        || (c == ';');
+  }
+
+  private int skipWSread()
+      throws IOException {
+    boolean inComment = false;
+
+    for (; ; ) {
+      int c = _reader.read();
+
+      if (inComment) {
+        switch (c) {
+          case '\n':
+            inComment = false;
+            break;
+
+          case EOF:
+            return c;
         }
-        catch (IOException e)
-        {
-            throw new OpenException(
-                      ScmString.create(filename)
-                  );
+      } else {
+        if (c == ';') {
+          inComment = true;
+        } else if (!isWhitespace(c)) {
+          return c;
         }
+      }
     }
+  }
 
-
-    // specialisation of Port
-
-    public void writeOn(Writer destination)
-        throws IOException
-    {
-        destination.write("#[input port]");
+  private char readNoEof()
+      throws IOException, ParseException {
+    int c = _reader.read();
+    if (c == EOF) {
+      throw new ParseException(
+          this,
+          "unexpected EOF"
+      );
     }
+    return (char) c;
+  }
 
+  private Character parseChar()
+      throws IOException, ParseException {
+    int c = readNoEof();
 
-    public void close()
-        throws CloseException
-    {
-        try
-        {
-            _reader.close();
-        }
-        catch (IOException e)
-        {
-            throw new CloseException(this);
-        }
+    if ((c == 's') || (c == 'n')) {
+      StringBuilder charName = new StringBuilder();
+
+      do {
+        charName.append((char) c);
+        c = _reader.read();
+      }
+      while ((c != EOF) && !isDelimiter(c));
+
+      if (c != EOF) {
+        _reader.unread(c);
+      }
+
+      String name = charName.toString();
+
+      switch (name) {
+        case "s":
+          return ValueTraits.toScmChar('s');
+        case "n":
+          return ValueTraits.toScmChar('n');
+        case "space":
+          return ValueTraits.toScmChar(' ');
+        case "newline":
+          return ValueTraits.toScmChar('\n');
+        default:
+          throw new ParseException(
+              this,
+              "invalid character name '" + name + "'"
+          );
+      }
+    } else {
+      return ValueTraits.toScmChar((char) c);
     }
+  }
 
+  private Object[] parseVector(int index)
+      throws IOException, ParseException {
+    int la = skipWSread();
 
-    // input port
+    if (la == ')') {
+      return new Object[index];
+    } else if (la == EOF) {
+      throw new ParseException(
+          this,
+          "unexpected EOF"
+      );
+    } else {
+      _reader.unread(la);
 
-    public Object read()
-        throws ReadException, ParseException, InterruptedException
-    {
-        try
-        {
-            return parseDatum();
-        }
-        catch (InterruptedIOException e)
-        {
-            throw new InterruptedException(e.getMessage());
-        }
-        catch (IOException e)
-        {
-            throw new ReadException(this);
-        }
+      Object head = parseDatum();
+      Object[] result = parseVector(index + 1);
+
+      result[index] = head;
+
+      return result;
     }
+  }
 
+  private Object parseList(char closeToken)
+      throws IOException, ParseException {
+    int la = skipWSread();
 
-    private boolean isWhitespace(int c)
-    {
-        return (c == ' ') || (c == '\t') || (c == '\n');
+    if (la == closeToken) {
+      return ListFactory.createConst();
     }
+    if (la == EOF) {
+      throw new ParseException(
+          this,
+          "unexpected EOF"
+      );
+    } else {
+      _reader.unread(la);
+      Object head = parseDatum();
 
-    private boolean isDelimiter(int c)
-    {
-        return isWhitespace(c)
-               || (c == '(')
-               || (c == ')')
-               || (c == '[')
-               || (c == ']')
-               || (c == '"')    // "
-               || (c == ';');
+      la = skipWSread();
+      if (la == '.') {
+        IPair result = ListFactory.createConstPair(
+            head,
+            parseDatum()
+        );
+
+        if (skipWSread() != ')') {
+          throw new ParseException(
+              this,
+              "expected ')'"
+          );
+        }
+
+        return result;
+      } else {
+        _reader.unread(la);
+        return ListFactory.createConstPair(
+            head,
+            parseList(closeToken)
+        );
+      }
     }
+  }
 
-    private int skipWSread()
-        throws IOException
-    {
-        boolean inComment = false;
+  private ScmString parseString()
+      throws IOException, ParseException {
+    StringBuilder buf = new StringBuilder();
 
-        for (;;)
-        {
-            int c = _reader.read();
+    for (; ; ) {
+      char c = readNoEof();
 
-            if (inComment)
-            {
-                switch (c)
-                {
-                case '\n':
-                    inComment = false;
-                    break;
-
-                case EOF:
-                    return c;
-                }
-            }
-            else
-            {
-                if (c == ';')
-                {
-                    inComment = true;
-                }
-                else if (!isWhitespace(c))
-                {
-                    return c;
-                }
-            }
-        }
-    }
-
-    private char readNoEof()
-        throws IOException, ParseException
-    {
-        int c = _reader.read();
-        if (c == EOF)
-        {
-            throw new ParseException(
-                      this,
-                      "unexpected EOF"
-                  );
-        }
-        return (char)c;
-    }
-
-    private Character parseChar()
-        throws IOException, ParseException
-    {
-        int c = readNoEof();
-
-        if ((c == 's') || (c == 'n'))
-        {
-            StringBuilder charName = new StringBuilder();
-
-            do
-            {
-                charName.append((char)c);
-                c = _reader.read();
-            }
-            while ((c != EOF) && !isDelimiter(c));
-
-            if (c != EOF)
-            {
-                _reader.unread(c);
-            }
-
-            String name = charName.toString();
-
-            switch (name) {
-                case "s":
-                    return ValueTraits.toScmChar('s');
-                case "n":
-                    return ValueTraits.toScmChar('n');
-                case "space":
-                    return ValueTraits.toScmChar(' ');
-                case "newline":
-                    return ValueTraits.toScmChar('\n');
-                default:
-                    throw new ParseException(
-                            this,
-                            "invalid character name '" + name + "'"
-                    );
-            }
-        }
-        else
-        {
-            return ValueTraits.toScmChar((char)c);
-        }
-    }
-
-    private Object[] parseVector(int index)
-        throws IOException, ParseException
-    {
-        int la = skipWSread();
-
-        if (la == ')')
-        {
-            return new Object[index];
-        }
-        else if (la == EOF)
-        {
-            throw new ParseException(
-                      this,
-                      "unexpected EOF"
-                  );
-        }
-        else
-        {
-            _reader.unread(la);
-
-            Object   head   = parseDatum();
-            Object[] result = parseVector(index + 1);
-
-            result[index] = head;
-
-            return result;
-        }
-    }
-
-    private Object parseList(char closeToken)
-        throws IOException, ParseException
-    {
-        int la = skipWSread();
-
-        if (la == closeToken)
-        {
-            return ListFactory.createConst();
-        }
-        if (la == EOF)
-        {
-            throw new ParseException(
-                      this,
-                      "unexpected EOF"
-                  );
-        }
-        else
-        {
-            _reader.unread(la);
-            Object head = parseDatum();
-
-            la = skipWSread();
-            if (la == '.')
-            {
-                IPair result = ListFactory.createConstPair(
-                                  head,
-                                  parseDatum()
-                              );
-
-                if (skipWSread() != ')')
-                {
-                    throw new ParseException(
-                              this,
-                              "expected ')'"
-                          );
-                }
-
-                return result;
-            }
-            else
-            {
-                _reader.unread(la);
-                return ListFactory.createConstPair(
-                           head,
-                           parseList(closeToken)
-                       );
-            }
-        }
-    }
-
-    private ScmString parseString()
-        throws IOException, ParseException
-    {
-        StringBuilder buf = new StringBuilder();
-
-        for (;;)
-        {
-            char c = readNoEof();
-
-            switch (c)
-            {
-            case '"':  // "
-                return ScmString.createConst(buf.toString());
-
-            case '\\':
-                buf.append(readNoEof());
-                break;
-
-            default:
-                buf.append(c);
-                break;
-            }
-        }
-    }
-
-    private boolean isDigit(char c)
-    {
-        return ('0' <= c) && (c <= '9');
-    }
-
-    private boolean isLetter(char c)
-    {
-        return ('a' <= c) && (c <= 'z');
-    }
-
-    private boolean isSpecialInitial(char c)
-    {
-        return "!$%&*/:<=>?^_~".indexOf(c) != -1;
-    }
-
-    private boolean isInitial(char c)
-    {
-        return isLetter(c)
-               || isSpecialInitial(c);
-    }
-
-    private boolean isSubsequent(char c)
-    {
-        return isInitial(c)
-               || isDigit(c)
-               || ("+-.@".indexOf(c) != -1);
-    }
-
-
-    private Object parseNumOrSym(char initial)
-        throws IOException, ParseException
-    {
-        StringBuilder buf = new StringBuilder();
-        initial = Character.toLowerCase(initial);
-        buf.append(initial);
-        for (;;)
-        {
-            int c = _reader.read();
-            if (c == EOF)
-            {
-                break;
-            }
-            else if (isDelimiter(c))
-            {
-                _reader.unread(c);
-                break;
-            }
-            buf.append(
-                Character.toLowerCase((char)c)
-            );
-        }
-
-        String str = buf.toString();
-
-        switch (str) {
-            case "+":
-                return _plus; // "+";
-
-            case "-":
-                return _minus; // "-";
-
-            case "...":
-                return _ellipsis; // "...";
-
-        }
-
-checkNumber:
-        {
-            if (!isDigit(initial))
-            {
-                if ((initial != '+') && (initial != '-'))
-                {
-                    break checkNumber;
-                }
-            }
-            for (int i = 1; i < str.length(); i++)
-            {
-                if (!isDigit(str.charAt(i)))
-                {
-                    break checkNumber;
-                }
-            }
-            try
-            {
-                return ScmNumber.create(str);
-            }
-            catch (NumberFormatException e)
-            { }
-        }
-
-        if (!isInitial(initial))
-        {
-            throw new ParseException(
-                      this,
-                      "invalid identifier"
-                  );
-        }
-
-        for (int i = 1; i < str.length(); i++)
-        {
-            if (!isSubsequent(str.charAt(i)))
-            {
-                throw new ParseException(
-                          this,
-                          "invalid identifier"
-                      );
-            }
-        }
-
-        return str.intern();
-    }
-
-    private Object parseDatum()
-        throws IOException, ParseException
-    {
-        int la1 = skipWSread();
-
-        switch (la1)
-        {
-        case '#':
-            {
-                int la2 = _reader.read();
-
-                switch (la2)
-                {
-                case 't':
-                    return ValueTraits.TRUE;
-
-                case 'f':
-                    return ValueTraits.FALSE;
-
-                case '\\':
-                    return parseChar();
-
-                case '(':
-                    return ScmVector.createConst(parseVector(0));
-
-                default:
-                    throw new ParseException(
-                              this,
-                              "'" + la2 + "' can't follow '#'"
-                          );
-                }
-            } // break;
-
-        case '(':
-            return parseList(')');
-
-        case '[':
-            return parseList(']');
-
+      switch (c) {
         case '"':  // "
-            return parseString();
+          return ScmString.createConst(buf.toString());
 
-        case '\'':
-            return ListFactory.createConst(
-                       "quote",
-                       parseDatum()
-                   );
-
-        case '`':
-            return ListFactory.createConst(
-                       "quasiquote",
-                       parseDatum()
-                   );
-
-        case ',':
-            {
-                int la2 = _reader.read();
-                String sym;
-
-                if (la2 == '@')
-                {
-                    sym = "unquote-splicing";
-                }
-                else
-                {
-                    _reader.unread(la2);
-                    sym = "unquote";
-                }
-
-                return ListFactory.createConst(
-                           sym,
-                           parseDatum()
-                       );
-            }
-
-
-        case EOF:
-            return EOF_VALUE;
+        case '\\':
+          buf.append(readNoEof());
+          break;
 
         default:
-            return parseNumOrSym((char)la1);
-        }
+          buf.append(c);
+          break;
+      }
+    }
+  }
+
+  private boolean isDigit(char c) {
+    return ('0' <= c) && (c <= '9');
+  }
+
+  private boolean isLetter(char c) {
+    return ('a' <= c) && (c <= 'z');
+  }
+
+  private boolean isSpecialInitial(char c) {
+    return "!$%&*/:<=>?^_~".indexOf(c) != -1;
+  }
+
+  private boolean isInitial(char c) {
+    return isLetter(c)
+        || isSpecialInitial(c);
+  }
+
+  private boolean isSubsequent(char c) {
+    return isInitial(c)
+        || isDigit(c)
+        || ("+-.@".indexOf(c) != -1);
+  }
+
+
+  private Object parseNumOrSym(char initial)
+      throws IOException, ParseException {
+    StringBuilder buf = new StringBuilder();
+    initial = Character.toLowerCase(initial);
+    buf.append(initial);
+    for (; ; ) {
+      int c = _reader.read();
+      if (c == EOF) {
+        break;
+      } else if (isDelimiter(c)) {
+        _reader.unread(c);
+        break;
+      }
+      buf.append(
+          Character.toLowerCase((char) c)
+      );
     }
 
+    String str = buf.toString();
 
-    public int readChar()
-        throws ReadException
-    {
-        try
-        {
-            return _reader.read();
-        }
-        catch (IOException e)
-        {
-            throw new ReadException(this);
-        }
+    switch (str) {
+      case "+":
+        return _plus; // "+";
+
+      case "-":
+        return _minus; // "-";
+
+      case "...":
+        return _ellipsis; // "...";
+
     }
 
-    public Object readScmChar()
-        throws ReadException
+    checkNumber:
     {
-        int c = readChar();
+      if (!isDigit(initial)) {
+        if ((initial != '+') && (initial != '-')) {
+          break checkNumber;
+        }
+      }
+      for (int i = 1; i < str.length(); i++) {
+        if (!isDigit(str.charAt(i))) {
+          break checkNumber;
+        }
+      }
+      try {
+        return ScmNumber.create(str);
+      } catch (NumberFormatException e) {
+      }
+    }
 
-        return
-            (c == EOF)
+    if (!isInitial(initial)) {
+      throw new ParseException(
+          this,
+          "invalid identifier"
+      );
+    }
+
+    for (int i = 1; i < str.length(); i++) {
+      if (!isSubsequent(str.charAt(i))) {
+        throw new ParseException(
+            this,
+            "invalid identifier"
+        );
+      }
+    }
+
+    return str.intern();
+  }
+
+  private Object parseDatum()
+      throws IOException, ParseException {
+    int la1 = skipWSread();
+
+    switch (la1) {
+      case '#': {
+        int la2 = _reader.read();
+
+        switch (la2) {
+          case 't':
+            return ValueTraits.TRUE;
+
+          case 'f':
+            return ValueTraits.FALSE;
+
+          case '\\':
+            return parseChar();
+
+          case '(':
+            return ScmVector.createConst(parseVector(0));
+
+          default:
+            throw new ParseException(
+                this,
+                "'" + la2 + "' can't follow '#'"
+            );
+        }
+      } // break;
+
+      case '(':
+        return parseList(')');
+
+      case '[':
+        return parseList(']');
+
+      case '"':  // "
+        return parseString();
+
+      case '\'':
+        return ListFactory.createConst(
+            "quote",
+            parseDatum()
+        );
+
+      case '`':
+        return ListFactory.createConst(
+            "quasiquote",
+            parseDatum()
+        );
+
+      case ',': {
+        int la2 = _reader.read();
+        String sym;
+
+        if (la2 == '@') {
+          sym = "unquote-splicing";
+        } else {
+          _reader.unread(la2);
+          sym = "unquote";
+        }
+
+        return ListFactory.createConst(
+            sym,
+            parseDatum()
+        );
+      }
+
+      case EOF:
+        return EOF_VALUE;
+
+      default:
+        return parseNumOrSym((char) la1);
+    }
+  }
+
+
+  public int readChar()
+      throws ReadException {
+    try {
+      return _reader.read();
+    } catch (IOException e) {
+      throw new ReadException(this);
+    }
+  }
+
+  public Object readScmChar()
+      throws ReadException {
+    int c = readChar();
+
+    return
+        (c == EOF)
             ? EOF_VALUE
-            : ValueTraits.toScmChar((char)c);
+            : ValueTraits.toScmChar((char) c);
+  }
+
+  public int peekChar()
+      throws ReadException {
+    try {
+      int result = _reader.read();
+      if (result != EOF) {
+        _reader.unread(result);
+      }
+      return result;
+    } catch (IOException e) {
+      throw new ReadException(this);
     }
+  }
 
-    public int peekChar()
-        throws ReadException
-    {
-        try
-        {
-            int result = _reader.read();
-            if (result != EOF)
-            {
-                _reader.unread(result);
-            }
-            return result;
-        }
-        catch (IOException e)
-        {
-            throw new ReadException(this);
-        }
-    }
+  public Object peekScmChar()
+      throws ReadException {
+    int c = peekChar();
 
-    public Object peekScmChar()
-        throws ReadException
-    {
-        int c = peekChar();
-
-        return
-            (c == EOF)
+    return
+        (c == EOF)
             ? EOF_VALUE
-            : ValueTraits.toScmChar((char)c);
+            : ValueTraits.toScmChar((char) c);
+  }
+
+  public boolean isReady() {
+    try {
+      return _reader.ready();
+    } catch (IOException e) {
     }
 
-    public boolean isReady()
-    {
-        try
-        {
-            return _reader.ready();
-        }
-        catch (IOException e)
-        { }
-
-        return false;
-    }
+    return false;
+  }
 }

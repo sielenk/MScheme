@@ -14,25 +14,23 @@ import mscheme.values.ValueTraits;
 
 
 public class SubcontinuationController
-        extends UnaryFunction
-{
-    public final static String CVS_ID = "$Id$";
+    extends UnaryFunction {
 
-    private final Mark _mark;
+  public final static String CVS_ID = "$Id$";
 
-    SubcontinuationController(Registers state)
-    {
-        _mark = state.getStack().createMark();
-    }
+  private final Mark _mark;
 
-    protected Object checkedCall(Registers state, Object argument)
-            throws SchemeException, InterruptedException
-    {
-        return ValueTraits.apply(
-                state,
-                argument,
-                ListFactory.create(
-                        new Subcontinuation(
-                                state.getStack().cutSlice(_mark))));
-    }
+  SubcontinuationController(Registers state) {
+    _mark = state.getStack().createMark();
+  }
+
+  protected Object checkedCall(Registers state, Object argument)
+      throws SchemeException, InterruptedException {
+    return ValueTraits.apply(
+        state,
+        argument,
+        ListFactory.create(
+            new Subcontinuation(
+                state.getStack().cutSlice(_mark))));
+  }
 }

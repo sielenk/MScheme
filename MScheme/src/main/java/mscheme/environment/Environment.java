@@ -22,7 +22,6 @@ package mscheme.environment;
 
 import java.io.IOException;
 import java.io.Writer;
-
 import mscheme.exceptions.AlreadyBound;
 import mscheme.exceptions.CompileError;
 import mscheme.exceptions.RuntimeError;
@@ -30,203 +29,180 @@ import mscheme.syntax.TranslatorFactory;
 import mscheme.values.functions.Builtins;
 
 
-public final class Environment
-{
-    public final static String CVS_ID
-        = "$Id$";
+public final class Environment {
 
+  public final static String CVS_ID
+      = "$Id$";
 
-    // *******************************************************************
+  // *******************************************************************
 
-    public void writeOn(Writer destination)
-        throws IOException
-    {
-        destination.write("#[environment]");
+  public void writeOn(Writer destination)
+      throws IOException {
+    destination.write("#[environment]");
+  }
+
+  public Environment toEnvironment() {
+    return this;
+  }
+
+  // *******************************************************************
+
+  private final StaticEnvironment _bindings;
+  private final DynamicEnvironment _values;
+
+  // *******************************************************************
+
+  private Environment(
+      StaticEnvironment bindings,
+      DynamicEnvironment values
+  ) {
+    _bindings = bindings;
+    _values = values;
+  }
+
+  private static Environment create() {
+    return new Environment(
+        StaticEnvironment.create(),
+        DynamicEnvironment.create()
+    );
+  }
+
+  public static Environment getEmpty() {
+    return create();
+  }
+
+  public static Environment getNullEnvironment() {
+    Environment result = getEmpty();
+
+    try {
+      StaticEnvironment staticBindings = result.getStatic();
+
+      staticBindings.defineSyntax(
+          "quote",
+          TranslatorFactory.getQuoteToken()
+      );
+      staticBindings.defineSyntax(
+          "if",
+          TranslatorFactory.getIfToken()
+      );
+      staticBindings.defineSyntax(
+          "begin",
+          TranslatorFactory.getBeginToken()
+      );
+      staticBindings.defineSyntax(
+          "and",
+          TranslatorFactory.getAndToken()
+      );
+      staticBindings.defineSyntax(
+          "or",
+          TranslatorFactory.getOrToken()
+      );
+      staticBindings.defineSyntax(
+          "lambda",
+          TranslatorFactory.getLambdaToken()
+      );
+      staticBindings.defineSyntax(
+          "let",
+          TranslatorFactory.getLetToken()
+      );
+      staticBindings.defineSyntax(
+          "let*",
+          TranslatorFactory.getLetStarToken()
+      );
+      staticBindings.defineSyntax(
+          "letrec",
+          TranslatorFactory.getLetrecToken()
+      );
+      staticBindings.defineSyntax(
+          "define",
+          TranslatorFactory.getDefineToken()
+      );
+      staticBindings.defineSyntax(
+          "set!",
+          TranslatorFactory.getSetToken()
+      );
+      staticBindings.defineSyntax(
+          "define-syntax",
+          TranslatorFactory.getDefineSyntaxToken()
+      );
+    } catch (AlreadyBound e) {
+      throw new RuntimeException(
+          "unexpected AlreadyBound in getNullEnvironment()"
+      );
     }
 
-    public Environment toEnvironment()
-    {
-        return this;
+    return result;
+  }
+
+  public static Environment getSchemeReportEnvironment() {
+    Environment result = getNullEnvironment();
+
+    try {
+      Builtins.getBuiltins(result);
+    } catch (CompileError e) {
+      throw new RuntimeException(
+          "unexpected CompileError"
+      );
     }
 
-    // *******************************************************************
+    return result;
+  }
 
-    private final  StaticEnvironment _bindings;
-    private final DynamicEnvironment _values;
 
-    // *******************************************************************
+  public StaticEnvironment getStatic() {
+    return _bindings;
+  }
 
-    private Environment(
-        StaticEnvironment  bindings,
-        DynamicEnvironment values
-    )
-    {
-        _bindings = bindings;
-        _values   = values;
+  public DynamicEnvironment getDynamic() {
+    return _values;
+  }
+
+  // *** Envrionment access ************************************************
+
+  // *** code access (compiletime) ***
+
+  public Reference define(String key, Object value)
+      throws CompileError {
+    Reference newReference = _bindings.define(key);
+    assign(newReference, value);
+    return newReference;
+  }
+
+  // *** value access (runtime) ***
+
+  public Object assign(Reference key, Object value) {
+    return _values.assign(key, value);
+  }
+
+  public Object assign(String key, Object value)
+      throws CompileError {
+    return assign(_bindings.getReferenceFor(key), value);
+  }
+
+
+  public Object lookupNoThrow(Reference ref) {
+    return _values.lookupNoThrow(ref);
+  }
+
+  public Object lookup(Reference ref)
+      throws RuntimeError {
+    Object result = lookupNoThrow(ref);
+
+    if (result == null) {
+      throw new RuntimeError(
+          ref.getSymbol(),
+          "uninitialized variable"
+      );
     }
 
-    private static Environment create()
-    {
-        return new Environment(
-             StaticEnvironment.create(),
-            DynamicEnvironment.create()
-        );
-    }
+    return result;
+  }
 
-    public static Environment getEmpty()
-    {
-        return create();
-    }
+  public Object lookup(String key)
+      throws CompileError,
+      RuntimeError {
+    return lookup(_bindings.getReferenceFor(key));
+  }
 
-    public static Environment getNullEnvironment()
-    {
-        Environment result = getEmpty();
-
-        try
-        {
-            StaticEnvironment staticBindings = result.getStatic();
-
-            staticBindings.defineSyntax(
-                "quote",
-                TranslatorFactory.getQuoteToken()
-            );
-            staticBindings.defineSyntax(
-                "if",
-                TranslatorFactory.getIfToken()
-            );
-            staticBindings.defineSyntax(
-                "begin",
-                TranslatorFactory.getBeginToken()
-            );
-            staticBindings.defineSyntax(
-                "and",
-                TranslatorFactory.getAndToken()
-            );
-            staticBindings.defineSyntax(
-                "or",
-                TranslatorFactory.getOrToken()
-            );
-            staticBindings.defineSyntax(
-                "lambda",
-                TranslatorFactory.getLambdaToken()
-            );
-            staticBindings.defineSyntax(
-                "let",
-                TranslatorFactory.getLetToken()
-            );
-            staticBindings.defineSyntax(
-                "let*",
-                TranslatorFactory.getLetStarToken()
-            );
-            staticBindings.defineSyntax(
-                "letrec",
-                TranslatorFactory.getLetrecToken()
-            );
-            staticBindings.defineSyntax(
-                "define",
-                TranslatorFactory.getDefineToken()
-            );
-            staticBindings.defineSyntax(
-                "set!",
-                TranslatorFactory.getSetToken()
-            );
-            staticBindings.defineSyntax(
-                "define-syntax",
-                TranslatorFactory.getDefineSyntaxToken()
-            );
-        }
-        catch (AlreadyBound e)
-        {
-            throw new RuntimeException(
-                "unexpected AlreadyBound in getNullEnvironment()"
-            );
-        }
-
-        return result;
-    }
-
-    public static Environment getSchemeReportEnvironment()
-    {
-        Environment result = getNullEnvironment();
-
-        try
-        {
-            Builtins.getBuiltins(result);
-        }
-        catch (CompileError e)
-        {
-            throw new RuntimeException(
-                "unexpected CompileError"
-            );
-        }
-
-        return result;
-    }
-
-
-    public StaticEnvironment getStatic()
-    {
-        return _bindings;
-    }
-
-    public DynamicEnvironment getDynamic()
-    {
-        return _values;
-    }
-
-    // *** Envrionment access ************************************************
-
-    // *** code access (compiletime) ***
-
-    public Reference define(String key, Object value)
-        throws CompileError
-    {
-        Reference newReference = _bindings.define(key);
-        assign(newReference, value);
-        return newReference;
-    }
-
-    // *** value access (runtime) ***
-
-	public Object assign(Reference key, Object value)
-    {
-        return _values.assign(key, value);
-    }
-
-    public Object assign(String key, Object value)
-        throws CompileError
-    {
-        return assign(_bindings.getReferenceFor(key), value);
-    }
-
-
-    public Object lookupNoThrow(Reference ref)
-    {
-        return _values.lookupNoThrow(ref);
-    }
-
-    public Object lookup(Reference ref)
-        throws RuntimeError
-    {
-        Object result = lookupNoThrow(ref);
-
-        if (result == null)
-        {
-            throw new RuntimeError(
-                ref.getSymbol(),
-                "uninitialized variable"
-            );
-        }
-
-        return result;
-    }
-
-    public Object lookup(String key)
-        throws CompileError,
-               RuntimeError
-    {
-        return lookup(_bindings.getReferenceFor(key));
-    }
-
-    // ***********************************************************************
+  // ***********************************************************************
 }

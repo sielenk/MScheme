@@ -22,17 +22,16 @@ package mscheme.exceptions;
 
 
 public final class EnvironmentExpected
-    extends TypeError
-{
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
-    public final static String CVS_ID
-        = "$Id$";
+    extends TypeError {
 
-    public EnvironmentExpected(Object cause)
-    {
-        super(cause, "environment");
-    }
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
+  public final static String CVS_ID
+      = "$Id$";
+
+  public EnvironmentExpected(Object cause) {
+    super(cause, "environment");
+  }
 }

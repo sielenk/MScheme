@@ -8,76 +8,68 @@ package mscheme.values;
 
 import java.io.PipedReader;
 import java.io.PipedWriter;
-
 import junit.framework.TestCase;
 
 /**
  * @author sielenk
- * 
+ *
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 public class OutputPortTest
-        extends TestCase
-{
-    public OutputPortTest(String name)
+    extends TestCase {
+
+  public OutputPortTest(String name) {
+    super(name);
+  }
+
+  private static void checkReadWrite(Object o)
+      throws Exception {
+    PipedReader inPipe = new PipedReader();
+
     {
-        super(name);
+      PipedWriter outPipe = new PipedWriter(inPipe);
+      OutputPort out = OutputPort.create(outPipe);
+      out.write(o);
+      out.close();
+      outPipe.close();
     }
 
-    private static void checkReadWrite(Object o)
-            throws Exception
-    {
-        PipedReader inPipe = new PipedReader();
+    assertTrue(ValueTraits.equal(o, InputPort.create(inPipe).read()));
+  }
 
-        {
-            PipedWriter outPipe = new PipedWriter(inPipe);
-            OutputPort out = OutputPort.create(outPipe);
-            out.write(o);
-            out.close();
-            outPipe.close();
-        }
+  public void testReadWriteBoolean()
+      throws Exception {
+    checkReadWrite(ValueTraits.TRUE);
+    checkReadWrite(ValueTraits.FALSE);
+  }
 
-        assertTrue(ValueTraits.equal(o, InputPort.create(inPipe).read()));
-    }
+  public void testReadWriteChar()
+      throws Exception {
+    checkReadWrite(ValueTraits.toScmChar('a'));
+    checkReadWrite(ValueTraits.toScmChar('\n'));
+    checkReadWrite(ValueTraits.toScmChar(' '));
+  }
 
-    public void testReadWriteBoolean()
-            throws Exception
-    {
-        checkReadWrite(ValueTraits.TRUE);
-        checkReadWrite(ValueTraits.FALSE);
-    }
+  public void testReadWriteNumber()
+      throws Exception {
+    checkReadWrite(ValueTraits.toScmNumber(-1));
+    checkReadWrite(ValueTraits.toScmNumber(0));
+    checkReadWrite(ValueTraits.toScmNumber(12));
+  }
 
-    public void testReadWriteChar()
-            throws Exception
-    {
-        checkReadWrite(ValueTraits.toScmChar('a'));
-        checkReadWrite(ValueTraits.toScmChar('\n'));
-        checkReadWrite(ValueTraits.toScmChar(' '));
-    }
+  public void testReadWriteList()
+      throws Exception {
+    checkReadWrite(ListFactory.create());
+    checkReadWrite(ListFactory.create(ValueTraits.TRUE));
+    checkReadWrite(ListFactory.create(ValueTraits.toScmChar('b'),
+        ValueTraits.toScmChar('\n')));
+  }
 
-    public void testReadWriteNumber()
-            throws Exception
-    {
-        checkReadWrite(ValueTraits.toScmNumber(-1));
-        checkReadWrite(ValueTraits.toScmNumber(0));
-        checkReadWrite(ValueTraits.toScmNumber(12));
-    }
-
-    public void testReadWriteList()
-            throws Exception
-    {
-        checkReadWrite(ListFactory.create());
-        checkReadWrite(ListFactory.create(ValueTraits.TRUE));
-        checkReadWrite(ListFactory.create(ValueTraits.toScmChar('b'),
-                ValueTraits.toScmChar('\n')));
-    }
-
-    public void testReadWriteVector()
-            throws Exception
-    {
-        checkReadWrite(ScmVector.create());
-        checkReadWrite(ScmVector.create(new Object[]
-        { ValueTraits.toScmChar('b'), ValueTraits.toScmChar('\n') }));
-    }
+  public void testReadWriteVector()
+      throws Exception {
+    checkReadWrite(ScmVector.create());
+    checkReadWrite(ScmVector.create(new Object[]
+        {ValueTraits.toScmChar('b'), ValueTraits.toScmChar('\n')}));
+  }
 }

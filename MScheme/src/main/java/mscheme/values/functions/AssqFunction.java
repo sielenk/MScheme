@@ -24,17 +24,16 @@ import mscheme.values.ValueTraits;
 
 
 public final class AssqFunction
-	extends AssocBase
-{
-    public final static String CVS_ID
-    	= "$Id$";
+    extends AssocBase {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    public final static AssqFunction INSTANCE
-    	= new AssqFunction();
+  public final static AssqFunction INSTANCE
+      = new AssqFunction();
 
-    protected boolean equal(Object fst, Object snd)
-    {
-        return ValueTraits.eq(fst, snd);
-    }
+  protected boolean equal(Object fst, Object snd) {
+    return ValueTraits.eq(fst, snd);
+  }
 }

@@ -21,70 +21,57 @@ Boston, MA  02111-1307, USA. */
 package mscheme.syntax;
 
 
+public abstract class TranslatorFactory {
 
-public abstract class TranslatorFactory
-{
-    public final static String CVS_ID
-        = "$Id$";
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    public static ITranslator getBeginToken()
-    {
-        return Begin.INSTANCE_BEGIN;
-    }
+  public static ITranslator getBeginToken() {
+    return Begin.INSTANCE_BEGIN;
+  }
 
-    public static ITranslator getAndToken()
-    {
-        return Begin.INSTANCE_AND;
-    }
+  public static ITranslator getAndToken() {
+    return Begin.INSTANCE_AND;
+  }
 
-    public static ITranslator getOrToken()
-    {
-        return Begin.INSTANCE_OR;
-    }
+  public static ITranslator getOrToken() {
+    return Begin.INSTANCE_OR;
+  }
 
-    public static ITranslator getSetToken()
-    {
-        return Set.INSTANCE;
-    }
+  public static ITranslator getSetToken() {
+    return Set.INSTANCE;
+  }
 
-    public static ITranslator getDefineToken()
-    {
-        return Define.INSTANCE;
-    }
+  public static ITranslator getDefineToken() {
+    return Define.INSTANCE;
+  }
 
-    public static ITranslator getDefineSyntaxToken()
-    {
-        return DefineSyntax.INSTANCE;
-    }
+  public static ITranslator getDefineSyntaxToken() {
+    return DefineSyntax.INSTANCE;
+  }
 
-    public static ITranslator getLambdaToken()
-    {
-        return Lambda.INSTANCE;
-    }
+  public static ITranslator getLambdaToken() {
+    return Lambda.INSTANCE;
+  }
 
-    public static ITranslator getLetToken()
-    {
-        return Let.INSTANCE;
-    }
+  public static ITranslator getLetToken() {
+    return Let.INSTANCE;
+  }
 
-    public static ITranslator getLetStarToken()
-    {
-        return LetStar.INSTANCE;
-    }
+  public static ITranslator getLetStarToken() {
+    return LetStar.INSTANCE;
+  }
 
-    public static ITranslator getLetrecToken()
-    {
-        return Letrec.INSTANCE;
-    }
+  public static ITranslator getLetrecToken() {
+    return Letrec.INSTANCE;
+  }
 
-    public static ITranslator getIfToken()
-    {
-        return If.INSTANCE;
-    }
+  public static ITranslator getIfToken() {
+    return If.INSTANCE;
+  }
 
-    public static ITranslator getQuoteToken()
-    {
-        return Quote.INSTANCE;
-    }
+  public static ITranslator getQuoteToken() {
+    return Quote.INSTANCE;
+  }
 }

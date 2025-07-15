@@ -23,19 +23,17 @@ package mscheme.values.functions;
 import mscheme.values.ValueTraits;
 
 
-
 public final class MemvFunction
-	extends MemberBase
-{
-    public final static String  CVS_ID
-    	= "$Id$";
+    extends MemberBase {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    public final static MemvFunction INSTANCE
-    	= new MemvFunction();
+  public final static MemvFunction INSTANCE
+      = new MemvFunction();
 
-    protected boolean equal(Object fst, Object snd)
-    {
-        return ValueTraits.eqv(fst, snd);
-    }
+  protected boolean equal(Object fst, Object snd) {
+    return ValueTraits.eqv(fst, snd);
+  }
 }

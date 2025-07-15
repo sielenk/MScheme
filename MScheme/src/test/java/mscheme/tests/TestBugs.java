@@ -25,154 +25,135 @@ import mscheme.exceptions.SchemeException;
 
 
 public class TestBugs
-    extends TestSchemeBase
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends TestSchemeBase {
 
-    public TestBugs(String name)
-    {
-        super(name);
+  public final static String CVS_ID
+      = "$Id$";
+
+  public TestBugs(String name) {
+    super(name);
+  }
+
+
+  public void test_2002_19_03()
+      throws SchemeException, InterruptedException {
+    // This failed, because set! didn't use delayed
+    // references, MHS 2002-19-03
+    check("(begin\n" +
+            "  (define (f)\n" +
+            "    (define (g)\n" +
+            "      (set! x 1)\n" +
+            "      x)\n" +
+            "    (define x 2)\n" +
+            "    (g)\n" +
+            "    x)\n" +
+            "  (f))",
+        "1"
+    );
+  }
+
+  public void test_2002_04_09()
+      throws SchemeException, InterruptedException {
+    // It is now illegal to internally redefine a symbol.
+    try {
+      eval("(let ((x 1)) (begin (define x 2)) x)");
+      fail();
+    } catch (CompileError e) {
+    }
+  }
+
+  public void test_2002_04_15a()
+      throws SchemeException, InterruptedException {
+    // Internal definitions are not allowed after the
+    // first expression.
+
+    try {
+      eval("(let () 1 (define x 2) x)");
+      fail();
+    } catch (CompileError e) {
     }
 
-
-    public void test_2002_19_03()
-        throws SchemeException, InterruptedException
-    {
-        // This failed, because set! didn't use delayed
-        // references, MHS 2002-19-03
-        check("(begin\n" +
-              "  (define (f)\n" +
-              "    (define (g)\n" +
-              "      (set! x 1)\n" +
-              "      x)\n" +
-              "    (define x 2)\n" +
-              "    (g)\n" +
-              "    x)\n" +
-              "  (f))",
-              "1"
-        );
-    }    
-
-    public void test_2002_04_09()
-        throws SchemeException, InterruptedException
-    {
-        // It is now illegal to internally redefine a symbol.
-        try {
-            eval("(let ((x 1)) (begin (define x 2)) x)");
-            fail();
-        }
-        catch (CompileError e)
-        { }
+    try {
+      eval("(let () 'a (define x 2) x)");
+      fail();
+    } catch (CompileError e) {
     }
 
-    public void test_2002_04_15a()
-        throws SchemeException, InterruptedException
-    {
-        // Internal definitions are not allowed after the
-        // first expression.
-
-        try {
-            eval("(let () 1 (define x 2) x)");
-            fail();
-        }
-        catch (CompileError e)
-        { }
-
-        try {
-            eval("(let () 'a (define x 2) x)");
-            fail();
-        }
-        catch (CompileError e)
-        { }
-
-        try {
-            eval("(let ((a 1)) a (define x 2) x)");
-            fail();
-        }
-        catch (CompileError e)
-        { }
-
-        try {
-            eval("(let () (if 1 1 1) (define x 2) x)");
-            fail();
-        }
-        catch (CompileError e)
-        { }
+    try {
+      eval("(let ((a 1)) a (define x 2) x)");
+      fail();
+    } catch (CompileError e) {
     }
 
-    public void test_2002_04_15ba()
-        throws SchemeException, InterruptedException
-    {
-        // no nested definitions
-        try {
-            eval("(define x (define y 3))");
-            fail();
-        }
-        catch (CompileError e)
-        { }
+    try {
+      eval("(let () (if 1 1 1) (define x 2) x)");
+      fail();
+    } catch (CompileError e) {
+    }
+  }
+
+  public void test_2002_04_15ba()
+      throws SchemeException, InterruptedException {
+    // no nested definitions
+    try {
+      eval("(define x (define y 3))");
+      fail();
+    } catch (CompileError e) {
+    }
+  }
+
+  public void test_2002_04_15bb()
+      throws SchemeException, InterruptedException {
+    // no nested definitions
+    try {
+      eval("(lambda () (cons (define a 1) 2))");
+      fail();
+    } catch (CompileError e) {
+    }
+  }
+
+  public void test_2002_04_15c()
+      throws SchemeException, InterruptedException {
+    try {
+      eval("(define (f)\n" +
+          "  (define y 2)\n" +
+          "  (define g (+ y 1))\n" +
+          "  g\n" +
+          "  y))"
+      );
+      fail();
+    } catch (CompileError e) {
     }
 
-    public void test_2002_04_15bb()
-        throws SchemeException, InterruptedException
-    {
-        // no nested definitions
-        try {
-            eval("(lambda () (cons (define a 1) 2))");
-            fail();
-        }
-        catch (CompileError e)
-        { }
+    try {
+      eval("(define (f)\n" +
+          "  (define g (+ y 1))\n" +
+          "  (define y 2)\n" +
+          "  g\n" +
+          "  y))"
+      );
+      fail();
+    } catch (CompileError e) {
     }
 
-    public void test_2002_04_15c()
-        throws SchemeException, InterruptedException
-    {
-        try {
-            eval("(define (f)\n" +
-                 "  (define y 2)\n" +
-                 "  (define g (+ y 1))\n" +
-                 "  g\n" +
-                 "  y))"
-            );
-            fail();
-        }
-        catch (CompileError e)
-        { }
-
-        try {
-            eval("(define (f)\n" +
-                 "  (define g (+ y 1))\n" +
-                 "  (define y 2)\n" +
-                 "  g\n" +
-                 "  y))"
-            );
-            fail();
-        }
-        catch (CompileError e)
-        { }
-
-        try {
-            eval("(define (f)\n" +
-                 "  (define y 2)\n" +
-                 "  (define g (set! y 1))\n" +
-                 "  g\n" +
-                 "  y))"
-            );
-            fail();
-        }
-        catch (CompileError e)
-        { }
+    try {
+      eval("(define (f)\n" +
+          "  (define y 2)\n" +
+          "  (define g (set! y 1))\n" +
+          "  g\n" +
+          "  y))"
+      );
+      fail();
+    } catch (CompileError e) {
     }
+  }
 
-    public void test_todo01()
-        throws SchemeException, InterruptedException
-    {
-        try {
-            eval("(cons (define a 1) 2)");
-            fail();
-        }
-        catch (CompileError e)
-        { }
+  public void test_todo01()
+      throws SchemeException, InterruptedException {
+    try {
+      eval("(cons (define a 1) 2)");
+      fail();
+    } catch (CompileError e) {
     }
+  }
 }

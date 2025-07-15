@@ -25,21 +25,20 @@ import mscheme.machine.Registers;
 
 
 public abstract class BinaryValueFunction
-    extends BinaryFunction
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends BinaryFunction {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    protected final Object checkedCall(
-		Registers state,
-        Object    fst,
-        Object    snd
-    ) throws SchemeException
-    {
-        return checkedCall(fst, snd);
-    }
+  protected final Object checkedCall(
+      Registers state,
+      Object fst,
+      Object snd
+  ) throws SchemeException {
+    return checkedCall(fst, snd);
+  }
 
-    protected abstract Object checkedCall(Object fst, Object snd)
-        throws SchemeException;
+  protected abstract Object checkedCall(Object fst, Object snd)
+      throws SchemeException;
 }

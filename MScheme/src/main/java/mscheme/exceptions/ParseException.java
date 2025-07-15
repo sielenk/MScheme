@@ -22,21 +22,20 @@ package mscheme.exceptions;
 
 
 public class ParseException
-    extends RuntimeError
-{
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
+    extends RuntimeError {
 
-    public final static String CVS_ID
-        = "$Id$";
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
 
-    public final String _message;
+  public final static String CVS_ID
+      = "$Id$";
 
-    public ParseException(Object port, String message)
-    {
-        super(port);
-        _message = message;
-    }
+  public final String _message;
+
+  public ParseException(Object port, String message) {
+    super(port);
+    _message = message;
+  }
 }

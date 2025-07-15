@@ -22,39 +22,35 @@ package mscheme.values.functions;
 
 import mscheme.exceptions.ListExpected;
 import mscheme.exceptions.PairExpected;
-
-import mscheme.values.IPair;
 import mscheme.values.IList;
+import mscheme.values.IPair;
 import mscheme.values.ValueTraits;
 
 abstract class AssocBase
-	extends BinaryValueFunction
-{
-    public final static String CVS_ID
-    	= "$Id$";
+    extends BinaryValueFunction {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    protected abstract boolean equal(Object fst, Object snd);
+  protected abstract boolean equal(Object fst, Object snd);
 
-    protected final Object checkedCall(
-        Object key,
-        Object values
-    ) throws ListExpected, PairExpected
-    {
-        for (
-            IList tail = ValueTraits.toList(values);
-            !tail.isEmpty();
-            tail = tail.getTail()
-        )
-        {
-            IPair pair = ValueTraits.toConstPair(tail.getHead());
+  protected final Object checkedCall(
+      Object key,
+      Object values
+  ) throws ListExpected, PairExpected {
+    for (
+        IList tail = ValueTraits.toList(values);
+        !tail.isEmpty();
+        tail = tail.getTail()
+    ) {
+      IPair pair = ValueTraits.toConstPair(tail.getHead());
 
-            if (equal(key, pair.getFirst()))
-            {
-                return pair;
-            }
-        }
-
-        return ValueTraits.FALSE;
+      if (equal(key, pair.getFirst())) {
+        return pair;
+      }
     }
+
+    return ValueTraits.FALSE;
+  }
 }

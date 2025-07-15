@@ -24,20 +24,19 @@ import mscheme.values.ScmVector;
 
 
 public class InvalidVectorIndexException
-    extends VectorException
-{
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
-    public final static String CVS_ID
-        = "$Id$";
+    extends VectorException {
 
-    public InvalidVectorIndexException(
-        ScmVector vector,
-        int       index
-    )
-    {
-        super(vector, index);
-    }
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
+  public final static String CVS_ID
+      = "$Id$";
+
+  public InvalidVectorIndexException(
+      ScmVector vector,
+      int index
+  ) {
+    super(vector, index);
+  }
 }

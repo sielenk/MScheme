@@ -20,8 +20,8 @@ Boston, MA  02111-1307, USA. */
 
 package mscheme.values;
 
-public abstract class Port
-{
-    protected Port()
-    { }
+public abstract class Port {
+
+  protected Port() {
+  }
 }

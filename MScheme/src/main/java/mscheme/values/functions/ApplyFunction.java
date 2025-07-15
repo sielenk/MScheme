@@ -21,66 +21,60 @@ Boston, MA  02111-1307, USA. */
 package mscheme.values.functions;
 
 import mscheme.code.Application;
-
 import mscheme.exceptions.SchemeException;
-
 import mscheme.util.Arity;
-
 import mscheme.values.IList;
 import mscheme.values.ValueTraits;
 
 
 public class ApplyFunction
-    extends CheckedFunction
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends CheckedFunction {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    public final static ApplyFunction INSTANCE = new ApplyFunction();
+  public final static ApplyFunction INSTANCE = new ApplyFunction();
 
 
-    protected Arity getArity()
-    {
-        return Arity.atLeast(2);
+  protected Arity getArity() {
+    return Arity.atLeast(2);
+  }
+
+  protected Object checkedCall(
+      mscheme.machine.Registers state,
+      IList arguments
+  ) throws SchemeException {
+    Object func = arguments.getHead();
+
+    // Since the argument list is newly allocated
+    // and mutable, it is permissible to modify it. (*)
+    // The modification done looks like this:
+    // (f 0 1 (2 3)) is changed to (f 0 1 2 3)
+
+    IList toBeModified = arguments;
+    for (int i = toBeModified.getLength() - 2; i > 0; i--) {
+      toBeModified = toBeModified.getTail();
     }
 
-	protected Object checkedCall(
-		mscheme.machine.Registers state,
-		IList      arguments
-	) throws SchemeException
-	{
-		Object func = arguments.getHead();
+    // Now toBeModified referes the pair containing the
+    // last but one argument. In the example it would be
+    // (1 (2 3)) which is equal to (1 . ((2 3)))
 
-		// Since the argument list is newly allocated
-		// and mutable, it is permissible to modify it. (*)
-		// The modification done looks like this:
-		// (f 0 1 (2 3)) is changed to (f 0 1 2 3)
+    ValueTraits.toMutablePair(toBeModified).setSecond(
+        ValueTraits.toList(toBeModified.getTail().getHead()).getCopy()
+    );
 
-		IList toBeModified = arguments;
-		for (int i = toBeModified.getLength() - 2; i > 0; i--)
-		{
-			toBeModified = toBeModified.getTail();
-		}
+    // and here it would have become
+    // (1 . (2 3)) which is equal to (1 2 3)
 
-		// Now toBeModified referes the pair containing the
-		// last but one argument. In the example it would be
-		// (1 (2 3)) which is equal to (1 . ((2 3)))
+    // the call to getCopy() is necessary to keep the
+    // statement marked with (*) above true.
 
-		ValueTraits.toMutablePair(toBeModified).setSecond(
-			ValueTraits.toList(toBeModified.getTail().getHead()).getCopy()
-		);
+    state.push(
+        Application.createCall(
+            arguments.getTail()));
 
-		// and here it would have become
-		// (1 . (2 3)) which is equal to (1 2 3)
-        
-		// the call to getCopy() is necessary to keep the
-		// statement marked with (*) above true.
-		
-		state.push(
-			Application.createCall(
-				arguments.getTail()));
-
-		return func;
-	}
+    return func;
+  }
 }

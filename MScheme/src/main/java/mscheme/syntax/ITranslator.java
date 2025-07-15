@@ -21,26 +21,25 @@ Boston, MA  02111-1307, USA. */
 package mscheme.syntax;
 
 import mscheme.environment.StaticEnvironment;
-
 import mscheme.exceptions.SchemeException;
-
 import mscheme.values.IList;
 
 
 /**
- * This interface is used to compile lists. Due to the special
- * nature of syntactic keywords in Scheme - they are not reserved -
- * their bindings are stored in the static environment.
+ * This interface is used to compile lists. Due to the special nature of syntactic keywords in
+ * Scheme - they are not reserved - their bindings are stored in the static environment.
  */
-public interface ITranslator
-{
-    /** The CVS id of the file containing this class. */
-    String CVS_ID
-        = "$Id$";
+public interface ITranslator {
+
+  /**
+   * The CVS id of the file containing this class.
+   */
+  String CVS_ID
+      = "$Id$";
 
 
-    Object translate(
-        StaticEnvironment compilationEnv,
-        IList              arguments
-    ) throws SchemeException, InterruptedException;
+  Object translate(
+      StaticEnvironment compilationEnv,
+      IList arguments
+  ) throws SchemeException, InterruptedException;
 }

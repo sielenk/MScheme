@@ -24,17 +24,16 @@ import mscheme.values.ValueTraits;
 
 
 public final class MemberFunction
-	extends MemberBase
-{
-    public final static String  CVS_ID
-    	= "$Id$";
+    extends MemberBase {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    public final static MemberFunction INSTANCE
-    	= new MemberFunction();
+  public final static MemberFunction INSTANCE
+      = new MemberFunction();
 
-    protected boolean equal(Object fst, Object snd)
-    {
-        return ValueTraits.equal(fst, snd);
-    }
+  protected boolean equal(Object fst, Object snd) {
+    return ValueTraits.equal(fst, snd);
+  }
 }

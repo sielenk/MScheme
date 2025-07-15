@@ -22,212 +22,186 @@
 
 package mscheme;
 
-import java.awt.Panel;
+import java.awt.BorderLayout;
 import java.awt.Button;
-
+import java.awt.Panel;
+import java.io.IOException;
 import mscheme.exceptions.SchemeException;
 import mscheme.machine.Machine;
 
-import java.awt.BorderLayout;
-import java.io.IOException;
-
 /**
  * @author sielenk
- * 
+ *
  * TODO To change the template for this generated type comment go to Window -
  * Preferences - Java - Code Style - Code Templates
  */
 public class MSchemePanel
-        extends Panel
-{
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
+    extends Panel {
 
-    public final static String CVS_ID = "$Id$";
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
 
-    private StdioArea _stdio = null;
+  public final static String CVS_ID = "$Id$";
 
-    private Button _startStopButton = null;
+  private StdioArea _stdio = null;
 
-    private Panel _buttonPanel = null;
+  private Button _startStopButton = null;
 
-    private Button _copyButton = null;
+  private Panel _buttonPanel = null;
 
-    private Button _cutButton = null;
+  private Button _copyButton = null;
 
-    private Button _clearButton = null;
+  private Button _cutButton = null;
 
-    private Button _pasteButton = null;
+  private Button _clearButton = null;
 
-    public MSchemePanel()
-    {
-        super();
-        initialize();
+  private Button _pasteButton = null;
+
+  public MSchemePanel() {
+    super();
+    initialize();
+  }
+
+  private void initialize() {
+    this.setLayout(new BorderLayout());
+    this.setSize(600, 400);
+    this.add(get_buttonPanel(), java.awt.BorderLayout.SOUTH);
+    this.add(get_stdio(), java.awt.BorderLayout.CENTER);
+    get_stdio().requestFocus();
+  }
+
+  private Panel get_buttonPanel() {
+    if (_buttonPanel == null) {
+      _buttonPanel = new Panel();
+      _buttonPanel.setBackground(java.awt.SystemColor.control);
+      _buttonPanel.add(get_startStopButton(), null);
+      _buttonPanel.add(get_clearButton(), null);
+      _buttonPanel.add(get_copyButton(), null);
+      _buttonPanel.add(get_cutButton(), null);
+      _buttonPanel.add(get_pasteButton(), null);
     }
+    return _buttonPanel;
+  }
 
-    private void initialize()
-    {
-        this.setLayout(new BorderLayout());
-        this.setSize(600, 400);
-        this.add(get_buttonPanel(), java.awt.BorderLayout.SOUTH);
-        this.add(get_stdio(), java.awt.BorderLayout.CENTER);
+  private Button get_copyButton() {
+    if (_copyButton == null) {
+      _copyButton = new Button();
+      _copyButton.setLabel("Copy");
+      _copyButton.addActionListener(e -> {
+        get_stdio().copy();
         get_stdio().requestFocus();
+      });
+    }
+    return _copyButton;
+  }
+
+  private Button get_cutButton() {
+    if (_cutButton == null) {
+      _cutButton = new Button();
+      _cutButton.setLabel("Cut");
+      _cutButton.addActionListener(e -> {
+        get_stdio().cut();
+        get_stdio().requestFocus();
+      });
+    }
+    return _cutButton;
+  }
+
+  private Button get_clearButton() {
+    if (_clearButton == null) {
+      _clearButton = new Button();
+      _clearButton.setLabel("Clear");
+      _clearButton.addActionListener(e -> {
+        get_stdio().clear();
+        get_stdio().requestFocus();
+      });
+    }
+    return _clearButton;
+  }
+
+  private Button get_pasteButton() {
+    if (_pasteButton == null) {
+      _pasteButton = new Button();
+      _pasteButton.setLabel("Paste");
+      _pasteButton.addActionListener(e -> {
+        get_stdio().paste();
+        get_stdio().requestFocus();
+      });
+    }
+    return _pasteButton;
+  }
+
+  private StdioArea get_stdio() {
+    if (_stdio == null) {
+      _stdio = new StdioArea();
+      _stdio.addActionListener(e -> {
+        get_pasteButton().setEnabled(get_stdio().canPaste());
+        get_copyButton().setEnabled(get_stdio().canCopy());
+        get_cutButton().setEnabled(get_stdio().canCut());
+        get_stdio().requestFocus();
+      });
+    }
+    return _stdio;
+  }
+
+  private Thread _runner = null;
+
+  public synchronized void start() {
+    if (_runner != null) {
+      return;
     }
 
-    private Panel get_buttonPanel()
-    {
-        if (_buttonPanel == null)
-        {
-            _buttonPanel = new Panel();
-            _buttonPanel.setBackground(java.awt.SystemColor.control);
-            _buttonPanel.add(get_startStopButton(), null);
-            _buttonPanel.add(get_clearButton(), null);
-            _buttonPanel.add(get_copyButton(), null);
-            _buttonPanel.add(get_cutButton(), null);
-            _buttonPanel.add(get_pasteButton(), null);
+    this._runner = new Thread(() -> {
+      try {
+        get_startStopButton().setLabel("Stop");
+        new Machine(get_stdio().stdin(), get_stdio().stdout())
+            .unprotectedRun();
+      } catch (SchemeException e) {
+        try {
+          get_stdio().stdout().write(e.getMessage());
+        } catch (IOException e1) {
         }
-        return _buttonPanel;
+      } catch (InterruptedException e) {
+      } finally {
+        _runner = null;
+        get_startStopButton().setLabel("Start");
+        get_startStopButton().setEnabled(true);
+      }
+    });
+    _runner.start();
+  }
+
+  public void stop() {
+    Thread _localRunner = _runner;
+
+    if (_localRunner == null || _localRunner.isInterrupted()) {
+      return;
     }
 
-    private Button get_copyButton()
-    {
-        if (_copyButton == null)
-        {
-            _copyButton = new Button();
-            _copyButton.setLabel("Copy");
-            _copyButton.addActionListener(e -> {
-                get_stdio().copy();
-                get_stdio().requestFocus();
-            });
-        }
-        return _copyButton;
+    get_startStopButton().setEnabled(false);
+    _localRunner.interrupt();
+  }
+
+  private void runnerStartStop() {
+    if (_runner == null) {
+      start();
+    } else {
+      stop();
     }
+  }
 
-    private Button get_cutButton()
-    {
-        if (_cutButton == null)
-        {
-            _cutButton = new Button();
-            _cutButton.setLabel("Cut");
-            _cutButton.addActionListener(e -> {
-                get_stdio().cut();
-                get_stdio().requestFocus();
-            });
-        }
-        return _cutButton;
+  private Button get_startStopButton() {
+    if (_startStopButton == null) {
+      _startStopButton = new Button();
+      _startStopButton.setLabel("Start");
+      _startStopButton
+          .addActionListener(e -> {
+            runnerStartStop();
+            get_stdio().requestFocus();
+          });
     }
-
-    private Button get_clearButton()
-    {
-        if (_clearButton == null)
-        {
-            _clearButton = new Button();
-            _clearButton.setLabel("Clear");
-            _clearButton.addActionListener(e -> {
-                get_stdio().clear();
-                get_stdio().requestFocus();
-            });
-        }
-        return _clearButton;
-    }
-
-    private Button get_pasteButton()
-    {
-        if (_pasteButton == null)
-        {
-            _pasteButton = new Button();
-            _pasteButton.setLabel("Paste");
-            _pasteButton.addActionListener(e -> {
-                get_stdio().paste();
-                get_stdio().requestFocus();
-            });
-        }
-        return _pasteButton;
-    }
-
-    private StdioArea get_stdio()
-    {
-        if (_stdio == null)
-        {
-            _stdio = new StdioArea();
-            _stdio.addActionListener(e -> {
-                get_pasteButton().setEnabled(get_stdio().canPaste());
-                get_copyButton().setEnabled(get_stdio().canCopy());
-                get_cutButton().setEnabled(get_stdio().canCut());
-                get_stdio().requestFocus();
-            });
-        }
-        return _stdio;
-    }
-
-    private Thread _runner = null;
-
-    public synchronized void start()
-    {
-        if (_runner != null)
-            return;
-
-        this._runner = new Thread(() -> {
-            try
-            {
-                get_startStopButton().setLabel("Stop");
-                new Machine(get_stdio().stdin(), get_stdio().stdout())
-                        .unprotectedRun();
-            }
-            catch (SchemeException e)
-            {
-                try
-                {
-                    get_stdio().stdout().write(e.getMessage());
-                }
-                catch (IOException e1)
-                {}
-            }
-            catch (InterruptedException e)
-            {}
-            finally
-            {
-                _runner = null;
-                get_startStopButton().setLabel("Start");
-                get_startStopButton().setEnabled(true);
-            }
-        });
-        _runner.start();
-    }
-
-    public void stop()
-    {
-        Thread _localRunner = _runner;
-
-        if (_localRunner == null || _localRunner.isInterrupted())
-            return;
-
-        get_startStopButton().setEnabled(false);
-        _localRunner.interrupt();
-    }
-
-    private void runnerStartStop()
-    {
-        if (_runner == null)
-            start();
-        else
-            stop();
-    }
-
-    private Button get_startStopButton()
-    {
-        if (_startStopButton == null)
-        {
-            _startStopButton = new Button();
-            _startStopButton.setLabel("Start");
-            _startStopButton
-                    .addActionListener(e -> {
-                        runnerStartStop();
-                        get_stdio().requestFocus();
-                    });
-        }
-        return _startStopButton;
-    }
+    return _startStopButton;
+  }
 }

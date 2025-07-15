@@ -17,69 +17,55 @@ import mscheme.values.ValueTraits;
 
 /**
  * @author sielenk
- * 
+ *
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class Compiler
-{
-    private final StaticEnvironment _env;
+public class Compiler {
 
-    public Compiler(StaticEnvironment env)
-    {
-        _env = env;
+  private final StaticEnvironment _env;
+
+  public Compiler(StaticEnvironment env) {
+    _env = env;
+  }
+
+  public static Object force(Object o)
+      throws CompileError {
+    return (o instanceof IForceable) ? ((IForceable) o).force() : o;
+  }
+
+  public Object getForceable(Object object)
+      throws SchemeException, InterruptedException {
+    if (ValueTraits.isScmVector(object)) {
+      throw new CantCompileException(object);
+    }
+    if (ValueTraits.isSymbol(object)) {
+      _env.setStateClosed();
+      return _env.getDelayedReferenceFor((String) object);
+    } else if (object instanceof ICompileable) {
+      return ((ICompileable) object).getForceable(_env);
+    } else {
+      _env.setStateClosed();
+      return ValueTraits.getConst(object);
+    }
+  }
+
+  public ITranslator getTranslator(Object object)
+      throws SchemeException {
+    if (object instanceof String symbol) {
+
+      ITranslator result = _env.getSyntaxFor(symbol);
+
+      if (result != null) {
+        return result;
+      }
     }
 
-    public static Object force(Object o)
-            throws CompileError
-    {
-        return (o instanceof IForceable) ? ((IForceable) o).force() : o;
-    }
+    return ProcedureCall.create(object);
+  }
 
-    public Object getForceable(Object object)
-            throws SchemeException, InterruptedException
-    {
-        if (ValueTraits.isScmVector(object))
-        {
-            throw new CantCompileException(object);
-        }
-        if (ValueTraits.isSymbol(object))
-        {
-            _env.setStateClosed();
-            return _env.getDelayedReferenceFor((String)object);
-        }
-        else if (object instanceof ICompileable)
-        {
-            return ((ICompileable) object).getForceable(_env);
-        }
-        else
-        {
-            _env.setStateClosed();
-            return ValueTraits.getConst(object);
-        }
-    }
-
-    public ITranslator getTranslator(Object object)
-            throws SchemeException
-    {
-        if (object instanceof String)
-        {
-            String symbol = (String) object;
-
-            ITranslator result = _env.getSyntaxFor(symbol);
-
-            if (result != null)
-            {
-                return result;
-            }
-        }
-
-        return ProcedureCall.create(object);
-    }
-
-    public Object compile(Object compilee)
-            throws SchemeException, InterruptedException
-    {
-        return force(getForceable(compilee));
-    }
+  public Object compile(Object compilee)
+      throws SchemeException, InterruptedException {
+    return force(getForceable(compilee));
+  }
 }

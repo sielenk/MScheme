@@ -24,22 +24,21 @@ import mscheme.exceptions.SchemeException;
 
 
 public abstract class TernaryValueFunction
-    extends TernaryFunction
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends TernaryFunction {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    protected final Object checkedCall(
-		mscheme.machine.Registers state,
-        Object    fst,
-        Object    snd,
-        Object    trd
-    ) throws SchemeException
-    {
-        return checkedCall(fst, snd, trd);
-    }
+  protected final Object checkedCall(
+      mscheme.machine.Registers state,
+      Object fst,
+      Object snd,
+      Object trd
+  ) throws SchemeException {
+    return checkedCall(fst, snd, trd);
+  }
 
-    protected abstract Object checkedCall(Object fst, Object snd, Object trd)
-        throws SchemeException;
+  protected abstract Object checkedCall(Object fst, Object snd, Object trd)
+      throws SchemeException;
 }

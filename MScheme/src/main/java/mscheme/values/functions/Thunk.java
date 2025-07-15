@@ -21,33 +21,29 @@ Boston, MA  02111-1307, USA. */
 package mscheme.values.functions;
 
 import mscheme.exceptions.SchemeException;
-
 import mscheme.util.Arity;
-
 import mscheme.values.IList;
 
 
 public abstract class Thunk
-    extends CheckedFunction
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends CheckedFunction {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    protected final Arity getArity()
-    {
-        return Arity.exactly(0);
-    }
+  protected final Arity getArity() {
+    return Arity.exactly(0);
+  }
 
-    protected final Object checkedCall(
-		mscheme.machine.Registers state,
-        IList                      arguments
-    ) throws SchemeException
-    {
-        return checkedCall(state);
-    }
+  protected final Object checkedCall(
+      mscheme.machine.Registers state,
+      IList arguments
+  ) throws SchemeException {
+    return checkedCall(state);
+  }
 
-    protected abstract Object checkedCall(
-		mscheme.machine.Registers state
-    ) throws SchemeException;
+  protected abstract Object checkedCall(
+      mscheme.machine.Registers state
+  ) throws SchemeException;
 }

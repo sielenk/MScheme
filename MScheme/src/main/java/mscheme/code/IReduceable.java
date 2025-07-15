@@ -15,10 +15,10 @@ import mscheme.machine.Registers;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public interface IReduceable
-{
-	String CVS_ID
-		= "$Id$";
+public interface IReduceable {
 
-	Object reduce(Registers state) throws SchemeException;
+  String CVS_ID
+      = "$Id$";
+
+  Object reduce(Registers state) throws SchemeException;
 }

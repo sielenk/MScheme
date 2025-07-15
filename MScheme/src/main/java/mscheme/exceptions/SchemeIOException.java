@@ -22,17 +22,16 @@ package mscheme.exceptions;
 
 
 public class SchemeIOException
-    extends RuntimeError
-{
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
-    public final static String CVS_ID
-        = "$Id$";
+    extends RuntimeError {
 
-    public SchemeIOException(Object cause)
-    {
-        super(cause);
-    }
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
+  public final static String CVS_ID
+      = "$Id$";
+
+  public SchemeIOException(Object cause) {
+    super(cause);
+  }
 }

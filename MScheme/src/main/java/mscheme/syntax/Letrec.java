@@ -22,91 +22,82 @@ package mscheme.syntax;
 
 
 import mscheme.code.Application;
-import mscheme.code.Sequence;
 import mscheme.code.CompiledLambda;
+import mscheme.code.Sequence;
 import mscheme.compiler.Compiler;
-
 import mscheme.environment.StaticEnvironment;
-
 import mscheme.exceptions.SchemeException;
-
 import mscheme.util.Arity;
-
 import mscheme.values.IList;
 import mscheme.values.ValueTraits;
-
 
 // *** letrec ***
 
 final class Letrec
-    extends LetBase
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends LetBase {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    final static ITranslator INSTANCE = new Letrec();
+  final static ITranslator INSTANCE = new Letrec();
 
-    private Letrec()
-    {
-        super(Arity.atLeast(2));
+  private Letrec() {
+    super(Arity.atLeast(2));
+  }
+
+
+  protected Object checkedTranslate(
+      StaticEnvironment compilationEnv,
+      IList arguments
+  ) throws SchemeException, InterruptedException {
+    // (letrec ((<var> <init>) ...) <body>)
+
+    IList[] formalsInitsBody = splitArguments(arguments);
+    IList formals = formalsInitsBody[0];
+    IList inits = formalsInitsBody[1];
+    IList body = formalsInitsBody[2];
+
+    int numberOfFormals = formals.getLength();
+
+    StaticEnvironment
+        bodyCompilationEnv = compilationEnv.createChild(formals);
+
+    Object[] compiledBody = body.getCompiledArray(bodyCompilationEnv);
+
+    Object[] compiledLetrec
+        = new Object[numberOfFormals + compiledBody.length];
+
+    Compiler compiler = new Compiler(bodyCompilationEnv);
+
+    // prepend the initialisations to the body
+    int index = 0;
+    while (!formals.isEmpty()) {
+      String formal = ValueTraits.toSymbol(formals.getHead());
+      Object init = inits.getHead();
+
+      compiledLetrec[index++]
+          = Set.translate(
+          bodyCompilationEnv.getReferenceFor(formal),
+          compiler.getForceable(init)
+      );
+
+      formals = formals.getTail();
+      inits = inits.getTail();
     }
 
+    System.arraycopy(
+        compiledBody,
+        0,
+        compiledLetrec,
+        index,
+        compiledBody.length
+    );
 
-    protected Object checkedTranslate(
-        StaticEnvironment compilationEnv,
-        IList              arguments
-    ) throws SchemeException, InterruptedException
-    {
-        // (letrec ((<var> <init>) ...) <body>)
-
-        IList[] formalsInitsBody = splitArguments(arguments);
-        IList formals = formalsInitsBody[0];
-        IList inits   = formalsInitsBody[1];
-        IList body    = formalsInitsBody[2];
-
-        int numberOfFormals = formals.getLength();
-
-        StaticEnvironment
-            bodyCompilationEnv = compilationEnv.createChild(formals);
-
-        Object[] compiledBody = body.getCompiledArray(bodyCompilationEnv);
-
-        Object[] compiledLetrec
-            = new Object[numberOfFormals + compiledBody.length];
-
-        Compiler compiler = new Compiler(bodyCompilationEnv);
-
-        // prepend the initialisations to the body
-        int index = 0;
-        while (!formals.isEmpty())
-        {
-            String formal = ValueTraits.toSymbol(formals.getHead());
-            Object init   = inits  .getHead();
-
-            compiledLetrec[index++]
-                = Set.translate(
-                      bodyCompilationEnv.getReferenceFor(formal),
-                      compiler.getForceable(init)
-                  );
-
-            formals = formals.getTail();
-            inits   = inits  .getTail();
-        }
-
-        System.arraycopy(
-            compiledBody,
-            0,
-            compiledLetrec,
-            index,
-            compiledBody.length
-        );
-
-
-        return Application.create(
-            new Object[]
+    return Application.create(
+        new Object[]
             {
-                CompiledLambda.create( 
+                CompiledLambda.create(
                     Arity.exactly(0),
                     bodyCompilationEnv.getSize(),
                     Sequence.create(
@@ -114,6 +105,6 @@ final class Letrec
                     )
                 )
             }
-        );
-    }
+    );
+  }
 }

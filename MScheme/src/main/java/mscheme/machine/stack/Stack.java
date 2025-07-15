@@ -24,121 +24,107 @@ import mscheme.exceptions.RuntimeError;
 import mscheme.machine.StackFrame;
 
 
-/** 
+/**
  * @author Marvin H. Sielenkemper
  */
-public class Stack implements IStack
-{
-    public static class Mark
-    {
-        public final static String CVS_ID
-            = "$Id$";
+public class Stack implements IStack {
+
+  public static class Mark {
+
+    public final static String CVS_ID
+        = "$Id$";
+  }
+
+  public static class Slice {
+
+    public final static String CVS_ID
+        = "$Id$";
+
+    final Mark _mark;
+    final PlainStack _stack;
+    Slice _next;
+
+    Slice(Mark mark, Slice next) {
+      _mark = mark;
+      _stack = new PlainStack();
+      _next = next;
     }
 
-    public static class Slice
-    {
-        public final static String CVS_ID
-           = "$Id$";
+    Slice(Slice slice) {
+      _mark = slice._mark;
+      _stack = slice._stack.getCopy();
+      _next = null;
+    }
+  }
 
-        final Mark       _mark;
-        final PlainStack _stack;
-        Slice            _next;
+  private Slice _top;
 
-        Slice(Mark mark, Slice next)
-        {
-            _mark  = mark;
-            _stack = new PlainStack();
-            _next  = next;
-        }
+  public Stack() {
+    _top = new Slice(null, null);
+  }
 
-        Slice(Slice slice)
-        {
-            _mark  = slice._mark;
-            _stack = slice._stack.getCopy();
-            _next  = null;
-        }
-    }    
+  public boolean isEmpty() {
+    Slice slice = _top;
+    while (slice._next != null && slice._stack.isEmpty()) {
+      slice = slice._next;
+    }
 
-	private Slice _top;
+    return slice._stack.isEmpty();
+  }
 
-	public Stack()
-	{
-		_top = new Slice(null, null);
-	}
+  public StackFrame pop() {
+    while (_top._next != null && _top._stack.isEmpty()) {
+      _top = _top._next;
+    }
 
-	public boolean isEmpty()
-	{
-        Slice slice = _top;
-        while (slice._next != null && slice._stack.isEmpty())
-        {
-            slice = slice._next;
-        }
+    return _top._stack.pop();
+  }
 
-        return slice._stack.isEmpty();
-	}
+  public void push(StackFrame f) {
+    _top._stack.push(f);
+  }
 
-	public StackFrame pop()
-	{
-        while (_top._next != null && _top._stack.isEmpty())
-            _top = _top._next;
+  // continuation support
+  public Slice getContinuation() {
+    Slice top = _top;
+    _top = new Slice(null, null);
+    reinstate(top);
+    return top;
+  }
 
-        return _top._stack.pop();
-	}
+  // subcontinuation support
+  public Mark createMark() {
+    _top = new Slice(new Mark(), _top);
+    return _top._mark;
+  }
 
-	public void push(StackFrame f)
-	{
-		_top._stack.push(f);
-	}
+  public Slice cutSlice(Mark mark) throws RuntimeError {
+    final Slice top = _top;
 
-    // continuation support
-    public Slice getContinuation()
-    {
-        Slice top = _top;
-        _top = new Slice(null, null);
-        reinstate(top);
+    for (Slice slice = top; slice._next != null; slice = slice._next) {
+      if (slice._mark == mark) {
+        _top = slice._next;
+        slice._next = null;
+
         return top;
+      }
     }
 
-    // subcontinuation support
-    public Mark createMark()
-    {
-        _top = new Slice(new Mark(), _top);
-        return _top._mark;
+    throw new RuntimeError(mark, "stack mark not found");
+  }
+
+  public void reinstate(final Slice slice) {
+    final Slice oldTop = _top;
+
+    Slice srcSlice = slice;
+    Slice dstSlice = _top = new Slice(srcSlice);
+    while (srcSlice._next != null) {
+      srcSlice = srcSlice._next;
+      dstSlice = dstSlice._next = new Slice(srcSlice);
     }
 
-    public Slice cutSlice(Mark mark) throws RuntimeError
-    {
-        final Slice top = _top;
-
-        for (Slice slice = top; slice._next != null; slice = slice._next)
-        {
-            if (slice._mark == mark)
-            {
-                _top = slice._next;
-                slice._next = null;
-
-                return top;
-            }
-        }
-
-        throw new RuntimeError(mark, "stack mark not found");
+    if (dstSlice._mark != null) {
+      dstSlice._next = oldTop;
     }
-
-	public void reinstate(final Slice slice)
-	{
-        final Slice oldTop = _top;
-
-        Slice srcSlice = slice;
-        Slice dstSlice = _top = new Slice(srcSlice);
-        while (srcSlice._next != null)
-        {
-            srcSlice = srcSlice._next;
-            dstSlice = dstSlice._next = new Slice(srcSlice);
-        }
-        
-        if (dstSlice._mark != null)
-        {
-            dstSlice._next = oldTop;
-        }
-	}
+  }
 }

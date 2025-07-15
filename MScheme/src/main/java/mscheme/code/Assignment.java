@@ -28,51 +28,46 @@ import mscheme.machine.Registers;
 
 
 public final class Assignment
-    implements IForceable, IReduceable
-{
-	public final static String CVS_ID
-        = "$Id$";
+    implements IForceable, IReduceable {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    private Reference _binding;
-    private Object    _expression;
+  private Reference _binding;
+  private Object _expression;
 
 
-	private Assignment(Reference binding, Object expression)
-	{
-		_binding    = binding;
-		_expression = expression;		
-	}
+  private Assignment(Reference binding, Object expression) {
+    _binding = binding;
+    _expression = expression;
+  }
 
-    public static Assignment create(
-        Reference binding,
-        Object    valueCalculation
-    )
-    {
-        return new Assignment(binding, valueCalculation);
-    }
+  public static Assignment create(
+      Reference binding,
+      Object valueCalculation
+  ) {
+    return new Assignment(binding, valueCalculation);
+  }
 
-    public Object force()
-        throws CompileError
-    {
-        _binding    = _binding.forceRef();        
-		_expression = Compiler.force(_expression);
-        return this;
-    }
+  public Object force()
+      throws CompileError {
+    _binding = _binding.forceRef();
+    _expression = Compiler.force(_expression);
+    return this;
+  }
 
-    public String toString()
-    {
-        return "set:<" + _binding + ' ' + _expression + '>';
-    }
+  public String toString() {
+    return "set:<" + _binding + ' ' + _expression + '>';
+  }
 
-	/* (non-Javadoc)
-	 * @see mscheme.code.Reduceable#reduce(mscheme.machine.Stack, mscheme.environment.DynamicEnvironment)
-	 */
-	public Object reduce(Registers registers)
-	{
-		registers.push(
-				(registers1, value) -> registers1.assign(_binding, value));
+  /* (non-Javadoc)
+   * @see mscheme.code.Reduceable#reduce(mscheme.machine.Stack, mscheme.environment.DynamicEnvironment)
+   */
+  public Object reduce(Registers registers) {
+    registers.push(
+        (registers1, value) -> registers1.assign(_binding, value));
 
-		return _expression;
-	}
+    return _expression;
+  }
 }

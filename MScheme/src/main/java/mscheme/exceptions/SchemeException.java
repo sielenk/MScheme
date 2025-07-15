@@ -22,43 +22,39 @@ package mscheme.exceptions;
 
 
 public abstract class SchemeException
-	extends Exception
-{
-    private static final long serialVersionUID = 1L;
+    extends Exception {
 
-    public final static String CVS_ID
-    = "$Id$";
+  private static final long serialVersionUID = 1L;
 
-    private final Object _cause;
-    private final String _message;
+  public final static String CVS_ID
+      = "$Id$";
 
-    public SchemeException(
-        Object cause,
-        String message
-    )
-    {
-        _cause   = cause;
-        _message = message;
-    }
+  private final Object _cause;
+  private final String _message;
 
-    public Object getCauseValue()
-    {
-        return _cause;
-    }
+  public SchemeException(
+      Object cause,
+      String message
+  ) {
+    _cause = cause;
+    _message = message;
+  }
 
-    public String getMessage()
-    {
-        return _message;
-    }
+  public Object getCauseValue() {
+    return _cause;
+  }
 
-    public String toString()
-    {    	
-        return
-            "'" +
-			((_cause == null)
-				? "nothing"
-				: getCauseValue().toString()) +
+  public String getMessage() {
+    return _message;
+  }
+
+  public String toString() {
+    return
+        "'" +
+            ((_cause == null)
+                ? "nothing"
+                : getCauseValue().toString()) +
             "' caused a\n" +
             super.toString();
-    }
+  }
 }

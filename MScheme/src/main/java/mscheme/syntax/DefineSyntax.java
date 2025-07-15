@@ -28,96 +28,92 @@ import mscheme.exceptions.SchemeException;
 import mscheme.machine.Machine;
 import mscheme.util.Arity;
 import mscheme.values.IList;
-import mscheme.values.ListFactory;
 import mscheme.values.IPair;
+import mscheme.values.ListFactory;
 import mscheme.values.ValueTraits;
 import mscheme.values.functions.ApplyFunction;
 
 
 final class Macro
-    implements ITranslator
-{
-    public final static String CVS_ID
-        = "$Id$";
+    implements ITranslator {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    final static Machine MACHINE = 
-        new Machine(
-            Environment.getSchemeReportEnvironment()
-        );
+  final static Machine MACHINE =
+      new Machine(
+          Environment.getSchemeReportEnvironment()
+      );
 
-    private final static Object APPLY
-        = ApplyFunction.INSTANCE;
+  private final static Object APPLY
+      = ApplyFunction.INSTANCE;
 
-    private final Object            _transformer;
-    private final StaticEnvironment _definitionEnv;
+  private final Object _transformer;
+  private final StaticEnvironment _definitionEnv;
 
-    Macro(Object transformer, StaticEnvironment definitionEnv)
-    {
-        _transformer   = transformer;
-        _definitionEnv = definitionEnv;
-    }
+  Macro(Object transformer, StaticEnvironment definitionEnv) {
+    _transformer = transformer;
+    _definitionEnv = definitionEnv;
+  }
 
-    public Object translate(
-        StaticEnvironment usageEnv,
-        IList              arguments
-    ) throws SchemeException, InterruptedException
-    {
-        // (apply tranformer def_env use_env args)
+  public Object translate(
+      StaticEnvironment usageEnv,
+      IList arguments
+  ) throws SchemeException, InterruptedException {
+    // (apply tranformer def_env use_env args)
 
-        IPair result = (IPair)MACHINE.execute(
-            Application.create(
-                new Object[]
+    IPair result = (IPair) MACHINE.execute(
+        Application.create(
+            new Object[]
                 {
                     APPLY,
                     _transformer,
                     _definitionEnv,
-                          usageEnv,
-                         arguments
+                    usageEnv,
+                    arguments
                 }
-            )
-        );
+        )
+    );
 
-        return new Compiler(
-            ValueTraits.toStaticEnvironment(result.getFirst())
-        ).getForceable(
-        	result.getSecond());
-    }
+    return new Compiler(
+        ValueTraits.toStaticEnvironment(result.getFirst())
+    ).getForceable(
+        result.getSecond());
+  }
 }
 
 final class DefineSyntax
-    extends CheckedTranslator
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends CheckedTranslator {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    final static ITranslator INSTANCE = new DefineSyntax();
+  final static ITranslator INSTANCE = new DefineSyntax();
 
-    private DefineSyntax()
-    {
-        super(Arity.exactly(2));
-    }
+  private DefineSyntax() {
+    super(Arity.exactly(2));
+  }
 
-    protected Object checkedTranslate(
-        StaticEnvironment compilationEnv,
-        IList              arguments
-    ) throws SchemeException, InterruptedException
-    {
-        String symbol = ValueTraits.toSymbol(arguments.getHead());
-        Object value  = arguments.getTail().getHead();
+  protected Object checkedTranslate(
+      StaticEnvironment compilationEnv,
+      IList arguments
+  ) throws SchemeException, InterruptedException {
+    String symbol = ValueTraits.toSymbol(arguments.getHead());
+    Object value = arguments.getTail().getHead();
 
-        Macro macro = new Macro(
-           	Macro.MACHINE.evaluate(value),
-            compilationEnv);
+    Macro macro = new Macro(
+        Macro.MACHINE.evaluate(value),
+        compilationEnv);
 
-        compilationEnv.defineSyntax(symbol, macro);
-        Macro
-            .MACHINE
-            .getEnvironment()
-            .getStatic()
-            .defineSyntax(symbol, macro);
+    compilationEnv.defineSyntax(symbol, macro);
+    Macro
+        .MACHINE
+        .getEnvironment()
+        .getStatic()
+        .defineSyntax(symbol, macro);
 
-        return ListFactory.create();
-    }
+    return ListFactory.create();
+  }
 }

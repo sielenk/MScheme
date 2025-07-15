@@ -22,114 +22,95 @@ package mscheme.values;
 
 import java.io.IOException;
 import java.io.Writer;
-
 import java.math.BigInteger;
 
 
 public class ScmNumber
-    implements IComparable, IOutputable
-{
-    public final static String CVS_ID
-        = "$Id$";
+    implements IComparable, IOutputable {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    private final BigInteger _value;
+  private final BigInteger _value;
 
-    private ScmNumber(BigInteger v)
-    {
-        _value = v;
+  private ScmNumber(BigInteger v) {
+    _value = v;
+  }
+
+  public static ScmNumber create(int v) {
+    return new ScmNumber(
+        BigInteger.valueOf(v)
+    );
+  }
+
+  public static ScmNumber create(String v)
+      throws NumberFormatException {
+    return new ScmNumber(
+        new BigInteger(v)
+    );
+  }
+
+  // implementation of Compareable
+
+  public boolean eq(Object other) {
+    return this == other;
+  }
+
+  public boolean eqv(Object other) {
+    if (!(other instanceof ScmNumber)) {
+      return false;
     }
 
-    public static ScmNumber create(int v)
-    {
-        return new ScmNumber(
-            BigInteger.valueOf(v)
-        );
-    }
+    return isEqualTo((ScmNumber) other);
+  }
 
-    public static ScmNumber create(String v)
-        throws NumberFormatException
-    {
-        return new ScmNumber(
-            new BigInteger(v)
-        );
-    }
+  public boolean equals(Object other) {
+    return eqv(other);
+  }
 
-    // implementation of Compareable
+  // number specific
 
-    public boolean eq(Object other)
-    {
-        return this == other;
-    }
-
-    public boolean eqv(Object other)
-    {
-        if (!(other instanceof ScmNumber))
-        {
-            return false;
-        }
-
-        return isEqualTo((ScmNumber)other);
-     }
-
-    public boolean equals(Object other)
-    {
-        return eqv(other);
-    }
+  public int getInteger() {
+    return _value.intValue();
+  }
 
 
-    // number specific
+  public boolean isLessThan(ScmNumber other) {
+    return _value.compareTo(other._value) < 0;
+  }
 
-    public int getInteger()
-    {
-        return _value.intValue();
-    }
-
-
-    public boolean isLessThan(ScmNumber other)
-    {
-        return _value.compareTo(other._value) < 0;
-    }
-
-    public boolean isEqualTo(ScmNumber other)
-    {
-        return _value.equals(other._value);
-    }
+  public boolean isEqualTo(ScmNumber other) {
+    return _value.equals(other._value);
+  }
 
 
-    public ScmNumber negated()
-    {
-        return new ScmNumber(_value.negate());
-    }
+  public ScmNumber negated() {
+    return new ScmNumber(_value.negate());
+  }
 
-    public ScmNumber plus(ScmNumber other)
-    {
-        return new ScmNumber(_value.add(other._value));
-    }
+  public ScmNumber plus(ScmNumber other) {
+    return new ScmNumber(_value.add(other._value));
+  }
 
-    public ScmNumber minus(ScmNumber other)
-    {
-        return new ScmNumber(_value.subtract(other._value));
-    }
+  public ScmNumber minus(ScmNumber other) {
+    return new ScmNumber(_value.subtract(other._value));
+  }
 
-    public ScmNumber reciprocal()
-    {
-        return new ScmNumber(BigInteger.valueOf(1).divide(_value));
-    }
+  public ScmNumber reciprocal() {
+    return new ScmNumber(BigInteger.valueOf(1).divide(_value));
+  }
 
-    public ScmNumber times(ScmNumber other)
-    {
-        return new ScmNumber(_value.multiply(other._value));
-    }
+  public ScmNumber times(ScmNumber other) {
+    return new ScmNumber(_value.multiply(other._value));
+  }
 
-    public ScmNumber divide(ScmNumber other)
-    {
-        return new ScmNumber(_value.divide(other._value));
-    }
+  public ScmNumber divide(ScmNumber other) {
+    return new ScmNumber(_value.divide(other._value));
+  }
 
-	public void outputOn(Writer destination, boolean doWrite)
-	throws IOException
-	{
-		destination.write(_value.toString());
-	}
+  public void outputOn(Writer destination, boolean doWrite)
+      throws IOException {
+    destination.write(_value.toString());
+  }
 }

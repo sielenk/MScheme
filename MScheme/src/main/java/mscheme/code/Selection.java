@@ -28,83 +28,77 @@ import mscheme.values.ValueTraits;
 
 
 public final class Selection
-    implements IReduceable
-{
-    public final static String CVS_ID
-        = "$Id$";
+    implements IReduceable {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    private final Object _test;
-    private final Object _onTrue;
-    private final Object _onFalse;
+  private final Object _test;
+  private final Object _onTrue;
+  private final Object _onFalse;
 
-    protected Selection(
-		Object test,
-		Object onTrue,
-		Object onFalse
-    )
-    {
-        _test    = test;
-        _onTrue  = onTrue;
-        _onFalse = onFalse;
-    }
+  Selection(
+      Object test,
+      Object onTrue,
+      Object onFalse
+  ) {
+    _test = test;
+    _onTrue = onTrue;
+    _onFalse = onFalse;
+  }
 
-    public static Object create(
-		Object test,
-		Object onTrue,
-		Object onFalse
-    )
-    {
-        return new ForceableSelection(test, onTrue, onFalse);
-    }
+  public static Object create(
+      Object test,
+      Object onTrue,
+      Object onFalse
+  ) {
+    return new ForceableSelection(test, onTrue, onFalse);
+  }
 
-    public String toString()
-    {
-        return "sel:<" + _test + ", " + _onTrue + ", " + _onFalse + '>';
-    }
+  public String toString() {
+    return "sel:<" + _test + ", " + _onTrue + ", " + _onFalse + '>';
+  }
 
-	/* (non-Javadoc)
-	 * @see mscheme.code.Reduceable#reduce(mscheme.machine.Stack, mscheme.environment.DynamicEnvironment)
-	 */
-	public Object reduce(Registers registers)
-	{
-		registers.push(
-                (registers1, value) -> ValueTraits.isTrue(value)
-                ? _onTrue
-                : _onFalse);
+  /* (non-Javadoc)
+   * @see mscheme.code.Reduceable#reduce(mscheme.machine.Stack, mscheme.environment.DynamicEnvironment)
+   */
+  public Object reduce(Registers registers) {
+    registers.push(
+        (registers1, value) -> ValueTraits.isTrue(value)
+            ? _onTrue
+            : _onFalse);
 
-		return _test;
-	}
+    return _test;
+  }
 }
 
 final class ForceableSelection
-implements IForceable
-{
-    public final static String CVS_ID
-    	= "$Id$";
+    implements IForceable {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    private final Object _test;
-    private final Object _onTrue;
-    private final Object _onFalse;
+  private final Object _test;
+  private final Object _onTrue;
+  private final Object _onFalse;
 
-    public ForceableSelection(
-        Object test,
-        Object onTrue,
-        Object onFalse
-    )
-    {
-        _test    = test;
-        _onTrue  = onTrue;
-        _onFalse = onFalse;
-    }
+  public ForceableSelection(
+      Object test,
+      Object onTrue,
+      Object onFalse
+  ) {
+    _test = test;
+    _onTrue = onTrue;
+    _onFalse = onFalse;
+  }
 
-    public Object force()
-    throws CompileError
-    {
-        return new Selection(
-        	Compiler.force(_test),
-        	Compiler.force(_onTrue),
-        	Compiler.force(_onFalse));
-    }
+  public Object force()
+      throws CompileError {
+    return new Selection(
+        Compiler.force(_test),
+        Compiler.force(_onTrue),
+        Compiler.force(_onFalse));
+  }
 }

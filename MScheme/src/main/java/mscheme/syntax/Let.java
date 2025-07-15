@@ -22,99 +22,85 @@ package mscheme.syntax;
 
 
 import mscheme.code.Application;
-
 import mscheme.environment.StaticEnvironment;
-
 import mscheme.exceptions.SchemeException;
-
 import mscheme.util.Arity;
-
 import mscheme.values.IList;
 import mscheme.values.ListFactory;
 import mscheme.values.ValueTraits;
-
 import mscheme.values.functions.YCombinator;
-
 
 // *** let ***
 
 final class Let
-    extends LetBase
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends LetBase {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    final static ITranslator INSTANCE = new Let();
+  final static ITranslator INSTANCE = new Let();
 
-    private Let()
-    {
-        super(Arity.atLeast(2));
+  private Let() {
+    super(Arity.atLeast(2));
+  }
+
+
+  protected Object checkedTranslate(
+      StaticEnvironment compilationEnv,
+      IList arguments
+  ) throws SchemeException, InterruptedException {
+    String name;
+    if (ValueTraits.isSymbol(arguments.getHead())) {
+      if (arguments.getLength() < 3) {
+        arityError(arguments);
+      }
+      // named let
+      // (let <var> ((<var> <init>) ...) <body>)
+      name = ValueTraits.toSymbol(arguments.getHead());
+      arguments = arguments.getTail();
+    } else {
+      // (let ((<var> <init>) ...) <body>)
+      name = null;
     }
 
+    IList[] formalsInitsBody = splitArguments(arguments);
+    IList formals = formalsInitsBody[0];
+    IList inits = formalsInitsBody[1];
+    IList body = formalsInitsBody[2];
 
-    protected Object checkedTranslate(
-        StaticEnvironment compilationEnv,
-        IList              arguments
-    ) throws SchemeException, InterruptedException
-    {
-        String name;
-        if (ValueTraits.isSymbol(arguments.getHead()))
-        {
-            if (arguments.getLength() < 3)
-            {
-                arityError(arguments);
-            }
-            // named let
-            // (let <var> ((<var> <init>) ...) <body>)
-            name      = ValueTraits.toSymbol(arguments.getHead());
-            arguments = arguments.getTail();
-        }
-        else
-        {
-            // (let ((<var> <init>) ...) <body>)
-            name     = null;
-        }
-
-        IList[] formalsInitsBody = splitArguments(arguments);
-        IList formals = formalsInitsBody[0];
-        IList inits   = formalsInitsBody[1];
-        IList body    = formalsInitsBody[2];
-
-        if (name != null)
-        {
-            // for the named let, the usually anonymous
-            // closure gets a name to be recursively callable.
-            // to ensure this names uniqueness, it is prepended to
-            // the formals list.
-            formals = ListFactory.prepend(name, formals);
-        }
-
-        Object compiledProc =
-            Lambda.INSTANCE.translate(
-                compilationEnv,
-                ListFactory.prepend(formals, body)
-            );
-
-        if (name != null)
-        {
-            // the "raw" closure of a named-let has one additional
-            // argument, which is to be bound to the "curried"
-            // closure -- the YCombinator does it's magic ...
-
-            compiledProc = Application.create(
-                new Object[]
-                {
-                    YCombinator.INSTANCE,
-                    compiledProc
-                }
-            );
-        }
-
-        Object[] compiledLet = inits.getCompiledArray(compilationEnv, 1);
-
-        compiledLet[0] = compiledProc;
-
-        return Application.create(compiledLet);
+    if (name != null) {
+      // for the named let, the usually anonymous
+      // closure gets a name to be recursively callable.
+      // to ensure this names uniqueness, it is prepended to
+      // the formals list.
+      formals = ListFactory.prepend(name, formals);
     }
+
+    Object compiledProc =
+        Lambda.INSTANCE.translate(
+            compilationEnv,
+            ListFactory.prepend(formals, body)
+        );
+
+    if (name != null) {
+      // the "raw" closure of a named-let has one additional
+      // argument, which is to be bound to the "curried"
+      // closure -- the YCombinator does it's magic ...
+
+      compiledProc = Application.create(
+          new Object[]
+              {
+                  YCombinator.INSTANCE,
+                  compiledProc
+              }
+      );
+    }
+
+    Object[] compiledLet = inits.getCompiledArray(compilationEnv, 1);
+
+    compiledLet[0] = compiledProc;
+
+    return Application.create(compiledLet);
+  }
 }

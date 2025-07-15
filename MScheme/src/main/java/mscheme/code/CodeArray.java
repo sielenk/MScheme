@@ -24,49 +24,44 @@ import mscheme.compiler.Compiler;
 import mscheme.exceptions.CompileError;
 
 
-class CodeArray
-{
-    public final static String CVS_ID
-        = "$Id$";
+class CodeArray {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    static String printTuple(
-        Object[] tuple
-    )
-    {
-        return printTuple(tuple, 0, tuple.length);
+  static String printTuple(
+      Object[] tuple
+  ) {
+    return printTuple(tuple, 0, tuple.length);
+  }
+
+  static String printTuple(
+      Object[] tuple,
+      int begin,
+      int end
+  ) {
+    StringBuilder buffer = new StringBuilder();
+
+    buffer.append('<');
+    for (int i = begin; ; ) {
+      buffer.append(
+          tuple[i].toString()
+      );
+      if (++i == end) {
+        break;
+      }
+      buffer.append(", ");
     }
+    buffer.append('>');
 
-    static String printTuple(
-        Object[] tuple,
-        int      begin,
-        int      end
-    )
-    {
-        StringBuilder buffer = new StringBuilder();
-        
-        buffer.append('<');
-        for (int i = begin;;)
-        {
-            buffer.append(
-                tuple[i].toString()
-            );
-            if (++i == end) {
-                break;
-            }
-            buffer.append(", ");
-        }
-        buffer.append('>');
+    return buffer.toString();
+  }
 
-        return buffer.toString(); 
+  static void force(Object[] array)
+      throws CompileError {
+    for (int i = 0; i < array.length; ++i) {
+      array[i] = Compiler.force(array[i]);
     }
-
-    static void force(Object[] array)
-        throws CompileError
-    {
-        for (int i = 0; i < array.length; ++i)
-        {
-            array[i] = Compiler.force(array[i]);
-        }
-    }
+  }
 }

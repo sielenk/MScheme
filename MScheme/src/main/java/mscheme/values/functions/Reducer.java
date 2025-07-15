@@ -22,111 +22,90 @@ package mscheme.values.functions;
 
 import mscheme.exceptions.RuntimeError;
 import mscheme.exceptions.TypeError;
-
 import mscheme.values.IList;
 
-abstract class Reducer
-{
-    public final static String CVS_ID
-        = "$Id$";
+abstract class Reducer {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    private final Object _initial;
+  private final Object _initial;
 
-    protected Reducer(Object initial)
-    {
-        _initial = initial;
+  protected Reducer(Object initial) {
+    _initial = initial;
+  }
+
+  protected abstract Object combine(Object fst, Object snd)
+      throws RuntimeError, TypeError;
+
+
+  public final Object reduceLeft(IList list)
+      throws RuntimeError, TypeError {
+    if (list.isEmpty()) {
+      return _initial;
+    } else {
+      Object result = list.getHead();
+
+      for (
+          IList tail = list.getTail();
+          !tail.isEmpty();
+          tail = tail.getTail()
+      ) {
+        result = combine(result, tail.getHead());
+      }
+
+      return result;
+    }
+  }
+
+  public final Object foldLeft(IList list)
+      throws RuntimeError, TypeError {
+    Object result = _initial;
+
+    for (
+        IList tail = list;
+        !tail.isEmpty();
+        tail = tail.getTail()
+    ) {
+      result = combine(result, tail.getHead());
     }
 
-    protected abstract Object combine(Object fst, Object snd)
-        throws RuntimeError, TypeError;
+    return result;
+  }
 
+  private Object reduceRightHelper(IList list)
+      throws RuntimeError, TypeError {
+    IList tail = list.getTail();
 
-    public final Object reduceLeft(IList list)
-        throws RuntimeError, TypeError
-    {
-        if (list.isEmpty())
-        {
-            return _initial;
-        }
-        else
-        {
-            Object result = list.getHead();
-        
-            for (
-                IList tail = list.getTail();
-                !tail.isEmpty();
-                tail   = tail.getTail()
-            )
-            {
-                result = combine(result, tail.getHead());
-            }
-
-            return result;
-        }
+    if (tail.isEmpty()) {
+      return list.getHead();
+    } else {
+      return combine(
+          list.getHead(),
+          reduceRightHelper(tail)
+      );
     }
+  }
 
-    public final Object foldLeft(IList list)
-        throws RuntimeError, TypeError
-    {
-        Object result = _initial;
-    
-        for (
-            IList tail = list;
-            !tail.isEmpty();
-            tail   = tail.getTail()
-        )
-        {
-            result = combine(result, tail.getHead());
-        }
-
-        return result;
+  public final Object reduceRight(IList list)
+      throws RuntimeError, TypeError {
+    if (list.isEmpty()) {
+      return _initial;
+    } else {
+      return reduceRightHelper(list);
     }
+  }
 
-    private Object reduceRightHelper(IList list)
-        throws RuntimeError, TypeError
-    {
-        IList tail = list.getTail();
-
-        if (tail.isEmpty())
-        {
-            return list.getHead();
-        }
-        else
-        {
-            return combine(
-                       list.getHead(),
-                       reduceRightHelper(tail)
-                   );
-        }
+  public Object foldRight(IList list)
+      throws RuntimeError, TypeError {
+    if (list.isEmpty()) {
+      return _initial;
+    } else {
+      return combine(
+          list.getHead(),
+          foldRight(list.getTail())
+      );
     }
-
-    public final Object reduceRight(IList list)
-        throws RuntimeError, TypeError
-    {
-        if (list.isEmpty())
-        {
-            return _initial;
-        }
-        else
-        {
-            return reduceRightHelper(list);
-        }
-    }
-
-    public Object foldRight(IList list)
-        throws RuntimeError, TypeError
-    {
-        if (list.isEmpty())
-        {
-            return _initial;
-        }
-        else
-        {
-            return combine(
-                       list.getHead(),
-                       foldRight(list.getTail())
-                   );
-        }
-    }
+  }
 }

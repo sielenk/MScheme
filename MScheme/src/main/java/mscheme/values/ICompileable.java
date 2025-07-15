@@ -24,18 +24,19 @@ import mscheme.environment.StaticEnvironment;
 import mscheme.exceptions.SchemeException;
 
 
-public interface ICompileable
-{
-    /** The CVS id of the file containing this class. */
-    String CVS_ID
-        = "$Id$";
+public interface ICompileable {
 
-    // compilation functions
+  /**
+   * The CVS id of the file containing this class.
+   */
+  String CVS_ID
+      = "$Id$";
 
-    /**
-     * Compiles a value as normal code.
-     * @throws InterruptedException
-     */
-    Object getForceable(StaticEnvironment compilationEnv)
-        throws SchemeException, InterruptedException;
+  // compilation functions
+
+  /**
+   * Compiles a value as normal code.
+   */
+  Object getForceable(StaticEnvironment compilationEnv)
+      throws SchemeException, InterruptedException;
 }

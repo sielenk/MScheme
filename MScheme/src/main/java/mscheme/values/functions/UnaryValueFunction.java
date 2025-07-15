@@ -25,20 +25,19 @@ import mscheme.machine.Registers;
 
 
 public abstract class UnaryValueFunction
-    extends UnaryFunction
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends UnaryFunction {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    protected final Object checkedCall(
-		Registers state,
-        Object    fst
-    ) throws SchemeException, InterruptedException
-    {
-        return checkedCall(fst);
-    }
+  protected final Object checkedCall(
+      Registers state,
+      Object fst
+  ) throws SchemeException, InterruptedException {
+    return checkedCall(fst);
+  }
 
-	protected abstract Object checkedCall(Object fst)
-		throws SchemeException, InterruptedException;
+  protected abstract Object checkedCall(Object fst)
+      throws SchemeException, InterruptedException;
 }

@@ -25,10 +25,11 @@ package mscheme.machine.stack;
 
 import mscheme.machine.StackFrame;
 
-interface IStack
-{
-    boolean isEmpty();
+interface IStack {
 
-    StackFrame pop();
-    void push(StackFrame frame);
+  boolean isEmpty();
+
+  StackFrame pop();
+
+  void push(StackFrame frame);
 }

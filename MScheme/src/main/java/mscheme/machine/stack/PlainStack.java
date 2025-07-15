@@ -12,72 +12,64 @@ import mscheme.machine.StackFrame;
 /**
  * @author sielenk
  */
-class PlainStack implements IStack
-{
-	public final static String CVS_ID
-	    = "$Id$";
+class PlainStack implements IStack {
 
-	private final static int INITIAL_STACK_SIZE = 0;
+  public final static String CVS_ID
+      = "$Id$";
 
-	private StackFrame _stack[];
-	private int        _sp;
+  private final static int INITIAL_STACK_SIZE = 0;
 
-
-	public PlainStack(PlainStack other)
-	{
-		_sp    = other._sp;
-		_stack = new StackFrame[_sp];
-
-		System.arraycopy(other._stack, 0, _stack, 0, _sp);
-	}
-
-	public PlainStack()
-	{
-		_sp    = 0;
-		_stack = new StackFrame[INITIAL_STACK_SIZE];
-	}
-
-	public PlainStack getCopy()
-	{
-		return new PlainStack(this);
-	}
-
-	public boolean isEmpty()
-	{
-		return _sp <= 0;
-	}
-
-	public StackFrame pop()
-	{
-		assertFull();
-		return _stack[--_sp];
-	}
-
-	public void push(StackFrame frame)
-	{
-        if (_sp >= _stack.length)
-            enlarge();
-
-		_stack[_sp++] = frame;
-	}
+  private StackFrame[] _stack;
+  private int _sp;
 
 
-	private void assertFull()
-	{
-		if (isEmpty())
-		{
-			throw new ArrayIndexOutOfBoundsException();
-		}
-	}
+  public PlainStack(PlainStack other) {
+    _sp = other._sp;
+    _stack = new StackFrame[_sp];
 
-	private void enlarge()
-	{
-		final int          length   = _stack.length;
-		final StackFrame[] oldStack = _stack;
-		final StackFrame[] newStack = new StackFrame[length * 2 + 1];
+    System.arraycopy(other._stack, 0, _stack, 0, _sp);
+  }
 
-		System.arraycopy(oldStack, 0, newStack,0, length);
+  public PlainStack() {
+    _sp = 0;
+    _stack = new StackFrame[INITIAL_STACK_SIZE];
+  }
 
-		_stack = newStack;
-	}
+  public PlainStack getCopy() {
+    return new PlainStack(this);
+  }
+
+  public boolean isEmpty() {
+    return _sp <= 0;
+  }
+
+  public StackFrame pop() {
+    assertFull();
+    return _stack[--_sp];
+  }
+
+  public void push(StackFrame frame) {
+    if (_sp >= _stack.length) {
+      enlarge();
+    }
+
+    _stack[_sp++] = frame;
+  }
+
+
+  private void assertFull() {
+    if (isEmpty()) {
+      throw new ArrayIndexOutOfBoundsException();
+    }
+  }
+
+  private void enlarge() {
+    final int length = _stack.length;
+    final StackFrame[] oldStack = _stack;
+    final StackFrame[] newStack = new StackFrame[length * 2 + 1];
+
+    System.arraycopy(oldStack, 0, newStack, 0, length);
+
+    _stack = newStack;
+  }
 }

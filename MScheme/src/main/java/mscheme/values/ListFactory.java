@@ -21,77 +21,65 @@ Boston, MA  02111-1307, USA. */
 package mscheme.values;
 
 
-public abstract class ListFactory
-{
-    public final static String CVS_ID
-        = "$Id$";
+public abstract class ListFactory {
 
+  public final static String CVS_ID
+      = "$Id$";
 
-    // *** List creation ***
+  // *** List creation ***
 
-	public static IList prepend(Object head, IList tail) {
-		return PairOrList.prepend(head, tail);
-	}
+  public static IList prepend(Object head, IList tail) {
+    return PairOrList.prepend(head, tail);
+  }
 
-	public static IList prependConst(Object head, IList tail) {
-		return PairOrList.prependConst(head, tail);
-	}
+  public static IList prependConst(Object head, IList tail) {
+    return PairOrList.prependConst(head, tail);
+  }
 
-    public static IList create()
-    {
-        return Empty.INSTANCE;
-    }
+  public static IList create() {
+    return Empty.INSTANCE;
+  }
 
-    public static IList createConst()
-    {
-        return Empty.INSTANCE;
-    }
+  public static IList createConst() {
+    return Empty.INSTANCE;
+  }
 
-    public static IList create(Object first)
-    {
-        return prepend(first, create());
-    }
+  public static IList create(Object first) {
+    return prepend(first, create());
+  }
 
-    public static IList createConst(Object first)
-    {
-        return prependConst(first, createConst());
-    }
+  public static IList createConst(Object first) {
+    return prependConst(first, createConst());
+  }
 
-    public static IList create(Object first, Object second)
-    {
-        return prepend(first, create(second));
-    }
+  public static IList create(Object first, Object second) {
+    return prepend(first, create(second));
+  }
 
-    public static IList createConst(Object first, Object second)
-    {
-        return prependConst(first, createConst(second));
-    }
+  public static IList createConst(Object first, Object second) {
+    return prependConst(first, createConst(second));
+  }
 
-    public static IList create(Object first, Object second, Object third)
-    {
-        return prepend(first, create(second, third));
-    }
+  public static IList create(Object first, Object second, Object third) {
+    return prepend(first, create(second, third));
+  }
 
-    public static IList create(
-		Object first,
-		Object second,
-		Object third,
-		Object fourth)
-    {
-        return prepend(first, create(second, third, fourth));
-    }
+  public static IList create(
+      Object first,
+      Object second,
+      Object third,
+      Object fourth) {
+    return prepend(first, create(second, third, fourth));
+  }
 
+  // *** Pair creation ***
 
-    // *** Pair creation ***
-    
-    public static IMutablePair createPair(Object fst, Object snd)
-    {
-        return PairOrList.create(fst, snd);
-    }
- 
-    public static IPair createConstPair(Object fst, Object snd)
-    {
-        return PairOrList.createConst(fst, snd);
-    }
+  public static IMutablePair createPair(Object fst, Object snd) {
+    return PairOrList.create(fst, snd);
+  }
+
+  public static IPair createConstPair(Object fst, Object snd) {
+    return PairOrList.createConst(fst, snd);
+  }
 }
 

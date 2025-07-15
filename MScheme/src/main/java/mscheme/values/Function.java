@@ -23,31 +23,28 @@ package mscheme.values;
 import mscheme.exceptions.RuntimeArityError;
 import mscheme.exceptions.SchemeException;
 import mscheme.machine.Registers;
-
 import mscheme.util.Arity;
 
 
-public abstract class Function
-{
-    public final static String CVS_ID
-        = "$Id$";
+public abstract class Function {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    public static int checkArguments(Arity arity, IList arguments)
-        throws SchemeException
-    {
-        int len = arguments.getLength();
+  public static int checkArguments(Arity arity, IList arguments)
+      throws SchemeException {
+    int len = arguments.getLength();
 
-        if (!arity.isValid(len))
-        {
-            throw new RuntimeArityError(arguments, arity);
-        }
-
-        return len;
+    if (!arity.isValid(len)) {
+      throw new RuntimeArityError(arguments, arity);
     }
 
+    return len;
+  }
 
-    // abstract function interface
-    public abstract Object call(Registers state, IList arguments)
-		throws SchemeException, InterruptedException;
+
+  // abstract function interface
+  public abstract Object call(Registers state, IList arguments)
+      throws SchemeException, InterruptedException;
 }

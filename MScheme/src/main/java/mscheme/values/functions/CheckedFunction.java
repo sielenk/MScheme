@@ -22,35 +22,31 @@ package mscheme.values.functions;
 
 import mscheme.exceptions.SchemeException;
 import mscheme.machine.Registers;
-
 import mscheme.util.Arity;
-
 import mscheme.values.Function;
 import mscheme.values.IList;
 
 
 public abstract class CheckedFunction
-    extends Function
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends Function {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    protected abstract Arity getArity();
+  protected abstract Arity getArity();
 
-    protected abstract Object checkedCall(
-		mscheme.machine.Registers state,
-        IList                      args
-    ) throws SchemeException, InterruptedException;
+  protected abstract Object checkedCall(
+      mscheme.machine.Registers state,
+      IList args
+  ) throws SchemeException, InterruptedException;
 
+  // implementation of Function
 
-    // implementation of Function
+  public final Object call(Registers state, IList arguments)
+      throws SchemeException, InterruptedException {
+    checkArguments(getArity(), arguments);
 
-    public final Object call(Registers state, IList arguments)
-        throws SchemeException, InterruptedException
-    {
-        checkArguments(getArity(), arguments);
-
-        return checkedCall(state, arguments);
-    }
+    return checkedCall(state, arguments);
+  }
 }

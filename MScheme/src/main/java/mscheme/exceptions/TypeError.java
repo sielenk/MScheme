@@ -22,15 +22,14 @@ package mscheme.exceptions;
 
 
 public abstract class TypeError
-    extends SchemeException
-{
-    private static final long serialVersionUID = 1L;
+    extends SchemeException {
 
-    public final static String CVS_ID
-        = "$Id$";
+  private static final long serialVersionUID = 1L;
 
-    public TypeError(Object cause, String message)
-    {
-        super(cause, message + " expected");
-    }
+  public final static String CVS_ID
+      = "$Id$";
+
+  public TypeError(Object cause, String message) {
+    super(cause, message + " expected");
+  }
 }

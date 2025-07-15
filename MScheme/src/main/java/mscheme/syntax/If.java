@@ -30,37 +30,35 @@ import mscheme.values.IList;
 
 
 final class If
-    extends CheckedTranslator
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends CheckedTranslator {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    final static ITranslator INSTANCE = new If();
+  final static ITranslator INSTANCE = new If();
 
-    private If()
-    {
-        super(Arity.inRange(2, 3));
-    }
+  private If() {
+    super(Arity.inRange(2, 3));
+  }
 
 
-    protected Object checkedTranslate(
-        StaticEnvironment compilationEnv,
-        IList              arguments
-    ) throws SchemeException, InterruptedException
-    {
-        Object flag    = arguments.getHead();
-        Object onTrue  = arguments.getTail().getHead();
-        Object onFalse =
-            arguments.getTail().getTail().isEmpty()
+  protected Object checkedTranslate(
+      StaticEnvironment compilationEnv,
+      IList arguments
+  ) throws SchemeException, InterruptedException {
+    Object flag = arguments.getHead();
+    Object onTrue = arguments.getTail().getHead();
+    Object onFalse =
+        arguments.getTail().getTail().isEmpty()
             ? Boolean.FALSE
             : arguments.getTail().getTail().getHead();
 
-        Compiler compiler = new Compiler(compilationEnv);
+    Compiler compiler = new Compiler(compilationEnv);
 
-        return Selection.create(
-            compiler.getForceable(flag   ),
-            compiler.getForceable(onTrue ),
-            compiler.getForceable(onFalse));
-    }
+    return Selection.create(
+        compiler.getForceable(flag),
+        compiler.getForceable(onTrue),
+        compiler.getForceable(onFalse));
+  }
 }

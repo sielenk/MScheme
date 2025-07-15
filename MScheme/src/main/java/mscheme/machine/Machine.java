@@ -1,17 +1,17 @@
 /*
  * The 'virtual scheme machine'. Copyright (C) 2001 Marvin H. Sielenkemper
- * 
+ *
  * This file is part of MScheme.
- * 
+ *
  * MScheme is free software; you can redistribute it and/or modify it under the
  * terms of the GNU General Public License as published by the Free Software
  * Foundation; either version 2 of the License, or (at your option) any later
  * version.
- * 
+ *
  * MScheme is distributed in the hope that it will be useful, but WITHOUT ANY
  * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
  * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with
  * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
@@ -24,7 +24,6 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
-
 import mscheme.IInit;
 import mscheme.code.IReduceable;
 import mscheme.compiler.Compiler;
@@ -46,290 +45,239 @@ import mscheme.values.functions.UnaryValueFunction;
 import mscheme.values.functions.ValueThunk;
 
 public final class Machine
-        implements Runnable
-{
-    public final static String CVS_ID = "$Id$";
+    implements Runnable {
 
-    private final Environment _environment;
+  public final static String CVS_ID = "$Id$";
 
-    private InputPort _stdin;
+  private final Environment _environment;
 
-    private OutputPort _stdout;
+  private InputPort _stdin;
 
-    private Function _errorHandler = null;
+  private OutputPort _stdout;
 
-    private int _tickerRed = 0;
+  private Function _errorHandler = null;
 
-    private int _tickerInv = 0;
+  private int _tickerRed = 0;
 
-    public Machine()
-    {
-        _environment = Environment.getSchemeReportEnvironment();
-        _stdin = InputPort.create(new InputStreamReader(System.in));
-        _stdout = OutputPort.create(new OutputStreamWriter(System.out));
-        init();
+  private int _tickerInv = 0;
 
-        // I would call this(...) but it kills gcj 3.0.2 ...
-    }
+  public Machine() {
+    _environment = Environment.getSchemeReportEnvironment();
+    _stdin = InputPort.create(new InputStreamReader(System.in));
+    _stdout = OutputPort.create(new OutputStreamWriter(System.out));
+    init();
 
-    public Machine(Reader stdin, Writer stdout)
-    {
-        _environment = Environment.getSchemeReportEnvironment();
-        _stdin = InputPort.create(stdin);
-        _stdout = OutputPort.create(stdout);
-        init();
-    }
+    // I would call this(...) but it kills gcj 3.0.2 ...
+  }
 
-    public Machine(Environment environment)
-    {
-        _environment = environment;
-        _stdin = InputPort.create(new InputStreamReader(System.in));
-        _stdout = OutputPort.create(new OutputStreamWriter(System.out));
-    }
+  public Machine(Reader stdin, Writer stdout) {
+    _environment = Environment.getSchemeReportEnvironment();
+    _stdin = InputPort.create(stdin);
+    _stdout = OutputPort.create(stdout);
+    init();
+  }
 
-    private void init()
-    {
-        try
-        {
-            _environment.define("current-input-port",
-                    new ValueThunk()
-                    {
-                        protected Object checkedCall()
-                        {
-                            return _stdin;
-                        }
-                    });
+  public Machine(Environment environment) {
+    _environment = environment;
+    _stdin = InputPort.create(new InputStreamReader(System.in));
+    _stdout = OutputPort.create(new OutputStreamWriter(System.out));
+  }
 
-            _environment.define("reset-input-port",
-                    new UnaryValueFunction()
-                    {
-                        protected Object checkedCall(Object argument)
-                                throws TypeError
-                        {
-                            Object result = _stdin;
-                            _stdin = (InputPort) argument;
-                            return result;
-                        }
-                    });
-
-            _environment.define("current-output-port",
-                    new ValueThunk()
-                    {
-                        protected Object checkedCall()
-                        {
-                            return _stdout;
-                        }
-                    });
-
-            _environment.define("reset-output-port",
-                    new UnaryValueFunction()
-                    {
-                        protected Object checkedCall(Object argument)
-                                throws TypeError
-                        {
-                            Object result = _stdout;
-                            _stdout = (OutputPort) argument;
-                            return result;
-                        }
-                    });
-
-            _environment.define("current-error-handler",
-                    new ValueThunk()
-                    {
-                        protected Object checkedCall()
-                        {
-                            if (_errorHandler != null)
-                            {
-                                return _errorHandler;
-                            }
-                            return Boolean.FALSE;
-                        }
-                    });
-
-            _environment.define("reset-error-handler",
-                    new UnaryValueFunction()
-                    {
-                        protected Object checkedCall(Object argument)
-                                throws TypeError
-                        {
-                            Object oldErrorHandler = _errorHandler;
-
-                            _errorHandler = ValueTraits.isTrue(argument) ? (Function) argument
-                                    : null;
-
-                            if (oldErrorHandler != null)
-                            {
-                                return oldErrorHandler;
-                            }
-
-                            return Boolean.FALSE;
-                        }
-                    });
-
-            _environment.define("machine-environment",
-                    _environment);
-
-            _environment.define(
-                    "ticker",
-                    new ValueThunk()
-                    {
-                        protected Object checkedCall()
-                        {
-                            int tRed = _tickerRed;
-                            int tInv = _tickerInv;
-                            _tickerRed = _tickerInv = 0;
-                            return ListFactory.create(ScmNumber.create(tRed), ScmNumber
-                                    .create(tInv));
-                        }
-                    });
-
-            evaluate(InputPort.create(new StringReader(IInit.BOOTSTRAP)).read());
-        }
-        catch (SchemeException | InterruptedException e)
-        {
-            throw new RuntimeException(e.toString());
-        }
-    }
-
-    public Object unprotectedRun()
-            throws SchemeException, InterruptedException
-    {
-        return evaluate(InputPort.create(new StringReader(IInit.REP)).read());
-    }
-
-    public void run()
-    {
-        try
-        {
-            unprotectedRun();
-        }
-        catch (Throwable t)
-        {
-            System.err.println(t.toString());
-        }
-    }
-
-    public Environment getEnvironment()
-    {
-        return _environment;
-    }
-
-    class Executor
-    {
-        private boolean _done;
-
-        private final Registers _state;
-
-        Executor(DynamicEnvironment environment)
-        {
-            _state = new Registers(environment);
-        }
-
-        public Object execute(Object expression)
-                throws SchemeException, InterruptedException
-        {
-            Object current = expression;
-
-            _done = false;
-            while (!_done)
-            {
-                try
-                {
-                    if (current instanceof IReduceable)
-                    {
-                        current = ((IReduceable) current).reduce(_state);
-                        ++_tickerRed;
-                    }
-                    else
-                    {
-                        current = invoke(current);
-                        ++_tickerInv;
-                    }
-                }
-                catch (SchemeException error)
-                {
-                    current = handleError(error);
-                }
+  private void init() {
+    try {
+      _environment.define("current-input-port",
+          new ValueThunk() {
+            protected Object checkedCall() {
+              return _stdin;
             }
+          });
 
-            return current;
-        }
-
-        private Object invoke(Object current)
-                throws SchemeException, InterruptedException
-        {
-            Stack stack = _state.getStack();
-
-            if (!stack.isEmpty())
-            {
-                final StackFrame frame = stack.pop();
-
-                _state.setEnvironment(frame.environment);
-
-                current = frame.continuation.invoke(_state, current);
+      _environment.define("reset-input-port",
+          new UnaryValueFunction() {
+            protected Object checkedCall(Object argument)
+                throws TypeError {
+              Object result = _stdin;
+              _stdin = (InputPort) argument;
+              return result;
             }
-            else
-            {
-                _done = true;
+          });
+
+      _environment.define("current-output-port",
+          new ValueThunk() {
+            protected Object checkedCall() {
+              return _stdout;
             }
+          });
 
-            return current;
-        }
-
-        private Object handleError(SchemeException error)
-                throws RuntimeError, SchemeException, InterruptedException
-        {
-            if (_errorHandler != null)
-            {
-                IList errorValue = ListFactory.create(
-                        error.getCauseValue(),
-                        error.getMessage(),
-                        new Subcontinuation(
-                                _state.getStack().getContinuation()),
-                        error instanceof RuntimeError);
-
-                // Avoid endless loop if the
-                // handler is buggy:
-                Function handler = _errorHandler;
-                _errorHandler = null;
-
-                return ValueTraits.apply(_state, handler, ListFactory
-                        .create(errorValue));
+      _environment.define("reset-output-port",
+          new UnaryValueFunction() {
+            protected Object checkedCall(Object argument)
+                throws TypeError {
+              Object result = _stdout;
+              _stdout = (OutputPort) argument;
+              return result;
             }
-            else
-            {
-                throw error;
+          });
+
+      _environment.define("current-error-handler",
+          new ValueThunk() {
+            protected Object checkedCall() {
+              if (_errorHandler != null) {
+                return _errorHandler;
+              }
+              return Boolean.FALSE;
             }
-        }
+          });
+
+      _environment.define("reset-error-handler",
+          new UnaryValueFunction() {
+            protected Object checkedCall(Object argument)
+                throws TypeError {
+              Object oldErrorHandler = _errorHandler;
+
+              _errorHandler = ValueTraits.isTrue(argument) ? (Function) argument
+                  : null;
+
+              if (oldErrorHandler != null) {
+                return oldErrorHandler;
+              }
+
+              return Boolean.FALSE;
+            }
+          });
+
+      _environment.define("machine-environment",
+          _environment);
+
+      _environment.define(
+          "ticker",
+          new ValueThunk() {
+            protected Object checkedCall() {
+              int tRed = _tickerRed;
+              int tInv = _tickerInv;
+              _tickerRed = _tickerInv = 0;
+              return ListFactory.create(ScmNumber.create(tRed), ScmNumber
+                  .create(tInv));
+            }
+          });
+
+      evaluate(InputPort.create(new StringReader(IInit.BOOTSTRAP)).read());
+    } catch (SchemeException | InterruptedException e) {
+      throw new RuntimeException(e.toString());
+    }
+  }
+
+  public Object unprotectedRun()
+      throws SchemeException, InterruptedException {
+    return evaluate(InputPort.create(new StringReader(IInit.REP)).read());
+  }
+
+  public void run() {
+    try {
+      unprotectedRun();
+    } catch (Throwable t) {
+      System.err.println(t);
+    }
+  }
+
+  public Environment getEnvironment() {
+    return _environment;
+  }
+
+  class Executor {
+
+    private boolean _done;
+
+    private final Registers _state;
+
+    Executor(DynamicEnvironment environment) {
+      _state = new Registers(environment);
     }
 
     public Object execute(Object expression)
-            throws SchemeException, InterruptedException
-    {
-        return new Executor(getEnvironment().getDynamic()).execute(expression);
+        throws SchemeException, InterruptedException {
+      Object current = expression;
+
+      _done = false;
+      while (!_done) {
+        try {
+          if (current instanceof IReduceable) {
+            current = ((IReduceable) current).reduce(_state);
+            ++_tickerRed;
+          } else {
+            current = invoke(current);
+            ++_tickerInv;
+          }
+        } catch (SchemeException error) {
+          current = handleError(error);
+        }
+      }
+
+      return current;
     }
 
-    public Object compile(Object compilee)
-            throws SchemeException, InterruptedException
-    {
-        return new Compiler(getEnvironment().getStatic()).compile(compilee);
+    private Object invoke(Object current)
+        throws SchemeException, InterruptedException {
+      Stack stack = _state.getStack();
+
+      if (!stack.isEmpty()) {
+        final StackFrame frame = stack.pop();
+
+        _state.setEnvironment(frame.environment);
+
+        current = frame.continuation.invoke(_state, current);
+      } else {
+        _done = true;
+      }
+
+      return current;
     }
 
-    public static Object parse(String expression)
-            throws SchemeException, InterruptedException
-    {
-        return InputPort.create(new StringReader(expression)).read();
-    }
+    private Object handleError(SchemeException error)
+        throws SchemeException, InterruptedException {
+      if (_errorHandler != null) {
+        IList errorValue = ListFactory.create(
+            error.getCauseValue(),
+            error.getMessage(),
+            new Subcontinuation(
+                _state.getStack().getContinuation()),
+            error instanceof RuntimeError);
 
-    public Object evaluate(Object evaluatee)
-            throws SchemeException, InterruptedException
-    {
-        return execute(compile(evaluatee));
-    }
+        // Avoid endless loop if the
+        // handler is buggy:
+        Function handler = _errorHandler;
+        _errorHandler = null;
 
-    public Object evaluate(String expression)
-            throws SchemeException, InterruptedException
-    {
-        return evaluate(parse(expression));
+        return ValueTraits.apply(_state, handler, ListFactory
+            .create(errorValue));
+      } else {
+        throw error;
+      }
     }
+  }
+
+  public Object execute(Object expression)
+      throws SchemeException, InterruptedException {
+    return new Executor(getEnvironment().getDynamic()).execute(expression);
+  }
+
+  public Object compile(Object compilee)
+      throws SchemeException, InterruptedException {
+    return new Compiler(getEnvironment().getStatic()).compile(compilee);
+  }
+
+  public static Object parse(String expression)
+      throws SchemeException, InterruptedException {
+    return InputPort.create(new StringReader(expression)).read();
+  }
+
+  public Object evaluate(Object evaluatee)
+      throws SchemeException, InterruptedException {
+    return execute(compile(evaluatee));
+  }
+
+  public Object evaluate(String expression)
+      throws SchemeException, InterruptedException {
+    return evaluate(parse(expression));
+  }
 }

@@ -21,12 +21,12 @@ Boston, MA  02111-1307, USA. */
 package mscheme.syntax;
 
 
-public interface ISequenceTags
-{
-    String CVS_ID
-        = "$Id$";
+public interface ISequenceTags {
 
-    int TAG_BEGIN = 0;
-    int TAG_AND   = 1;
-    int TAG_OR    = 2;
+  String CVS_ID
+      = "$Id$";
+
+  int TAG_BEGIN = 0;
+  int TAG_AND = 1;
+  int TAG_OR = 2;
 }

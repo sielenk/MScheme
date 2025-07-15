@@ -22,36 +22,30 @@ package mscheme.syntax;
 
 
 import mscheme.environment.StaticEnvironment;
-
 import mscheme.exceptions.TypeError;
-
 import mscheme.util.Arity;
-
 import mscheme.values.IList;
 import mscheme.values.ValueTraits;
-
 
 // *** quote ***
 
 final class Quote
-    extends CheckedTranslator
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends CheckedTranslator {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    final static ITranslator INSTANCE = new Quote();
+  final static ITranslator INSTANCE = new Quote();
 
-    private Quote()
-    {
-        super(Arity.exactly(1));
-    }
+  private Quote() {
+    super(Arity.exactly(1));
+  }
 
-    protected Object checkedTranslate(
-        StaticEnvironment compilationEnv,
-        IList              arguments
-    ) throws TypeError
-    {
-        return ValueTraits.getConst(arguments.getHead());
-    }
+  protected Object checkedTranslate(
+      StaticEnvironment compilationEnv,
+      IList arguments
+  ) throws TypeError {
+    return ValueTraits.getConst(arguments.getHead());
+  }
 }

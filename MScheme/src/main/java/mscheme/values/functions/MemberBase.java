@@ -22,36 +22,32 @@ package mscheme.values.functions;
 
 import mscheme.exceptions.ListExpected;
 import mscheme.exceptions.PairExpected;
-
 import mscheme.values.IList;
 import mscheme.values.ValueTraits;
 
 abstract class MemberBase
-	extends BinaryValueFunction
-{
-    public final static String  CVS_ID
-    	= "$Id$";
+    extends BinaryValueFunction {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    protected abstract boolean equal(Object fst, Object snd);
+  protected abstract boolean equal(Object fst, Object snd);
 
-    protected final Object checkedCall(
-        Object key,
-        Object values
-    ) throws ListExpected, PairExpected
-    {
-        for (
-            IList tail = ValueTraits.toList(values);
-            !tail.isEmpty();
-            tail = tail.getTail()
-        )
-        {
-            if (equal(key, tail.getHead()))
-            {
-                return tail;
-            }
-        }
-
-        return ValueTraits.FALSE;
+  protected final Object checkedCall(
+      Object key,
+      Object values
+  ) throws ListExpected, PairExpected {
+    for (
+        IList tail = ValueTraits.toList(values);
+        !tail.isEmpty();
+        tail = tail.getTail()
+    ) {
+      if (equal(key, tail.getHead())) {
+        return tail;
+      }
     }
+
+    return ValueTraits.FALSE;
+  }
 }

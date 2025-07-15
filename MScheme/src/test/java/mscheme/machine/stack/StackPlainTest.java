@@ -8,39 +8,35 @@ package mscheme.machine.stack;
 /**
  * @author sielenk
  */
-public class StackPlainTest extends StackTest
-{
-	public StackPlainTest(String name) {
-		super(name);
-	}
+public class StackPlainTest extends StackTest {
 
-	private PlainStack _stack;
+  public StackPlainTest(String name) {
+    super(name);
+  }
 
-	protected IStack createStack()
-	{
-		return _stack = new PlainStack();
-	}
+  private PlainStack _stack;
 
-	public void testCopy()
-	{
-		final int SIZE = 50;
+  protected IStack createStack() {
+    return _stack = new PlainStack();
+  }
 
-		for (int i = 0; i < SIZE; ++i)
-		{ 
-			_stack.push(createFrame());
-		}
+  public void testCopy() {
+    final int SIZE = 50;
 
-		IStack otherStack = _stack.getCopy();
+    for (int i = 0; i < SIZE; ++i) {
+      _stack.push(createFrame());
+    }
 
-		for (int j = 0; j < SIZE; ++j)
-		{ 
-			assertFalse(_stack.isEmpty());
-			assertFalse(otherStack.isEmpty());
+    IStack otherStack = _stack.getCopy();
 
-			assertSame(_stack.pop(),  otherStack.pop() );
-		}
+    for (int j = 0; j < SIZE; ++j) {
+      assertFalse(_stack.isEmpty());
+      assertFalse(otherStack.isEmpty());
 
-		assertTrue(_stack.isEmpty());
-		assertTrue(otherStack.isEmpty());
-	}
+      assertSame(_stack.pop(), otherStack.pop());
+    }
+
+    assertTrue(_stack.isEmpty());
+    assertTrue(otherStack.isEmpty());
+  }
 }

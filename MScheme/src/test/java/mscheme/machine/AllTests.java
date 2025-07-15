@@ -6,10 +6,10 @@
  */
 package mscheme.machine;
 
-import mscheme.machine.stack.StackListTest;
-import mscheme.machine.stack.StackPlainTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import mscheme.machine.stack.StackListTest;
+import mscheme.machine.stack.StackPlainTest;
 
 /**
  * @author sielenk
@@ -17,18 +17,17 @@ import junit.framework.TestSuite;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class AllTests
-{
-    public final static String CVS_ID = "$Id$";
+public class AllTests {
 
-    public static Test suite()
-    {
-        TestSuite suite = new TestSuite("Test for mscheme.machine");
-        //$JUnit-BEGIN$
-        suite.addTestSuite(StackListTest.class);
-        suite.addTestSuite(StackPlainTest.class);
-        suite.addTestSuite(MachineTest.class);
-        //$JUnit-END$
-        return suite;
-    }
+  public final static String CVS_ID = "$Id$";
+
+  public static Test suite() {
+    TestSuite suite = new TestSuite("Test for mscheme.machine");
+    //$JUnit-BEGIN$
+    suite.addTestSuite(StackListTest.class);
+    suite.addTestSuite(StackPlainTest.class);
+    suite.addTestSuite(MachineTest.class);
+    //$JUnit-END$
+    return suite;
+  }
 }

@@ -24,24 +24,23 @@ import mscheme.values.ScmString;
 
 
 public class StringException
-    extends RuntimeError
-{
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
+    extends RuntimeError {
 
-    public final static String CVS_ID
-        = "$Id$";
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
 
-    public final int _index;
+  public final static String CVS_ID
+      = "$Id$";
 
-    public StringException(
-        ScmString string,
-        int       index
-    )
-    {
-        super(string);
-        _index = index;
-    }
+  public final int _index;
+
+  public StringException(
+      ScmString string,
+      int index
+  ) {
+    super(string);
+    _index = index;
+  }
 }

@@ -22,17 +22,16 @@ package mscheme.exceptions;
 
 
 public final class CharExpected
-    extends TypeError
-{
-    /**
-     * 
-     */
-    private static final long serialVersionUID = 1L;
-    public final static String CVS_ID
-        = "$Id$";
+    extends TypeError {
 
-    public CharExpected(Object cause)
-    {
-        super(cause, "character");
-    }
+  /**
+   *
+   */
+  private static final long serialVersionUID = 1L;
+  public final static String CVS_ID
+      = "$Id$";
+
+  public CharExpected(Object cause) {
+    super(cause, "character");
+  }
 }

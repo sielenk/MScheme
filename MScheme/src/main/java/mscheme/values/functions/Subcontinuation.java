@@ -12,26 +12,24 @@ import mscheme.machine.stack.Stack.Slice;
 
 
 public class Subcontinuation
-	extends UnaryFunction
-{
-	public final static String CVS_ID
-		= "$Id$";
+    extends UnaryFunction {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-	private final Slice _slice;
+  private final Slice _slice;
 
-	public Subcontinuation(Slice slice)
-	{
-		_slice = slice;
-	}
+  public Subcontinuation(Slice slice) {
+    _slice = slice;
+  }
 
 
-	protected Object checkedCall(
-		Registers state,
-		Object    argument)
-	throws SchemeException
-	{
-		state.getStack().reinstate(_slice);
-		return argument;
-	}
+  protected Object checkedCall(
+      Registers state,
+      Object argument)
+      throws SchemeException {
+    state.getStack().reinstate(_slice);
+    return argument;
+  }
 }

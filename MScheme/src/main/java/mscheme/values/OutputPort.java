@@ -23,129 +23,100 @@ package mscheme.values;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-
 import mscheme.exceptions.CloseException;
 import mscheme.exceptions.OpenException;
 import mscheme.exceptions.WriteException;
 
 
 public class OutputPort
-	extends Port
-{
-    public final static String  CVS_ID
-    	= "$Id$";
+    extends Port {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    private final Writer _writer;
+  private final Writer _writer;
 
-    private OutputPort(Writer writer)
-    {
-        _writer = writer;
+  private OutputPort(Writer writer) {
+    _writer = writer;
+  }
+
+
+  public static OutputPort create(Writer writer) {
+    return new OutputPort(writer);
+  }
+
+  public static OutputPort create(ScmString filename)
+      throws OpenException {
+    return create(filename.getJavaString());
+  }
+
+  public static OutputPort create(String filename)
+      throws OpenException {
+    try {
+      return create(new FileWriter(filename));
+    } catch (IOException e) {
+      throw new OpenException(
+          ScmString.create(filename)
+      );
     }
+  }
+
+  // specialisation of Port
+
+  public void writeOn(Writer destination)
+      throws IOException {
+    destination.write("#[output port]");
+  }
+
+  public OutputPort toOutputPort() {
+    return this;
+  }
 
 
-    public static OutputPort create(Writer writer)
-    {
-        return new OutputPort(writer);
+  public void close()
+      throws CloseException {
+    try {
+      _writer.close();
+    } catch (IOException e) {
+      throw new CloseException(this);
     }
+  }
 
-    public static OutputPort create(ScmString filename)
-    throws OpenException
-    {
-        return create(filename.getJavaString());
+  // output port
+
+  public void writeChar(char c)
+      throws WriteException {
+    try {
+      _writer.write(c);
+      _writer.flush();
+    } catch (IOException e) {
+      throw new WriteException(this);
     }
+  }
 
-    public static OutputPort create(String filename)
-    throws OpenException
-    {
-        try
-        {
-            return create(new FileWriter(filename));
-        }
-        catch (IOException e)
-        {
-            throw new OpenException(
-                      ScmString.create(filename)
-                  );
-        }
+  public void writeScmChar(Character c)
+      throws WriteException {
+    writeChar(c);
+  }
+
+  public void write(Object datum)
+      throws WriteException {
+    try {
+      ValueTraits.write(_writer, datum);
+      _writer.flush();
+    } catch (IOException e) {
+      throw new WriteException(this);
     }
+  }
 
-
-    // specialisation of Port
-
-    public void writeOn(Writer destination)
-    throws IOException
-    {
-        destination.write("#[output port]");
+  public void display(Object datum)
+      throws WriteException {
+    try {
+      ValueTraits.display(_writer, datum);
+      _writer.flush();
+    } catch (IOException e) {
+      throw new WriteException(this);
     }
-
-    public OutputPort toOutputPort()
-    {
-        return this;
-    }
-
-
-    public void close()
-    throws CloseException
-    {
-        try
-        {
-            _writer.close();
-        }
-        catch (IOException e)
-        {
-            throw new CloseException(this);
-        }
-    }
-
-
-    // output port
-
-    public void writeChar(char c)
-    throws WriteException
-    {
-        try
-        {
-            _writer.write(c);
-            _writer.flush();
-        }
-        catch (IOException e)
-        {
-            throw new WriteException(this);
-        }
-    }
-
-    public void writeScmChar(Character c)
-    throws WriteException
-    {
-        writeChar(c);
-    }
-
-    public void write(Object datum)
-    throws WriteException
-    {
-        try
-        {
-            ValueTraits.write(_writer, datum);
-            _writer.flush();
-        }
-        catch (IOException e)
-        {
-            throw new WriteException(this);
-        }
-    }
-
-    public void display(Object datum)
-    throws WriteException
-    {
-        try
-        {
-			ValueTraits.display(_writer, datum);
-            _writer.flush();
-        }
-        catch (IOException e)
-        {
-            throw new WriteException(this);
-        }
-    }
+  }
 }

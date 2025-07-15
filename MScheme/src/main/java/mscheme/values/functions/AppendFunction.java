@@ -23,9 +23,7 @@ package mscheme.values.functions;
 import mscheme.exceptions.RuntimeError;
 import mscheme.exceptions.TypeError;
 import mscheme.machine.Registers;
-
 import mscheme.util.Arity;
-
 import mscheme.values.Function;
 import mscheme.values.IList;
 import mscheme.values.ListFactory;
@@ -33,65 +31,59 @@ import mscheme.values.ValueTraits;
 
 
 final class AppendHelper1
-    extends Reducer
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends Reducer {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    AppendHelper1(Object initial)
-    {
-        super(initial);
-    }
+  AppendHelper1(Object initial) {
+    super(initial);
+  }
 
-    protected Object combine(Object fst, Object snd)
-    {
-        return ListFactory.createPair(fst, snd);
-    }
+  protected Object combine(Object fst, Object snd) {
+    return ListFactory.createPair(fst, snd);
+  }
 }
 
 
 final class AppendHelper2
-    extends Reducer
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends Reducer {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    final static AppendHelper2 INSTANCE
-        = new AppendHelper2();
+  final static AppendHelper2 INSTANCE
+      = new AppendHelper2();
 
-    private AppendHelper2()
-    {
-        super(ListFactory.create());
-    }
+  private AppendHelper2() {
+    super(ListFactory.create());
+  }
 
-    protected Object combine(Object fst, Object snd)
-        throws RuntimeError, TypeError
-    {
-        return new AppendHelper1(snd).foldRight(ValueTraits.toList(fst));
-    }
+  protected Object combine(Object fst, Object snd)
+      throws RuntimeError, TypeError {
+    return new AppendHelper1(snd).foldRight(ValueTraits.toList(fst));
+  }
 }
 
 
 public final class AppendFunction
-    extends Function
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends Function {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    public final static AppendFunction INSTANCE
-        = new AppendFunction();
+  public final static AppendFunction INSTANCE
+      = new AppendFunction();
 
-    protected Arity getArity()
-    {
-        return Arity.atLeast(0);
-    }
+  private Arity getArity() {
+    return Arity.atLeast(0);
+  }
 
-    public Object call(Registers state, IList arguments)
-        throws RuntimeError, TypeError
-    {
-        return AppendHelper2.INSTANCE.reduceRight(arguments);
-    }
+  public Object call(Registers state, IList arguments)
+      throws RuntimeError, TypeError {
+    return AppendHelper2.INSTANCE.reduceRight(arguments);
+  }
 }

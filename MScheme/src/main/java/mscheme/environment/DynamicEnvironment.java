@@ -21,184 +21,157 @@ Boston, MA  02111-1307, USA. */
 package mscheme.environment;
 
 import java.util.Vector;
-
 import mscheme.exceptions.ListExpected;
 import mscheme.exceptions.PairExpected;
 import mscheme.exceptions.RuntimeError;
-
 import mscheme.util.Arity;
-
 import mscheme.values.IList;
 
 
-public final class DynamicEnvironment
-{
-    public final static String CVS_ID
-        = "$Id$";
+public final class DynamicEnvironment {
 
+  public final static String CVS_ID
+      = "$Id$";
 
-    // *******************************************************************
+  // *******************************************************************
 
-    private final Vector<Object> _globals;
-    private final Object[][]     _frames;
+  private final Vector<Object> _globals;
+  private final Object[][] _frames;
 
-    // *******************************************************************
+  // *******************************************************************
 
-    private DynamicEnvironment(
-        Vector<Object> globals,
-        Object[][]     frames
-    )
-    {
-        _globals = globals;
-        _frames  = frames;
+  private DynamicEnvironment(
+      Vector<Object> globals,
+      Object[][] frames
+  ) {
+    _globals = globals;
+    _frames = frames;
+  }
+
+  private static DynamicEnvironment create(
+      DynamicEnvironment parent,
+      int size
+  ) {
+    Object[][] oldFrames = parent._frames;
+    int newIndex = oldFrames.length;
+    Object[][] newFrames = new Object[newIndex + 1][];
+
+    if (newIndex > 0) {
+      System.arraycopy(
+          oldFrames, 0,
+          newFrames, 0,
+          newIndex
+      );
     }
 
-    private static DynamicEnvironment create(
-        DynamicEnvironment parent,
-        int                size
-    )
-    {
-        Object[][] oldFrames = parent._frames;
-        int       newIndex  = oldFrames.length;
-        Object[][] newFrames = new Object[newIndex + 1][];
+    newFrames[newIndex] = new Object[size];
 
-        if (newIndex > 0)
-        {
-            System.arraycopy(
-                oldFrames, 0,
-                newFrames, 0,
-                newIndex
-            );
-        }
+    return new DynamicEnvironment(
+        parent._globals,
+        newFrames
+    );
+  }
 
-        newFrames[newIndex] = new Object[size];
+  private static DynamicEnvironment create(
+      DynamicEnvironment parent,
+      Arity arity,
+      int frameSize,
+      IList values
+  ) throws PairExpected, ListExpected {
+    DynamicEnvironment result = create(
+        parent,
+        frameSize
+    );
 
-        return new DynamicEnvironment(
-            parent._globals,
-            newFrames
-        );
+    Object[] frame = result._frames[result._frames.length - 1];
+    IList rest = values;
+
+    for (int i = 0; i < arity.getMin(); i++) {
+      frame[i] = rest.getHead();
+      rest = rest.getTail();
     }
 
-    private static DynamicEnvironment create(
-        DynamicEnvironment parent,
-        Arity              arity,
-        int                frameSize,
-        IList               values
-    ) throws PairExpected, ListExpected
-    {
-        DynamicEnvironment result = create(
-            parent,
-            frameSize
-        );
-
-        Object[] frame = result._frames[result._frames.length - 1];
-        IList     rest  = values;
-
-        for (int i = 0; i < arity.getMin(); i++)
-        {
-            frame[i] = rest.getHead();
-            rest     = rest.getTail();
-        }
-
-        if (arity.allowMore())
-        {
-            frame[arity.getMin()] = rest;
-        }
-
-        return result;
+    if (arity.allowMore()) {
+      frame[arity.getMin()] = rest;
     }
 
+    return result;
+  }
 
-    public static DynamicEnvironment create()
-    {
-        return new DynamicEnvironment(
-            new Vector<>(),
-            new Object[0][]
-        );
+
+  public static DynamicEnvironment create() {
+    return new DynamicEnvironment(
+        new Vector<>(),
+        new Object[0][]
+    );
+  }
+
+  public DynamicEnvironment createChild(int size) {
+    return create(this, size);
+  }
+
+  public DynamicEnvironment createChild(
+      Arity arity,
+      int frameSize,
+      IList values
+  ) throws ListExpected, PairExpected {
+    return create(this, arity, frameSize, values);
+  }
+
+  // *** Envrionment access ************************************************
+
+  // *** value access (runtime) ***
+
+  public Object assign(Reference ref, Object value) {
+    int level = ref.getLevel();
+    int index = ref.getIndex();
+
+    Object result = null;
+
+    if (level > 0) {
+      result = _frames[level - 1][index];
+      _frames[level - 1][index] = value;
+    } else if (index < _globals.size()) {
+      result = _globals.elementAt(index);
+      _globals.setElementAt(value, index);
+    } else {
+      _globals.setSize(index + 1);
+      _globals.setElementAt(value, index);
     }
 
-    public DynamicEnvironment createChild(int size)
-    {
-        return create(this, size);
+    return (result != null) ? result : value;
+  }
+
+  public Object lookupNoThrow(Reference ref) {
+    final int level = ref.getLevel();
+    final int index = ref.getIndex();
+
+    if (0 < level && level <= _frames.length) {
+      final Object[] frame = _frames[level - 1];
+
+      if (0 <= index && index < frame.length) {
+        return frame[index];
+      }
+    } else if (0 <= index && index < _globals.size()) {
+      return _globals.elementAt(index);
     }
 
-    public DynamicEnvironment createChild(
-        Arity             arity,
-        int               frameSize,
-        IList              values
-    ) throws ListExpected, PairExpected
-    {
-        return create(this, arity, frameSize, values);
+    return null;
+  }
+
+  public Object lookup(Reference ref)
+      throws RuntimeError {
+    Object result = lookupNoThrow(ref);
+
+    if (result == null) {
+      throw new RuntimeError(
+          ref.getSymbol(),
+          "uninitialized variable"
+      );
     }
 
+    return result;
+  }
 
-    // *** Envrionment access ************************************************
-
-    // *** value access (runtime) ***
-
-	public Object assign(Reference ref, Object value)
-	{
-		int level = ref.getLevel();
-		int index = ref.getIndex();
-
-		Object result = null;
-
-		if (level > 0)
-		{
-			result = _frames[level - 1][index];
-			_frames[level - 1][index] = value;
-		}
-		else if (index < _globals.size())
-		{
-			result = _globals.elementAt(index);
-			_globals.setElementAt(value, index);
-		}
-        else
-		{
-			_globals.setSize(index + 1);
-			_globals.setElementAt(value, index);
-		}
-
-		return (result != null) ? result : value;
-	}
-
-    public Object lookupNoThrow(Reference ref)
-    {
-        final int level = ref.getLevel();
-        final int index = ref.getIndex();
-
-        if (0 < level && level <= _frames.length)
-        {
-            final Object[] frame = _frames[level - 1];
-
-            if (0 <= index && index < frame.length)
-            {
-                return frame[index];
-            }
-        }
-        else if (0 <= index && index < _globals.size())
-        {
-            return _globals.elementAt(index);
-        }
-
-        return null;
-    }
-
-    public Object lookup(Reference ref)
-        throws RuntimeError
-    {
-        Object result = lookupNoThrow(ref);
-
-        if (result == null)
-        {
-            throw new RuntimeError(
-                ref.getSymbol(),
-                "uninitialized variable"
-            );
-        }
-
-        return result;
-    }
-
-    // ***********************************************************************
+  // ***********************************************************************
 }

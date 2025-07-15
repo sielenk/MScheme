@@ -30,138 +30,118 @@ import mscheme.values.ListFactory;
 
 
 public class TestEnvironment
-    extends junit.framework.TestCase
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends junit.framework.TestCase {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    protected Environment env;
-    protected String sym1;
-    protected String sym2;
-    protected Object val1;
-    protected Object val2;
+  protected Environment env;
+  protected String sym1;
+  protected String sym2;
+  protected Object val1;
+  protected Object val2;
 
-    public TestEnvironment(String name)
-    {
-        super(name);
+  public TestEnvironment(String name) {
+    super(name);
+  }
+
+  protected void setUp() {
+    env = Environment.getEmpty();
+
+    sym1 = "test1";
+    sym2 = "test2";
+
+    val1 = ListFactory.create();
+    val2 = Boolean.TRUE;
+  }
+
+  protected void tearDown() {
+    env = null;
+    sym1 = sym2 = null;
+    val1 = val2 = null;
+  }
+
+
+  public void testTestPattern() {
+    assertNotSame("different symbols are equal (==)", sym1, sym2);
+    assertFalse("different symbols are equal (equals)", sym1.equals(sym2));
+    assertNotSame("different entities are equal (==)", val1, val2);
+    assertFalse("different entities are equals (equals)", val1.equals(val2));
+  }
+
+  public void testNormal()
+      throws Exception {
+    try {
+      env.lookup(sym1);
+      fail("env not empty");
+    } catch (SymbolNotFoundException e) {
     }
 
-    protected void setUp()
-    {
-        env = Environment.getEmpty();
-
-        sym1 = "test1";
-        sym2 = "test2";
-
-        val1 = ListFactory.create();
-        val2 = Boolean.TRUE;
+    try {
+      env.assign(sym1, val1);
+      fail("expected SymbolNotFound exception");
+    } catch (SymbolNotFoundException e) {
     }
 
-    protected void tearDown()
-    {
-        env = null;
-        sym1 = sym2 = null;
-        val1 = val2 = null;
+    env.define(sym1, val1);
+
+    assertSame("lookup failed", env.lookup(sym1), val1);
+
+    env.assign(sym1, val2);
+
+    assertSame("assign failed", env.lookup(sym1), val2);
+  }
+
+  public void testSyntax()
+      throws Exception {
+    StaticEnvironment env = new StaticEnvironment();
+
+    try {
+      env.getSyntaxFor(sym1);
+      fail("expected SymbolNotFoundException");
+    } catch (SymbolNotFoundException e) {
     }
 
-
-    public void testTestPattern()
-    {
-        assertNotSame("different symbols are equal (==)", sym1, sym2);
-        assertTrue("different symbols are equal (equals)", !sym1.equals(sym2));
-        assertNotSame("different entities are equal (==)", val1, val2);
-        assertTrue("different entities are equals (equals)", !val1.equals(val2));
+    try {
+      env.getSyntaxFor(sym1);
+      fail("expected SymbolNotFoundException");
+    } catch (SymbolNotFoundException e) {
     }
 
-    public void testNormal()
-        throws Exception
-    {
-        try
-        {
-            env.lookup(sym1);
-            fail("env not empty");
-        }
-        catch (SymbolNotFoundException e)
-        { }
+    ITranslator token = TranslatorFactory.getBeginToken();
+    env.defineSyntax(sym1, token);
 
-        try
-        {
-            env.assign(sym1, val1);
-            fail("expected SymbolNotFound exception");
-        }
-        catch (SymbolNotFoundException e)
-        { }
+    assertSame(env.getSyntaxFor(sym1), token);
 
-        env.define(sym1, val1);
-
-        assertSame("lookup failed", env.lookup(sym1), val1);
-
-        env.assign(sym1, val2);
-
-        assertSame("assign failed", env.lookup(sym1), val2);
+    try {
+      env.getReferenceFor(sym1);
+      fail("expected UnexpectedSyntax");
+    } catch (UnexpectedSyntax e) {
     }
 
-    public void testSyntax()
-        throws Exception
-    {
-        StaticEnvironment env = new StaticEnvironment();
+    Reference reference = env.define(sym2);
 
-        try
-        {
-            env.getSyntaxFor(sym1);
-            fail("expected SymbolNotFoundException");
-        }
-        catch (SymbolNotFoundException e)
-        { }
+    assertSame(env.getReferenceFor(sym2), reference);
+  }
 
-        try
-        {
-            env.getSyntaxFor(sym1);
-            fail("expected SymbolNotFoundException");
-        }
-        catch (SymbolNotFoundException e)
-        { }
+  public void testExtendedStatic()
+      throws Exception {
+    env.getStatic().define(sym1);
 
-        ITranslator    token = TranslatorFactory.getBeginToken();
-        env.defineSyntax(sym1, token);
-
-        assertSame(env.getSyntaxFor(sym1), token);
-
-        try
-        {
-            env.getReferenceFor(sym1);
-            fail("expected UnexpectedSyntax");
-        }
-        catch (UnexpectedSyntax e)
-        { }
-
-        Reference reference = env.define(sym2);
-
-        assertSame(env.getReferenceFor(sym2), reference);
+    try {
+      env.lookup(sym1);
+      fail("expected UninitializedSymbolException");
+    } catch (RuntimeError e) {
     }
 
-    public void testExtendedStatic()
-        throws Exception
-    {
-        env.getStatic().define(sym1);
+    env.assign(sym1, val1);
 
-        try
-        {
-            env.lookup(sym1);
-            fail("expected UninitializedSymbolException");
-        }
-        catch (RuntimeError e)
-        { }
+    assertSame(env.lookup(sym1), val1);
+  }
 
-        env.assign(sym1, val1);
+  public void testDynamic()
+      throws Exception {
 
-        assertSame(env.lookup(sym1), val1);
-    }
-
-    public void testDynamic()
-        throws Exception
-    {
-        
-    }
+  }
 }

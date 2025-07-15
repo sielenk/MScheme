@@ -25,19 +25,18 @@ import mscheme.machine.Registers;
 
 
 public abstract class ValueThunk
-    extends Thunk
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends Thunk {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    protected final Object checkedCall(
-		Registers state
-    ) throws SchemeException
-    {
-        return checkedCall();
-    }
+  protected final Object checkedCall(
+      Registers state
+  ) throws SchemeException {
+    return checkedCall();
+  }
 
-    protected abstract Object checkedCall()
-        throws SchemeException;
+  protected abstract Object checkedCall()
+      throws SchemeException;
 }

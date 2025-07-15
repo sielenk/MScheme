@@ -26,24 +26,23 @@ import mscheme.machine.Registers;
 
 
 public class DynamicWindFunction
-    extends TernaryFunction
-{
-    public final static String CVS_ID
-        = "$Id$";
+    extends TernaryFunction {
+
+  public final static String CVS_ID
+      = "$Id$";
 
 
-    public final static DynamicWindFunction INSTANCE
-        = new DynamicWindFunction();
+  public final static DynamicWindFunction INSTANCE
+      = new DynamicWindFunction();
 
 
-    protected Object checkedCall(
-		Registers state,
-        Object    fst,
-        Object    snd,
-        Object    trd
-    ) throws RuntimeError, TypeError
-    {
-    	//TODO add implementation
-    	throw new RuntimeError(null, "");
-    }
+  protected Object checkedCall(
+      Registers state,
+      Object fst,
+      Object snd,
+      Object trd
+  ) throws RuntimeError, TypeError {
+    //TODO add implementation
+    throw new RuntimeError(null, "");
+  }
 }
