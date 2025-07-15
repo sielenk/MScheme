@@ -28,8 +28,6 @@ import mscheme.values.ValueTraits;
 public final class SpawnFunction
     extends UnaryFunction {
 
-  public final static String CVS_ID = "$Id$";
-
   public final static SpawnFunction INSTANCE = new SpawnFunction();
 
   private SpawnFunction() {

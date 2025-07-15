@@ -30,10 +30,6 @@ import mscheme.machine.Registers;
 public final class Assignment
     implements IForceable, IReduceable {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   private Reference _binding;
   private Object _expression;
 

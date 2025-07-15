@@ -29,10 +29,6 @@ import mscheme.values.ValueTraits;
 abstract class AssocBase
     extends BinaryValueFunction {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   protected abstract boolean equal(Object fst, Object snd);
 
   protected final Object checkedCall(

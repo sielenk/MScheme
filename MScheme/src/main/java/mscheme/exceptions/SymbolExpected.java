@@ -24,12 +24,7 @@ package mscheme.exceptions;
 public final class SymbolExpected
     extends TypeError {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
-  public final static String CVS_ID
-      = "$Id$";
 
   public SymbolExpected(Object cause) {
     super(cause, "symbol");

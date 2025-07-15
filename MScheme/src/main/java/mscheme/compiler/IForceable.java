@@ -13,13 +13,6 @@ import mscheme.exceptions.CompileError;
  */
 public interface IForceable {
 
-  /**
-   * The CVS id of the file containing this class.
-   */
-  String CVS_ID
-      = "$Id$";
-
-
   Object force()
       throws CompileError;
 }

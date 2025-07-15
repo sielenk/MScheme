@@ -30,10 +30,6 @@ import mscheme.machine.Registers;
 public abstract class Reference
     implements IForceable, IReduceable {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   private final String _symbol;
 
   protected Reference(String symbol) {
@@ -86,10 +82,6 @@ public abstract class Reference
 final class DelayedReference
     extends Reference {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   private final StaticEnvironment _env;
   private final boolean _restricted;
 
@@ -127,10 +119,6 @@ final class DelayedReference
 
 final class ForcedReference
     extends Reference {
-
-  public final static String CVS_ID
-      = "$Id$";
-
 
   private final int _level;
   private final int _index;

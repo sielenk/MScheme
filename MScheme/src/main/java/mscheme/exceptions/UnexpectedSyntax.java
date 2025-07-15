@@ -24,12 +24,7 @@ package mscheme.exceptions;
 public final class UnexpectedSyntax
     extends CompileError {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
-  public final static String CVS_ID
-      = "$Id$";
 
   public UnexpectedSyntax(String cause) {
     super(cause, "unexpected syntactic keyword");

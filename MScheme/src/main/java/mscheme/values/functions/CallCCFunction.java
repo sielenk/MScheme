@@ -28,8 +28,6 @@ import mscheme.values.ValueTraits;
 public final class CallCCFunction
     extends UnaryFunction {
 
-  public final static String CVS_ID = "$Id$";
-
   public final static CallCCFunction INSTANCE = new CallCCFunction();
 
   private CallCCFunction() {

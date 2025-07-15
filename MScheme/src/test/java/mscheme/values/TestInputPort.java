@@ -26,10 +26,6 @@ import java.io.StringReader;
 public class TestInputPort
     extends junit.framework.TestCase {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   public TestInputPort(String name) {
     super(name);
   }

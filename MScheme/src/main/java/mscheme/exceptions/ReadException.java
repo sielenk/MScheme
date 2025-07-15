@@ -24,12 +24,7 @@ package mscheme.exceptions;
 public class ReadException
     extends SchemeIOException {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
-  public final static String CVS_ID
-      = "$Id$";
 
   public ReadException(Object cause) {
     super(cause);

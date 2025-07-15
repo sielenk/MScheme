@@ -23,9 +23,6 @@ package mscheme.values;
 
 public abstract class ListFactory {
 
-  public final static String CVS_ID
-      = "$Id$";
-
   // *** List creation ***
 
   public static IList prepend(Object head, IList tail) {

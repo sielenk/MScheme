@@ -24,12 +24,7 @@ package mscheme.exceptions;
 public final class ImmutableException
     extends RuntimeError {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
-  public final static String CVS_ID
-      = "$Id$";
 
   public ImmutableException(Object cause) {
     super(cause, "attempt to modify constant value");

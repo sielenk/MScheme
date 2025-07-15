@@ -26,10 +26,6 @@ import mscheme.exceptions.SchemeException;
 public abstract class TernaryValueFunction
     extends TernaryFunction {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   protected final Object checkedCall(
       mscheme.machine.Registers state,
       Object fst,

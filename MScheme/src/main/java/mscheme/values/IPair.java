@@ -27,8 +27,6 @@ package mscheme.values;
  */
 public interface IPair {
 
-  String CVS_ID = "$Id$";
-
   Object getFirst();
 
   Object getSecond();

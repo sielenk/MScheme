@@ -24,10 +24,6 @@ import mscheme.exceptions.RuntimeArityError;
 
 public class Arity {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   private final int _minArity;
   private final int _maxArity;
 

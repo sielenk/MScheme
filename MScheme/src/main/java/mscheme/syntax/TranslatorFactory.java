@@ -23,10 +23,6 @@ package mscheme.syntax;
 
 public abstract class TranslatorFactory {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   public static ITranslator getBeginToken() {
     return Begin.INSTANCE_BEGIN;
   }

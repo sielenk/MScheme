@@ -47,8 +47,6 @@ import mscheme.values.functions.ValueThunk;
 public final class Machine
     implements Runnable {
 
-  public final static String CVS_ID = "$Id$";
-
   private final Environment _environment;
 
   private InputPort _stdin;

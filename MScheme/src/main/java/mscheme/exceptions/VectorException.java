@@ -26,13 +26,7 @@ import mscheme.values.ScmVector;
 public class VectorException
     extends RuntimeError {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
-
-  public final static String CVS_ID
-      = "$Id$";
 
   public final int _index;
 

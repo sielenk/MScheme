@@ -33,9 +33,6 @@ import mscheme.values.ValueTraits;
 final class AppendHelper1
     extends Reducer {
 
-  public final static String CVS_ID
-      = "$Id$";
-
 
   AppendHelper1(Object initial) {
     super(initial);
@@ -49,9 +46,6 @@ final class AppendHelper1
 
 final class AppendHelper2
     extends Reducer {
-
-  public final static String CVS_ID
-      = "$Id$";
 
 
   final static AppendHelper2 INSTANCE
@@ -70,9 +64,6 @@ final class AppendHelper2
 
 public final class AppendFunction
     extends Function {
-
-  public final static String CVS_ID
-      = "$Id$";
 
 
   public final static AppendFunction INSTANCE

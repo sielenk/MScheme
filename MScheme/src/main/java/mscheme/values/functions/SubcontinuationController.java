@@ -16,8 +16,6 @@ import mscheme.values.ValueTraits;
 public class SubcontinuationController
     extends UnaryFunction {
 
-  public final static String CVS_ID = "$Id$";
-
   private final Mark _mark;
 
   SubcontinuationController(Registers state) {

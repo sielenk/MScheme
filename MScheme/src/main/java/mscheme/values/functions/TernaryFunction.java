@@ -29,10 +29,6 @@ import mscheme.values.IList;
 public abstract class TernaryFunction
     extends CheckedFunction {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   protected final Arity getArity() {
     return Arity.exactly(3);
   }

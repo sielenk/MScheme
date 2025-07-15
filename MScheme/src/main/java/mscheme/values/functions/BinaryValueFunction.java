@@ -27,10 +27,6 @@ import mscheme.machine.Registers;
 public abstract class BinaryValueFunction
     extends BinaryFunction {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   protected final Object checkedCall(
       Registers state,
       Object fst,

@@ -35,9 +35,6 @@ import mscheme.values.ValueTraits;
 
 public class StaticEnvironment {
 
-  public final static String CVS_ID
-      = "$Id$";
-
   // ***********************************************************************
 
   public void writeOn(Writer destination)

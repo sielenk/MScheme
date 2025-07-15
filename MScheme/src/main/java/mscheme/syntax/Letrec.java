@@ -36,10 +36,6 @@ import mscheme.values.ValueTraits;
 final class Letrec
     extends LetBase {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   final static ITranslator INSTANCE = new Letrec();
 
   private Letrec() {

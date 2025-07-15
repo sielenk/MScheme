@@ -29,9 +29,6 @@ import mscheme.values.ValueTraits;
 public abstract class TestSchemeBase
     extends TestCase {
 
-  public final static String CVS_ID
-      = "$Id$";
-
   private Machine machine;
 
 

@@ -25,10 +25,6 @@ import mscheme.machine.Machine;
 
 public class Main {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   public static void main(String[] argv)
       throws Exception {
     new Machine().unprotectedRun();

@@ -34,10 +34,6 @@ import mscheme.exceptions.ReadException;
 class EofValue
     implements IOutputable {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   public final static EofValue INSTANCE = new EofValue();
 
   private EofValue() {
@@ -52,10 +48,6 @@ class EofValue
 
 public class InputPort
     extends Port {
-
-  public final static String CVS_ID
-      = "$Id$";
-
 
   public final static int EOF = -1;
   public final static Object EOF_VALUE = EofValue.INSTANCE;

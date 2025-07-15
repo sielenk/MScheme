@@ -35,8 +35,6 @@ import mscheme.syntax.ProcedureCall;
 class ConstPairOrList
     extends PairOrList {
 
-  public final static String CVS_ID = "$Id$";
-
   private final Object _first;
 
   private final Object _second;
@@ -58,8 +56,6 @@ class ConstPairOrList
 class MutablePairOrList
     extends PairOrList
     implements IMutablePair {
-
-  public final static String CVS_ID = "$Id$";
 
   private Object _first;
 
@@ -134,8 +130,6 @@ class ListEnumerator
 
 public abstract class PairOrList
     implements IPair, IList, ICompileable, IComparable, IOutputable {
-
-  public final static String CVS_ID = "$Id$";
 
   protected PairOrList() {
   }

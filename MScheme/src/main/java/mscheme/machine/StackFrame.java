@@ -16,9 +16,6 @@ import mscheme.environment.DynamicEnvironment;
  */
 public class StackFrame {
 
-  public final static String CVS_ID
-      = "$Id$";
-
   final DynamicEnvironment environment;
   final IContinuation continuation;
 

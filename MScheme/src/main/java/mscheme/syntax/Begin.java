@@ -30,8 +30,6 @@ final class Begin
     extends CheckedTranslator
     implements ISequenceTags {
 
-  public final static String CVS_ID = "$Id$";
-
   private final int _tag;
 
   final static ITranslator INSTANCE_BEGIN = new Begin(TAG_BEGIN);

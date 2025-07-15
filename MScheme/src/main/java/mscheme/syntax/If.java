@@ -32,10 +32,6 @@ import mscheme.values.IList;
 final class If
     extends CheckedTranslator {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   final static ITranslator INSTANCE = new If();
 
   private If() {

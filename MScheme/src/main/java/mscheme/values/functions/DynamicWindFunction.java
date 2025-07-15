@@ -28,10 +28,6 @@ import mscheme.machine.Registers;
 public class DynamicWindFunction
     extends TernaryFunction {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   public final static DynamicWindFunction INSTANCE
       = new DynamicWindFunction();
 

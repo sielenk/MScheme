@@ -30,10 +30,6 @@ import mscheme.values.ValueTraits;
 public class ApplyFunction
     extends CheckedFunction {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   public final static ApplyFunction INSTANCE = new ApplyFunction();
 
 

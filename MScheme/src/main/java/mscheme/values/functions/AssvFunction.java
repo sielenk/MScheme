@@ -26,10 +26,6 @@ import mscheme.values.ValueTraits;
 public final class AssvFunction
     extends AssocBase {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   public final static AssvFunction INSTANCE
       = new AssvFunction();
 

@@ -24,12 +24,7 @@ package mscheme.exceptions;
 public class RuntimeError
     extends SchemeException {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
-  public final static String CVS_ID
-      = "$Id$";
 
   public RuntimeError(Object cause, String message) {
     super(cause, message);

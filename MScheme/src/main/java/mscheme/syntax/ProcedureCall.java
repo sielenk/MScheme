@@ -29,8 +29,6 @@ import mscheme.values.IList;
 public final class ProcedureCall
     implements ITranslator {
 
-  public final static String CVS_ID = "$Id$";
-
   private final Object _head;
 
   private ProcedureCall(Object head) {

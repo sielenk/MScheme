@@ -26,9 +26,6 @@ public abstract class TypeError
 
   private static final long serialVersionUID = 1L;
 
-  public final static String CVS_ID
-      = "$Id$";
-
   public TypeError(Object cause, String message) {
     super(cause, message + " expected");
   }

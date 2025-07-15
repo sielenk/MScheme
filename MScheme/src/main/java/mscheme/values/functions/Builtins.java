@@ -56,8 +56,6 @@ import mscheme.values.ValueTraits;
 
 final class Order {
 
-  public final static String CVS_ID = "$Id$";
-
   public final static int LT = -2;
 
   public final static int LE = -1;
@@ -124,8 +122,6 @@ final class Order {
 }
 
 public class Builtins {
-
-  public final static String CVS_ID = "$Id$";
 
   // 6. Standard procedures
 

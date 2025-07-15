@@ -26,10 +26,6 @@ import mscheme.values.IList;
 
 abstract class Reducer {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   private final Object _initial;
 
   protected Reducer(Object initial) {

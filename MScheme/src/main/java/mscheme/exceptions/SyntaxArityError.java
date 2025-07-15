@@ -27,12 +27,7 @@ import mscheme.values.IList;
 public final class SyntaxArityError
     extends CompileError {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
-  public final static String CVS_ID
-      = "$Id$";
 
   public SyntaxArityError(IList arguments, Arity expected) {
     super(arguments, "expected " + expected.toString() + " argument(s)");

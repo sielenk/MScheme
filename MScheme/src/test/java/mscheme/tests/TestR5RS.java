@@ -33,9 +33,6 @@ import mscheme.values.ValueTraits;
 public class TestR5RS
     extends TestSchemeBase {
 
-  public final static String CVS_ID
-      = "$Id$";
-
   public TestR5RS(String name) {
     super(name);
   }

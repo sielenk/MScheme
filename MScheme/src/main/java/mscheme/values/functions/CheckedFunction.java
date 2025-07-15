@@ -30,10 +30,6 @@ import mscheme.values.IList;
 public abstract class CheckedFunction
     extends Function {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   protected abstract Arity getArity();
 
   protected abstract Object checkedCall(

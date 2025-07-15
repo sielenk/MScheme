@@ -28,10 +28,6 @@ import mscheme.util.Arity;
 
 public abstract class Function {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   public static int checkArguments(Arity arity, IList arguments)
       throws SchemeException {
     int len = arguments.getLength();

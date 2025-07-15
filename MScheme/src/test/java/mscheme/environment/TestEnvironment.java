@@ -32,9 +32,6 @@ import mscheme.values.ListFactory;
 public class TestEnvironment
     extends junit.framework.TestCase {
 
-  public final static String CVS_ID
-      = "$Id$";
-
 
   protected Environment env;
   protected String sym1;

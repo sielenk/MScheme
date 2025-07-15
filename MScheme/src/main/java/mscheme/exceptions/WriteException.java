@@ -24,12 +24,7 @@ package mscheme.exceptions;
 public final class WriteException
     extends SchemeIOException {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
-  public final static String CVS_ID
-      = "$Id$";
 
   public WriteException(Object cause) {
     super(cause);

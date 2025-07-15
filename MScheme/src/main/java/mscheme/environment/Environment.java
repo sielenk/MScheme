@@ -31,9 +31,6 @@ import mscheme.values.functions.Builtins;
 
 public final class Environment {
 
-  public final static String CVS_ID
-      = "$Id$";
-
   // *******************************************************************
 
   public void writeOn(Writer destination)

@@ -24,8 +24,6 @@ import mscheme.exceptions.ImmutableException;
 public interface IMutablePair
     extends IPair, IMutable {
 
-  String CVS_ID = "$Id$";
-
   void setFirst(Object fst)
       throws ImmutableException;
 

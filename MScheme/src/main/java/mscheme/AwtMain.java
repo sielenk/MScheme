@@ -23,8 +23,6 @@ import java.awt.Frame;
 
 public final class AwtMain {
 
-  public final static String CVS_ID = "$Id$";
-
   private Frame _frame = null; //  @jve:decl-index=0:visual-constraint="14,13"
 
   private MSchemePanel _panel = null;

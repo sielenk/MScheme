@@ -26,10 +26,6 @@ import mscheme.exceptions.CompileError;
 
 class CodeArray {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   static String printTuple(
       Object[] tuple
   ) {

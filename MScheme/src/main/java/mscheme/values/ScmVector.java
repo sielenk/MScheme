@@ -75,10 +75,6 @@ final class MutableScmVector
 public abstract class ScmVector
     implements IComparable, IOutputable {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   private final static ScmVector EMPTY = new ConstScmVector(0, null);
 
   public static ScmVector create() {

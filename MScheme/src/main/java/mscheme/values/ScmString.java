@@ -29,9 +29,6 @@ import mscheme.exceptions.InvalidStringIndexException;
 class ConstScmString
     extends ScmString {
 
-  public final static String CVS_ID
-      = "$Id$";
-
   private final String _string;
 
   public ConstScmString(String javaString) {
@@ -59,9 +56,6 @@ class ConstScmString
 class MutableScmString
     extends ScmString
     implements IMutable {
-
-  public final static String CVS_ID
-      = "$Id$";
 
   private final char[] _string;
 
@@ -102,10 +96,6 @@ class MutableScmString
 
 public abstract class ScmString
     implements IComparable, IOutputable {
-
-  public final static String CVS_ID
-      = "$Id$";
-
 
   protected ScmString() {
   }

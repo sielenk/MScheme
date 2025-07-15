@@ -14,10 +14,6 @@ import mscheme.machine.stack.Stack.Slice;
 public class Subcontinuation
     extends UnaryFunction {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   private final Slice _slice;
 
   public Subcontinuation(Slice slice) {

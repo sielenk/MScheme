@@ -35,8 +35,6 @@ import mscheme.values.ValueTraits;
 final class LetStar
     extends CheckedTranslator {
 
-  public final static String CVS_ID = "$Id$";
-
   final static ITranslator INSTANCE = new LetStar();
 
   private LetStar() {
@@ -65,8 +63,6 @@ final class LetStar
 }
 
 final class LetStarHelper {
-
-  public final static String CVS_ID = "$Id$";
 
   private final IList _body;
 

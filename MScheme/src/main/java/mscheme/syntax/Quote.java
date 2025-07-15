@@ -32,10 +32,6 @@ import mscheme.values.ValueTraits;
 final class Quote
     extends CheckedTranslator {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   final static ITranslator INSTANCE = new Quote();
 
   private Quote() {

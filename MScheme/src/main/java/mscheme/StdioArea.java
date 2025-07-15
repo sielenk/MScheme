@@ -40,10 +40,6 @@ import java.io.Writer;
 
 class StdioReader extends Reader {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   private boolean _closed;
   private String _buffer;
 
@@ -130,10 +126,6 @@ class StdioReader extends Reader {
 
 class StdioWriter extends Writer {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   private boolean _closed;
   private final StdioArea _owner;
 
@@ -185,13 +177,7 @@ public class StdioArea
     extends TextArea
     implements FocusListener, KeyListener, MouseListener, TextListener {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
-  public final static String CVS_ID
-      = "$Id$";
-
 
   /***** interface FocusListener begin *****/
 

@@ -26,11 +26,6 @@ import mscheme.exceptions.SchemeException;
 
 public interface IList {
 
-  /**
-   * The CVS id of the file containing this class.
-   */
-  String CVS_ID = "$Id$";
-
   boolean isValid();
 
   IList validate()

@@ -28,10 +28,6 @@ import java.math.BigInteger;
 public class ScmNumber
     implements IComparable, IOutputable {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   private final BigInteger _value;
 
   private ScmNumber(BigInteger v) {

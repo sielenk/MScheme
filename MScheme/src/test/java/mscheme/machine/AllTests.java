@@ -19,8 +19,6 @@ import mscheme.machine.stack.StackPlainTest;
  */
 public class AllTests {
 
-  public final static String CVS_ID = "$Id$";
-
   public static Test suite() {
     TestSuite suite = new TestSuite("Test for mscheme.machine");
     //$JUnit-BEGIN$

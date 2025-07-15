@@ -14,9 +14,6 @@ import mscheme.machine.StackFrame;
  */
 class PlainStack implements IStack {
 
-  public final static String CVS_ID
-      = "$Id$";
-
   private final static int INITIAL_STACK_SIZE = 0;
 
   private StackFrame[] _stack;

@@ -37,10 +37,6 @@ import mscheme.values.functions.ApplyFunction;
 final class Macro
     implements ITranslator {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   final static Machine MACHINE =
       new Machine(
           Environment.getSchemeReportEnvironment()
@@ -85,10 +81,6 @@ final class Macro
 
 final class DefineSyntax
     extends CheckedTranslator {
-
-  public final static String CVS_ID
-      = "$Id$";
-
 
   final static ITranslator INSTANCE = new DefineSyntax();
 

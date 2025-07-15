@@ -36,10 +36,6 @@ import mscheme.values.functions.CallCCFunction;
 public class TestValue
     extends junit.framework.TestCase {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   public TestValue(String name) {
     super(name);
   }

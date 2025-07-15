@@ -31,10 +31,6 @@ import mscheme.values.ValueTraits;
 public final class Sequence
     implements ISequenceTags, IForceable, IReduceable {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   private final int _tag;
   private final Object[] _sequence;
 
@@ -106,11 +102,6 @@ public final class Sequence
     if (index + 1 < _sequence.length) {
       registers.push(
           new IContinuation() {
-            @SuppressWarnings("unused")
-            public final static String CVS_ID
-                = "$Id$";
-
-
             public Object invoke(
                 Registers registers,
                 Object value) {

@@ -35,10 +35,6 @@ import mscheme.values.functions.YCombinator;
 final class Let
     extends LetBase {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   final static ITranslator INSTANCE = new Let();
 
   private Let() {

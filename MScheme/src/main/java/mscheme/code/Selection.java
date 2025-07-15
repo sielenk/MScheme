@@ -30,10 +30,6 @@ import mscheme.values.ValueTraits;
 public final class Selection
     implements IReduceable {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   private final Object _test;
   private final Object _onTrue;
   private final Object _onFalse;
@@ -75,10 +71,6 @@ public final class Selection
 
 final class ForceableSelection
     implements IForceable {
-
-  public final static String CVS_ID
-      = "$Id$";
-
 
   private final Object _test;
   private final Object _onTrue;

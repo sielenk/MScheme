@@ -15,13 +15,6 @@ import mscheme.machine.stack.Stack;
  */
 public class Registers {
 
-  /**
-   * The CVS id of the file containing this class.
-   */
-  public final static String CVS_ID
-      = "$Id$";
-
-
   private final Stack _stack;
   private DynamicEnvironment _environment;
 

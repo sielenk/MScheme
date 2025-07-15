@@ -32,8 +32,6 @@ import mscheme.values.ValueTraits;
 public final class Application
     implements IForceable, IReduceable {
 
-  public final static String CVS_ID = "$Id$";
-
   private final Object[] _application;
 
   private Application(Object[] application) {
@@ -61,9 +59,6 @@ public final class Application
 
   public static IContinuation createCall(final IList done) {
     return new IContinuation() {
-      @SuppressWarnings("unused")
-      public final static String CVS_ID = "$Id$";
-
       public Object invoke(Registers registers, Object value)
           throws SchemeException, InterruptedException {
         return ValueTraits.apply(registers, value, done);
@@ -73,9 +68,6 @@ public final class Application
 
   private IContinuation createPush(final IList done, final int index) {
     return new IContinuation() {
-      @SuppressWarnings("unused")
-      public final static String CVS_ID = "$Id$";
-
       public Object invoke(Registers registers, Object value) {
         return prepareNext(registers, ListFactory.prepend(value, done),
             index - 1);

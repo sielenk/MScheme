@@ -31,14 +31,9 @@ public class Stack implements IStack {
 
   public static class Mark {
 
-    public final static String CVS_ID
-        = "$Id$";
   }
 
   public static class Slice {
-
-    public final static String CVS_ID
-        = "$Id$";
 
     final Mark _mark;
     final PlainStack _stack;

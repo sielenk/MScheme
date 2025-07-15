@@ -31,13 +31,6 @@ import mscheme.values.IList;
  */
 public interface ITranslator {
 
-  /**
-   * The CVS id of the file containing this class.
-   */
-  String CVS_ID
-      = "$Id$";
-
-
   Object translate(
       StaticEnvironment compilationEnv,
       IList arguments

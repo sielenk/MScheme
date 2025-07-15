@@ -30,10 +30,6 @@ import mscheme.values.ValueTraits;
 abstract class LetBase
     extends CheckedTranslator {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   protected LetBase(Arity arity) {
     super(arity);
   }

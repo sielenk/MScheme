@@ -24,12 +24,7 @@ package mscheme.exceptions;
 public final class OutputPortExpected
     extends PortExpected {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
-  public final static String CVS_ID
-      = "$Id$";
 
   public OutputPortExpected(Object cause) {
     super(cause, "output port");

@@ -38,8 +38,6 @@ import mscheme.values.functions.CheckedFunction;
 public final class CompiledLambda
     implements IForceable, IReduceable {
 
-  public final static String CVS_ID = "$Id$";
-
   private final Arity _arity;
 
   private final int _frameSize;
@@ -67,8 +65,6 @@ public final class CompiledLambda
 
   final class Closure
       extends CheckedFunction {
-
-    public final static String CVS_ID = "$Id$";
 
     private final DynamicEnvironment _enclosingEnvironment;
 

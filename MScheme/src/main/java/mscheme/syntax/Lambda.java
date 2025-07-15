@@ -32,8 +32,6 @@ import mscheme.values.ValueTraits;
 final class Lambda
     extends CheckedTranslator {
 
-  public final static String CVS_ID = "$Id$";
-
   final static ITranslator INSTANCE = new Lambda();
 
   private Lambda() {

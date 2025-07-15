@@ -26,10 +26,6 @@ import mscheme.values.ValueTraits;
 public final class MemqFunction
     extends MemberBase {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   public final static MemqFunction INSTANCE
       = new MemqFunction();
 

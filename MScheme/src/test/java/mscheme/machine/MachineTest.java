@@ -26,10 +26,6 @@ import mscheme.values.functions.AppendFunction;
 public class MachineTest
     extends TestCase {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   private final static Object O1 = new Object();
   private final static Object O2 = new Object();
   private final static Object O3 = new Object();

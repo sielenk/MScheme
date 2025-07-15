@@ -30,9 +30,6 @@ import mscheme.values.IList;
 
 public final class DynamicEnvironment {
 
-  public final static String CVS_ID
-      = "$Id$";
-
   // *******************************************************************
 
   private final Vector<Object> _globals;

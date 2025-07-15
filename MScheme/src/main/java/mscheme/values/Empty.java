@@ -29,8 +29,6 @@ import mscheme.exceptions.PairExpected;
 public final class Empty
     implements IList, IOutputable, ICompileable {
 
-  public final static String CVS_ID = "$Id$";
-
   public final static Empty INSTANCE = new Empty();
 
   private final static Object[] ARRAY = new Object[0];

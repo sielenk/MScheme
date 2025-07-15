@@ -31,10 +31,6 @@ import mscheme.exceptions.WriteException;
 public class OutputPort
     extends Port {
 
-  public final static String CVS_ID
-      = "$Id$";
-
-
   private final Writer _writer;
 
   private OutputPort(Writer writer) {

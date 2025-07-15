@@ -16,10 +16,6 @@ import mscheme.exceptions.SchemeException;
  */
 public interface IContinuation {
 
-  String CVS_ID
-      = "$Id$";
-
-
   Object invoke(
       Registers registers,
       Object value) throws SchemeException, InterruptedException;

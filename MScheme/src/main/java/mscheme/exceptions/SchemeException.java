@@ -26,9 +26,6 @@ public abstract class SchemeException
 
   private static final long serialVersionUID = 1L;
 
-  public final static String CVS_ID
-      = "$Id$";
-
   private final Object _cause;
   private final String _message;
 

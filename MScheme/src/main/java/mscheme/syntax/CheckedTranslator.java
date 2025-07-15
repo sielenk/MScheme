@@ -29,8 +29,6 @@ import mscheme.values.IList;
 abstract class CheckedTranslator
     implements ITranslator {
 
-  public final static String CVS_ID = "$Id$";
-
   private final Arity _arity;
 
   protected CheckedTranslator(Arity arity) {

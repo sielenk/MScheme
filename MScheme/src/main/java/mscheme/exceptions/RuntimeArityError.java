@@ -27,12 +27,7 @@ import mscheme.values.IList;
 public final class RuntimeArityError
     extends RuntimeError {
 
-  /**
-   *
-   */
   private static final long serialVersionUID = 1L;
-  public final static String CVS_ID
-      = "$Id$";
 
   public RuntimeArityError(IList arguments, Arity expected) {
     super(
