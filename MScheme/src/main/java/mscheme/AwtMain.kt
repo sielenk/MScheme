@@ -16,47 +16,45 @@
  * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package mscheme
 
-package mscheme;
+import java.awt.BorderLayout
+import java.awt.Frame
+import java.awt.event.WindowAdapter
+import java.awt.event.WindowEvent
+import kotlin.system.exitProcess
 
-import java.awt.Frame;
 
-public final class AwtMain {
+class AwtMain {
+    private val frame: Frame by lazy {
+        val newFrame = Frame()
 
-  private Frame _frame = null; //  @jve:decl-index=0:visual-constraint="14,13"
+        newFrame.setTitle("MScheme")
+        newFrame.setSize(600, 400)
+        newFrame.add(panel, BorderLayout.CENTER)
+        newFrame.addWindowListener(object : WindowAdapter() {
+            override fun windowClosing(e: WindowEvent) {
+                panel.stop()
+                newFrame.isVisible = false
+                newFrame.dispose()
+            }
 
-  private MSchemePanel _panel = null;
+            override fun windowClosed(e: WindowEvent?) {
+                exitProcess(0)
+            }
+        })
 
-  private Frame get_frame() {
-    if (_frame == null) {
-      _frame = new Frame();
-      _frame.setTitle("MScheme");
-      _frame.setSize(600, 400);
-      _frame.add(get_panel(), java.awt.BorderLayout.CENTER);
-      _frame.addWindowListener(new java.awt.event.WindowAdapter() {
-        public void windowClosing(java.awt.event.WindowEvent e) {
-          get_panel().stop();
-          get_frame().setVisible(false);
-          get_frame().dispose();
-        }
-
-        public void windowClosed(java.awt.event.WindowEvent e) {
-          System.exit(0);
-        }
-      });
+        newFrame
     }
-    return _frame;
-  }
 
-  private MSchemePanel get_panel() {
-    if (_panel == null) {
-      _panel = new MSchemePanel();
+    private val panel: MSchemePanel by lazy {
+        MSchemePanel()
     }
-    return _panel;
-  }
 
-  public static void main(String[] argv)
-      throws Exception {
-    new AwtMain().get_frame().setVisible(true);
-  }
+    companion object {
+        @JvmStatic
+        fun main(argv: Array<String>) {
+            AwtMain().frame.isVisible = true
+        }
+    }
 }
