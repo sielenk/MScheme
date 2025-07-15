@@ -1,0 +1,3 @@
+rootProject.name = "MScheme"
+
+include(":MScheme")
