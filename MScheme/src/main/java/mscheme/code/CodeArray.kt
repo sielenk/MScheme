@@ -17,47 +17,24 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.code
 
-package mscheme.code;
+import mscheme.compiler.Compiler.Companion.force
+import mscheme.exceptions.CompileError
 
-import mscheme.compiler.Compiler;
-import mscheme.exceptions.CompileError;
-
-
-class CodeArray {
-
-  static String printTuple(
-      Object[] tuple
-  ) {
-    return printTuple(tuple, 0, tuple.length);
-  }
-
-  static String printTuple(
-      Object[] tuple,
-      int begin,
-      int end
-  ) {
-    StringBuilder buffer = new StringBuilder();
-
-    buffer.append('<');
-    for (int i = begin; ; ) {
-      buffer.append(
-          tuple[i].toString()
-      );
-      if (++i == end) {
-        break;
-      }
-      buffer.append(", ");
+internal object CodeArray {
+    @JvmStatic
+    fun printTuple(tuple: Array<Any?>): String = tuple.joinToString(
+        prefix = "<", separator = ", ", postfix = ">",
+    ) {
+        it.toString()
     }
-    buffer.append('>');
 
-    return buffer.toString();
-  }
-
-  static void force(Object[] array)
-      throws CompileError {
-    for (int i = 0; i < array.length; ++i) {
-      array[i] = Compiler.force(array[i]);
+    @JvmStatic
+    @Throws(CompileError::class)
+    fun force(array: Array<Any?>) {
+        for (i in array.indices) {
+            array[i] = force(array[i])
+        }
     }
-  }
 }
