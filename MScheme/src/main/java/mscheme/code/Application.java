@@ -60,8 +60,8 @@ public final class Application
 
   public static IContinuation createCall(final IList done) {
     return new IContinuation() {
-      public Object invoke(Registers registers, Object value)
-          throws SchemeException, InterruptedException {
+      public Object invoke(@NotNull Registers registers, Object value)
+          throws InterruptedException, SchemeException {
         return ValueTraits.apply(registers, value, done);
       }
     };
@@ -69,7 +69,7 @@ public final class Application
 
   private IContinuation createPush(final IList done, final int index) {
     return new IContinuation() {
-      public Object invoke(Registers registers, Object value) {
+      public Object invoke(@NotNull Registers registers, Object value) {
         return prepareNext(registers, ListFactory.prepend(value, done),
             index - 1);
       }

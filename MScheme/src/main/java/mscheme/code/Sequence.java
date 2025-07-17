@@ -104,7 +104,7 @@ public final class Sequence
       registers.push(
           new IContinuation() {
             public Object invoke(
-                Registers registers,
+                @NotNull Registers registers,
                 Object value) {
               if (
                   ((_tag == TAG_AND) && !ValueTraits.isTrue(value))
