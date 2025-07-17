@@ -48,8 +48,8 @@ class StaticEnvironment @JvmOverloads internal constructor(
         if (parent == null) 0 else (parent.level + 1)
     var size: Int = 0
         private set
-    private var _state: Int =
-        OPEN
+    private var _state: State =
+        State.OPEN
 
     // *** constructors ******************************************************
 
@@ -85,13 +85,13 @@ class StaticEnvironment @JvmOverloads internal constructor(
     @Throws(CompileError::class)
     fun setStateOpen(v: Any?) {
         when (_state) {
-            OPEN -> throw CompileError(
+            State.OPEN -> throw CompileError(
                 v,
                 "no nested definitions"
             )
 
-            DEF_BODY -> _state = OPEN
-            CLOSED -> throw CompileError(
+            State.DEF_BODY -> _state = State.OPEN
+            State.CLOSED -> throw CompileError(
                 v,
                 "environment already closed (1)"
             )
@@ -101,13 +101,13 @@ class StaticEnvironment @JvmOverloads internal constructor(
     @Throws(CompileError::class)
     fun setStateDefinitionBody(v: Any?) {
         when (_state) {
-            OPEN -> _state = DEF_BODY
-            DEF_BODY -> throw CompileError(
+            State.OPEN -> _state = State.DEF_BODY
+            State.DEF_BODY -> throw CompileError(
                 v,
                 "no nested definitions"
             )
 
-            CLOSED -> throw CompileError(
+            State.CLOSED -> throw CompileError(
                 v,
                 "environment already closed (2)"
             )
@@ -115,14 +115,14 @@ class StaticEnvironment @JvmOverloads internal constructor(
     }
 
     fun setStateClosed() {
-        if ((_state == OPEN) && (this.level > 0)) {
-            _state = CLOSED
+        if ((_state == State.OPEN) && (this.level > 0)) {
+            _state = State.CLOSED
         }
     }
 
     @Throws(CompileError::class)
     fun define(symbol: String?): Reference {
-        if (_state != OPEN) {
+        if (_state != State.OPEN) {
             throw CompileError(
                 symbol,
                 "environment already closed (3)"
@@ -193,7 +193,7 @@ class StaticEnvironment @JvmOverloads internal constructor(
         val result = lookupNoThrow(key)
 
         return if ((result == null) || (result is Reference))
-            Reference.create(key, this, _state == DEF_BODY)
+            Reference.create(key, this, _state == State.DEF_BODY)
         else
             result
     }
@@ -245,12 +245,12 @@ class StaticEnvironment @JvmOverloads internal constructor(
     // ***********************************************************************
 
     companion object {
-        private const val OPEN = 0
-        private const val DEF_BODY = 1
-        private const val CLOSED = 2
-
         @JvmStatic
         fun create(): StaticEnvironment =
             StaticEnvironment()
+    }
+
+    enum class State {
+        OPEN, DEF_BODY, CLOSED
     }
 }
