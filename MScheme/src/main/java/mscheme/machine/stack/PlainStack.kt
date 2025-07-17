@@ -30,9 +30,8 @@ internal class PlainStack : IStack {
     val copy: PlainStack
         get() = PlainStack(this)
 
-    override fun isEmpty(): Boolean {
-        return _sp <= 0
-    }
+    override val isEmpty: Boolean
+        get() = _sp <= 0
 
     override fun pop(): StackFrame? {
         assertFull()
@@ -49,7 +48,7 @@ internal class PlainStack : IStack {
 
 
     private fun assertFull() {
-        if (isEmpty()) {
+        if (isEmpty) {
             throw ArrayIndexOutOfBoundsException()
         }
     }

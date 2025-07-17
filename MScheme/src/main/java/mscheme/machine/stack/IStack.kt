@@ -18,18 +18,14 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
-
 /* Created on 07.08.2005, 16:07:52 by Marv */
+package mscheme.machine.stack
 
-package mscheme.machine.stack;
+import mscheme.machine.StackFrame
 
-import mscheme.machine.StackFrame;
+internal interface IStack {
+    val isEmpty: Boolean
 
-interface IStack {
-
-  boolean isEmpty();
-
-  StackFrame pop();
-
-  void push(StackFrame frame);
+    fun pop(): StackFrame?
+    fun push(frame: StackFrame?)
 }

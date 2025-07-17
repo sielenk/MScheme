@@ -52,14 +52,15 @@ class Stack : IStack {
         _top = Slice(null, null)
     }
 
-    override fun isEmpty(): Boolean {
-        var slice = _top
-        while (slice!!._next != null && slice._stack.isEmpty) {
-            slice = slice._next
-        }
+    override val isEmpty: Boolean
+        get() {
+            var slice = _top
+            while (slice!!._next != null && slice._stack.isEmpty) {
+                slice = slice._next
+            }
 
-        return slice._stack.isEmpty
-    }
+            return slice._stack.isEmpty
+        }
 
     override fun pop(): StackFrame? {
         while (_top!!._next != null && _top!!._stack.isEmpty) {
