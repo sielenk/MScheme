@@ -23,8 +23,8 @@ package mscheme.environment;
 import mscheme.code.IReduceable;
 import mscheme.compiler.IForceable;
 import mscheme.exceptions.CompileError;
-import mscheme.exceptions.RuntimeError;
 import mscheme.machine.Registers;
+import org.jetbrains.annotations.NotNull;
 
 
 public abstract class Reference
@@ -53,8 +53,7 @@ public abstract class Reference
   }
 
   public final Object reduce(
-      Registers state)
-      throws RuntimeError {
+      @NotNull Registers state) {
     return state.getEnvironment().lookup(this);
   }
 

@@ -25,6 +25,7 @@ import mscheme.compiler.IForceable;
 import mscheme.environment.Reference;
 import mscheme.exceptions.CompileError;
 import mscheme.machine.Registers;
+import org.jetbrains.annotations.NotNull;
 
 
 public final class Assignment
@@ -60,7 +61,7 @@ public final class Assignment
   /* (non-Javadoc)
    * @see mscheme.code.Reduceable#reduce(mscheme.machine.Stack, mscheme.environment.DynamicEnvironment)
    */
-  public Object reduce(Registers registers) {
+  public Object reduce(@NotNull Registers registers) {
     registers.push(
         (registers1, value) -> registers1.assign(_binding, value));
 

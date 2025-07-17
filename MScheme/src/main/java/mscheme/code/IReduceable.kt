@@ -4,10 +4,10 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package mscheme.code;
+package mscheme.code
 
-import mscheme.exceptions.SchemeException;
-import mscheme.machine.Registers;
+import mscheme.exceptions.SchemeException
+import mscheme.machine.Registers
 
 /**
  * @author sielenk
@@ -15,7 +15,7 @@ import mscheme.machine.Registers;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public interface IReduceable {
-
-  Object reduce(Registers state) throws SchemeException;
+interface IReduceable {
+    @Throws(SchemeException::class)
+    fun reduce(state: Registers): Any?
 }

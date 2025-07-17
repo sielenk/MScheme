@@ -25,6 +25,7 @@ import mscheme.compiler.IForceable;
 import mscheme.exceptions.CompileError;
 import mscheme.machine.Registers;
 import mscheme.values.ValueTraits;
+import org.jetbrains.annotations.NotNull;
 
 
 public final class Selection
@@ -59,7 +60,7 @@ public final class Selection
   /* (non-Javadoc)
    * @see mscheme.code.Reduceable#reduce(mscheme.machine.Stack, mscheme.environment.DynamicEnvironment)
    */
-  public Object reduce(Registers registers) {
+  public Object reduce(@NotNull Registers registers) {
     registers.push(
         (registers1, value) -> ValueTraits.isTrue(value)
             ? _onTrue

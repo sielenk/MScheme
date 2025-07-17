@@ -26,6 +26,7 @@ import mscheme.machine.IContinuation;
 import mscheme.machine.Registers;
 import mscheme.syntax.ISequenceTags;
 import mscheme.values.ValueTraits;
+import org.jetbrains.annotations.NotNull;
 
 
 public final class Sequence
@@ -92,7 +93,7 @@ public final class Sequence
   }
 
 
-  public Object reduce(Registers registers) {
+  public Object reduce(@NotNull Registers registers) {
     return prepareNext(registers, 0);
   }
 

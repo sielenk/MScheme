@@ -34,6 +34,7 @@ import mscheme.machine.Registers;
 import mscheme.util.Arity;
 import mscheme.values.IList;
 import mscheme.values.functions.CheckedFunction;
+import org.jetbrains.annotations.NotNull;
 
 public final class CompiledLambda
     implements IForceable, IReduceable {
@@ -102,7 +103,7 @@ public final class CompiledLambda
     return "lambda:<" + _compiledBody + '>';
   }
 
-  public Object reduce(Registers state) {
+  public Object reduce(@NotNull Registers state) {
     return new Closure(state.getEnvironment());
   }
 }

@@ -75,7 +75,6 @@ class DynamicEnvironment private constructor(
         return null
     }
 
-    @Throws(RuntimeError::class)
     fun lookup(ref: Reference): Any =
         lookupNoThrow(ref)
             ?: throw RuntimeError(

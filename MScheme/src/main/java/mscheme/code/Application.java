@@ -28,6 +28,7 @@ import mscheme.machine.Registers;
 import mscheme.values.IList;
 import mscheme.values.ListFactory;
 import mscheme.values.ValueTraits;
+import org.jetbrains.annotations.NotNull;
 
 public final class Application
     implements IForceable, IReduceable {
@@ -52,7 +53,7 @@ public final class Application
     return "app:" + CodeArray.printTuple(_application);
   }
 
-  public Object reduce(Registers registers) {
+  public Object reduce(@NotNull Registers registers) {
     return prepareNext(registers, ListFactory.create(),
         _application.length - 1);
   }
