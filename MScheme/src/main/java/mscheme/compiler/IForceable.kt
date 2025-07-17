@@ -4,15 +4,14 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package mscheme.compiler;
+package mscheme.compiler
 
-import mscheme.exceptions.CompileError;
+import mscheme.exceptions.CompileError
 
 /**
  * @author sielenk
  */
-public interface IForceable {
-
-  Object force()
-      throws CompileError;
+interface IForceable {
+    @Throws(CompileError::class)
+    fun force(): Any?
 }
