@@ -39,8 +39,8 @@ class StaticEnvironment @JvmOverloads internal constructor(
         return this
     }
 
-    private val _bindings: Hashtable<String?, Any?> =
-        Hashtable<String?, Any?>()
+    private val _bindings: MutableMap<String, Any> =
+        Hashtable()
 
     // *** instance access ***************************************************
 
@@ -65,7 +65,7 @@ class StaticEnvironment @JvmOverloads internal constructor(
     }
 
     internal constructor(
-        parent: StaticEnvironment?, symbol: String?
+        parent: StaticEnvironment?, symbol: String
     ) : this(parent) {
         define(symbol)
     }
@@ -78,7 +78,7 @@ class StaticEnvironment @JvmOverloads internal constructor(
         StaticEnvironment(this, symbols)
 
     @Throws(CompileError::class)
-    fun createChild(symbol: String?): StaticEnvironment =
+    fun createChild(symbol: String): StaticEnvironment =
         StaticEnvironment(this, symbol)
 
     // *** instance access ***************************************************
@@ -121,7 +121,7 @@ class StaticEnvironment @JvmOverloads internal constructor(
     }
 
     @Throws(CompileError::class)
-    fun define(symbol: String?): Reference {
+    fun define(symbol: String): Reference {
         if (_state != State.OPEN) {
             throw CompileError(
                 symbol,
@@ -131,7 +131,7 @@ class StaticEnvironment @JvmOverloads internal constructor(
 
         try {
             val key = symbol
-            var ref = _bindings.get(key) as Reference?
+            var ref = _bindings[key] as Reference?
 
             // if ref is != null
             // the symbol is already bound in the
@@ -144,7 +144,7 @@ class StaticEnvironment @JvmOverloads internal constructor(
                     this.size
                 )
 
-                _bindings.put(key, ref)
+                _bindings[key] = ref
                 this.size++
 
                 return ref
@@ -159,25 +159,25 @@ class StaticEnvironment @JvmOverloads internal constructor(
 
 
     @Throws(AlreadyBound::class)
-    fun defineSyntax(symbol: String?, value: ITranslator?) {
+    fun defineSyntax(symbol: String, value: ITranslator) {
         val key = symbol
 
         run {
-            val o = _bindings.get(key)
+            val o = _bindings[key]
             if ((o != null) && o !is ITranslator) {
                 throw AlreadyBound(symbol)
             }
         }
 
-        _bindings.put(key, value)
+        _bindings[key] = value
     }
 
 
-    private fun lookupNoThrow(key: String?): Any? {
+    private fun lookupNoThrow(key: String): Any? {
         var current: StaticEnvironment? = this
 
         while (current != null) {
-            val result = current._bindings.get(key)
+            val result = current._bindings[key]
 
             if (result != null) {
                 return result
@@ -189,7 +189,7 @@ class StaticEnvironment @JvmOverloads internal constructor(
         return null
     }
 
-    private fun delayedLookup(key: String?): Any {
+    private fun delayedLookup(key: String): Any {
         val result = lookupNoThrow(key)
 
         return if ((result == null) || (result is Reference))
@@ -199,15 +199,15 @@ class StaticEnvironment @JvmOverloads internal constructor(
     }
 
     @Throws(SymbolNotFoundException::class)
-    private fun lookup(key: String?): Any =
+    private fun lookup(key: String): Any =
         lookupNoThrow(key) ?: throw SymbolNotFoundException(key)
 
     @Throws(SymbolNotFoundException::class)
-    fun getSyntaxFor(key: String?): ITranslator? =
+    fun getSyntaxFor(key: String): ITranslator? =
         lookup(key) as? ITranslator
 
     @Throws(UnexpectedSyntax::class)
-    fun getDelayedReferenceFor(key: String?): Reference {
+    fun getDelayedReferenceFor(key: String): Reference {
         val o = delayedLookup(key)
 
         if (o is Reference) {
@@ -218,7 +218,7 @@ class StaticEnvironment @JvmOverloads internal constructor(
     }
 
     @Throws(CompileError::class)
-    fun getReferenceFor(key: String?, restricted: Boolean): Reference {
+    fun getReferenceFor(key: String, restricted: Boolean): Reference {
         val o = lookup(key)
 
         if (o is Reference) {
@@ -236,10 +236,10 @@ class StaticEnvironment @JvmOverloads internal constructor(
     }
 
     @Throws(CompileError::class)
-    fun getReferenceFor(key: String?): Reference =
+    fun getReferenceFor(key: String): Reference =
         getReferenceFor(key, false)
 
-    fun isBound(key: String?): Boolean =
+    fun isBound(key: String): Boolean =
         lookupNoThrow(key) != null
 
     // ***********************************************************************
