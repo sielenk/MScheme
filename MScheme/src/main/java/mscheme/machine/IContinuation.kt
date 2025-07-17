@@ -4,19 +4,15 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package mscheme.machine;
+package mscheme.machine
 
-import mscheme.exceptions.SchemeException;
+import mscheme.exceptions.SchemeException
 
-/**
- * @author sielenk
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
- */
-public interface IContinuation {
 
-  Object invoke(
-      Registers registers,
-      Object value) throws SchemeException, InterruptedException;
+interface IContinuation {
+    @Throws(SchemeException::class, InterruptedException::class)
+    fun invoke(
+        registers: Registers?,
+        value: Any?
+    ): Any?
 }
