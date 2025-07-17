@@ -17,303 +17,240 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.environment
 
-package mscheme.environment;
+import mscheme.exceptions.*
+import mscheme.syntax.ITranslator
+import mscheme.values.IList
+import mscheme.values.ValueTraits
+import java.io.IOException
+import java.io.Writer
+import java.util.*
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Hashtable;
-import mscheme.exceptions.AlreadyBound;
-import mscheme.exceptions.CompileError;
-import mscheme.exceptions.SymbolNotFoundException;
-import mscheme.exceptions.TypeError;
-import mscheme.exceptions.UnexpectedSyntax;
-import mscheme.syntax.ITranslator;
-import mscheme.values.IList;
-import mscheme.values.ValueTraits;
-
-
-public class StaticEnvironment {
-
-  // ***********************************************************************
-
-  public void writeOn(Writer destination)
-      throws IOException {
-    destination.write("#[static environment]");
-  }
-
-  public StaticEnvironment toStaticEnvironment() {
-    return this;
-  }
-
-  // ***********************************************************************
-
-  private final static int OPEN = 0;
-  private final static int DEF_BODY = 1;
-  private final static int CLOSED = 2;
-
-  private final StaticEnvironment _parent;
-  private final Hashtable<String, Object> _bindings;
-  private final int _level;
-  private int _numberOfReferences;
-  private int _state;
-
-  // *** constructors ******************************************************
-
-  StaticEnvironment() {
-    this(null);
-  }
-
-  StaticEnvironment(StaticEnvironment parent) {
-    _parent = parent;
-    _bindings = new Hashtable<>();
-    _level = (parent == null) ? 0 : (parent.getLevel() + 1);
-    _numberOfReferences = 0;
-    _state = OPEN;
-  }
-
-
-  StaticEnvironment(StaticEnvironment parent, IList symbols)
-      throws CompileError, TypeError {
-    this(parent);
-
-    for (
-        IList tail = symbols;
-        !tail.isEmpty();
-        tail = tail.getTail()) {
-      define(ValueTraits.toSymbol(tail.getHead()));
-    }
-  }
-
-  StaticEnvironment(StaticEnvironment parent, String symbol)
-      throws CompileError {
-    this(parent);
-    define(symbol);
-  }
-
-  // *** instance access ***************************************************
-
-  int getLevel() {
-    return _level;
-  }
-
-  public int getSize() {
-    return _numberOfReferences;
-  }
-
-  // *** implementation of StaticEnvironment *******************************
-
-  public static StaticEnvironment create() {
-    return new StaticEnvironment();
-  }
-
-  public StaticEnvironment getParent() {
-    return _parent;
-  }
-
-  public StaticEnvironment createChild() {
-    return new StaticEnvironment(this);
-  }
-
-  public StaticEnvironment createChild(IList symbols)
-      throws CompileError, TypeError {
-    return new StaticEnvironment(this, symbols);
-  }
-
-  public StaticEnvironment createChild(String symbol)
-      throws CompileError {
-    return new StaticEnvironment(this, symbol);
-  }
-
-  // *** instance access ***************************************************
-
-  public void setStateOpen(Object v)
-      throws CompileError {
-    switch (_state) {
-      case OPEN:
-        throw new CompileError(
-            v,
-            "no nested definitions"
-        );
-
-      case DEF_BODY:
-        _state = OPEN;
-        break;
-
-      case CLOSED:
-        throw new CompileError(
-            v,
-            "environment already closed (1)"
-        );
-    }
-  }
-
-  public void setStateDefinitionBody(Object v)
-      throws CompileError {
-    switch (_state) {
-      case OPEN:
-        _state = DEF_BODY;
-        break;
-
-      case DEF_BODY:
-        throw new CompileError(
-            v,
-            "no nested definitions"
-        );
-
-      case CLOSED:
-        throw new CompileError(
-            v,
-            "environment already closed (2)"
-        );
-    }
-  }
-
-  public void setStateClosed() {
-    if ((_state == OPEN) && (getLevel() > 0)) {
-      _state = CLOSED;
-    }
-  }
-
-  public final Reference define(String symbol)
-      throws CompileError {
-    if (_state != OPEN) {
-      throw new CompileError(
-          symbol,
-          "environment already closed (3)"
-      );
+class StaticEnvironment @JvmOverloads internal constructor(
+    val parent: StaticEnvironment? = null
+) {
+    @Throws(IOException::class)
+    fun writeOn(destination: Writer) {
+        destination.write("#[static environment]")
     }
 
-    try {
-      String key = symbol;
-      Reference ref = (Reference) _bindings.get(key);
-
-      // if ref is != null
-      // the symbol is already bound in the
-      // current frame. This define is in fact
-      // a lookup.
-      if (ref == null) {
-        ref = Reference.create(
-            symbol,
-            getLevel(),
-            getSize()
-        );
-
-        _bindings.put(key, ref);
-        _numberOfReferences++;
-
-        return ref;
-      } else if (_level == 0) {
-        return ref;
-      }
-    } catch (ClassCastException e) {
+    fun toStaticEnvironment(): StaticEnvironment {
+        return this
     }
 
-    throw new AlreadyBound(symbol);
-  }
+    private val _bindings: Hashtable<String?, Any?> =
+        Hashtable<String?, Any?>()
 
+    // *** instance access ***************************************************
 
-  public void defineSyntax(String symbol, ITranslator value)
-      throws AlreadyBound {
-    String key = symbol;
+    val level: Int =
+        if (parent == null) 0 else (parent.level + 1)
+    var size: Int = 0
+        private set
+    private var _state: Int =
+        OPEN
 
-    {
-      Object o = _bindings.get(key);
-      if ((o != null) && !(o instanceof ITranslator)) {
-        throw new AlreadyBound(symbol);
-      }
+    // *** constructors ******************************************************
+
+    internal constructor(
+        parent: StaticEnvironment?, symbols: IList
+    ) : this(parent) {
+        var tail = symbols
+
+        while (!tail.isEmpty()) {
+            define(ValueTraits.toSymbol(tail.getHead()))
+            tail = tail.getTail()
+        }
     }
 
-    _bindings.put(key, value);
-  }
-
-
-  private Object lookupNoThrow(String key) {
-    for (
-        StaticEnvironment current = this;
-        current != null;
-        current = current._parent
-    ) {
-      Object result = current._bindings.get(key);
-
-      if (result != null) {
-        return result;
-      }
+    internal constructor(
+        parent: StaticEnvironment?, symbol: String?
+    ) : this(parent) {
+        define(symbol)
     }
 
-    return null;
-  }
+    fun createChild(): StaticEnvironment =
+        StaticEnvironment(this)
 
-  private Object delayedLookup(String key) {
-    Object result = lookupNoThrow(key);
+    @Throws(CompileError::class, TypeError::class)
+    fun createChild(symbols: IList): StaticEnvironment =
+        StaticEnvironment(this, symbols)
 
-    if ((result == null) || (result instanceof Reference)) {
-      return Reference.create(key, this, _state == DEF_BODY);
+    @Throws(CompileError::class)
+    fun createChild(symbol: String?): StaticEnvironment =
+        StaticEnvironment(this, symbol)
+
+    // *** instance access ***************************************************
+    @Throws(CompileError::class)
+    fun setStateOpen(v: Any?) {
+        when (_state) {
+            OPEN -> throw CompileError(
+                v,
+                "no nested definitions"
+            )
+
+            DEF_BODY -> _state = OPEN
+            CLOSED -> throw CompileError(
+                v,
+                "environment already closed (1)"
+            )
+        }
     }
 
-    return result;
-  }
+    @Throws(CompileError::class)
+    fun setStateDefinitionBody(v: Any?) {
+        when (_state) {
+            OPEN -> _state = DEF_BODY
+            DEF_BODY -> throw CompileError(
+                v,
+                "no nested definitions"
+            )
 
-  private Object lookup(String key)
-      throws SymbolNotFoundException {
-    Object result = lookupNoThrow(key);
-
-    if (result == null) {
-      throw new SymbolNotFoundException(key);
+            CLOSED -> throw CompileError(
+                v,
+                "environment already closed (2)"
+            )
+        }
     }
 
-    return result;
-  }
-
-  public ITranslator getSyntaxFor(String key)
-      throws SymbolNotFoundException {
-    Object result = lookup(key);
-
-    return
-        (result instanceof ITranslator)
-            ? (ITranslator) result
-            : null;
-  }
-
-  public Reference getDelayedReferenceFor(String key)
-      throws UnexpectedSyntax {
-    Object o = delayedLookup(key);
-
-    if (o instanceof Reference) {
-      return (Reference) o;
-    } else {
-      throw new UnexpectedSyntax(key);
+    fun setStateClosed() {
+        if ((_state == OPEN) && (this.level > 0)) {
+            _state = CLOSED
+        }
     }
-  }
 
-  public Reference getReferenceFor(String key, boolean restricted)
-      throws CompileError {
-    Object o = lookup(key);
+    @Throws(CompileError::class)
+    fun define(symbol: String?): Reference {
+        if (_state != OPEN) {
+            throw CompileError(
+                symbol,
+                "environment already closed (3)"
+            )
+        }
 
-    if (o instanceof Reference result) {
+        try {
+            val key = symbol
+            var ref = _bindings.get(key) as Reference?
 
-      if (
-          restricted
-              && (result.getLevel() == getLevel())
-              && (getLevel() > 0) // and again: global is special
-      ) {
-        throw new CompileError(key, "may not be used here");
-      }
+            // if ref is != null
+            // the symbol is already bound in the
+            // current frame. This define is in fact
+            // a lookup.
+            if (ref == null) {
+                ref = Reference.create(
+                    symbol,
+                    this.level,
+                    this.size
+                )
 
-      return result;
-    } else {
-      throw new UnexpectedSyntax(key);
+                _bindings.put(key, ref)
+                this.size++
+
+                return ref
+            } else if (this.level == 0) {
+                return ref
+            }
+        } catch (e: ClassCastException) {
+        }
+
+        throw AlreadyBound(symbol)
     }
-  }
 
-  public Reference getReferenceFor(String key)
-      throws CompileError {
-    return getReferenceFor(key, false);
-  }
 
-  public boolean isBound(String key) {
-    return lookupNoThrow(key) != null;
-  }
+    @Throws(AlreadyBound::class)
+    fun defineSyntax(symbol: String?, value: ITranslator?) {
+        val key = symbol
 
-  // ***********************************************************************
+        run {
+            val o = _bindings.get(key)
+            if ((o != null) && o !is ITranslator) {
+                throw AlreadyBound(symbol)
+            }
+        }
+
+        _bindings.put(key, value)
+    }
+
+
+    private fun lookupNoThrow(key: String?): Any? {
+        var current: StaticEnvironment? = this
+
+        while (current != null) {
+            val result = current._bindings.get(key)
+
+            if (result != null) {
+                return result
+            }
+
+            current = current.parent
+        }
+
+        return null
+    }
+
+    private fun delayedLookup(key: String?): Any {
+        val result = lookupNoThrow(key)
+
+        return if ((result == null) || (result is Reference))
+            Reference.create(key, this, _state == DEF_BODY)
+        else
+            result
+    }
+
+    @Throws(SymbolNotFoundException::class)
+    private fun lookup(key: String?): Any =
+        lookupNoThrow(key) ?: throw SymbolNotFoundException(key)
+
+    @Throws(SymbolNotFoundException::class)
+    fun getSyntaxFor(key: String?): ITranslator? =
+        lookup(key) as? ITranslator
+
+    @Throws(UnexpectedSyntax::class)
+    fun getDelayedReferenceFor(key: String?): Reference {
+        val o = delayedLookup(key)
+
+        if (o is Reference) {
+            return o
+        } else {
+            throw UnexpectedSyntax(key)
+        }
+    }
+
+    @Throws(CompileError::class)
+    fun getReferenceFor(key: String?, restricted: Boolean): Reference {
+        val o = lookup(key)
+
+        if (o is Reference) {
+            if (restricted
+                && (o.getLevel() == this.level)
+                && (this.level > 0) // and again: global is special
+            ) {
+                throw CompileError(key, "may not be used here")
+            }
+
+            return o
+        } else {
+            throw UnexpectedSyntax(key)
+        }
+    }
+
+    @Throws(CompileError::class)
+    fun getReferenceFor(key: String?): Reference =
+        getReferenceFor(key, false)
+
+    fun isBound(key: String?): Boolean =
+        lookupNoThrow(key) != null
+
+    // ***********************************************************************
+
+    companion object {
+        private const val OPEN = 0
+        private const val DEF_BODY = 1
+        private const val CLOSED = 2
+
+        @JvmStatic
+        fun create(): StaticEnvironment =
+            StaticEnvironment()
+    }
 }
