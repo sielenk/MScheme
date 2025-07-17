@@ -221,9 +221,9 @@ public final class Machine
       if (!stack.isEmpty()) {
         final StackFrame frame = stack.pop();
 
-        _state.setEnvironment(frame.environment);
+        _state.setEnvironment(frame.getEnvironment());
 
-        current = frame.continuation.invoke(_state, current);
+        current = frame.getContinuation().invoke(_state, current);
       } else {
         _done = true;
       }

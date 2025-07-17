@@ -4,9 +4,9 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package mscheme.machine;
+package mscheme.machine
 
-import mscheme.environment.DynamicEnvironment;
+import mscheme.environment.DynamicEnvironment
 
 /**
  * @author sielenk
@@ -14,13 +14,7 @@ import mscheme.environment.DynamicEnvironment;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class StackFrame {
-
-  final DynamicEnvironment environment;
-  final IContinuation continuation;
-
-  public StackFrame(DynamicEnvironment e, IContinuation k) {
-    environment = e;
-    continuation = k;
-  }
-}
+data class StackFrame(
+    val environment: DynamicEnvironment?,
+    val continuation: IContinuation?
+)
