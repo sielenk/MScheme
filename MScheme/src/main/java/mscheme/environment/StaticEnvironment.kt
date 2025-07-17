@@ -223,7 +223,7 @@ class StaticEnvironment @JvmOverloads internal constructor(
 
         if (o is Reference) {
             if (restricted
-                && (o.getLevel() == this.level)
+                && (o.level == this.level)
                 && (this.level > 0) // and again: global is special
             ) {
                 throw CompileError(key, "may not be used here")

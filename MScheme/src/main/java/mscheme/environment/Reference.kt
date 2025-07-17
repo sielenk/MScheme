@@ -17,126 +17,71 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.environment
 
-package mscheme.environment;
+import mscheme.code.IReduceable
+import mscheme.compiler.IForceable
+import mscheme.exceptions.CompileError
+import mscheme.machine.Registers
 
-import mscheme.code.IReduceable;
-import mscheme.compiler.IForceable;
-import mscheme.exceptions.CompileError;
-import mscheme.machine.Registers;
-import org.jetbrains.annotations.NotNull;
+sealed class Reference protected constructor(
+    val symbol: String
+) : IForceable, IReduceable {
+    override fun reduce(state: Registers): Any =
+        state.environment.lookup(this)
 
+    abstract val level: Int
 
-public abstract class Reference
-    implements IForceable, IReduceable {
+    abstract val index: Int
 
-  private final String _symbol;
+    @Throws(CompileError::class)
+    abstract fun forceRef(): Reference
 
-  protected Reference(String symbol) {
-    _symbol = symbol;
-  }
+    @Throws(CompileError::class)
+    override fun force(): Any? =
+        forceRef()
 
-  static Reference create(
-      String key,
-      StaticEnvironment env,
-      boolean restricted
-  ) {
-    return new DelayedReference(key, env, restricted);
-  }
+    override fun toString(): String =
+        "ptr:<$level, $index, $symbol>"
 
-  static Reference create(String key, int level, int index) {
-    return new ForcedReference(key, level, index);
-  }
+    companion object {
+        fun create(
+            key: String,
+            env: StaticEnvironment,
+            restricted: Boolean
+        ): Reference =
+            DelayedReference(key, env, restricted)
 
-  public final String getSymbol() {
-    return _symbol;
-  }
-
-  public final Object reduce(
-      @NotNull Registers state) {
-    return state.getEnvironment().lookup(this);
-  }
-
-  abstract int getLevel();
-
-  abstract int getIndex();
-
-  public abstract Reference forceRef()
-      throws CompileError;
-
-  public final Object force()
-      throws CompileError {
-    return forceRef();
-  }
-
-  public final String toString() {
-    return
-        "ptr:<" + getLevel()
-            + ", " + getIndex()
-            + ", " + _symbol
-            + '>';
-  }
+        fun create(key: String, level: Int, index: Int): Reference =
+            ForcedReference(key, level, index)
+    }
 }
 
-final class DelayedReference
-    extends Reference {
+internal class DelayedReference(
+    key: String,
+    private val _env: StaticEnvironment,
+    private val _restricted: Boolean
+) : Reference(key) {
+    override val level: Int
+        get() = throw RuntimeException(
+            "$symbol delayed reference"
+        )
 
-  private final StaticEnvironment _env;
-  private final boolean _restricted;
+    override val index: Int
+        get() = throw RuntimeException(
+            "$symbol delayed reference"
+        )
 
-
-  DelayedReference(
-      String key,
-      StaticEnvironment env,
-      boolean restricted
-  ) {
-    super(key);
-    _env = env;
-    _restricted = restricted;
-  }
-
-
-  int getLevel() {
-    throw new RuntimeException(
-        getSymbol() + " delayed reference"
-    );
-  }
-
-  int getIndex() {
-    throw new RuntimeException(
-        getSymbol() + " delayed reference"
-    );
-  }
-
-
-  public Reference forceRef()
-      throws CompileError {
-    return _env.getReferenceFor(getSymbol(), _restricted);
-  }
+    @Throws(CompileError::class)
+    override fun forceRef(): Reference =
+        _env.getReferenceFor(symbol, _restricted)
 }
 
-
-final class ForcedReference
-    extends Reference {
-
-  private final int _level;
-  private final int _index;
-
-  ForcedReference(String symbol, int level, int index) {
-    super(symbol);
-    _level = level;
-    _index = index;
-  }
-
-  int getLevel() {
-    return _level;
-  }
-
-  int getIndex() {
-    return _index;
-  }
-
-  public Reference forceRef() {
-    return this;
-  }
+internal class ForcedReference(
+    symbol: String,
+    override val level: Int,
+    override val index: Int
+) : Reference(symbol) {
+    override fun forceRef(): Reference =
+        this
 }

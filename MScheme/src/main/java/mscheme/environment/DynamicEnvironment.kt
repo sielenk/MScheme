@@ -39,8 +39,8 @@ class DynamicEnvironment private constructor(
         create(this, arity, frameSize, values)
 
     fun assign(ref: Reference, value: Any?): Any? {
-        val level = ref.getLevel()
-        val index = ref.getIndex()
+        val level = ref.level
+        val index = ref.index
 
         var result: Any? = null
 
@@ -59,8 +59,8 @@ class DynamicEnvironment private constructor(
     }
 
     fun lookupNoThrow(ref: Reference): Any? {
-        val level = ref.getLevel()
-        val index = ref.getIndex()
+        val level = ref.level
+        val index = ref.index
 
         if (0 < level && level <= _frames.size) {
             val frame = _frames[level - 1]
