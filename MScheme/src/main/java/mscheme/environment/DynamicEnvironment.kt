@@ -17,158 +17,112 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.environment
 
-package mscheme.environment;
+import mscheme.exceptions.ListExpected
+import mscheme.exceptions.PairExpected
+import mscheme.exceptions.RuntimeError
+import mscheme.util.Arity
+import mscheme.values.IList
+import java.util.*
 
-import java.util.Vector;
-import mscheme.exceptions.ListExpected;
-import mscheme.exceptions.PairExpected;
-import mscheme.exceptions.RuntimeError;
-import mscheme.util.Arity;
-import mscheme.values.IList;
+class DynamicEnvironment private constructor(
+    private val _globals: Vector<Any?>,
+    private val _frames: Array<Array<Any?>>
+) {
+    @Throws(ListExpected::class, PairExpected::class)
+    fun createChild(
+        arity: Arity,
+        frameSize: Int,
+        values: IList
+    ): DynamicEnvironment =
+        create(this, arity, frameSize, values)
 
+    fun assign(ref: Reference, value: Any?): Any? {
+        val level = ref.getLevel()
+        val index = ref.getIndex()
 
-public final class DynamicEnvironment {
+        var result: Any? = null
 
-  // *******************************************************************
+        if (level > 0) {
+            result = _frames[level - 1][index]
+            _frames[level - 1][index] = value
+        } else if (index < _globals.size) {
+            result = _globals.elementAt(index)
+            _globals.setElementAt(value, index)
+        } else {
+            _globals.setSize(index + 1)
+            _globals.setElementAt(value, index)
+        }
 
-  private final Vector<Object> _globals;
-  private final Object[][] _frames;
-
-  // *******************************************************************
-
-  private DynamicEnvironment(
-      Vector<Object> globals,
-      Object[][] frames
-  ) {
-    _globals = globals;
-    _frames = frames;
-  }
-
-  private static DynamicEnvironment create(
-      DynamicEnvironment parent,
-      int size
-  ) {
-    Object[][] oldFrames = parent._frames;
-    int newIndex = oldFrames.length;
-    Object[][] newFrames = new Object[newIndex + 1][];
-
-    if (newIndex > 0) {
-      System.arraycopy(
-          oldFrames, 0,
-          newFrames, 0,
-          newIndex
-      );
+        return result ?: value
     }
 
-    newFrames[newIndex] = new Object[size];
+    fun lookupNoThrow(ref: Reference): Any? {
+        val level = ref.getLevel()
+        val index = ref.getIndex()
 
-    return new DynamicEnvironment(
-        parent._globals,
-        newFrames
-    );
-  }
+        if (0 < level && level <= _frames.size) {
+            val frame = _frames[level - 1]
 
-  private static DynamicEnvironment create(
-      DynamicEnvironment parent,
-      Arity arity,
-      int frameSize,
-      IList values
-  ) throws PairExpected, ListExpected {
-    DynamicEnvironment result = create(
-        parent,
-        frameSize
-    );
+            if (0 <= index && index < frame.size) {
+                return frame[index]
+            }
+        } else if (0 <= index && index < _globals.size) {
+            return _globals.elementAt(index)
+        }
 
-    Object[] frame = result._frames[result._frames.length - 1];
-    IList rest = values;
-
-    for (int i = 0; i < arity.getMin(); i++) {
-      frame[i] = rest.getHead();
-      rest = rest.getTail();
+        return null
     }
 
-    if (arity.allowMore()) {
-      frame[arity.getMin()] = rest;
+    @Throws(RuntimeError::class)
+    fun lookup(ref: Reference): Any =
+        lookupNoThrow(ref)
+            ?: throw RuntimeError(
+                ref.symbol,
+                "uninitialized variable"
+            )
+
+    companion object {
+        private fun create(
+            parent: DynamicEnvironment,
+            size: Int
+        ): DynamicEnvironment =
+            DynamicEnvironment(
+                parent._globals,
+                parent._frames + arrayOfNulls(size)
+            )
+
+        @Throws(PairExpected::class, ListExpected::class)
+        private fun create(
+            parent: DynamicEnvironment,
+            arity: Arity,
+            frameSize: Int,
+            values: IList
+        ): DynamicEnvironment {
+            val result: DynamicEnvironment =
+                create(parent, frameSize)
+
+            val frame = result._frames[result._frames.size - 1]
+            var rest = values
+
+            for (i in 0..<arity.min) {
+                frame[i] = rest.getHead()
+                rest = rest.getTail()
+            }
+
+            if (arity.allowMore()) {
+                frame[arity.min] = rest
+            }
+
+            return result
+        }
+
+        @JvmStatic
+        fun create(): DynamicEnvironment =
+            DynamicEnvironment(
+                Vector<Any?>(),
+                arrayOf()
+            )
     }
-
-    return result;
-  }
-
-
-  public static DynamicEnvironment create() {
-    return new DynamicEnvironment(
-        new Vector<>(),
-        new Object[0][]
-    );
-  }
-
-  public DynamicEnvironment createChild(int size) {
-    return create(this, size);
-  }
-
-  public DynamicEnvironment createChild(
-      Arity arity,
-      int frameSize,
-      IList values
-  ) throws ListExpected, PairExpected {
-    return create(this, arity, frameSize, values);
-  }
-
-  // *** Envrionment access ************************************************
-
-  // *** value access (runtime) ***
-
-  public Object assign(Reference ref, Object value) {
-    int level = ref.getLevel();
-    int index = ref.getIndex();
-
-    Object result = null;
-
-    if (level > 0) {
-      result = _frames[level - 1][index];
-      _frames[level - 1][index] = value;
-    } else if (index < _globals.size()) {
-      result = _globals.elementAt(index);
-      _globals.setElementAt(value, index);
-    } else {
-      _globals.setSize(index + 1);
-      _globals.setElementAt(value, index);
-    }
-
-    return (result != null) ? result : value;
-  }
-
-  public Object lookupNoThrow(Reference ref) {
-    final int level = ref.getLevel();
-    final int index = ref.getIndex();
-
-    if (0 < level && level <= _frames.length) {
-      final Object[] frame = _frames[level - 1];
-
-      if (0 <= index && index < frame.length) {
-        return frame[index];
-      }
-    } else if (0 <= index && index < _globals.size()) {
-      return _globals.elementAt(index);
-    }
-
-    return null;
-  }
-
-  public Object lookup(Reference ref)
-      throws RuntimeError {
-    Object result = lookupNoThrow(ref);
-
-    if (result == null) {
-      throw new RuntimeError(
-          ref.getSymbol(),
-          "uninitialized variable"
-      );
-    }
-
-    return result;
-  }
-
-  // ***********************************************************************
 }
