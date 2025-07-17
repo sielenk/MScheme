@@ -17,189 +17,153 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.environment
 
-package mscheme.environment;
+import mscheme.exceptions.AlreadyBound
+import mscheme.exceptions.CompileError
+import mscheme.exceptions.RuntimeError
+import mscheme.syntax.TranslatorFactory
+import mscheme.values.functions.Builtins
+import java.io.IOException
+import java.io.Writer
 
-import java.io.IOException;
-import java.io.Writer;
-import mscheme.exceptions.AlreadyBound;
-import mscheme.exceptions.CompileError;
-import mscheme.exceptions.RuntimeError;
-import mscheme.syntax.TranslatorFactory;
-import mscheme.values.functions.Builtins;
-
-
-public final class Environment {
-
-  // *******************************************************************
-
-  public void writeOn(Writer destination)
-      throws IOException {
-    destination.write("#[environment]");
-  }
-
-  public Environment toEnvironment() {
-    return this;
-  }
-
-  // *******************************************************************
-
-  private final StaticEnvironment _bindings;
-  private final DynamicEnvironment _values;
-
-  // *******************************************************************
-
-  private Environment(
-      StaticEnvironment bindings,
-      DynamicEnvironment values
-  ) {
-    _bindings = bindings;
-    _values = values;
-  }
-
-  private static Environment create() {
-    return new Environment(
-        StaticEnvironment.create(),
-        DynamicEnvironment.create()
-    );
-  }
-
-  public static Environment getEmpty() {
-    return create();
-  }
-
-  public static Environment getNullEnvironment() {
-    Environment result = getEmpty();
-
-    try {
-      StaticEnvironment staticBindings = result.getStatic();
-
-      staticBindings.defineSyntax(
-          "quote",
-          TranslatorFactory.getQuoteToken()
-      );
-      staticBindings.defineSyntax(
-          "if",
-          TranslatorFactory.getIfToken()
-      );
-      staticBindings.defineSyntax(
-          "begin",
-          TranslatorFactory.getBeginToken()
-      );
-      staticBindings.defineSyntax(
-          "and",
-          TranslatorFactory.getAndToken()
-      );
-      staticBindings.defineSyntax(
-          "or",
-          TranslatorFactory.getOrToken()
-      );
-      staticBindings.defineSyntax(
-          "lambda",
-          TranslatorFactory.getLambdaToken()
-      );
-      staticBindings.defineSyntax(
-          "let",
-          TranslatorFactory.getLetToken()
-      );
-      staticBindings.defineSyntax(
-          "let*",
-          TranslatorFactory.getLetStarToken()
-      );
-      staticBindings.defineSyntax(
-          "letrec",
-          TranslatorFactory.getLetrecToken()
-      );
-      staticBindings.defineSyntax(
-          "define",
-          TranslatorFactory.getDefineToken()
-      );
-      staticBindings.defineSyntax(
-          "set!",
-          TranslatorFactory.getSetToken()
-      );
-      staticBindings.defineSyntax(
-          "define-syntax",
-          TranslatorFactory.getDefineSyntaxToken()
-      );
-    } catch (AlreadyBound e) {
-      throw new RuntimeException(
-          "unexpected AlreadyBound in getNullEnvironment()"
-      );
+class Environment private constructor(
+    val static: StaticEnvironment,
+    val dynamic: DynamicEnvironment
+) {
+    @Throws(IOException::class)
+    fun writeOn(destination: Writer) {
+        destination.write("#[environment]")
     }
 
-    return result;
-  }
-
-  public static Environment getSchemeReportEnvironment() {
-    Environment result = getNullEnvironment();
-
-    try {
-      Builtins.getBuiltins(result);
-    } catch (CompileError e) {
-      throw new RuntimeException(
-          "unexpected CompileError"
-      );
+    fun toEnvironment(): Environment {
+        return this
     }
 
-    return result;
-  }
+    // *** Envrionment access ************************************************
 
+    // *** code access (compiletime) ***
 
-  public StaticEnvironment getStatic() {
-    return _bindings;
-  }
-
-  public DynamicEnvironment getDynamic() {
-    return _values;
-  }
-
-  // *** Envrionment access ************************************************
-
-  // *** code access (compiletime) ***
-
-  public Reference define(String key, Object value)
-      throws CompileError {
-    Reference newReference = _bindings.define(key);
-    assign(newReference, value);
-    return newReference;
-  }
-
-  // *** value access (runtime) ***
-
-  public Object assign(Reference key, Object value) {
-    return _values.assign(key, value);
-  }
-
-  public Object assign(String key, Object value)
-      throws CompileError {
-    return assign(_bindings.getReferenceFor(key), value);
-  }
-
-
-  public Object lookupNoThrow(Reference ref) {
-    return _values.lookupNoThrow(ref);
-  }
-
-  public Object lookup(Reference ref)
-      throws RuntimeError {
-    Object result = lookupNoThrow(ref);
-
-    if (result == null) {
-      throw new RuntimeError(
-          ref.getSymbol(),
-          "uninitialized variable"
-      );
+    @Throws(CompileError::class)
+    fun define(key: String, value: Any?): Reference {
+        val newReference = static.define(key)
+        assign(newReference, value)
+        return newReference
     }
 
-    return result;
-  }
+    // *** value access (runtime) ***
+    fun assign(key: Reference, value: Any?): Any? =
+        dynamic.assign(key, value)
 
-  public Object lookup(String key)
-      throws CompileError,
-      RuntimeError {
-    return lookup(_bindings.getReferenceFor(key));
-  }
+    @Throws(CompileError::class)
+    fun assign(key: String, value: Any?): Any? =
+        assign(static.getReferenceFor(key), value)
 
-  // ***********************************************************************
+
+    fun lookupNoThrow(ref: Reference): Any? =
+        dynamic.lookupNoThrow(ref)
+
+    @Throws(RuntimeError::class)
+    fun lookup(ref: Reference): Any =
+        lookupNoThrow(ref) ?: throw RuntimeError(
+            ref.symbol,
+            "uninitialized variable"
+        )
+
+    @Throws(CompileError::class, RuntimeError::class)
+    fun lookup(key: String): Any =
+        lookup(static.getReferenceFor(key)) // ***********************************************************************
+
+    companion object {
+        private fun create(): Environment =
+            Environment(
+                StaticEnvironment.create(),
+                DynamicEnvironment.create()
+            )
+
+        @JvmStatic
+        fun getEmpty(): Environment =
+            create()
+
+        @JvmStatic
+        fun getNullEnvironment(): Environment {
+            val result: Environment =
+                getEmpty()
+
+            try {
+                val staticBindings = result.static
+
+                staticBindings.defineSyntax(
+                    "quote",
+                    TranslatorFactory.getQuoteToken()
+                )
+                staticBindings.defineSyntax(
+                    "if",
+                    TranslatorFactory.getIfToken()
+                )
+                staticBindings.defineSyntax(
+                    "begin",
+                    TranslatorFactory.getBeginToken()
+                )
+                staticBindings.defineSyntax(
+                    "and",
+                    TranslatorFactory.getAndToken()
+                )
+                staticBindings.defineSyntax(
+                    "or",
+                    TranslatorFactory.getOrToken()
+                )
+                staticBindings.defineSyntax(
+                    "lambda",
+                    TranslatorFactory.getLambdaToken()
+                )
+                staticBindings.defineSyntax(
+                    "let",
+                    TranslatorFactory.getLetToken()
+                )
+                staticBindings.defineSyntax(
+                    "let*",
+                    TranslatorFactory.getLetStarToken()
+                )
+                staticBindings.defineSyntax(
+                    "letrec",
+                    TranslatorFactory.getLetrecToken()
+                )
+                staticBindings.defineSyntax(
+                    "define",
+                    TranslatorFactory.getDefineToken()
+                )
+                staticBindings.defineSyntax(
+                    "set!",
+                    TranslatorFactory.getSetToken()
+                )
+                staticBindings.defineSyntax(
+                    "define-syntax",
+                    TranslatorFactory.getDefineSyntaxToken()
+                )
+            } catch (e: AlreadyBound) {
+                throw RuntimeException(
+                    "unexpected AlreadyBound in getNullEnvironment()"
+                )
+            }
+
+            return result
+        }
+
+        @JvmStatic
+        fun getSchemeReportEnvironment(): Environment {
+            val result: Environment =
+                getNullEnvironment()
+
+            try {
+                Builtins.getBuiltins(result)
+            } catch (e: CompileError) {
+                throw RuntimeException(
+                    "unexpected CompileError"
+                )
+            }
+
+            return result
+        }
+    }
 }
