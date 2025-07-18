@@ -17,40 +17,28 @@
  * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package mscheme.values.functions
 
-package mscheme.values.functions;
+import mscheme.exceptions.SchemeException
+import mscheme.exceptions.TypeError
+import mscheme.machine.Registers
+import mscheme.values.Function
+import mscheme.values.IList
+import mscheme.values.ListFactory.prepend
+import mscheme.values.ValueTraits.apply
 
-import mscheme.exceptions.SchemeException;
-import mscheme.exceptions.TypeError;
-import mscheme.machine.Registers;
-import mscheme.values.Function;
-import mscheme.values.IList;
-import mscheme.values.ListFactory;
-import mscheme.values.ValueTraits;
-
-class YWrappedFunction
-    extends Function {
-
-  private final Function _f;
-
-  YWrappedFunction(Function f) {
-    _f = f;
-  }
-
-  public Object call(Registers state, IList arguments)
-      throws SchemeException, InterruptedException {
-    return ValueTraits.apply(state, _f, ListFactory
-        .prepend(this, arguments));
-  }
+internal class YWrappedFunction(private val _f: Function?) : Function() {
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun call(state: Registers, arguments: IList): Any? =
+        apply(
+            state,
+            _f,
+            prepend(this, arguments)
+        )
 }
 
-public final class YCombinator
-    extends UnaryValueFunction {
-
-  public final static YCombinator INSTANCE = new YCombinator();
-
-  protected Object checkedCall(Object fst)
-      throws TypeError {
-    return new YWrappedFunction((Function) fst);
-  }
+object YCombinator : UnaryValueFunction() {
+    @Throws(TypeError::class)
+    override fun checkedCall(fst: Any?): Any =
+        YWrappedFunction(fst as Function?)
 }
