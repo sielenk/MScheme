@@ -17,29 +17,21 @@
  * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package mscheme.values.functions
 
-package mscheme.values.functions;
+import mscheme.exceptions.SchemeException
+import mscheme.machine.Registers
+import mscheme.values.ListFactory
+import mscheme.values.ValueTraits
 
-import mscheme.exceptions.SchemeException;
-import mscheme.machine.Registers;
-import mscheme.values.ListFactory;
-import mscheme.values.ValueTraits;
-
-public final class SpawnFunction
-    extends UnaryFunction {
-
-  public final static SpawnFunction INSTANCE = new SpawnFunction();
-
-  private SpawnFunction() {
-  }
-
-  protected Object checkedCall(Registers state, Object argument)
-      throws SchemeException, InterruptedException {
-    return ValueTraits.apply(
-        state,
-        argument,
-        ListFactory.create(
-            new SubcontinuationController(
-                state)));
-  }
+object SpawnFunction : UnaryFunction() {
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun checkedCall(state: Registers, fst: Any?): Any? =
+        ValueTraits.apply(
+            state,
+            fst,
+            ListFactory.create(
+                SubcontinuationController(state)
+            )
+        )
 }
