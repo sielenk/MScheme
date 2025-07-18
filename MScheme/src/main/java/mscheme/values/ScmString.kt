@@ -17,172 +17,132 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.values
 
-package mscheme.values;
+import mscheme.exceptions.ImmutableException
+import mscheme.exceptions.InvalidStringIndexException
+import java.io.IOException
+import java.io.Writer
 
-import java.io.IOException;
-import java.io.Writer;
-import mscheme.exceptions.ImmutableException;
-import mscheme.exceptions.InvalidStringIndexException;
+internal class ConstScmString(
+    private val _string: String
+) : ScmString() {
+    override val length: Int
+        get() = _string.length
 
+    override fun get_(index: Int): Char =
+        _string[index]
 
-class ConstScmString
-    extends ScmString {
+    @Throws(ImmutableException::class)
+    override fun set_(index: Int, c: Char) {
+        throw ImmutableException(this)
+    }
 
-  private final String _string;
-
-  public ConstScmString(String javaString) {
-    _string = javaString;
-  }
-
-  public int getLength() {
-    return _string.length();
-  }
-
-  public char get_(int index) {
-    return _string.charAt(index);
-  }
-
-  public void set_(int index, char c)
-      throws ImmutableException {
-    throw new ImmutableException(this);
-  }
-
-  public String getJavaString() {
-    return _string;
-  }
+    override val javaString: String
+        get() = _string
 }
 
-class MutableScmString
-    extends ScmString
-    implements IMutable {
+internal class MutableScmString : ScmString, IMutable {
+    private val _string: CharArray
 
-  private final char[] _string;
-
-  public MutableScmString(int size, char fill) {
-    _string = new char[size];
-    for (int i = 0; i < size; ++i) {
-      _string[i] = fill;
+    constructor(size: Int, fill: Char) {
+        _string = CharArray(size) { fill }
     }
-  }
 
-  public MutableScmString(String javaString) {
-    int size = javaString.length();
-    _string = new char[size];
-    javaString.getChars(0, size, _string, 0);
-  }
+    constructor(javaString: String) {
+        _string = javaString.toCharArray()
+    }
 
-  public int getLength() {
-    return _string.length;
-  }
+    override val length: Int
+        get() = _string.size
 
-  public char get_(int index) {
-    return _string[index];
-  }
+    override fun get_(index: Int): Char =
+        _string[index]
 
-  public void set_(int index, char c) {
-    _string[index] = c;
-  }
+    override fun set_(index: Int, c: Char) {
+        _string[index] = c
+    }
 
-  public Object getConst() {
-    return new ConstScmString(getJavaString());
-  }
+    override fun getConst(): Any =
+        ConstScmString(javaString)
 
-  public String getJavaString() {
-    return new String(_string);
-  }
+    override val javaString: String
+        get() = String(_string)
 }
 
 
-public abstract class ScmString
-    implements IComparable, IOutputable {
+abstract class ScmString protected constructor() : IComparable, IOutputable {
+    abstract val javaString: String
 
-  protected ScmString() {
-  }
-
-  public static ScmString create(int size, char fill) {
-    return new MutableScmString(size, fill);
-  }
-
-  public static ScmString create(String javaString) {
-    return new MutableScmString(javaString);
-  }
-
-  public static ScmString createConst(String javaString) {
-    return new ConstScmString(javaString);
-  }
-
-  abstract public String getJavaString();
-
-  // accessors
-
-  private void validateIndex(int index)
-      throws InvalidStringIndexException {
-    if ((index < 0) || (getLength() <= index)) {
-      throw new InvalidStringIndexException(this, index);
-    }
-  }
-
-  public final void set(int index, char c)
-      throws InvalidStringIndexException, ImmutableException {
-    validateIndex(index);
-    set_(index, c);
-  }
-
-  public final char get(int index)
-      throws InvalidStringIndexException {
-    validateIndex(index);
-    return get_(index);
-  }
-
-  abstract public int getLength();
-
-  abstract protected void set_(int index, char c)
-      throws ImmutableException;
-
-  abstract protected char get_(int index);
-
-  public void outputOn(Writer destination, boolean doWrite) throws IOException {
-    if (doWrite) {
-      destination.write('"'); // "
-      for (int i = 0; i < getLength(); i++) {
-        char c = get_(i);
-        switch (c) {
-          case '\n':
-            destination.write("\\n");
-            break;
-
-          case '"': // "
-            destination.write("\\\"");
-            break;
-
-          default:
-            destination.write(c);
-            break;
+    // accessors
+    @Throws(InvalidStringIndexException::class)
+    private fun validateIndex(index: Int) {
+        if ((index < 0) || (this.length <= index)) {
+            throw InvalidStringIndexException(this, index)
         }
-      }
-      destination.write('"'); // "
-    } else {
-      destination.write(
-          getJavaString());
-    }
-  }
-
-  public boolean eq(Object other) {
-    return this == other;
-  }
-
-  public boolean eqv(Object other) {
-    return this == other;
-  }
-
-  public boolean equals(Object other) {
-    if (!(other instanceof ScmString otherString)) {
-      return false;
     }
 
-    return getJavaString().compareTo(
-        otherString.getJavaString()
-    ) == 0;
-  }
+    @Throws(InvalidStringIndexException::class, ImmutableException::class)
+    fun set(index: Int, c: Char) {
+        validateIndex(index)
+        set_(index, c)
+    }
+
+    @Throws(InvalidStringIndexException::class)
+    fun get(index: Int): Char {
+        validateIndex(index)
+        return get_(index)
+    }
+
+    abstract val length: Int
+
+    @Throws(ImmutableException::class)
+    protected abstract fun set_(index: Int, c: Char)
+
+    protected abstract fun get_(index: Int): Char
+
+    @Throws(IOException::class)
+    override fun outputOn(destination: Writer, doWrite: Boolean) {
+        if (doWrite) {
+            destination.write('"'.code) // "
+            for (i in 0..<this.length) {
+                val c = get_(i)
+                when (c) {
+                    '\n' -> destination.write("\\n")
+                    '"' -> destination.write("\\\"")
+                    else -> destination.write(c.code)
+                }
+            }
+            destination.write('"'.code) // "
+        } else {
+            destination.write(
+                this.javaString
+            )
+        }
+    }
+
+    override fun eq(other: Any?): Boolean =
+        this === other
+
+    override fun eqv(other: Any?): Boolean =
+        this === other
+
+    override fun equals(other: Any?): Boolean =
+        other is ScmString
+                && this.javaString.compareTo(other.javaString) == 0
+
+
+    companion object {
+        @JvmStatic
+        fun create(size: Int, fill: Char): ScmString =
+            MutableScmString(size, fill)
+
+        @JvmStatic
+        fun create(javaString: String): ScmString =
+            MutableScmString(javaString)
+
+        @JvmStatic
+        fun createConst(javaString: String): ScmString =
+            ConstScmString(javaString)
+    }
 }
