@@ -22,12 +22,11 @@ package mscheme.values.functions
 import mscheme.exceptions.SchemeException
 import mscheme.machine.Registers
 import mscheme.util.Arity
-import mscheme.util.Arity.Companion.exactly
 import mscheme.values.IList
 
 abstract class Thunk : CheckedFunction() {
     override val arity: Arity =
-        exactly(0)
+        Arity.exactly(0)
 
     @Throws(SchemeException::class)
     override fun checkedCall(state: Registers, args: IList): Any? =

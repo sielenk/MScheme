@@ -24,16 +24,16 @@ import mscheme.exceptions.TypeError
 import mscheme.machine.Registers
 import mscheme.values.Function
 import mscheme.values.IList
-import mscheme.values.ListFactory.prepend
-import mscheme.values.ValueTraits.apply
+import mscheme.values.ListFactory
+import mscheme.values.ValueTraits
 
 internal class YWrappedFunction(private val _f: Function?) : Function() {
     @Throws(SchemeException::class, InterruptedException::class)
     override fun call(state: Registers, arguments: IList): Any? =
-        apply(
+        ValueTraits.apply(
             state,
             _f,
-            prepend(this, arguments)
+            ListFactory.prepend(this, arguments)
         )
 }
 

@@ -23,8 +23,7 @@ import mscheme.exceptions.CloseException
 import mscheme.exceptions.OpenException
 import mscheme.exceptions.ParseException
 import mscheme.exceptions.ReadException
-import mscheme.values.ListFactory.createConst
-import mscheme.values.ListFactory.createConstPair
+import mscheme.values.ListFactory
 import java.io.*
 
 internal object EofValue : IOutputable {
@@ -176,7 +175,7 @@ class InputPort private constructor(
         var la = skipWSread()
 
         if (la == closeToken.code) {
-            return createConst()
+            return ListFactory.createConst()
         }
 
         if (la == EOF) {
@@ -190,7 +189,7 @@ class InputPort private constructor(
 
             la = skipWSread()
             if (la == '.'.code) {
-                val result = createConstPair(
+                val result = ListFactory.createConstPair(
                     head,
                     parseDatum()
                 )
@@ -205,7 +204,7 @@ class InputPort private constructor(
                 return result
             } else {
                 _reader.unread(la)
-                return createConstPair(
+                return ListFactory.createConstPair(
                     head,
                     parseList(closeToken)
                 )
@@ -332,11 +331,11 @@ class InputPort private constructor(
             '('.code -> return parseList(')')
             '['.code -> return parseList(']')
             '"'.code -> return parseString()
-            '\''.code -> return createConst(
+            '\''.code -> return ListFactory.createConst(
                 "quote",
                 parseDatum()
             )
-            '`'.code -> return createConst(
+            '`'.code -> return ListFactory.createConst(
                 "quasiquote",
                 parseDatum()
             )
@@ -351,7 +350,7 @@ class InputPort private constructor(
                     sym = "unquote"
                 }
 
-                return createConst(
+                return ListFactory.createConst(
                     sym,
                     parseDatum()
                 )

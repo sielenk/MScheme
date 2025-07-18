@@ -22,18 +22,17 @@ package mscheme.values.functions
 import mscheme.exceptions.ListExpected
 import mscheme.exceptions.PairExpected
 import mscheme.values.ValueTraits
-import mscheme.values.ValueTraits.toConstPair
-import mscheme.values.ValueTraits.toList
+
 
 abstract class AssocBase : BinaryValueFunction() {
     protected abstract fun equal(fst: Any?, snd: Any?): Boolean
 
     @Throws(ListExpected::class, PairExpected::class)
     override fun checkedCall(fst: Any?, snd: Any?): Any? {
-        var tail = toList(snd)
+        var tail = ValueTraits.toList(snd)
 
         while (!tail.isEmpty) {
-            val pair = toConstPair(tail.head)
+            val pair = ValueTraits.toConstPair(tail.head)
 
             if (equal(fst, pair.first)) {
                 return pair

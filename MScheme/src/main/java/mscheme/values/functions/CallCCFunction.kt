@@ -21,20 +21,19 @@ package mscheme.values.functions
 
 import mscheme.exceptions.SchemeException
 import mscheme.machine.Registers
-import mscheme.values.ListFactory.create
-import mscheme.values.ValueTraits.apply
+import mscheme.values.ListFactory
+import mscheme.values.ValueTraits
 
 object CallCCFunction : UnaryFunction() {
     @Throws(SchemeException::class, InterruptedException::class)
-    override fun checkedCall(state: Registers, fst: Any?): Any? {
-        return apply(
+    override fun checkedCall(state: Registers, fst: Any?): Any? =
+        ValueTraits.apply(
             state,
             fst,
-            create(
+            ListFactory.create(
                 Subcontinuation(
                     state.stack.continuation
                 )
             )
         )
-    }
 }

@@ -22,12 +22,11 @@ package mscheme.values.functions
 import mscheme.exceptions.SchemeException
 import mscheme.machine.Registers
 import mscheme.util.Arity
-import mscheme.util.Arity.Companion.exactly
 import mscheme.values.IList
 
 abstract class BinaryFunction : CheckedFunction() {
     override val arity: Arity =
-        exactly(2)
+        Arity.exactly(2)
 
     @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedCall(state: Registers, args: IList): Any? =

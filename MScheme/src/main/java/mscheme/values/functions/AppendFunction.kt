@@ -22,23 +22,20 @@ package mscheme.values.functions
 import mscheme.exceptions.RuntimeError
 import mscheme.exceptions.TypeError
 import mscheme.machine.Registers
-import mscheme.util.Arity
-import mscheme.util.Arity.Companion.atLeast
 import mscheme.values.Function
 import mscheme.values.IList
-import mscheme.values.ListFactory.create
-import mscheme.values.ListFactory.createPair
-import mscheme.values.ValueTraits.toList
+import mscheme.values.ListFactory
+import mscheme.values.ValueTraits
 
 internal class AppendHelper1(initial: Any?) : Reducer(initial) {
     override fun combine(fst: Any?, snd: Any?): Any =
-        createPair(fst, snd)
+        ListFactory.createPair(fst, snd)
 }
 
-internal object AppendHelper2 : Reducer(create()) {
+internal object AppendHelper2 : Reducer(ListFactory.create()) {
     @Throws(RuntimeError::class, TypeError::class)
     override fun combine(fst: Any?, snd: Any?): Any? =
-        AppendHelper1(snd).foldRight(toList(fst))
+        AppendHelper1(snd).foldRight(ValueTraits.toList(fst))
 }
 
 object AppendFunction : Function() {

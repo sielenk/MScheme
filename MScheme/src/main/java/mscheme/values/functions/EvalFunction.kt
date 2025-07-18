@@ -21,12 +21,12 @@ package mscheme.values.functions
 import mscheme.compiler.Compiler
 import mscheme.exceptions.SchemeException
 import mscheme.machine.Registers
-import mscheme.values.ValueTraits.toEnvironment
+import mscheme.values.ValueTraits
 
 object EvalFunction : BinaryFunction() {
     @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedCall(state: Registers, fst: Any?, snd: Any?): Any? {
-        val newEnv = toEnvironment(snd)
+        val newEnv = ValueTraits.toEnvironment(snd)
         val newCode = Compiler(newEnv.static).compile(fst)
 
         state.environment = newEnv.dynamic

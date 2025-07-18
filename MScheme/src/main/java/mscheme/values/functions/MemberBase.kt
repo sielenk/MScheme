@@ -22,14 +22,13 @@ package mscheme.values.functions
 import mscheme.exceptions.ListExpected
 import mscheme.exceptions.PairExpected
 import mscheme.values.ValueTraits
-import mscheme.values.ValueTraits.toList
 
 abstract class MemberBase : BinaryValueFunction() {
     protected abstract fun equal(fst: Any?, snd: Any?): Boolean
 
     @Throws(ListExpected::class, PairExpected::class)
     override fun checkedCall(fst: Any?, snd: Any?): Any? {
-        var tail = toList(snd)
+        var tail = ValueTraits.toList(snd)
 
         while (!tail.isEmpty) {
             if (equal(fst, tail.head)) {

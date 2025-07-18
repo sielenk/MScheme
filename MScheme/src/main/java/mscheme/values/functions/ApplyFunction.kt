@@ -23,14 +23,12 @@ import mscheme.code.Application
 import mscheme.exceptions.SchemeException
 import mscheme.machine.Registers
 import mscheme.util.Arity
-import mscheme.util.Arity.Companion.atLeast
 import mscheme.values.IList
-import mscheme.values.ValueTraits.toList
-import mscheme.values.ValueTraits.toMutablePair
+import mscheme.values.ValueTraits
 
 object ApplyFunction : CheckedFunction() {
     override val arity: Arity =
-        atLeast(2)
+        Arity.atLeast(2)
 
     @Throws(SchemeException::class)
     override fun checkedCall(state: Registers, args: IList): Any? {
@@ -48,7 +46,8 @@ object ApplyFunction : CheckedFunction() {
         // Now toBeModified referes the pair containing the
         // last but one argument. In the example it would be
         // (1 (2 3)) which is equal to (1 . ((2 3)))
-        toMutablePair(toBeModified).second = toList(toBeModified.tail.head).getCopy()
+        ValueTraits.toMutablePair(toBeModified).second =
+            ValueTraits.toList(toBeModified.tail.head).getCopy()
 
 
         // and here it would have become

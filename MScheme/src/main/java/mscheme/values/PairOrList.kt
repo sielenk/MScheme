@@ -26,8 +26,7 @@ import mscheme.exceptions.PairExpected
 import mscheme.exceptions.SchemeException
 import mscheme.syntax.ITranslator
 import mscheme.syntax.ProcedureCall
-import mscheme.values.ValueTraits.getConst
-import mscheme.values.ValueTraits.output
+import mscheme.values.ValueTraits
 import java.io.IOException
 import java.io.StringWriter
 import java.io.Writer
@@ -39,9 +38,9 @@ internal class ConstPairOrList(
     second: Any?
 ) : PairOrList() {
     override val first: Any? =
-        getConst(first)
+        ValueTraits.getConst(first)
     override val second: Any? =
-        getConst(second)
+        ValueTraits.getConst(second)
 }
 
 internal class MutablePairOrList(
@@ -102,7 +101,7 @@ abstract class PairOrList protected constructor(
                 destination.write(' '.code)
             }
 
-            output(destination, doWrite, enumerator.nextElement())
+            ValueTraits.output(destination, doWrite, enumerator.nextElement())
             first = false
         }
 
@@ -111,7 +110,7 @@ abstract class PairOrList protected constructor(
                 destination.write(" . [ cyclic ]")
             } else {
                 destination.write(" . ")
-                output(
+                ValueTraits.output(
                     destination, doWrite, enumerator
                         .nextElement()
                 )

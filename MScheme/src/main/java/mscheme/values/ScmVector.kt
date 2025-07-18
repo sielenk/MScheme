@@ -22,10 +22,7 @@ package mscheme.values
 import mscheme.exceptions.ImmutableException
 import mscheme.exceptions.InvalidVectorIndexException
 import mscheme.exceptions.VectorException
-import mscheme.values.ListFactory.prepend
-import mscheme.values.ValueTraits.equal
-import mscheme.values.ValueTraits.getConst
-import mscheme.values.ValueTraits.output
+import mscheme.values.ValueTraits
 import java.io.IOException
 import java.io.Writer
 
@@ -35,7 +32,7 @@ internal class ConstScmVector : ScmVector {
     constructor(data: Array<Any?>) : super(data)
 
     override fun elementInit(obj: Any?): Any? =
-        getConst(obj)
+        ValueTraits.getConst(obj)
 
     @Throws(ImmutableException::class)
     public override fun modify() {
@@ -121,7 +118,7 @@ abstract class ScmVector : IComparable, IOutputable {
         }
 
         for (i in 0..<this.length) {
-            if (!equal(_data[i], other._data[i])) {
+            if (!ValueTraits.equal(_data[i], other._data[i])) {
                 return false
             }
         }
@@ -137,7 +134,7 @@ abstract class ScmVector : IComparable, IOutputable {
                 destination.write(' '.code)
             }
 
-            output(destination, doWrite, _data[i])
+            ValueTraits.output(destination, doWrite, _data[i])
         }
         destination.write(')'.code)
     }
@@ -147,19 +144,19 @@ abstract class ScmVector : IComparable, IOutputable {
             var result = ListFactory.create()
 
             for (i in this.length - 1 downTo 0) {
-                result = prepend(_data[i], result)
+                result = ListFactory.prepend(_data[i], result)
             }
 
             return result
         }
 
     companion object {
-        private val EMPTY: ScmVector = ConstScmVector(0, null)
+        private val EMPTY: ScmVector =
+            ConstScmVector(0, null)
 
         @JvmStatic
-        fun create(): ScmVector {
-            return EMPTY
-        }
+        fun create(): ScmVector =
+            EMPTY
 
         @JvmStatic
         fun create(data: Array<Any?>): ScmVector =

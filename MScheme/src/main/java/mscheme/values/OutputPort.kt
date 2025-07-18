@@ -22,8 +22,6 @@ package mscheme.values
 import mscheme.exceptions.CloseException
 import mscheme.exceptions.OpenException
 import mscheme.exceptions.WriteException
-import mscheme.values.ValueTraits.display
-import mscheme.values.ValueTraits.write
 import java.io.FileWriter
 import java.io.IOException
 import java.io.Writer
@@ -68,7 +66,7 @@ class OutputPort private constructor(private val _writer: Writer) : Port() {
     @Throws(WriteException::class)
     fun write(datum: Any?) {
         try {
-            write(_writer, datum)
+            ValueTraits.write(_writer, datum)
             _writer.flush()
         } catch (e: IOException) {
             throw WriteException(this)
@@ -78,7 +76,7 @@ class OutputPort private constructor(private val _writer: Writer) : Port() {
     @Throws(WriteException::class)
     fun display(datum: Any?) {
         try {
-            display(_writer, datum)
+            ValueTraits.display(_writer, datum)
             _writer.flush()
         } catch (e: IOException) {
             throw WriteException(this)
