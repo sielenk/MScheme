@@ -42,7 +42,7 @@ object ValueTraits {
                         (parameterTypes[0] == IList::class.java))
 
                 return try {
-                    if (arguments.isEmpty()) {
+                    if (arguments.isEmpty) {
                         if (methodExpectsIList) {
                             function.invoke(null, arguments)
                         } else {
@@ -56,11 +56,11 @@ object ValueTraits {
                         }
                     } else {
                         if (methodExpectsIList) {
-                            function.invoke(arguments.getHead(), arguments.getTail())
+                            function.invoke(arguments.head, arguments.tail)
                         } else {
                             function.invoke(
-                                arguments.getHead(),
-                                *arguments.getTail().getArray()
+                                arguments.head,
+                                *arguments.tail.getArray()
                             )
                         }
                     }
@@ -76,17 +76,17 @@ object ValueTraits {
             is Field -> {
                 try {
                     if (Modifier.isStatic(function.modifiers)) {
-                        if (!arguments.isEmpty()) {
+                        if (!arguments.isEmpty) {
                             throw RuntimeArityError(arguments, Arity.exactly(0))
                         }
 
                         return function.get(null)
                     } else {
-                        if (!arguments.getTail().isEmpty()) {
+                        if (!arguments.tail.isEmpty) {
                             throw RuntimeArityError(arguments, Arity.exactly(1))
                         }
 
-                        return function.get(arguments.getHead())
+                        return function.get(arguments.head)
                     }
                 } catch (e: IllegalArgumentException) {
                     throw RuntimeError(function, e.toString())
@@ -128,7 +128,7 @@ object ValueTraits {
 
     @JvmStatic
     fun isList(o: Any?): Boolean =
-        o is IList && o.isValid()
+        o is IList && o.isValid
 
     @JvmStatic
     @Throws(ListExpected::class)
@@ -144,7 +144,7 @@ object ValueTraits {
 
     @JvmStatic
     @Throws(PairExpected::class)
-    fun toConstPair(o: Any): IPair {
+    fun toConstPair(o: Any?): IPair {
         if (o is IPair) {
             return o
         } else {
@@ -154,7 +154,7 @@ object ValueTraits {
 
     @JvmStatic
     @Throws(PairExpected::class, ImmutableException::class)
-    fun toMutablePair(o: Any): IMutablePair =
+    fun toMutablePair(o: Any?): IMutablePair =
         when (o) {
             is IMutablePair ->
                 o
@@ -169,12 +169,12 @@ object ValueTraits {
 
     @JvmStatic
     @Throws(InputPortExpected::class)
-    fun toInputPort(o: Any): InputPort =
+    fun toInputPort(o: Any?): InputPort =
         o as? InputPort ?: throw InputPortExpected(o)
 
     @JvmStatic
     @Throws(SymbolExpected::class)
-    fun toSymbol(o: Any): String =
+    fun toSymbol(o: Any?): String =
         o as? String ?: throw SymbolExpected(o)
 
     private var _index = 0
@@ -193,7 +193,7 @@ object ValueTraits {
 
     @JvmStatic
     @Throws(NumberExpected::class)
-    fun toScmNumber(o: Any): ScmNumber =
+    fun toScmNumber(o: Any?): ScmNumber =
         o as? ScmNumber ?: throw NumberExpected(o)
 
     @JvmStatic
@@ -202,7 +202,7 @@ object ValueTraits {
 
     @JvmStatic
     @Throws(CharExpected::class)
-    fun toScmChar(o: Any): Char =
+    fun toScmChar(o: Any?): Char =
         o as? Char ?: throw CharExpected(o)
 
     @JvmStatic
@@ -211,27 +211,27 @@ object ValueTraits {
 
     @JvmStatic
     @Throws(StringExpected::class)
-    fun toScmString(o: Any): ScmString =
+    fun toScmString(o: Any?): ScmString =
         o as? ScmString ?: throw StringExpected(o)
 
     @JvmStatic
     @Throws(VectorExpected::class)
-    fun toScmVector(o: Any): ScmVector =
+    fun toScmVector(o: Any?): ScmVector =
         o as? ScmVector ?: throw VectorExpected(o)
 
     @JvmStatic
     @Throws(OutputPortExpected::class)
-    fun toOutputPort(o: Any): OutputPort =
+    fun toOutputPort(o: Any?): OutputPort =
         o as? OutputPort ?: throw OutputPortExpected(o)
 
     @JvmStatic
     @Throws(EnvironmentExpected::class)
-    fun toEnvironment(o: Any): Environment =
+    fun toEnvironment(o: Any?): Environment =
         o as? Environment ?: throw EnvironmentExpected(o)
 
     @JvmStatic
     @Throws(EnvironmentExpected::class)
-    fun toStaticEnvironment(o: Any): StaticEnvironment =
+    fun toStaticEnvironment(o: Any?): StaticEnvironment =
         o as? StaticEnvironment ?: throw EnvironmentExpected(o)
 
     @JvmStatic
@@ -268,7 +268,7 @@ object ValueTraits {
 
     @JvmStatic
     @Throws(IOException::class)
-    fun output(destination: Writer, doWrite: Boolean, o: Any) {
+    fun output(destination: Writer, doWrite: Boolean, o: Any?) {
         if (o is Char) {
             if (doWrite) {
                 destination.write("#\\")
@@ -296,13 +296,13 @@ object ValueTraits {
 
     @JvmStatic
     @Throws(IOException::class)
-    fun display(destination: Writer, o: Any) {
+    fun display(destination: Writer, o: Any?) {
         output(destination, false, o)
     }
 
     @JvmStatic
     @Throws(IOException::class)
-    fun write(destination: Writer, o: Any) {
+    fun write(destination: Writer, o: Any?) {
         output(destination, true, o)
     }
 

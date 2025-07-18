@@ -16,42 +16,40 @@
  * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package mscheme.values
 
-package mscheme.values;
+import mscheme.environment.StaticEnvironment
+import mscheme.exceptions.ListExpected
+import mscheme.exceptions.PairExpected
+import mscheme.exceptions.SchemeException
 
-import mscheme.environment.StaticEnvironment;
-import mscheme.exceptions.ListExpected;
-import mscheme.exceptions.PairExpected;
-import mscheme.exceptions.SchemeException;
+interface IList {
+    val isValid: Boolean
 
-public interface IList {
+    @Throws(ListExpected::class)
+    fun validate(): IList?
 
-  boolean isValid();
+    val isEmpty: Boolean
 
-  IList validate()
-      throws ListExpected;
+    val length: Int
 
-  boolean isEmpty();
+    fun getReversed(): IList
 
-  int getLength();
+    fun getCopy(): IList
 
-  IList getReversed();
+    @get:Throws(PairExpected::class)
+    val head: Any?
 
-  IList getCopy();
+    @get:Throws(PairExpected::class)
+    val tail: IList
 
-  Object getHead()
-      throws PairExpected;
+    @Throws(SchemeException::class, InterruptedException::class)
+    fun getCompiledArray(compilationEnv: StaticEnvironment?): Array<Any?>?
 
-  IList getTail()
-      throws PairExpected;
+    @Throws(SchemeException::class, InterruptedException::class)
+    fun getCompiledArray(compilationEnv: StaticEnvironment?, index: Int): Array<Any?>?
 
-  Object[] getCompiledArray(StaticEnvironment compilationEnv)
-      throws SchemeException, InterruptedException;
+    fun getArray(): Array<Any?>
 
-  Object[] getCompiledArray(StaticEnvironment compilationEnv, int index)
-      throws SchemeException, InterruptedException;
-
-  Object[] getArray();
-
-  Object[] getArray(int index);
+    fun getArray(index: Int): Array<Any?>
 }

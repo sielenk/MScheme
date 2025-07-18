@@ -58,9 +58,9 @@ class StaticEnvironment @JvmOverloads internal constructor(
     ) : this(parent) {
         var tail = symbols
 
-        while (!tail.isEmpty()) {
-            define(ValueTraits.toSymbol(tail.getHead()))
-            tail = tail.getTail()
+        while (!tail.isEmpty) {
+            define(ValueTraits.toSymbol(tail.head))
+            tail = tail.tail
         }
     }
 

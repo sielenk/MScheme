@@ -106,8 +106,8 @@ class DynamicEnvironment private constructor(
             var rest = values
 
             for (i in 0..<arity.min) {
-                frame[i] = rest.getHead()
-                rest = rest.getTail()
+                frame[i] = rest.head
+                rest = rest.tail
             }
 
             if (arity.allowMore()) {
