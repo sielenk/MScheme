@@ -24,7 +24,7 @@ import mscheme.exceptions.PairExpected
 import mscheme.values.ValueTraits
 import mscheme.values.ValueTraits.toList
 
-internal abstract class MemberBase : BinaryValueFunction() {
+abstract class MemberBase : BinaryValueFunction() {
     protected abstract fun equal(fst: Any?, snd: Any?): Boolean
 
     @Throws(ListExpected::class, PairExpected::class)
