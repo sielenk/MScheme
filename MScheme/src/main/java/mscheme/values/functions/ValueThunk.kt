@@ -17,23 +17,16 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.values.functions
 
-package mscheme.values.functions;
+import mscheme.exceptions.SchemeException
+import mscheme.machine.Registers
 
-import mscheme.exceptions.SchemeException;
-import mscheme.machine.Registers;
-import org.jetbrains.annotations.NotNull;
+abstract class ValueThunk : Thunk() {
+    @Throws(SchemeException::class)
+    override fun checkedCall(state: Registers): Any? =
+        checkedCall()
 
-
-public abstract class ValueThunk
-    extends Thunk {
-
-  protected final Object checkedCall(
-      @NotNull Registers state
-  ) throws SchemeException {
-    return checkedCall();
-  }
-
-  protected abstract Object checkedCall()
-      throws SchemeException;
+    @Throws(SchemeException::class)
+    protected abstract fun checkedCall(): Any?
 }
