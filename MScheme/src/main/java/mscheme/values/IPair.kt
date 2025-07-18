@@ -17,17 +17,13 @@
  along with MScheme; see the file COPYING. If not, write to 
  the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  Boston, MA  02111-1307, USA. */
-
 /* Created on 20.11.2004, 12:50:03 by sielenk */
-
-package mscheme.values;
+package mscheme.values
 
 /**
  * @author sielenk
  */
-public interface IPair {
-
-  Object getFirst();
-
-  Object getSecond();
+interface IPair {
+    fun getFirst(): Any?
+    fun getSecond(): Any?
 }
