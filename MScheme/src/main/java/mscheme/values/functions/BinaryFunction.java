@@ -24,17 +24,19 @@ import mscheme.exceptions.SchemeException;
 import mscheme.machine.Registers;
 import mscheme.util.Arity;
 import mscheme.values.IList;
+import org.jetbrains.annotations.NotNull;
 
 
 public abstract class BinaryFunction
     extends CheckedFunction {
 
+  @NotNull
   protected final Arity getArity() {
     return Arity.exactly(2);
   }
 
   protected final Object checkedCall(
-      Registers state,
+      @NotNull Registers state,
       IList arguments
   ) throws SchemeException, InterruptedException {
     return checkedCall(
@@ -45,7 +47,7 @@ public abstract class BinaryFunction
   }
 
   protected abstract Object checkedCall(
-      Registers state,
+      @NotNull Registers state,
       Object fst,
       Object snd
   ) throws SchemeException, InterruptedException;

@@ -22,13 +22,14 @@ package mscheme.values.functions;
 
 import mscheme.exceptions.SchemeException;
 import mscheme.machine.Registers;
+import org.jetbrains.annotations.NotNull;
 
 
 public abstract class BinaryValueFunction
     extends BinaryFunction {
 
   protected final Object checkedCall(
-      Registers state,
+      @NotNull Registers state,
       Object fst,
       Object snd
   ) throws SchemeException {

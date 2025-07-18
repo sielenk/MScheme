@@ -22,7 +22,9 @@ package mscheme.values.functions;
 import mscheme.compiler.Compiler;
 import mscheme.environment.Environment;
 import mscheme.exceptions.SchemeException;
+import mscheme.machine.Registers;
 import mscheme.values.ValueTraits;
+import org.jetbrains.annotations.NotNull;
 
 public final class EvalFunction
     extends BinaryFunction {
@@ -32,7 +34,7 @@ public final class EvalFunction
   private EvalFunction() {
   }
 
-  protected Object checkedCall(mscheme.machine.Registers state, Object fst,
+  protected Object checkedCall(@NotNull Registers state, Object fst,
       Object snd)
       throws SchemeException, InterruptedException {
     Environment newEnv = ValueTraits.toEnvironment(snd);
