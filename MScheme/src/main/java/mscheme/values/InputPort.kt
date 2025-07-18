@@ -17,501 +17,440 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.values
 
-package mscheme.values;
+import mscheme.exceptions.CloseException
+import mscheme.exceptions.OpenException
+import mscheme.exceptions.ParseException
+import mscheme.exceptions.ReadException
+import mscheme.values.ListFactory.createConst
+import mscheme.values.ListFactory.createConstPair
+import java.io.*
 
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InterruptedIOException;
-import java.io.PushbackReader;
-import java.io.Reader;
-import java.io.Writer;
-import mscheme.exceptions.CloseException;
-import mscheme.exceptions.OpenException;
-import mscheme.exceptions.ParseException;
-import mscheme.exceptions.ReadException;
-
-class EofValue
-    implements IOutputable {
-
-  public final static EofValue INSTANCE = new EofValue();
-
-  private EofValue() {
-  }
-
-  public void outputOn(Writer dest, boolean ignored)
-      throws IOException {
-    dest.write("#[eof]");
-  }
+internal object EofValue : IOutputable {
+    @Throws(IOException::class)
+    override fun outputOn(destination: Writer, doWrite: Boolean) {
+        destination.write("#[eof]")
+    }
 }
 
 
-public class InputPort
-    extends Port {
+class InputPort private constructor(
+    private val _reader: PushbackReader
+) : Port() {
+    // specialisation of Port
 
-  public final static int EOF = -1;
-  public final static Object EOF_VALUE = EofValue.INSTANCE;
-
-  private static final Object _plus = "+";
-  private static final Object _minus = "-";
-  private static final Object _ellipsis = "...";
-
-  private final PushbackReader _reader;
-
-  private InputPort(PushbackReader reader) {
-    _reader = reader;
-  }
-
-
-  public static InputPort create(Reader reader) {
-    return new InputPort(
-        reader instanceof PushbackReader
-            ? (PushbackReader) reader
-            : new PushbackReader(reader)
-    );
-  }
-
-  public static InputPort create(ScmString filename)
-      throws OpenException {
-    return create(filename.getJavaString());
-  }
-
-  public static InputPort create(String filename)
-      throws OpenException {
-    try {
-      return create(new FileReader(filename));
-    } catch (IOException e) {
-      throw new OpenException(
-          ScmString.create(filename)
-      );
+    @Throws(IOException::class)
+    fun writeOn(destination: Writer) {
+        destination.write("#[input port]")
     }
-  }
-
-  // specialisation of Port
-
-  public void writeOn(Writer destination)
-      throws IOException {
-    destination.write("#[input port]");
-  }
 
 
-  public void close()
-      throws CloseException {
-    try {
-      _reader.close();
-    } catch (IOException e) {
-      throw new CloseException(this);
-    }
-  }
-
-  // input port
-
-  public Object read()
-      throws ReadException, ParseException, InterruptedException {
-    try {
-      return parseDatum();
-    } catch (InterruptedIOException e) {
-      throw new InterruptedException(e.getMessage());
-    } catch (IOException e) {
-      throw new ReadException(this);
-    }
-  }
-
-
-  private boolean isWhitespace(int c) {
-    return (c == ' ') || (c == '\t') || (c == '\n');
-  }
-
-  private boolean isDelimiter(int c) {
-    return isWhitespace(c)
-        || (c == '(')
-        || (c == ')')
-        || (c == '[')
-        || (c == ']')
-        || (c == '"')    // "
-        || (c == ';');
-  }
-
-  private int skipWSread()
-      throws IOException {
-    boolean inComment = false;
-
-    for (; ; ) {
-      int c = _reader.read();
-
-      if (inComment) {
-        switch (c) {
-          case '\n':
-            inComment = false;
-            break;
-
-          case EOF:
-            return c;
+    @Throws(CloseException::class)
+    fun close() {
+        try {
+            _reader.close()
+        } catch (e: IOException) {
+            throw CloseException(this)
         }
-      } else {
-        if (c == ';') {
-          inComment = true;
-        } else if (!isWhitespace(c)) {
-          return c;
-        }
-      }
     }
-  }
 
-  private char readNoEof()
-      throws IOException, ParseException {
-    int c = _reader.read();
-    if (c == EOF) {
-      throw new ParseException(
-          this,
-          "unexpected EOF"
-      );
-    }
-    return (char) c;
-  }
-
-  private Character parseChar()
-      throws IOException, ParseException {
-    int c = readNoEof();
-
-    if ((c == 's') || (c == 'n')) {
-      StringBuilder charName = new StringBuilder();
-
-      do {
-        charName.append((char) c);
-        c = _reader.read();
-      }
-      while ((c != EOF) && !isDelimiter(c));
-
-      if (c != EOF) {
-        _reader.unread(c);
-      }
-
-      String name = charName.toString();
-
-      switch (name) {
-        case "s":
-          return ValueTraits.toScmChar('s');
-        case "n":
-          return ValueTraits.toScmChar('n');
-        case "space":
-          return ValueTraits.toScmChar(' ');
-        case "newline":
-          return ValueTraits.toScmChar('\n');
-        default:
-          throw new ParseException(
-              this,
-              "invalid character name '" + name + "'"
-          );
-      }
-    } else {
-      return ValueTraits.toScmChar((char) c);
-    }
-  }
-
-  private Object[] parseVector(int index)
-      throws IOException, ParseException {
-    int la = skipWSread();
-
-    if (la == ')') {
-      return new Object[index];
-    } else if (la == EOF) {
-      throw new ParseException(
-          this,
-          "unexpected EOF"
-      );
-    } else {
-      _reader.unread(la);
-
-      Object head = parseDatum();
-      Object[] result = parseVector(index + 1);
-
-      result[index] = head;
-
-      return result;
-    }
-  }
-
-  private Object parseList(char closeToken)
-      throws IOException, ParseException {
-    int la = skipWSread();
-
-    if (la == closeToken) {
-      return ListFactory.createConst();
-    }
-    if (la == EOF) {
-      throw new ParseException(
-          this,
-          "unexpected EOF"
-      );
-    } else {
-      _reader.unread(la);
-      Object head = parseDatum();
-
-      la = skipWSread();
-      if (la == '.') {
-        IPair result = ListFactory.createConstPair(
-            head,
+    // input port
+    @Throws(ReadException::class, ParseException::class, InterruptedException::class)
+    fun read(): Any? =
+        try {
             parseDatum()
-        );
-
-        if (skipWSread() != ')') {
-          throw new ParseException(
-              this,
-              "expected ')'"
-          );
+        } catch (e: InterruptedIOException) {
+            throw InterruptedException(e.message)
+        } catch (e: IOException) {
+            throw ReadException(this)
         }
 
-        return result;
-      } else {
-        _reader.unread(la);
-        return ListFactory.createConstPair(
-            head,
-            parseList(closeToken)
-        );
-      }
-    }
-  }
 
-  private ScmString parseString()
-      throws IOException, ParseException {
-    StringBuilder buf = new StringBuilder();
+    private fun isWhitespace(c: Int): Boolean =
+        (c == ' '.code) || (c == '\t'.code) || (c == '\n'.code)
 
-    for (; ; ) {
-      char c = readNoEof();
+    private fun isDelimiter(c: Int): Boolean =
+        isWhitespace(c)
+                || (c == '('.code)
+                || (c == ')'.code)
+                || (c == '['.code)
+                || (c == ']'.code)
+                || (c == '"'.code) // "
+                || (c == ';'.code)
 
-      switch (c) {
-        case '"':  // "
-          return ScmString.createConst(buf.toString());
+    @Throws(IOException::class)
+    private fun skipWSread(): Int {
+        var inComment = false
 
-        case '\\':
-          buf.append(readNoEof());
-          break;
+        while (true) {
+            val c = _reader.read()
 
-        default:
-          buf.append(c);
-          break;
-      }
-    }
-  }
-
-  private boolean isDigit(char c) {
-    return ('0' <= c) && (c <= '9');
-  }
-
-  private boolean isLetter(char c) {
-    return ('a' <= c) && (c <= 'z');
-  }
-
-  private boolean isSpecialInitial(char c) {
-    return "!$%&*/:<=>?^_~".indexOf(c) != -1;
-  }
-
-  private boolean isInitial(char c) {
-    return isLetter(c)
-        || isSpecialInitial(c);
-  }
-
-  private boolean isSubsequent(char c) {
-    return isInitial(c)
-        || isDigit(c)
-        || ("+-.@".indexOf(c) != -1);
-  }
-
-
-  private Object parseNumOrSym(char initial)
-      throws IOException, ParseException {
-    StringBuilder buf = new StringBuilder();
-    initial = Character.toLowerCase(initial);
-    buf.append(initial);
-    for (; ; ) {
-      int c = _reader.read();
-      if (c == EOF) {
-        break;
-      } else if (isDelimiter(c)) {
-        _reader.unread(c);
-        break;
-      }
-      buf.append(
-          Character.toLowerCase((char) c)
-      );
-    }
-
-    String str = buf.toString();
-
-    switch (str) {
-      case "+":
-        return _plus; // "+";
-
-      case "-":
-        return _minus; // "-";
-
-      case "...":
-        return _ellipsis; // "...";
-
-    }
-
-    checkNumber:
-    {
-      if (!isDigit(initial)) {
-        if ((initial != '+') && (initial != '-')) {
-          break checkNumber;
+            if (inComment) {
+                when (c) {
+                    '\n'.code -> inComment = false
+                    EOF -> return c
+                }
+            } else {
+                if (c == ';'.code) {
+                    inComment = true
+                } else if (!isWhitespace(c)) {
+                    return c
+                }
+            }
         }
-      }
-      for (int i = 1; i < str.length(); i++) {
-        if (!isDigit(str.charAt(i))) {
-          break checkNumber;
-        }
-      }
-      try {
-        return ScmNumber.create(str);
-      } catch (NumberFormatException e) {
-      }
     }
 
-    if (!isInitial(initial)) {
-      throw new ParseException(
-          this,
-          "invalid identifier"
-      );
-    }
+    @Throws(IOException::class, ParseException::class)
+    private fun readNoEof(): Char {
+        val c = _reader.read()
 
-    for (int i = 1; i < str.length(); i++) {
-      if (!isSubsequent(str.charAt(i))) {
-        throw new ParseException(
-            this,
-            "invalid identifier"
-        );
-      }
-    }
-
-    return str.intern();
-  }
-
-  private Object parseDatum()
-      throws IOException, ParseException {
-    int la1 = skipWSread();
-
-    switch (la1) {
-      case '#': {
-        int la2 = _reader.read();
-
-        switch (la2) {
-          case 't':
-            return ValueTraits.TRUE;
-
-          case 'f':
-            return ValueTraits.FALSE;
-
-          case '\\':
-            return parseChar();
-
-          case '(':
-            return ScmVector.createConst(parseVector(0));
-
-          default:
-            throw new ParseException(
+        if (c == EOF) {
+            throw ParseException(
                 this,
-                "'" + la2 + "' can't follow '#'"
-            );
+                "unexpected EOF"
+            )
         }
-      } // break;
 
-      case '(':
-        return parseList(')');
+        return c.toChar()
+    }
 
-      case '[':
-        return parseList(']');
+    @Throws(IOException::class, ParseException::class)
+    private fun parseChar(): Char {
+        var c = readNoEof().code
 
-      case '"':  // "
-        return parseString();
+        if ((c == 's'.code) || (c == 'n'.code)) {
+            val charName = StringBuilder()
 
-      case '\'':
-        return ListFactory.createConst(
-            "quote",
-            parseDatum()
-        );
+            do {
+                charName.append(c.toChar())
+                c = _reader.read()
+            } while ((c != EOF) && !isDelimiter(c))
 
-      case '`':
-        return ListFactory.createConst(
-            "quasiquote",
-            parseDatum()
-        );
+            if (c != EOF) {
+                _reader.unread(c)
+            }
 
-      case ',': {
-        int la2 = _reader.read();
-        String sym;
+            val name = charName.toString()
 
-        if (la2 == '@') {
-          sym = "unquote-splicing";
+            return when (name) {
+                "s" -> ValueTraits.toScmChar('s')
+                "n" -> ValueTraits.toScmChar('n')
+                "space" -> ValueTraits.toScmChar(' ')
+                "newline" -> ValueTraits.toScmChar('\n')
+                else -> throw ParseException(
+                    this,
+                    "invalid character name '" + name + "'"
+                )
+            }
         } else {
-          _reader.unread(la2);
-          sym = "unquote";
+            return ValueTraits.toScmChar(c.toChar())
+        }
+    }
+
+    @Throws(IOException::class, ParseException::class)
+    private fun parseVector(index: Int): Array<Any?> {
+        val la = skipWSread()
+
+        if (la == ')'.code) {
+            return arrayOfNulls(index)
+        } else if (la == EOF) {
+            throw ParseException(
+                this,
+                "unexpected EOF"
+            )
+        } else {
+            _reader.unread(la)
+
+            val head = parseDatum()
+            val result = parseVector(index + 1)
+
+            result[index] = head
+
+            return result
+        }
+    }
+
+    @Throws(IOException::class, ParseException::class)
+    private fun parseList(closeToken: Char): Any {
+        var la = skipWSread()
+
+        if (la == closeToken.code) {
+            return createConst()
         }
 
-        return ListFactory.createConst(
-            sym,
-            parseDatum()
-        );
-      }
+        if (la == EOF) {
+            throw ParseException(
+                this,
+                "unexpected EOF"
+            )
+        } else {
+            _reader.unread(la)
+            val head = parseDatum()
 
-      case EOF:
-        return EOF_VALUE;
+            la = skipWSread()
+            if (la == '.'.code) {
+                val result = createConstPair(
+                    head,
+                    parseDatum()
+                )
 
-      default:
-        return parseNumOrSym((char) la1);
-    }
-  }
+                if (skipWSread() != ')'.code) {
+                    throw ParseException(
+                        this,
+                        "expected ')'"
+                    )
+                }
 
-
-  public int readChar()
-      throws ReadException {
-    try {
-      return _reader.read();
-    } catch (IOException e) {
-      throw new ReadException(this);
-    }
-  }
-
-  public Object readScmChar()
-      throws ReadException {
-    int c = readChar();
-
-    return
-        (c == EOF)
-            ? EOF_VALUE
-            : ValueTraits.toScmChar((char) c);
-  }
-
-  public int peekChar()
-      throws ReadException {
-    try {
-      int result = _reader.read();
-      if (result != EOF) {
-        _reader.unread(result);
-      }
-      return result;
-    } catch (IOException e) {
-      throw new ReadException(this);
-    }
-  }
-
-  public Object peekScmChar()
-      throws ReadException {
-    int c = peekChar();
-
-    return
-        (c == EOF)
-            ? EOF_VALUE
-            : ValueTraits.toScmChar((char) c);
-  }
-
-  public boolean isReady() {
-    try {
-      return _reader.ready();
-    } catch (IOException e) {
+                return result
+            } else {
+                _reader.unread(la)
+                return createConstPair(
+                    head,
+                    parseList(closeToken)
+                )
+            }
+        }
     }
 
-    return false;
-  }
+    @Throws(IOException::class, ParseException::class)
+    private fun parseString(): ScmString {
+        val buf = StringBuilder()
+
+        while (true) {
+            val c = readNoEof()
+
+            when (c) {
+                '"' -> return ScmString.createConst(buf.toString())
+                '\\' -> buf.append(readNoEof())
+                else -> buf.append(c)
+            }
+        }
+    }
+
+    private fun isDigit(c: Char): Boolean =
+        ('0' <= c) && (c <= '9')
+
+    private fun isLetter(c: Char): Boolean =
+        ('a' <= c) && (c <= 'z')
+
+    private fun isSpecialInitial(c: Char): Boolean =
+        "!$%&*/:<=>?^_~".indexOf(c) != -1
+
+    private fun isInitial(c: Char): Boolean =
+        isLetter(c) || isSpecialInitial(c)
+
+    private fun isSubsequent(c: Char): Boolean =
+        isInitial(c) || isDigit(c) || ("+-.@".indexOf(c) != -1)
+
+
+    @Throws(IOException::class, ParseException::class)
+    private fun parseNumOrSym(initial: Char): Any? {
+        var initial = initial
+        val buf = StringBuilder()
+
+        initial = initial.lowercaseChar()
+        buf.append(initial)
+        while (true) {
+            val c = _reader.read()
+
+            if (c == EOF) {
+                break
+            } else if (isDelimiter(c)) {
+                _reader.unread(c)
+                break
+            }
+
+            buf.append(
+                c.toChar().lowercaseChar()
+            )
+        }
+
+        val str = buf.toString()
+
+        when (str) {
+            "+" -> return _plus // "+";
+            "-" -> return _minus // "-";
+            "..." -> return _ellipsis // "...";
+        }
+
+        do {
+            if (!isDigit(initial)) {
+                if ((initial != '+') && (initial != '-')) {
+                    break
+                }
+            }
+            for (i in 1..<str.length) {
+                if (!isDigit(str.get(i))) {
+                    break
+                }
+            }
+            try {
+                return ScmNumber.create(str)
+            } catch (e: NumberFormatException) {
+            }
+        } while (false)
+
+        if (!isInitial(initial)) {
+            throw ParseException(
+                this,
+                "invalid identifier"
+            )
+        }
+
+        for (i in 1..<str.length) {
+            if (!isSubsequent(str.get(i))) {
+                throw ParseException(
+                    this,
+                    "invalid identifier"
+                )
+            }
+        }
+
+        return str.intern()
+    }
+
+    @Throws(IOException::class, ParseException::class)
+    private fun parseDatum(): Any? {
+        val la1 = skipWSread()
+
+        when (la1) {
+            '#'.code -> {
+                val la2 = _reader.read()
+
+                return when (la2) {
+                    't'.code -> ValueTraits.TRUE
+                    'f'.code -> ValueTraits.FALSE
+                    '\\'.code -> parseChar()
+                    '('.code -> ScmVector.createConst(parseVector(0))
+                    else -> throw ParseException(
+                        this,
+                        "'$la2' can't follow '#'"
+                    )
+                }
+            } // break;
+            '('.code -> return parseList(')')
+            '['.code -> return parseList(']')
+            '"'.code -> return parseString()
+            '\''.code -> return createConst(
+                "quote",
+                parseDatum()
+            )
+            '`'.code -> return createConst(
+                "quasiquote",
+                parseDatum()
+            )
+            ','.code -> {
+                val la2 = _reader.read()
+                val sym: String?
+
+                if (la2 == '@'.code) {
+                    sym = "unquote-splicing"
+                } else {
+                    _reader.unread(la2)
+                    sym = "unquote"
+                }
+
+                return createConst(
+                    sym,
+                    parseDatum()
+                )
+            }
+
+            EOF -> return EOF_VALUE
+            else -> return parseNumOrSym(la1.toChar())
+        }
+    }
+
+
+    @Throws(ReadException::class)
+    fun readChar(): Int {
+        try {
+            return _reader.read()
+        } catch (e: IOException) {
+            throw ReadException(this)
+        }
+    }
+
+    @Throws(ReadException::class)
+    fun readScmChar(): Any? {
+        val c = readChar()
+
+        return if (c == EOF)
+            EOF_VALUE
+        else
+            ValueTraits.toScmChar(c.toChar())
+    }
+
+    @Throws(ReadException::class)
+    fun peekChar(): Int {
+        try {
+            val result = _reader.read()
+            if (result != EOF) {
+                _reader.unread(result)
+            }
+            return result
+        } catch (e: IOException) {
+            throw ReadException(this)
+        }
+    }
+
+    @Throws(ReadException::class)
+    fun peekScmChar(): Any? {
+        val c = peekChar()
+
+        return if (c == EOF)
+            EOF_VALUE
+        else
+            ValueTraits.toScmChar(c.toChar())
+    }
+
+    val isReady: Boolean
+        get() {
+            try {
+                return _reader.ready()
+            } catch (e: IOException) {
+            }
+
+            return false
+        }
+
+    companion object {
+        @JvmField
+        val EOF: Int = -1
+
+        @JvmField
+        val EOF_VALUE: Any = EofValue
+
+        private val _plus: Any = "+"
+        private val _minus: Any = "-"
+        private val _ellipsis: Any = "..."
+
+        @JvmStatic
+        fun create(reader: Reader): InputPort {
+            return InputPort(
+                if (reader is PushbackReader)
+                    reader
+                else
+                    PushbackReader(reader)
+            )
+        }
+
+        @JvmStatic
+        @Throws(OpenException::class)
+        fun create(filename: ScmString): InputPort {
+            return create(filename.javaString)
+        }
+
+        @Throws(OpenException::class)
+        fun create(filename: String): InputPort {
+            try {
+                return create(FileReader(filename))
+            } catch (e: IOException) {
+                throw OpenException(
+                    ScmString.create(filename)
+                )
+            }
+        }
+    }
 }

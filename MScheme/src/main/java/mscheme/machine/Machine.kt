@@ -58,7 +58,7 @@ class Machine : Runnable {
         // I would call this(...) but it kills gcj 3.0.2 ...
     }
 
-    constructor(stdin: Reader?, stdout: Writer?) {
+    constructor(stdin: Reader, stdout: Writer) {
         this.environment = Environment.getSchemeReportEnvironment()
         _stdin = InputPort.create(stdin)
         _stdout = OutputPort.create(stdout)
