@@ -417,9 +417,9 @@ public class Builtins {
   public static Object char_3D_3F(Object fst, Object snd)
     // char=?
       throws CharExpected {
-    return ValueTraits
-        .toScmBoolean(ValueTraits.toScmChar(fst).charValue() == ValueTraits
-            .toScmChar(snd).charValue());
+    return ValueTraits.toScmBoolean(
+        ValueTraits.toScmChar(fst) == ValueTraits.toScmChar(snd)
+    );
   }
 
   public static Object char_3E_3D_3F(Object fst, Object snd)
@@ -532,7 +532,7 @@ public class Builtins {
 
     for (IList rest = ValueTraits.toList(list); !rest.isEmpty(); rest = rest
         .getTail()) {
-      accu.append(ValueTraits.toScmChar(rest.getHead()).charValue());
+      accu.append(ValueTraits.toScmChar(rest.getHead()));
     }
 
     return ScmString.create(accu.toString());
