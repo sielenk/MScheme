@@ -17,19 +17,11 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.values.functions
 
-package mscheme.values.functions;
+import mscheme.values.ValueTraits
 
-import mscheme.values.ValueTraits;
-
-
-public final class AssvFunction
-    extends AssocBase {
-
-  public final static AssvFunction INSTANCE
-      = new AssvFunction();
-
-  protected boolean equal(Object fst, Object snd) {
-    return ValueTraits.eqv(fst, snd);
-  }
+object AssvFunction : AssocBase() {
+    override fun equal(fst: Any?, snd: Any?): Boolean =
+        ValueTraits.eqv(fst, snd)
 }
