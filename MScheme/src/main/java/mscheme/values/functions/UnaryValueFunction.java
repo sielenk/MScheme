@@ -22,13 +22,14 @@ package mscheme.values.functions;
 
 import mscheme.exceptions.SchemeException;
 import mscheme.machine.Registers;
+import org.jetbrains.annotations.NotNull;
 
 
 public abstract class UnaryValueFunction
     extends UnaryFunction {
 
   protected final Object checkedCall(
-      Registers state,
+      @NotNull Registers state,
       Object fst
   ) throws SchemeException, InterruptedException {
     return checkedCall(fst);
