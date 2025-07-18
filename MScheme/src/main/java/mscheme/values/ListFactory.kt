@@ -17,66 +17,62 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.values
 
-package mscheme.values;
 
+object ListFactory {
+    // *** List creation ***
+    @JvmStatic
+    fun prepend(head: Any?, tail: IList): IList =
+        PairOrList.prepend(head, tail)
 
-public abstract class ListFactory {
+    fun prependConst(head: Any?, tail: IList): IList =
+        PairOrList.prependConst(head, tail)
 
-  // *** List creation ***
+    @JvmStatic
+    fun create(): IList =
+        Empty
 
-  public static IList prepend(Object head, IList tail) {
-    return PairOrList.prepend(head, tail);
-  }
+    @JvmStatic
+    fun createConst(): IList =
+        Empty
 
-  public static IList prependConst(Object head, IList tail) {
-    return PairOrList.prependConst(head, tail);
-  }
+    @JvmStatic
+    fun create(first: Any?): IList =
+        prepend(first, create())
 
-  public static IList create() {
-    return Empty.INSTANCE;
-  }
+    fun createConst(first: Any?): IList =
+        prependConst(first, createConst())
 
-  public static IList createConst() {
-    return Empty.INSTANCE;
-  }
+    @JvmStatic
+    fun create(first: Any?, second: Any?): IList =
+        prepend(first, create(second))
 
-  public static IList create(Object first) {
-    return prepend(first, create());
-  }
+    @JvmStatic
+    fun create(first: Any?, second: Any?, third: Any?): IList =
+        prepend(first, create(second, third))
 
-  public static IList createConst(Object first) {
-    return prependConst(first, createConst());
-  }
+    fun create(
+        first: Any?,
+        second: Any?,
+        third: Any?,
+        fourth: Any?
+    ): IList =
+        prepend(
+            first,
+            create(second, third, fourth)
+        )
 
-  public static IList create(Object first, Object second) {
-    return prepend(first, create(second));
-  }
+    // *** Pair creation ***
+    @JvmStatic
+    fun createPair(fst: Any?, snd: Any?): IMutablePair =
+        PairOrList.create(fst, snd)
 
-  public static IList createConst(Object first, Object second) {
-    return prependConst(first, createConst(second));
-  }
+    @JvmStatic
+    fun createConstPair(fst: Any?, snd: Any?): IPair =
+        PairOrList.createConst(fst, snd)
 
-  public static IList create(Object first, Object second, Object third) {
-    return prepend(first, create(second, third));
-  }
-
-  public static IList create(
-      Object first,
-      Object second,
-      Object third,
-      Object fourth) {
-    return prepend(first, create(second, third, fourth));
-  }
-
-  // *** Pair creation ***
-
-  public static IMutablePair createPair(Object fst, Object snd) {
-    return PairOrList.create(fst, snd);
-  }
-
-  public static IPair createConstPair(Object fst, Object snd) {
-    return PairOrList.createConst(fst, snd);
-  }
+    @JvmStatic
+    fun createConst(first: Any?, second: Any?): IList =
+        prependConst(first, createConst(second))
 }
-
