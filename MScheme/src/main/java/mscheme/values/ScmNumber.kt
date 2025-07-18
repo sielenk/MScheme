@@ -17,96 +17,69 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.values
 
-package mscheme.values;
+import java.io.IOException
+import java.io.Writer
+import java.math.BigInteger
 
-import java.io.IOException;
-import java.io.Writer;
-import java.math.BigInteger;
+class ScmNumber private constructor(
+    private val _value: BigInteger
+) : IComparable, IOutputable {
+    // implementation of Compareable
+
+    override fun eq(other: Any?): Boolean =
+        this === other
+
+    override fun eqv(other: Any?): Boolean =
+        other is ScmNumber && isEqualTo(other)
+
+    override fun equals(other: Any?): Boolean =
+        eqv(other)
+
+    val integer: Int
+        // number specific
+        get() = _value.toInt()
 
 
-public class ScmNumber
-    implements IComparable, IOutputable {
+    fun isLessThan(other: ScmNumber): Boolean =
+        _value < other._value
 
-  private final BigInteger _value;
+    fun isEqualTo(other: ScmNumber): Boolean =
+        _value == other._value
 
-  private ScmNumber(BigInteger v) {
-    _value = v;
-  }
 
-  public static ScmNumber create(int v) {
-    return new ScmNumber(
-        BigInteger.valueOf(v)
-    );
-  }
+    fun negated(): ScmNumber =
+        ScmNumber(_value.negate())
 
-  public static ScmNumber create(String v)
-      throws NumberFormatException {
-    return new ScmNumber(
-        new BigInteger(v)
-    );
-  }
+    fun plus(other: ScmNumber): ScmNumber =
+        ScmNumber(_value.add(other._value))
 
-  // implementation of Compareable
+    fun minus(other: ScmNumber): ScmNumber =
+        ScmNumber(_value.subtract(other._value))
 
-  public boolean eq(Object other) {
-    return this == other;
-  }
+    fun reciprocal(): ScmNumber =
+        ScmNumber(BigInteger.valueOf(1).divide(_value))
 
-  public boolean eqv(Object other) {
-    if (!(other instanceof ScmNumber)) {
-      return false;
+    fun times(other: ScmNumber): ScmNumber =
+        ScmNumber(_value.multiply(other._value))
+
+    fun divide(other: ScmNumber): ScmNumber =
+        ScmNumber(_value.divide(other._value))
+
+    @Throws(IOException::class)
+    override fun outputOn(destination: Writer, doWrite: Boolean) {
+        destination.write(_value.toString())
     }
 
-    return isEqualTo((ScmNumber) other);
-  }
+    companion object {
+        @JvmStatic
+        fun create(v: Int): ScmNumber =
+            ScmNumber(BigInteger.valueOf(v.toLong()))
 
-  public boolean equals(Object other) {
-    return eqv(other);
-  }
-
-  // number specific
-
-  public int getInteger() {
-    return _value.intValue();
-  }
-
-
-  public boolean isLessThan(ScmNumber other) {
-    return _value.compareTo(other._value) < 0;
-  }
-
-  public boolean isEqualTo(ScmNumber other) {
-    return _value.equals(other._value);
-  }
-
-
-  public ScmNumber negated() {
-    return new ScmNumber(_value.negate());
-  }
-
-  public ScmNumber plus(ScmNumber other) {
-    return new ScmNumber(_value.add(other._value));
-  }
-
-  public ScmNumber minus(ScmNumber other) {
-    return new ScmNumber(_value.subtract(other._value));
-  }
-
-  public ScmNumber reciprocal() {
-    return new ScmNumber(BigInteger.valueOf(1).divide(_value));
-  }
-
-  public ScmNumber times(ScmNumber other) {
-    return new ScmNumber(_value.multiply(other._value));
-  }
-
-  public ScmNumber divide(ScmNumber other) {
-    return new ScmNumber(_value.divide(other._value));
-  }
-
-  public void outputOn(Writer destination, boolean doWrite)
-      throws IOException {
-    destination.write(_value.toString());
-  }
+        @JvmStatic
+        @Throws(NumberFormatException::class)
+        fun create(v: String): ScmNumber =
+            ScmNumber(BigInteger(v))
+    }
 }
