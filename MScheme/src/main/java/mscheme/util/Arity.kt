@@ -17,88 +17,70 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.util
 
-package mscheme.util;
+import mscheme.exceptions.RuntimeArityError
 
-import mscheme.exceptions.RuntimeArityError;
+class Arity private constructor(val min: Int, val max: Int) {
+    @get:Throws(RuntimeArityError::class)
+    val oneLess: Arity
+        get() {
+            var newMin = this.min - 1
 
-public class Arity {
+            if (newMin < 0) {
+                newMin = 0
+            }
 
-  private final int _minArity;
-  private final int _maxArity;
+            if (allowMore()) {
+                return atLeast(newMin)
+            } else {
+                val newMax = this.max - 1
 
-  private Arity(int minArity, int maxArity) {
-    _minArity = minArity;
-    _maxArity = maxArity;
-  }
+                if (newMax < 0) {
+                    throw RuntimeArityError(null, this)
+                }
 
-
-  public static Arity exactly(int arity) {
-    return new Arity(arity, arity);
-  }
-
-  public static Arity atLeast(int arity) {
-    return new Arity(arity, -1);
-  }
-
-  public static Arity inRange(int lo, int hi) {
-    return new Arity(lo, hi);
-  }
+                return inRange(newMin, newMax)
+            }
+        }
 
 
-  public Arity getOneLess()
-      throws RuntimeArityError {
-    int newMin = getMin() - 1;
+    fun allowMore(): Boolean =
+        this.max == -1
 
-    if (newMin < 0) {
-      newMin = 0;
+
+    fun isValid(arity: Int): Boolean {
+        val gotEnoughArguments = (this.min <= arity)
+        val isMaxArityDisabled = (this.max == -1)
+        val gotTooManyArguments = !isMaxArityDisabled && (this.max < arity)
+
+        return (gotEnoughArguments && !gotTooManyArguments)
     }
 
-    if (allowMore()) {
-      return atLeast(newMin);
-    } else {
-      int newMax = getMax() - 1;
 
-      if (newMax < 0) {
-        throw new RuntimeArityError(null, this);
-      }
+    override fun toString(): String {
+        var result = "" + this.min
 
-      return inRange(newMin, newMax);
-    }
-  }
+        if (allowMore()) {
+            result += " or more"
+        } else if (this.min != this.max) {
+            result += " to " + this.max
+        }
 
-
-  public int getMin() {
-    return _minArity;
-  }
-
-  public int getMax() {
-    return _maxArity;
-  }
-
-  public boolean allowMore() {
-    return (_maxArity == -1);
-  }
-
-
-  public boolean isValid(int arity) {
-    boolean gotEnoughArguments = (_minArity <= arity);
-    boolean isMaxArityDisabled = (_maxArity == -1);
-    boolean gotTooManyArguments = !isMaxArityDisabled && (_maxArity < arity);
-
-    return (gotEnoughArguments && !gotTooManyArguments);
-  }
-
-
-  public String toString() {
-    String result = "" + getMin();
-
-    if (allowMore()) {
-      result += " or more";
-    } else if (getMin() != getMax()) {
-      result += " to " + getMax();
+        return result
     }
 
-    return result;
-  }
+    companion object {
+        @JvmStatic
+        fun exactly(arity: Int): Arity =
+            Arity(arity, arity)
+
+        @JvmStatic
+        fun atLeast(arity: Int): Arity =
+            Arity(arity, -1)
+
+        @JvmStatic
+        fun inRange(lo: Int, hi: Int): Arity =
+            Arity(lo, hi)
+    }
 }
