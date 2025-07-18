@@ -31,6 +31,7 @@ import mscheme.exceptions.PairExpected;
 import mscheme.exceptions.SchemeException;
 import mscheme.syntax.ITranslator;
 import mscheme.syntax.ProcedureCall;
+import org.jetbrains.annotations.NotNull;
 
 class ConstPairOrList
     extends PairOrList {
@@ -239,8 +240,7 @@ public abstract class PairOrList
     return false;
   }
 
-  public IList validate()
-      throws ListExpected {
+  public @NotNull IList validate() throws ListExpected {
     if (!isValid()) {
       throw new ListExpected(this);
     }
@@ -252,6 +252,7 @@ public abstract class PairOrList
     return false;
   }
 
+  @NotNull
   public IList getCopy() {
     final Object empty = ListFactory.create();
 

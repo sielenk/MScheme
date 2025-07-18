@@ -30,7 +30,7 @@ object ValueTraits {
 
     @JvmStatic
     fun isEmpty(obj: Any?): Boolean =
-        obj === Empty.INSTANCE
+        obj === Empty
 
     @JvmStatic
     @Throws(SchemeException::class, InterruptedException::class)

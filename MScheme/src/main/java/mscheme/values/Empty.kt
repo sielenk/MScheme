@@ -16,86 +16,69 @@
  * mscheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package mscheme.values
 
-package mscheme.values;
+import mscheme.environment.StaticEnvironment
+import mscheme.exceptions.CantCompileException
+import mscheme.exceptions.ListExpected
+import mscheme.exceptions.PairExpected
+import java.io.IOException
+import java.io.Writer
 
-import java.io.IOException;
-import java.io.Writer;
-import mscheme.environment.StaticEnvironment;
-import mscheme.exceptions.CantCompileException;
-import mscheme.exceptions.ListExpected;
-import mscheme.exceptions.PairExpected;
+object Empty : IList, IOutputable, ICompileable {
+    override val isValid: Boolean
+        // implementation of List
+        get() = true
 
-public final class Empty
-    implements IList, IOutputable, ICompileable {
+    @Throws(ListExpected::class)
+    override fun validate(): IList =
+        this
 
-  public final static Empty INSTANCE = new Empty();
+    override val isEmpty: Boolean
+        get() = true
 
-  private final static Object[] ARRAY = new Object[0];
+    override fun getCopy(): IList =
+        this
 
-  private Empty() {
-  }
+    override val length: Int
+        get() = 0
 
-  // implementation of List
+    override fun getReversed(): IList =
+        this
 
-  public boolean isValid() {
-    return true;
-  }
+    @get:Throws(PairExpected::class)
+    override val head: Any?
+        get() {
+            throw PairExpected(this)
+        }
 
-  public IList validate()
-      throws ListExpected {
-    return this;
-  }
+    @get:Throws(PairExpected::class)
+    override val tail: IList
+        get() {
+            throw PairExpected(this)
+        }
 
-  public boolean isEmpty() {
-    return true;
-  }
+    @Throws(CantCompileException::class)
+    override fun getForceable(compilationEnv: StaticEnvironment): Any? {
+        throw CantCompileException(this)
+    }
 
-  public IList getCopy() {
-    return this;
-  }
+    override fun getCompiledArray(compilationEnv: StaticEnvironment?): Array<Any?> =
+        ARRAY
 
-  public int getLength() {
-    return 0;
-  }
+    override fun getCompiledArray(compilationEnv: StaticEnvironment?, index: Int): Array<Any?> =
+        arrayOfNulls(index)
 
-  public IList getReversed() {
-    return this;
-  }
+    override fun getArray(): Array<Any?> =
+        ARRAY
 
-  public Object getHead()
-      throws PairExpected {
-    throw new PairExpected(this);
-  }
+    override fun getArray(index: Int): Array<Any?> =
+        arrayOfNulls(index)
 
-  public IList getTail()
-      throws PairExpected {
-    throw new PairExpected(this);
-  }
+    @Throws(IOException::class)
+    override fun outputOn(destination: Writer, doWrite: Boolean) {
+        destination.write("()")
+    }
 
-  public Object getForceable(StaticEnvironment compilationEnv)
-      throws CantCompileException {
-    throw new CantCompileException(this);
-  }
-
-  public Object[] getCompiledArray(StaticEnvironment compilationEnv) {
-    return ARRAY;
-  }
-
-  public Object[] getCompiledArray(StaticEnvironment compilationEnv, int index) {
-    return new Object[index];
-  }
-
-  public Object[] getArray() {
-    return ARRAY;
-  }
-
-  public Object[] getArray(int index) {
-    return new Object[index];
-  }
-
-  public void outputOn(Writer destination, boolean doWrite)
-      throws IOException {
-    destination.write("()");
-  }
+    private val ARRAY = arrayOf<Any?>()
 }

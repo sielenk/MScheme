@@ -27,7 +27,7 @@ interface IList {
     val isValid: Boolean
 
     @Throws(ListExpected::class)
-    fun validate(): IList?
+    fun validate(): IList
 
     val isEmpty: Boolean
 
