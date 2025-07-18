@@ -4,31 +4,26 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package mscheme.values.functions;
+package mscheme.values.functions
 
-import mscheme.exceptions.SchemeException;
-import mscheme.machine.Registers;
-import mscheme.machine.stack.Stack.Mark;
-import mscheme.values.ListFactory;
-import mscheme.values.ValueTraits;
+import mscheme.exceptions.SchemeException
+import mscheme.machine.Registers
+import mscheme.machine.stack.Stack
+import mscheme.values.ListFactory
+import mscheme.values.ValueTraits
 
+class SubcontinuationController internal constructor(
+    state: Registers
+) : UnaryFunction() {
+    private val _mark: Stack.Mark? = state.stack.createMark()
 
-public class SubcontinuationController
-    extends UnaryFunction {
-
-  private final Mark _mark;
-
-  SubcontinuationController(Registers state) {
-    _mark = state.getStack().createMark();
-  }
-
-  protected Object checkedCall(Registers state, Object argument)
-      throws SchemeException, InterruptedException {
-    return ValueTraits.apply(
-        state,
-        argument,
-        ListFactory.create(
-            new Subcontinuation(
-                state.getStack().cutSlice(_mark))));
-  }
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun checkedCall(state: Registers, fst: Any?): Any? =
+        ValueTraits.apply(
+            state,
+            fst,
+            ListFactory.create(
+                Subcontinuation(state.stack.cutSlice(_mark))
+            )
+        )
 }
