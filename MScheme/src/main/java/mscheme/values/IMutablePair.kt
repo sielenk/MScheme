@@ -16,17 +16,14 @@
  * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package mscheme.values
 
-package mscheme.values;
+import mscheme.exceptions.ImmutableException
 
-import mscheme.exceptions.ImmutableException;
+interface IMutablePair : IPair, IMutable {
+    @set:Throws(ImmutableException::class)
+    override var first: Any?
 
-public interface IMutablePair
-    extends IPair, IMutable {
-
-  void setFirst(Object fst)
-      throws ImmutableException;
-
-  void setSecond(Object snd)
-      throws ImmutableException;
+    @set:Throws(ImmutableException::class)
+    override var second: Any?
 }

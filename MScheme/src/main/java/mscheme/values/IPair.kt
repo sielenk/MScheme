@@ -24,6 +24,6 @@ package mscheme.values
  * @author sielenk
  */
 interface IPair {
-    fun getFirst(): Any?
-    fun getSecond(): Any?
+    val first: Any?
+    val second: Any?
 }
