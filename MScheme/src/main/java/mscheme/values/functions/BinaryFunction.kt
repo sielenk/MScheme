@@ -17,38 +17,24 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.values.functions
 
-package mscheme.values.functions;
+import mscheme.exceptions.SchemeException
+import mscheme.machine.Registers
+import mscheme.util.Arity
+import mscheme.util.Arity.Companion.exactly
+import mscheme.values.IList
 
-import mscheme.exceptions.SchemeException;
-import mscheme.machine.Registers;
-import mscheme.util.Arity;
-import mscheme.values.IList;
-import org.jetbrains.annotations.NotNull;
+abstract class BinaryFunction : CheckedFunction() {
+    override val arity: Arity =
+        exactly(2)
 
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun checkedCall(state: Registers, args: IList): Any? =
+        checkedCall(state, args.head, args.tail.head)
 
-public abstract class BinaryFunction
-    extends CheckedFunction {
-
-  @NotNull
-  protected final Arity getArity() {
-    return Arity.exactly(2);
-  }
-
-  protected final Object checkedCall(
-      @NotNull Registers state,
-      IList arguments
-  ) throws SchemeException, InterruptedException {
-    return checkedCall(
-        state,
-        arguments.getHead(),
-        arguments.getTail().getHead()
-    );
-  }
-
-  protected abstract Object checkedCall(
-      @NotNull Registers state,
-      Object fst,
-      Object snd
-  ) throws SchemeException, InterruptedException;
+    @Throws(SchemeException::class, InterruptedException::class)
+    protected abstract fun checkedCall(
+        state: Registers, fst: Any?, snd: Any?
+    ): Any?
 }
