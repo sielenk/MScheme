@@ -17,33 +17,28 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.values.functions
 
-package mscheme.values.functions;
+import mscheme.exceptions.ListExpected
+import mscheme.exceptions.PairExpected
+import mscheme.values.ValueTraits
+import mscheme.values.ValueTraits.toList
 
-import mscheme.exceptions.ListExpected;
-import mscheme.exceptions.PairExpected;
-import mscheme.values.IList;
-import mscheme.values.ValueTraits;
+internal abstract class MemberBase : BinaryValueFunction() {
+    protected abstract fun equal(fst: Any?, snd: Any?): Boolean
 
-abstract class MemberBase
-    extends BinaryValueFunction {
+    @Throws(ListExpected::class, PairExpected::class)
+    override fun checkedCall(fst: Any?, snd: Any?): Any? {
+        var tail = toList(snd)
 
-  protected abstract boolean equal(Object fst, Object snd);
+        while (!tail.isEmpty) {
+            if (equal(fst, tail.head)) {
+                return tail
+            }
 
-  protected final Object checkedCall(
-      Object key,
-      Object values
-  ) throws ListExpected, PairExpected {
-    for (
-        IList tail = ValueTraits.toList(values);
-        !tail.isEmpty();
-        tail = tail.getTail()
-    ) {
-      if (equal(key, tail.getHead())) {
-        return tail;
-      }
+            tail = tail.tail
+        }
+
+        return ValueTraits.FALSE
     }
-
-    return ValueTraits.FALSE;
-  }
 }
