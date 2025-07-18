@@ -17,64 +17,32 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.values.functions
 
-package mscheme.values.functions;
+import mscheme.exceptions.RuntimeError
+import mscheme.exceptions.TypeError
+import mscheme.machine.Registers
+import mscheme.util.Arity
+import mscheme.util.Arity.Companion.atLeast
+import mscheme.values.Function
+import mscheme.values.IList
+import mscheme.values.ListFactory.create
+import mscheme.values.ListFactory.createPair
+import mscheme.values.ValueTraits.toList
 
-import mscheme.exceptions.RuntimeError;
-import mscheme.exceptions.TypeError;
-import mscheme.machine.Registers;
-import mscheme.util.Arity;
-import mscheme.values.Function;
-import mscheme.values.IList;
-import mscheme.values.ListFactory;
-import mscheme.values.ValueTraits;
-
-
-final class AppendHelper1
-    extends Reducer {
-
-
-  AppendHelper1(Object initial) {
-    super(initial);
-  }
-
-  protected Object combine(Object fst, Object snd) {
-    return ListFactory.createPair(fst, snd);
-  }
+internal class AppendHelper1(initial: Any?) : Reducer(initial) {
+    override fun combine(fst: Any?, snd: Any?): Any =
+        createPair(fst, snd)
 }
 
-
-final class AppendHelper2
-    extends Reducer {
-
-
-  final static AppendHelper2 INSTANCE
-      = new AppendHelper2();
-
-  private AppendHelper2() {
-    super(ListFactory.create());
-  }
-
-  protected Object combine(Object fst, Object snd)
-      throws RuntimeError, TypeError {
-    return new AppendHelper1(snd).foldRight(ValueTraits.toList(fst));
-  }
+internal object AppendHelper2 : Reducer(create()) {
+    @Throws(RuntimeError::class, TypeError::class)
+    override fun combine(fst: Any?, snd: Any?): Any? =
+        AppendHelper1(snd).foldRight(toList(fst))
 }
 
-
-public final class AppendFunction
-    extends Function {
-
-
-  public final static AppendFunction INSTANCE
-      = new AppendFunction();
-
-  private Arity getArity() {
-    return Arity.atLeast(0);
-  }
-
-  public Object call(Registers state, IList arguments)
-      throws RuntimeError, TypeError {
-    return AppendHelper2.INSTANCE.reduceRight(arguments);
-  }
+object AppendFunction : Function() {
+    @Throws(RuntimeError::class, TypeError::class)
+    override fun call(state: Registers, arguments: IList): Any? =
+        AppendHelper2.reduceRight(arguments)
 }
