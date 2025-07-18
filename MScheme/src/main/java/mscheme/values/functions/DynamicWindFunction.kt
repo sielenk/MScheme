@@ -17,29 +17,16 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.values.functions
 
-package mscheme.values.functions;
+import mscheme.exceptions.RuntimeError
+import mscheme.exceptions.TypeError
+import mscheme.machine.Registers
 
-import mscheme.exceptions.RuntimeError;
-import mscheme.exceptions.TypeError;
-import mscheme.machine.Registers;
-import org.jetbrains.annotations.NotNull;
-
-
-public class DynamicWindFunction
-    extends TernaryFunction {
-
-  public final static DynamicWindFunction INSTANCE
-      = new DynamicWindFunction();
-
-
-  protected Object checkedCall(
-      @NotNull Registers state,
-      Object fst,
-      Object snd,
-      Object trd
-  ) throws RuntimeError, TypeError {
-    //TODO add implementation
-    throw new RuntimeError(null, "");
-  }
+object DynamicWindFunction : TernaryFunction() {
+    @Throws(RuntimeError::class, TypeError::class)
+    override fun checkedCall(state: Registers, fst: Any?, snd: Any?, trd: Any?): Any? {
+        //TODO add implementation
+        throw RuntimeError(null, "")
+    }
 }
