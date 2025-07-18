@@ -23,6 +23,7 @@ package mscheme.values.functions;
 import mscheme.exceptions.RuntimeError;
 import mscheme.exceptions.TypeError;
 import mscheme.machine.Registers;
+import org.jetbrains.annotations.NotNull;
 
 
 public class DynamicWindFunction
@@ -33,7 +34,7 @@ public class DynamicWindFunction
 
 
   protected Object checkedCall(
-      Registers state,
+      @NotNull Registers state,
       Object fst,
       Object snd,
       Object trd

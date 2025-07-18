@@ -21,13 +21,15 @@ Boston, MA  02111-1307, USA. */
 package mscheme.values.functions;
 
 import mscheme.exceptions.SchemeException;
+import mscheme.machine.Registers;
+import org.jetbrains.annotations.NotNull;
 
 
 public abstract class TernaryValueFunction
     extends TernaryFunction {
 
   protected final Object checkedCall(
-      mscheme.machine.Registers state,
+      @NotNull Registers state,
       Object fst,
       Object snd,
       Object trd
