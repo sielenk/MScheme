@@ -16,31 +16,21 @@
  * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package mscheme.values.functions
 
-package mscheme.values.functions;
+import mscheme.compiler.Compiler
+import mscheme.exceptions.SchemeException
+import mscheme.machine.Registers
+import mscheme.values.ValueTraits.toEnvironment
 
-import mscheme.compiler.Compiler;
-import mscheme.environment.Environment;
-import mscheme.exceptions.SchemeException;
-import mscheme.machine.Registers;
-import mscheme.values.ValueTraits;
-import org.jetbrains.annotations.NotNull;
+object EvalFunction : BinaryFunction() {
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun checkedCall(state: Registers, fst: Any?, snd: Any?): Any? {
+        val newEnv = toEnvironment(snd)
+        val newCode = Compiler(newEnv.static).compile(fst)
 
-public final class EvalFunction
-    extends BinaryFunction {
+        state.environment = newEnv.dynamic
 
-  public final static EvalFunction INSTANCE = new EvalFunction();
-
-  private EvalFunction() {
-  }
-
-  protected Object checkedCall(@NotNull Registers state, Object fst,
-      Object snd)
-      throws SchemeException, InterruptedException {
-    Environment newEnv = ValueTraits.toEnvironment(snd);
-    Object newCode = new Compiler(newEnv.getStatic()).compile(fst);
-
-    state.setEnvironment(newEnv.getDynamic());
-    return newCode;
-  }
+        return newCode
+    }
 }
