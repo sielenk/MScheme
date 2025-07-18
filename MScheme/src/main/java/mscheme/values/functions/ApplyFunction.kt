@@ -17,60 +17,51 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.values.functions
 
-package mscheme.values.functions;
+import mscheme.code.Application
+import mscheme.exceptions.SchemeException
+import mscheme.machine.Registers
+import mscheme.util.Arity
+import mscheme.util.Arity.Companion.atLeast
+import mscheme.values.IList
+import mscheme.values.ValueTraits.toList
+import mscheme.values.ValueTraits.toMutablePair
 
-import mscheme.code.Application;
-import mscheme.exceptions.SchemeException;
-import mscheme.util.Arity;
-import mscheme.values.IList;
-import mscheme.values.ValueTraits;
+object ApplyFunction : CheckedFunction() {
+    override val arity: Arity =
+        atLeast(2)
+
+    @Throws(SchemeException::class)
+    override fun checkedCall(state: Registers, args: IList): Any? {
+        val func = args.head
+
+        // Since the argument list is newly allocated
+        // and mutable, it is permissible to modify it. (*)
+        // The modification done looks like this:
+        // (f 0 1 (2 3)) is changed to (f 0 1 2 3)
+        var toBeModified = args
+        for (i in toBeModified.length - 2 downTo 1) {
+            toBeModified = toBeModified.tail
+        }
+
+        // Now toBeModified referes the pair containing the
+        // last but one argument. In the example it would be
+        // (1 (2 3)) which is equal to (1 . ((2 3)))
+        toMutablePair(toBeModified).second = toList(toBeModified.tail.head).getCopy()
 
 
-public class ApplyFunction
-    extends CheckedFunction {
+        // and here it would have become
+        // (1 . (2 3)) which is equal to (1 2 3)
 
-  public final static ApplyFunction INSTANCE = new ApplyFunction();
+        // the call to getCopy() is necessary to keep the
+        // statement marked with (*) above true.
+        state.push(
+            Application.createCall(
+                args.tail
+            )
+        )
 
-
-  protected Arity getArity() {
-    return Arity.atLeast(2);
-  }
-
-  protected Object checkedCall(
-      mscheme.machine.Registers state,
-      IList arguments
-  ) throws SchemeException {
-    Object func = arguments.getHead();
-
-    // Since the argument list is newly allocated
-    // and mutable, it is permissible to modify it. (*)
-    // The modification done looks like this:
-    // (f 0 1 (2 3)) is changed to (f 0 1 2 3)
-
-    IList toBeModified = arguments;
-    for (int i = toBeModified.getLength() - 2; i > 0; i--) {
-      toBeModified = toBeModified.getTail();
+        return func
     }
-
-    // Now toBeModified referes the pair containing the
-    // last but one argument. In the example it would be
-    // (1 (2 3)) which is equal to (1 . ((2 3)))
-
-    ValueTraits.toMutablePair(toBeModified).setSecond(
-        ValueTraits.toList(toBeModified.getTail().getHead()).getCopy()
-    );
-
-    // and here it would have become
-    // (1 . (2 3)) which is equal to (1 2 3)
-
-    // the call to getCopy() is necessary to keep the
-    // statement marked with (*) above true.
-
-    state.push(
-        Application.createCall(
-            arguments.getTail()));
-
-    return func;
-  }
 }
