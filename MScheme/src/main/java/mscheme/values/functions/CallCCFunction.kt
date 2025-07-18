@@ -17,29 +17,24 @@
  * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package mscheme.values.functions
 
-package mscheme.values.functions;
+import mscheme.exceptions.SchemeException
+import mscheme.machine.Registers
+import mscheme.values.ListFactory.create
+import mscheme.values.ValueTraits.apply
 
-import mscheme.exceptions.SchemeException;
-import mscheme.machine.Registers;
-import mscheme.values.ListFactory;
-import mscheme.values.ValueTraits;
-
-public final class CallCCFunction
-    extends UnaryFunction {
-
-  public final static CallCCFunction INSTANCE = new CallCCFunction();
-
-  private CallCCFunction() {
-  }
-
-  protected Object checkedCall(Registers state, Object argument)
-      throws SchemeException, InterruptedException {
-    return ValueTraits.apply(
-        state,
-        argument,
-        ListFactory.create(
-            new Subcontinuation(
-                state.getStack().getContinuation())));
-  }
+object CallCCFunction : UnaryFunction() {
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun checkedCall(state: Registers, fst: Any?): Any? {
+        return apply(
+            state,
+            fst,
+            create(
+                Subcontinuation(
+                    state.stack.continuation
+                )
+            )
+        )
+    }
 }
