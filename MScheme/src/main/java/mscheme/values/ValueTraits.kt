@@ -34,7 +34,7 @@ object ValueTraits {
 
     @JvmStatic
     @Throws(SchemeException::class, InterruptedException::class)
-    fun apply(state: Registers?, function: Any?, arguments: IList): Any? {
+    fun apply(state: Registers, function: Any?, arguments: IList): Any? {
         when (function) {
             is Method -> {
                 val parameterTypes = function.parameterTypes

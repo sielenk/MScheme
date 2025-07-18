@@ -17,30 +17,30 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.values
 
-package mscheme.values;
+import mscheme.exceptions.RuntimeArityError
+import mscheme.exceptions.SchemeException
+import mscheme.machine.Registers
+import mscheme.util.Arity
 
-import mscheme.exceptions.RuntimeArityError;
-import mscheme.exceptions.SchemeException;
-import mscheme.machine.Registers;
-import mscheme.util.Arity;
+abstract class Function {
+    // abstract function interface
 
+    @Throws(SchemeException::class, InterruptedException::class)
+    abstract fun call(state: Registers, arguments: IList): Any?
 
-public abstract class Function {
+    companion object {
+        @JvmStatic
+        @Throws(SchemeException::class)
+        fun checkArguments(arity: Arity, arguments: IList): Int {
+            val len = arguments.length
 
-  public static int checkArguments(Arity arity, IList arguments)
-      throws SchemeException {
-    int len = arguments.getLength();
+            if (!arity.isValid(len)) {
+                throw RuntimeArityError(arguments, arity)
+            }
 
-    if (!arity.isValid(len)) {
-      throw new RuntimeArityError(arguments, arity);
+            return len
+        }
     }
-
-    return len;
-  }
-
-
-  // abstract function interface
-  public abstract Object call(Registers state, IList arguments)
-      throws SchemeException, InterruptedException;
 }
