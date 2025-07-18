@@ -17,29 +17,22 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.values.functions
 
-package mscheme.values.functions;
+import mscheme.exceptions.SchemeException
+import mscheme.machine.Registers
+import mscheme.util.Arity
+import mscheme.util.Arity.Companion.exactly
+import mscheme.values.IList
 
-import mscheme.exceptions.SchemeException;
-import mscheme.util.Arity;
-import mscheme.values.IList;
+abstract class Thunk : CheckedFunction() {
+    override val arity: Arity =
+        exactly(0)
 
+    @Throws(SchemeException::class)
+    override fun checkedCall(state: Registers, args: IList): Any? =
+        checkedCall(state)
 
-public abstract class Thunk
-    extends CheckedFunction {
-
-  protected final Arity getArity() {
-    return Arity.exactly(0);
-  }
-
-  protected final Object checkedCall(
-      mscheme.machine.Registers state,
-      IList arguments
-  ) throws SchemeException {
-    return checkedCall(state);
-  }
-
-  protected abstract Object checkedCall(
-      mscheme.machine.Registers state
-  ) throws SchemeException;
+    @Throws(SchemeException::class)
+    protected abstract fun checkedCall(state: Registers): Any?
 }
