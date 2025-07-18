@@ -46,7 +46,7 @@ class Stack : IStack {
         }
     }
 
-    private var _top: Slice?
+    private var _top: Slice
 
     init {
         _top = Slice(null, null)
@@ -55,26 +55,26 @@ class Stack : IStack {
     override val isEmpty: Boolean
         get() {
             var slice = _top
-            while (slice!!._next != null && slice._stack.isEmpty) {
-                slice = slice._next
+            while (slice._next != null && slice._stack.isEmpty) {
+                slice = slice._next!!
             }
 
             return slice._stack.isEmpty
         }
 
     override fun pop(): StackFrame? {
-        while (_top!!._next != null && _top!!._stack.isEmpty) {
-            _top = _top!!._next
+        while (_top._next != null && _top._stack.isEmpty) {
+            _top = _top._next!!
         }
 
-        return _top!!._stack.pop()
+        return _top._stack.pop()
     }
 
     override fun push(f: StackFrame?) {
-        _top!!._stack.push(f)
+        _top._stack.push(f)
     }
 
-    val continuation: Slice?
+    val continuation: Slice
         // continuation support
         get() {
             val top = _top
@@ -84,38 +84,39 @@ class Stack : IStack {
         }
 
     // subcontinuation support
-    fun createMark(): Mark? {
-        _top = Slice(Mark(), _top)
-        return _top!!._mark
+    fun createMark(): Mark {
+        val mark = Mark()
+        _top = Slice(mark, _top)
+        return mark
     }
 
     @Throws(RuntimeError::class)
-    fun cutSlice(mark: Mark?): Slice {
+    fun cutSlice(mark: Mark): Slice {
         val top = _top
 
         var slice = top
-        while (slice!!._next != null) {
+        while (slice._next != null) {
             if (slice._mark === mark) {
-                _top = slice._next
+                _top = slice._next!!
                 slice._next = null
 
-                return top!!
+                return top
             }
-            slice = slice._next
+            slice = slice._next!!
         }
 
         throw RuntimeError(mark, "stack mark not found")
     }
 
-    fun reinstate(slice: Slice?) {
+    fun reinstate(slice: Slice) {
         val oldTop = _top
 
         var srcSlice = slice
-        _top = Stack.Slice(srcSlice!!)
-        var dstSlice = _top!!
-        while (srcSlice!!._next != null) {
-            srcSlice = srcSlice._next
-            dstSlice._next = Slice(srcSlice!!)
+        _top = Slice(srcSlice)
+        var dstSlice = _top
+        while (srcSlice._next != null) {
+            srcSlice = srcSlice._next!!
+            dstSlice._next = Slice(srcSlice)
             dstSlice = dstSlice._next!!
         }
 
