@@ -17,91 +17,75 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.values.functions
 
-package mscheme.values.functions;
+import mscheme.exceptions.RuntimeError
+import mscheme.exceptions.TypeError
+import mscheme.values.IList
 
-import mscheme.exceptions.RuntimeError;
-import mscheme.exceptions.TypeError;
-import mscheme.values.IList;
+internal abstract class Reducer protected constructor(
+    private val _initial: Any?
+) {
+    @Throws(RuntimeError::class, TypeError::class)
+    protected abstract fun combine(fst: Any?, snd: Any?): Any?
 
-abstract class Reducer {
+    @Throws(RuntimeError::class, TypeError::class)
+    fun reduceLeft(list: IList): Any? {
+        if (list.isEmpty) {
+            return _initial
+        } else {
+            var result = list.head
 
-  private final Object _initial;
+            var tail = list.tail
+            while (!tail.isEmpty) {
+                result = combine(result, tail.head)
+                tail = tail.tail
+            }
 
-  protected Reducer(Object initial) {
-    _initial = initial;
-  }
-
-  protected abstract Object combine(Object fst, Object snd)
-      throws RuntimeError, TypeError;
-
-
-  public final Object reduceLeft(IList list)
-      throws RuntimeError, TypeError {
-    if (list.isEmpty()) {
-      return _initial;
-    } else {
-      Object result = list.getHead();
-
-      for (
-          IList tail = list.getTail();
-          !tail.isEmpty();
-          tail = tail.getTail()
-      ) {
-        result = combine(result, tail.getHead());
-      }
-
-      return result;
-    }
-  }
-
-  public final Object foldLeft(IList list)
-      throws RuntimeError, TypeError {
-    Object result = _initial;
-
-    for (
-        IList tail = list;
-        !tail.isEmpty();
-        tail = tail.getTail()
-    ) {
-      result = combine(result, tail.getHead());
+            return result
+        }
     }
 
-    return result;
-  }
+    @Throws(RuntimeError::class, TypeError::class)
+    fun foldLeft(list: IList): Any? {
+        var result = _initial
 
-  private Object reduceRightHelper(IList list)
-      throws RuntimeError, TypeError {
-    IList tail = list.getTail();
+        var tail = list
+        while (!tail.isEmpty) {
+            result = combine(result, tail.head)
+            tail = tail.tail
+        }
 
-    if (tail.isEmpty()) {
-      return list.getHead();
-    } else {
-      return combine(
-          list.getHead(),
-          reduceRightHelper(tail)
-      );
+        return result
     }
-  }
 
-  public final Object reduceRight(IList list)
-      throws RuntimeError, TypeError {
-    if (list.isEmpty()) {
-      return _initial;
-    } else {
-      return reduceRightHelper(list);
-    }
-  }
+    @Throws(RuntimeError::class, TypeError::class)
+    private fun reduceRightHelper(list: IList): Any? {
+        val tail = list.tail
 
-  public Object foldRight(IList list)
-      throws RuntimeError, TypeError {
-    if (list.isEmpty()) {
-      return _initial;
-    } else {
-      return combine(
-          list.getHead(),
-          foldRight(list.getTail())
-      );
+        return if (tail.isEmpty)
+            list.head
+        else
+            combine(
+                list.head,
+                reduceRightHelper(tail)
+            )
     }
-  }
+
+    @Throws(RuntimeError::class, TypeError::class)
+    fun reduceRight(list: IList): Any? =
+        if (list.isEmpty)
+            _initial
+        else
+            reduceRightHelper(list)
+
+    @Throws(RuntimeError::class, TypeError::class)
+    fun foldRight(list: IList): Any? =
+        if (list.isEmpty)
+            _initial
+        else
+            combine(
+                list.head,
+                foldRight(list.tail)
+            )
 }
