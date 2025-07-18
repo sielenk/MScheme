@@ -17,24 +17,16 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.values.functions
 
-package mscheme.values.functions;
+import mscheme.exceptions.SchemeException
+import mscheme.machine.Registers
 
-import mscheme.exceptions.SchemeException;
-import mscheme.machine.Registers;
-import org.jetbrains.annotations.NotNull;
+abstract class UnaryValueFunction : UnaryFunction() {
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun checkedCall(state: Registers, fst: Any?): Any? =
+        checkedCall(fst)
 
-
-public abstract class UnaryValueFunction
-    extends UnaryFunction {
-
-  protected final Object checkedCall(
-      @NotNull Registers state,
-      Object fst
-  ) throws SchemeException, InterruptedException {
-    return checkedCall(fst);
-  }
-
-  protected abstract Object checkedCall(Object fst)
-      throws SchemeException, InterruptedException;
+    @Throws(SchemeException::class, InterruptedException::class)
+    protected abstract fun checkedCall(fst: Any?): Any?
 }
