@@ -19,9 +19,9 @@ the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
 package mscheme.values.functions
 
-import mscheme.values.ValueTraits.eq
+import mscheme.values.ValueTraits
 
 object MemqFunction : MemberBase() {
     override fun equal(fst: Any?, snd: Any?): Boolean =
-        eq(fst, snd)
+        ValueTraits.eq(fst, snd)
 }
