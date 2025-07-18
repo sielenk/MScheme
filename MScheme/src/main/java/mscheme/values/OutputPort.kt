@@ -17,102 +17,92 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.values
 
-package mscheme.values;
+import mscheme.exceptions.CloseException
+import mscheme.exceptions.OpenException
+import mscheme.exceptions.WriteException
+import mscheme.values.ValueTraits.display
+import mscheme.values.ValueTraits.write
+import java.io.FileWriter
+import java.io.IOException
+import java.io.Writer
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
-import mscheme.exceptions.CloseException;
-import mscheme.exceptions.OpenException;
-import mscheme.exceptions.WriteException;
+class OutputPort private constructor(private val _writer: Writer) : Port() {
+    // specialisation of Port
 
-
-public class OutputPort
-    extends Port {
-
-  private final Writer _writer;
-
-  private OutputPort(Writer writer) {
-    _writer = writer;
-  }
-
-
-  public static OutputPort create(Writer writer) {
-    return new OutputPort(writer);
-  }
-
-  public static OutputPort create(ScmString filename)
-      throws OpenException {
-    return create(filename.getJavaString());
-  }
-
-  public static OutputPort create(String filename)
-      throws OpenException {
-    try {
-      return create(new FileWriter(filename));
-    } catch (IOException e) {
-      throw new OpenException(
-          ScmString.create(filename)
-      );
+    @Throws(IOException::class)
+    fun writeOn(destination: Writer) {
+        destination.write("#[output port]")
     }
-  }
 
-  // specialisation of Port
-
-  public void writeOn(Writer destination)
-      throws IOException {
-    destination.write("#[output port]");
-  }
-
-  public OutputPort toOutputPort() {
-    return this;
-  }
+    fun toOutputPort(): OutputPort =
+        this
 
 
-  public void close()
-      throws CloseException {
-    try {
-      _writer.close();
-    } catch (IOException e) {
-      throw new CloseException(this);
+    @Throws(CloseException::class)
+    fun close() {
+        try {
+            _writer.close()
+        } catch (e: IOException) {
+            throw CloseException(this)
+        }
     }
-  }
 
-  // output port
-
-  public void writeChar(char c)
-      throws WriteException {
-    try {
-      _writer.write(c);
-      _writer.flush();
-    } catch (IOException e) {
-      throw new WriteException(this);
+    // output port
+    @Throws(WriteException::class)
+    fun writeChar(c: Char) {
+        try {
+            _writer.write(c.code)
+            _writer.flush()
+        } catch (e: IOException) {
+            throw WriteException(this)
+        }
     }
-  }
 
-  public void writeScmChar(Character c)
-      throws WriteException {
-    writeChar(c);
-  }
-
-  public void write(Object datum)
-      throws WriteException {
-    try {
-      ValueTraits.write(_writer, datum);
-      _writer.flush();
-    } catch (IOException e) {
-      throw new WriteException(this);
+    @Throws(WriteException::class)
+    fun writeScmChar(c: Char) {
+        writeChar(c)
     }
-  }
 
-  public void display(Object datum)
-      throws WriteException {
-    try {
-      ValueTraits.display(_writer, datum);
-      _writer.flush();
-    } catch (IOException e) {
-      throw new WriteException(this);
+    @Throws(WriteException::class)
+    fun write(datum: Any?) {
+        try {
+            write(_writer, datum)
+            _writer.flush()
+        } catch (e: IOException) {
+            throw WriteException(this)
+        }
     }
-  }
+
+    @Throws(WriteException::class)
+    fun display(datum: Any?) {
+        try {
+            display(_writer, datum)
+            _writer.flush()
+        } catch (e: IOException) {
+            throw WriteException(this)
+        }
+    }
+
+    companion object {
+        @JvmStatic
+        fun create(writer: Writer): OutputPort =
+            OutputPort(writer)
+
+        @JvmStatic
+        @Throws(OpenException::class)
+        fun create(filename: ScmString): OutputPort =
+            create(filename.javaString)
+
+        @Throws(OpenException::class)
+        fun create(filename: String): OutputPort =
+            try {
+                create(FileWriter(filename))
+            } catch (e: IOException) {
+                throw OpenException(
+                    ScmString.create(filename)
+                )
+            }
+    }
 }
