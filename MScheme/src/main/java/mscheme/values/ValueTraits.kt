@@ -123,7 +123,7 @@ object ValueTraits {
 
 
     @JvmStatic
-    fun equal(fst: Any, snd: Any?): Boolean =
+    fun equal(fst: Any?, snd: Any?): Boolean =
         fst == snd
 
     @JvmStatic

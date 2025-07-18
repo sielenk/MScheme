@@ -63,10 +63,10 @@ object Empty : IList, IOutputable, ICompileable {
         throw CantCompileException(this)
     }
 
-    override fun getCompiledArray(compilationEnv: StaticEnvironment?): Array<Any?> =
+    override fun getCompiledArray(compilationEnv: StaticEnvironment): Array<Any?> =
         ARRAY
 
-    override fun getCompiledArray(compilationEnv: StaticEnvironment?, index: Int): Array<Any?> =
+    override fun getCompiledArray(compilationEnv: StaticEnvironment, index: Int): Array<Any?> =
         arrayOfNulls(index)
 
     override fun getArray(): Array<Any?> =

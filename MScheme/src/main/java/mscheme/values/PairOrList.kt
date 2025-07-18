@@ -17,330 +17,288 @@
  * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package mscheme.values
 
-package mscheme.values;
+import mscheme.compiler.Compiler
+import mscheme.environment.StaticEnvironment
+import mscheme.exceptions.ListExpected
+import mscheme.exceptions.PairExpected
+import mscheme.exceptions.SchemeException
+import mscheme.syntax.ITranslator
+import mscheme.syntax.ProcedureCall
+import mscheme.values.ValueTraits.getConst
+import mscheme.values.ValueTraits.output
+import java.io.IOException
+import java.io.StringWriter
+import java.io.Writer
+import java.util.*
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.Enumeration;
-import mscheme.compiler.Compiler;
-import mscheme.environment.StaticEnvironment;
-import mscheme.exceptions.ListExpected;
-import mscheme.exceptions.PairExpected;
-import mscheme.exceptions.SchemeException;
-import mscheme.syntax.ITranslator;
-import mscheme.syntax.ProcedureCall;
-import org.jetbrains.annotations.NotNull;
 
-class ConstPairOrList
-    extends PairOrList {
-
-  private final Object _first;
-
-  private final Object _second;
-
-  ConstPairOrList(Object first, Object second) {
-    _first = ValueTraits.getConst(first);
-    _second = ValueTraits.getConst(second);
-  }
-
-  public Object getFirst() {
-    return _first;
-  }
-
-  public Object getSecond() {
-    return _second;
-  }
+internal class ConstPairOrList(
+    first: Any?,
+    second: Any?
+) : PairOrList() {
+    override val first: Any? =
+        getConst(first)
+    override val second: Any? =
+        getConst(second)
 }
 
-class MutablePairOrList
-    extends PairOrList
-    implements IMutablePair {
-
-  private Object _first;
-
-  private Object _second;
-
-  MutablePairOrList(Object first, Object second) {
-    _first = first;
-    _second = second;
-  }
-
-  public void setFirst(Object first) {
-    _first = first;
-  }
-
-  public Object getFirst() {
-    return _first;
-  }
-
-  public void setSecond(Object second) {
-    _second = second;
-  }
-
-  public Object getSecond() {
-    return _second;
-  }
-
-  public Object getConst() {
-    return new ConstPairOrList(_first, _second);
-  }
+internal class MutablePairOrList(
+    override var first: Any?,
+    override var second: Any?
+) : PairOrList(), IMutablePair {
+    override fun getConst(): Any =
+        ConstPairOrList(this.first, this.second)
 }
 
-class ListEnumerator
-    implements Enumeration<Object> {
+internal class ListEnumerator(private var _tortoise: Any?) : Enumeration<Any?> {
+    private var _hare: Any?
 
-  private Object _tortoise;
-  private Object _hare;
-
-  ListEnumerator(Object o) {
-    _tortoise = o;
-    _hare = (o instanceof IPair) ? ((IPair) o).getSecond() : o;
-  }
-
-  public boolean hasMoreElements() {
-    return _hare != _tortoise;
-  }
-
-  public boolean isCyclic() {
-    return _tortoise instanceof IPair;
-  }
-
-  public boolean isValid() {
-    return _tortoise instanceof Empty;
-  }
-
-  public Object nextElement() {
-    if (_tortoise instanceof IPair pair) {
-      if (_hare instanceof IPair) {
-        _hare = ((IPair) _hare).getSecond();
-      }
-
-      if (_hare instanceof IPair) {
-        _hare = ((IPair) _hare).getSecond();
-      }
-
-      _tortoise = pair.getSecond();
-      return pair.getFirst();
-    } else {
-      return _tortoise;
+    init {
+        _hare = if (_tortoise is IPair) (_tortoise as IPair).second else _tortoise
     }
-  }
+
+    override fun hasMoreElements(): Boolean =
+        _hare !== _tortoise
+
+    val isCyclic: Boolean
+        get() = _tortoise is IPair
+
+    val isValid: Boolean
+        get() = _tortoise is Empty
+
+    override fun nextElement(): Any? {
+        val tortoise = _tortoise
+
+        if (tortoise is IPair) {
+            if (_hare is IPair) {
+                _hare = (_hare as IPair).second
+            }
+
+            if (_hare is IPair) {
+                _hare = (_hare as IPair).second
+            }
+
+            _tortoise = tortoise.second
+            return tortoise.first
+        } else {
+            return tortoise
+        }
+    }
 }
 
-public abstract class PairOrList
-    implements IPair, IList, ICompileable, IComparable, IOutputable {
+abstract class PairOrList protected constructor(
+) : IPair, IList, ICompileable, IComparable, IOutputable {
+    // implementation of Outputable
+    @Throws(IOException::class)
+    override fun outputOn(destination: Writer, doWrite: Boolean) {
+        destination.write('('.code)
 
-  protected PairOrList() {
-  }
+        val enumerator = ListEnumerator(this)
+        var first = true
+        while (enumerator.hasMoreElements()) {
+            if (!first) {
+                destination.write(' '.code)
+            }
 
-  public static IList prepend(Object head, IList tail) {
-    return new MutablePairOrList(head, tail);
-  }
+            output(destination, doWrite, enumerator.nextElement())
+            first = false
+        }
 
-  public static IList prependConst(Object head, IList tail) {
-    return new ConstPairOrList(head, tail);
-  }
+        if (!enumerator.isValid) {
+            if (enumerator.isCyclic) {
+                destination.write(" . [ cyclic ]")
+            } else {
+                destination.write(" . ")
+                output(
+                    destination, doWrite, enumerator
+                        .nextElement()
+                )
+            }
+        }
 
-  public static IMutablePair create(Object first, Object second) {
-    return new MutablePairOrList(first, second);
-  }
-
-  public static IPair createConst(Object first, Object second) {
-    return new ConstPairOrList(first, second);
-  }
-
-  // implementation of Outputable
-
-  public void outputOn(Writer destination, boolean doDisplay)
-      throws IOException {
-    destination.write('(');
-
-    ListEnumerator enumerator = new ListEnumerator(this);
-    for (boolean first = true; enumerator.hasMoreElements(); first = false) {
-      if (!first) {
-        destination.write(' ');
-      }
-
-      ValueTraits
-          .output(destination, doDisplay, enumerator.nextElement());
+        destination.write(')'.code)
     }
 
-    if (!enumerator.isValid()) {
-      if (enumerator.isCyclic()) {
-        destination.write(" . [ cyclic ]");
-      } else {
-        destination.write(" . ");
-        ValueTraits.output(destination, doDisplay, enumerator
-            .nextElement());
-      }
+    override fun eq(other: Any?): Boolean =
+        this === other
+
+    override fun eqv(other: Any?): Boolean =
+        this === other
+
+    override fun equals(other: Any?): Boolean =
+        other is PairOrList
+                && ValueTraits.equal(first, other.first)
+                && ValueTraits.equal(second, other.second)
+
+    @Throws(SchemeException::class)
+    fun getTranslator(compilationEnv: StaticEnvironment?): ITranslator =
+        ProcedureCall.create(this)
+
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun getForceable(compilationEnv: StaticEnvironment): Any? {
+        val list = validate()
+
+        return Compiler(compilationEnv)
+            .getTranslator(list.head)
+            .translate(compilationEnv, list.tail)
     }
 
-    destination.write(')');
-  }
+    override val isValid: Boolean
+        // implementation of List
+        get() {
+            var hare = second
 
-  public boolean eq(Object other) {
-    return this == other;
-  }
+            if (hare is Empty) {
+                return true
+            }
 
-  public boolean eqv(Object other) {
-    return this == other;
-  }
+            var tortoise = hare
+            do {
+                if (hare is IPair) {
+                    hare = hare.second
+                } else {
+                    return (hare is Empty)
+                }
 
-  public boolean equals(Object other) {
-    if (!(other instanceof PairOrList otherPair)) {
-      return false;
+                if (hare is IPair) {
+                    hare = hare.second
+                } else {
+                    return (hare is Empty)
+                }
+
+                tortoise = (tortoise as IPair).second
+            } while (hare !== tortoise)
+
+            return false
+        }
+
+    @Throws(ListExpected::class)
+    override fun validate(): IList =
+        if (isValid)
+            this
+        else
+            throw ListExpected(this)
+
+    override val isEmpty: Boolean
+        get() = false
+
+    override fun getCopy(): IList {
+        val empty: Any = ListFactory.create()
+
+        val enumerator = ListEnumerator(this)
+        val result = MutablePairOrList(
+            enumerator
+                .nextElement(), empty
+        )
+        var current = result
+        while (enumerator.hasMoreElements()) {
+            val next = MutablePairOrList(
+                enumerator
+                    .nextElement(), empty
+            )
+            current.second = next
+            current = next
+        }
+
+        return result
     }
 
-    return ValueTraits.equal(getFirst(), otherPair.getFirst())
-        && ValueTraits.equal(getSecond(), otherPair.getSecond());
-  }
+    override val head: Any?
+        get() = first
 
-  public ITranslator getTranslator(StaticEnvironment compilationEnv)
-      throws SchemeException {
-    return ProcedureCall.create(this);
-  }
+    override val tail: IList
+        get() = second as IList
 
-  public Object getForceable(StaticEnvironment compilationEnv)
-      throws SchemeException, InterruptedException {
-    IList list = validate();
+    override val length: Int
+        get() {
+            try {
+                var result = 1
 
-    return new Compiler(compilationEnv).getTranslator(list.getHead())
-        .translate(compilationEnv, list.getTail());
-  }
+                var tail = tail
+                while (!tail.isEmpty) {
+                    ++result
+                    tail = tail.tail
+                }
 
-  // implementation of List
+                return result
+            } catch (e: PairExpected) {
+                throw RuntimeException("unexpected PairExpected")
+            }
+        }
 
-  public boolean isValid() {
-    Object hare = getSecond();
+    override fun getReversed(): IList {
+        try {
+            var result = ListFactory.create()
 
-    if (hare instanceof Empty) {
-      return true;
+            var rest: IList = this
+            while (!rest.isEmpty) {
+                result = ListFactory.prepend(rest.head, result)
+                rest = rest.tail
+            }
+
+            return result
+        } catch (e: PairExpected) {
+            throw RuntimeException("unexpected PairExpected")
+        }
     }
 
-    Object tortoise = hare;
-    do {
-      if (hare instanceof IPair) {
-        hare = ((IPair) hare).getSecond();
-      } else {
-        return (hare instanceof Empty);
-      }
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun getCompiledArray(compilationEnv: StaticEnvironment): Array<Any?> =
+        getCompiledArray(compilationEnv, 0)
 
-      if (hare instanceof IPair) {
-        hare = ((IPair) hare).getSecond();
-      } else {
-        return (hare instanceof Empty);
-      }
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun getCompiledArray(compilationEnv: StaticEnvironment, index: Int): Array<Any?> {
+        val compiledHead = Compiler(compilationEnv)
+            .getForceable(head)
+        val result = tail.getCompiledArray(compilationEnv, index + 1)
 
-      tortoise = ((IPair) tortoise).getSecond();
-    }
-    while (hare != tortoise);
+        result!![index] = compiledHead
 
-    return false;
-  }
-
-  public @NotNull IList validate() throws ListExpected {
-    if (!isValid()) {
-      throw new ListExpected(this);
+        return result
     }
 
-    return this;
-  }
+    override fun getArray(): Array<Any?> =
+        getArray(0)
 
-  public boolean isEmpty() {
-    return false;
-  }
+    override fun getArray(index: Int): Array<Any?> {
+        val result = tail.getArray(index + 1)
 
-  @NotNull
-  public IList getCopy() {
-    final Object empty = ListFactory.create();
+        result[index] = head
 
-    ListEnumerator enumerator = new ListEnumerator(this);
-    final MutablePairOrList result = new MutablePairOrList(enumerator
-        .nextElement(), empty);
-    MutablePairOrList current = result;
-    while (enumerator.hasMoreElements()) {
-      MutablePairOrList next = new MutablePairOrList(enumerator
-          .nextElement(), empty);
-      current.setSecond(next);
-      current = next;
+        return result
     }
 
-    return result;
-  }
-
-  public Object getHead() {
-    return getFirst();
-  }
-
-  public IList getTail() {
-    return (IList) getSecond();
-  }
-
-  public int getLength() {
-    try {
-      int result = 1;
-
-      for (IList tail = getTail(); !tail.isEmpty(); tail = tail.getTail()) {
-        ++result;
-      }
-
-      return result;
-    } catch (PairExpected e) {
-      throw new RuntimeException("unexpected PairExpected");
+    override fun toString(): String {
+        val out = StringWriter()
+        try {
+            outputOn(out, true)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return out.toString()
     }
-  }
 
-  public IList getReversed() {
-    try {
-      IList result = ListFactory.create();
+    companion object {
+        @JvmStatic
+        fun prepend(head: Any?, tail: IList): IList {
+            return MutablePairOrList(head, tail)
+        }
 
-      for (IList rest = this; !rest.isEmpty(); rest = rest.getTail()) {
-        result = ListFactory.prepend(rest.getHead(), result);
-      }
+        @JvmStatic
+        fun prependConst(head: Any?, tail: IList): IList {
+            return ConstPairOrList(head, tail)
+        }
 
-      return result;
-    } catch (PairExpected e) {
-      throw new RuntimeException("unexpected PairExpected");
+        @JvmStatic
+        fun create(first: Any?, second: Any?): IMutablePair {
+            return MutablePairOrList(first, second)
+        }
+
+        @JvmStatic
+        fun createConst(first: Any?, second: Any?): IPair {
+            return ConstPairOrList(first, second)
+        }
     }
-  }
-
-  public Object[] getCompiledArray(StaticEnvironment compilationEnv)
-      throws SchemeException, InterruptedException {
-    return getCompiledArray(compilationEnv, 0);
-  }
-
-  public Object[] getCompiledArray(StaticEnvironment compilationEnv, int index)
-      throws SchemeException, InterruptedException {
-    Object compiledHead = new Compiler(compilationEnv)
-        .getForceable(getHead());
-    Object[] result = getTail().getCompiledArray(compilationEnv, index + 1);
-
-    result[index] = compiledHead;
-
-    return result;
-  }
-
-  public Object[] getArray() {
-    return getArray(0);
-  }
-
-  public Object[] getArray(int index) {
-    Object[] result = getTail().getArray(index + 1);
-
-    result[index] = getHead();
-
-    return result;
-  }
-
-  public String toString() {
-    StringWriter out = new StringWriter();
-    try {
-      outputOn(out, true);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return out.toString();
-  }
 }
