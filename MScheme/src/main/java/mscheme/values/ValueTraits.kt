@@ -132,7 +132,7 @@ object ValueTraits {
 
     @JvmStatic
     @Throws(ListExpected::class)
-    fun toList(o: Any?): IList? =
+    fun toList(o: Any?): IList =
         if (o is IList)
             o.validate()
         else

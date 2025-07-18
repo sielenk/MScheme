@@ -17,32 +17,25 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.values.functions
 
-package mscheme.values.functions;
+import mscheme.exceptions.SchemeException
+import mscheme.machine.Registers
+import mscheme.util.Arity
+import mscheme.values.Function
+import mscheme.values.IList
 
-import mscheme.exceptions.SchemeException;
-import mscheme.machine.Registers;
-import mscheme.util.Arity;
-import mscheme.values.Function;
-import mscheme.values.IList;
+abstract class CheckedFunction : Function() {
+    protected abstract val arity: Arity
 
+    @Throws(SchemeException::class, InterruptedException::class)
+    protected abstract fun checkedCall(state: Registers, args: IList): Any?
 
-public abstract class CheckedFunction
-    extends Function {
+    // implementation of Function
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun call(state: Registers, arguments: IList): Any? {
+        checkArguments(this.arity, arguments)
 
-  protected abstract Arity getArity();
-
-  protected abstract Object checkedCall(
-      mscheme.machine.Registers state,
-      IList args
-  ) throws SchemeException, InterruptedException;
-
-  // implementation of Function
-
-  public final Object call(Registers state, IList arguments)
-      throws SchemeException, InterruptedException {
-    checkArguments(getArity(), arguments);
-
-    return checkedCall(state, arguments);
-  }
+        return checkedCall(state, arguments)
+    }
 }
