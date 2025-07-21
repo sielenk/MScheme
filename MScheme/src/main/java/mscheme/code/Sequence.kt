@@ -17,108 +17,80 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.code
 
-package mscheme.code;
+import mscheme.code.CodeArray.force
+import mscheme.code.CodeArray.printTuple
+import mscheme.compiler.IForceable
+import mscheme.exceptions.CompileError
+import mscheme.machine.IContinuation
+import mscheme.machine.Registers
+import mscheme.syntax.ISequenceTags
+import mscheme.values.ValueTraits.isTrue
 
-import mscheme.compiler.IForceable;
-import mscheme.exceptions.CompileError;
-import mscheme.machine.IContinuation;
-import mscheme.machine.Registers;
-import mscheme.syntax.ISequenceTags;
-import mscheme.values.ValueTraits;
-import org.jetbrains.annotations.NotNull;
-
-
-public final class Sequence
-    implements ISequenceTags, IForceable, IReduceable {
-
-  private final int _tag;
-  private final Object[] _sequence;
-
-  private Sequence(int tag, Object[] sequence) {
-    _tag = tag;
-    _sequence = sequence;
-  }
-
-  public static Object create(int tag, Object[] sequence) {
-    switch (sequence.length) {
-      case 0:
-        return tag == TAG_AND;
-
-      case 1:
-        return sequence[0];
-
-      default:
-        return new Sequence(tag, sequence);
+class Sequence private constructor(
+    private val _tag: Int,
+    private val _sequence: Array<Any?>
+) : ISequenceTags, IForceable, IReduceable {
+    @Throws(CompileError::class)
+    override fun force(): Any? {
+        force(_sequence)
+        return this
     }
-  }
 
+    override fun toString(): String = "${
+        when (_tag) {
+            ISequenceTags.TAG_BEGIN -> "seq"
+            ISequenceTags.TAG_AND -> "and"
+            ISequenceTags.TAG_OR -> "or"
+            else -> "error"
+        }
+    }:<${printTuple(_sequence)}>"
 
-  public static Object create(Object[] sequence) {
-    return create(TAG_BEGIN, sequence);
-  }
+    override fun reduce(state: Registers): Any? =
+        prepareNext(state, 0)
 
-  public static Object createConj(Object[] sequence) {
-    return create(TAG_AND, sequence);
-  }
+    private fun prepareNext(
+        registers: Registers,
+        index: Int
+    ): Any? {
+        if (index + 1 < _sequence.size) {
+            registers.push(
+                object : IContinuation {
+                    override fun invoke(registers: Registers, value: Any?): Any? =
+                        if (((_tag == ISequenceTags.TAG_AND) && !isTrue(value))
+                            ||
+                            ((_tag == ISequenceTags.TAG_OR) && isTrue(value))
+                        ) {
+                            value
+                        } else {
+                            prepareNext(registers, index + 1)
+                        }
+                })
+        }
 
-  public static Object createDisj(Object[] sequence) {
-    return create(TAG_OR, sequence);
-  }
-
-
-  public Object force()
-      throws CompileError {
-    CodeArray.force(_sequence);
-    return this;
-  }
-
-  public String toString() {
-    String prefix = "error";
-
-    switch (_tag) {
-      case TAG_BEGIN:
-        prefix = "seq";
-        break;
-
-      case TAG_AND:
-        prefix = "and";
-        break;
-
-      case TAG_OR:
-        prefix = "or";
-        break;
+        return _sequence[index]
     }
-    return prefix + ":<" + CodeArray.printTuple(_sequence) + '>';
-  }
 
-
-  public Object reduce(@NotNull Registers registers) {
-    return prepareNext(registers, 0);
-  }
-
-  private Object prepareNext(
-      Registers registers,
-      final int index) {
-    if (index + 1 < _sequence.length) {
-      registers.push(
-          new IContinuation() {
-            public Object invoke(
-                @NotNull Registers registers,
-                Object value) {
-              if (
-                  ((_tag == TAG_AND) && !ValueTraits.isTrue(value))
-                      ||
-                      ((_tag == TAG_OR) && ValueTraits.isTrue(value))
-              ) {
-                return value;
-              } else {
-                return prepareNext(registers, index + 1);
-              }
+    companion object {
+        @JvmStatic
+        fun create(tag: Int, sequence: Array<Any?>): Any? =
+            when (sequence.size) {
+                0 -> tag == ISequenceTags.TAG_AND
+                1 -> sequence[0]
+                else -> Sequence(tag, sequence)
             }
-          });
-    }
 
-    return _sequence[index];
-  }
+        @JvmStatic
+        fun create(sequence: Array<Any?>): Any? =
+            create(ISequenceTags.TAG_BEGIN, sequence)
+
+        @JvmStatic
+        fun createConj(sequence: Array<Any?>): Any? =
+            create(ISequenceTags.TAG_AND, sequence)
+
+        @JvmStatic
+        fun createDisj(sequence: Array<Any?>): Any? =
+            create(ISequenceTags.TAG_OR, sequence)
+    }
 }

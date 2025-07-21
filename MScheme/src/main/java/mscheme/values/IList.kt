@@ -44,10 +44,10 @@ interface IList {
     val tail: IList
 
     @Throws(SchemeException::class, InterruptedException::class)
-    fun getCompiledArray(compilationEnv: StaticEnvironment): Array<Any?>?
+    fun getCompiledArray(compilationEnv: StaticEnvironment): Array<Any?>
 
     @Throws(SchemeException::class, InterruptedException::class)
-    fun getCompiledArray(compilationEnv: StaticEnvironment, index: Int): Array<Any?>?
+    fun getCompiledArray(compilationEnv: StaticEnvironment, index: Int): Array<Any?>
 
     fun getArray(): Array<Any?>
 

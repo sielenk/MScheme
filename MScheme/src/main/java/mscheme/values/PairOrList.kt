@@ -26,7 +26,6 @@ import mscheme.exceptions.PairExpected
 import mscheme.exceptions.SchemeException
 import mscheme.syntax.ITranslator
 import mscheme.syntax.ProcedureCall
-import mscheme.values.ValueTraits
 import java.io.IOException
 import java.io.StringWriter
 import java.io.Writer
