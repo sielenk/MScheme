@@ -39,6 +39,6 @@ internal class YWrappedFunction(private val _f: Function?) : Function() {
 
 object YCombinator : UnaryValueFunction() {
     @Throws(TypeError::class)
-    override fun checkedCall(fst: Any?): Any =
-        YWrappedFunction(fst as Function?)
+    override fun checkedCall(argument: Any?): Any =
+        YWrappedFunction(argument as Function?)
 }

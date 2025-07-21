@@ -28,5 +28,5 @@ abstract class UnaryValueFunction : UnaryFunction() {
         checkedCall(fst)
 
     @Throws(SchemeException::class, InterruptedException::class)
-    protected abstract fun checkedCall(fst: Any?): Any?
+    protected abstract fun checkedCall(argument: Any?): Any?
 }

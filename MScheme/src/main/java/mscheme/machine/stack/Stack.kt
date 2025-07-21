@@ -70,8 +70,8 @@ class Stack : IStack {
         return _top._stack.pop()
     }
 
-    override fun push(f: StackFrame?) {
-        _top._stack.push(f)
+    override fun push(frame: StackFrame?) {
+        _top._stack.push(frame)
     }
 
     val continuation: Slice
