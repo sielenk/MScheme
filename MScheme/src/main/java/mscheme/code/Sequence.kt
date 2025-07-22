@@ -25,13 +25,13 @@ import mscheme.compiler.IForceable
 import mscheme.exceptions.CompileError
 import mscheme.machine.IContinuation
 import mscheme.machine.Registers
-import mscheme.syntax.ISequenceTags
+import mscheme.syntax.SequenceTags
 import mscheme.values.ValueTraits.isTrue
 
 class Sequence private constructor(
-    private val _tag: Int,
+    private val _tag: SequenceTags,
     private val _sequence: Array<Any?>
-) : ISequenceTags, IForceable, IReduceable {
+) : IForceable, IReduceable {
     @Throws(CompileError::class)
     override fun force(): Any? {
         force(_sequence)
@@ -40,10 +40,9 @@ class Sequence private constructor(
 
     override fun toString(): String = "${
         when (_tag) {
-            ISequenceTags.TAG_BEGIN -> "seq"
-            ISequenceTags.TAG_AND -> "and"
-            ISequenceTags.TAG_OR -> "or"
-            else -> "error"
+            SequenceTags.BEGIN -> "seq"
+            SequenceTags.AND -> "and"
+            SequenceTags.OR -> "or"
         }
     }:<${printTuple(_sequence)}>"
 
@@ -58,9 +57,9 @@ class Sequence private constructor(
             registers.push(
                 object : IContinuation {
                     override fun invoke(registers: Registers, value: Any?): Any? =
-                        if (((_tag == ISequenceTags.TAG_AND) && !isTrue(value))
+                        if (((_tag == SequenceTags.AND) && !isTrue(value))
                             ||
-                            ((_tag == ISequenceTags.TAG_OR) && isTrue(value))
+                            ((_tag == SequenceTags.OR) && isTrue(value))
                         ) {
                             value
                         } else {
@@ -74,23 +73,23 @@ class Sequence private constructor(
 
     companion object {
         @JvmStatic
-        fun create(tag: Int, sequence: Array<Any?>): Any? =
+        fun create(tag: SequenceTags, sequence: Array<Any?>): Any? =
             when (sequence.size) {
-                0 -> tag == ISequenceTags.TAG_AND
+                0 -> tag == SequenceTags.AND
                 1 -> sequence[0]
                 else -> Sequence(tag, sequence)
             }
 
         @JvmStatic
         fun create(sequence: Array<Any?>): Any? =
-            create(ISequenceTags.TAG_BEGIN, sequence)
+            create(SequenceTags.BEGIN, sequence)
 
         @JvmStatic
         fun createConj(sequence: Array<Any?>): Any? =
-            create(ISequenceTags.TAG_AND, sequence)
+            create(SequenceTags.AND, sequence)
 
         @JvmStatic
         fun createDisj(sequence: Array<Any?>): Any? =
-            create(ISequenceTags.TAG_OR, sequence)
+            create(SequenceTags.OR, sequence)
     }
 }

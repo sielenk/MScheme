@@ -26,12 +26,12 @@ import mscheme.util.Arity.Companion.atLeast
 import mscheme.values.IList
 
 internal class Begin private constructor(
-    private val _tag: Int
+    private val _tag: SequenceTags
 ) : CheckedTranslator(
-    atLeast(if (_tag == ISequenceTags.TAG_BEGIN) 1 else 0)
-), ISequenceTags {
+    atLeast(if (_tag == SequenceTags.BEGIN) 1 else 0)
+) {
     override fun preTranslate(compilationEnv: StaticEnvironment) {
-        if (_tag != ISequenceTags.TAG_BEGIN) {
+        if (_tag != SequenceTags.BEGIN) {
             super.preTranslate(compilationEnv)
         }
     }
@@ -46,14 +46,14 @@ internal class Begin private constructor(
     companion object {
         @JvmField
         val INSTANCE_BEGIN: ITranslator =
-            Begin(ISequenceTags.TAG_BEGIN)
+            Begin(SequenceTags.BEGIN)
 
         @JvmField
         val INSTANCE_AND: ITranslator =
-            Begin(ISequenceTags.TAG_AND)
+            Begin(SequenceTags.AND)
 
         @JvmField
         val INSTANCE_OR: ITranslator =
-            Begin(ISequenceTags.TAG_OR)
+            Begin(SequenceTags.OR)
     }
 }
