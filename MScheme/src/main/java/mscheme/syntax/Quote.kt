@@ -21,13 +21,13 @@ package mscheme.syntax
 
 import mscheme.environment.StaticEnvironment
 import mscheme.exceptions.TypeError
-import mscheme.util.Arity.Companion.exactly
+import mscheme.util.Arity
 import mscheme.values.IList
 import mscheme.values.ValueTraits.getConst
 
 
 // *** quote ***
-internal object Quote : CheckedTranslator(exactly(1)) {
+internal object Quote : CheckedTranslator(Arity.exactly(1)) {
     @Throws(TypeError::class)
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment,

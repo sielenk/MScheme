@@ -23,8 +23,6 @@ import mscheme.code.CompiledLambda
 import mscheme.environment.StaticEnvironment
 import mscheme.exceptions.SchemeException
 import mscheme.util.Arity
-import mscheme.util.Arity.Companion.atLeast
-import mscheme.util.Arity.Companion.exactly
 import mscheme.values.IList
 import mscheme.values.ListFactory.create
 import mscheme.values.ListFactory.prepend
@@ -33,7 +31,7 @@ import mscheme.values.ValueTraits.isPair
 import mscheme.values.ValueTraits.toConstPair
 import mscheme.values.ValueTraits.toList
 
-internal object Lambda : CheckedTranslator(atLeast(2)) {
+internal object Lambda : CheckedTranslator(Arity.atLeast(2)) {
     @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment,
@@ -47,7 +45,7 @@ internal object Lambda : CheckedTranslator(atLeast(2)) {
 
         if (isList(rawFormals)) {
             formals = toList(rawFormals)
-            arity = exactly(formals.length)
+            arity = Arity.exactly(formals.length)
         } else {
             // rawFormals is an improper list.
             // This happens for lambda expressions
@@ -75,7 +73,7 @@ internal object Lambda : CheckedTranslator(atLeast(2)) {
             result = prepend(current, result)
 
             formals = result.getReversed()
-            arity = atLeast(minArity)
+            arity = Arity.atLeast(minArity)
         }
 
         return CompiledLambda.create(

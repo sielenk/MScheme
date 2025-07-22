@@ -20,19 +20,18 @@
 package mscheme.syntax
 
 import mscheme.code.Application
-import mscheme.code.CompiledLambda.Companion.create
+import mscheme.code.CompiledLambda
 import mscheme.code.Sequence
 import mscheme.compiler.Compiler
 import mscheme.environment.StaticEnvironment
 import mscheme.exceptions.SchemeException
-import mscheme.util.Arity.Companion.atLeast
-import mscheme.util.Arity.Companion.exactly
+import mscheme.util.Arity
 import mscheme.values.IList
 import mscheme.values.ValueTraits.toList
 import mscheme.values.ValueTraits.toSymbol
 
 // *** let* ***
-internal object LetStar : LetBase(atLeast(2)) {
+internal object LetStar : LetBase(Arity.atLeast(2)) {
     @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment,
@@ -49,8 +48,8 @@ internal object LetStar : LetBase(atLeast(2)) {
 
             Application.create(
                 arrayOf<Any?>(
-                    create(
-                        exactly(0), body, compilationEnv
+                    CompiledLambda.create(
+                        Arity.exactly(0), body, compilationEnv
                             .createChild()
                     )
                 )
@@ -77,8 +76,8 @@ internal class LetStarHelper(private val _body: IList) {
 
             val innerBody = translate(innerEnvironment, bindings.tail)
 
-            val lambda: Any = create(
-                exactly(1),
+            val lambda: Any = CompiledLambda.create(
+                Arity.exactly(1),
                 innerEnvironment.size, innerBody
             )
 

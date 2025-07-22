@@ -19,7 +19,7 @@ the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
 package mscheme.code
 
-import mscheme.compiler.Compiler.Companion.force
+import mscheme.compiler.Compiler
 import mscheme.compiler.IForceable
 import mscheme.environment.Reference
 import mscheme.exceptions.CompileError
@@ -32,7 +32,7 @@ class Assignment private constructor(
     @Throws(CompileError::class)
     override fun force(): Any? {
         _binding = _binding.forceRef()
-        _expression = force(_expression)
+        _expression = Compiler.force(_expression)
         return this
     }
 

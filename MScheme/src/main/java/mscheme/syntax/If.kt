@@ -19,18 +19,18 @@ the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
 package mscheme.syntax
 
-import mscheme.code.Selection.Companion.create
+import mscheme.code.Selection
 import mscheme.compiler.Compiler
 import mscheme.environment.StaticEnvironment
 import mscheme.exceptions.SchemeException
-import mscheme.util.Arity.Companion.inRange
+import mscheme.util.Arity
 import mscheme.values.IList
 import java.lang.Boolean
 import kotlin.Any
 import kotlin.Throws
 
 
-internal object If : CheckedTranslator(inRange(2, 3)) {
+internal object If : CheckedTranslator(Arity.inRange(2, 3)) {
     @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment, arguments: IList
@@ -45,7 +45,7 @@ internal object If : CheckedTranslator(inRange(2, 3)) {
 
         val compiler = Compiler(compilationEnv)
 
-        return create(
+        return Selection.create(
             compiler.getForceable(flag),
             compiler.getForceable(onTrue),
             compiler.getForceable(onFalse)

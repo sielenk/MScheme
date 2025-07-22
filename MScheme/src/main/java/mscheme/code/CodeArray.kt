@@ -19,7 +19,7 @@ the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
 package mscheme.code
 
-import mscheme.compiler.Compiler.Companion.force
+import mscheme.compiler.Compiler
 import mscheme.exceptions.CompileError
 
 internal object CodeArray {
@@ -31,7 +31,7 @@ internal object CodeArray {
     @Throws(CompileError::class)
     fun force(array: Array<Any?>) {
         for (i in array.indices) {
-            array[i] = force(array[i])
+            array[i] = Compiler.force(array[i])
         }
     }
 }

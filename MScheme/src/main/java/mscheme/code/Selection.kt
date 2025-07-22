@@ -19,7 +19,7 @@ the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
 package mscheme.code
 
-import mscheme.compiler.Compiler.Companion.force
+import mscheme.compiler.Compiler
 import mscheme.compiler.IForceable
 import mscheme.exceptions.CompileError
 import mscheme.machine.IContinuation
@@ -67,8 +67,8 @@ internal class ForceableSelection(
     @Throws(CompileError::class)
     override fun force(): Any =
         Selection(
-            force(_test),
-            force(_onTrue),
-            force(_onFalse)
+            Compiler.force(_test),
+            Compiler.force(_onTrue),
+            Compiler.force(_onFalse)
         )
 }

@@ -17,38 +17,32 @@
  * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package mscheme.syntax
 
-package mscheme.syntax;
+import mscheme.code.Assignment
+import mscheme.compiler.Compiler
+import mscheme.environment.Reference
+import mscheme.environment.StaticEnvironment
+import mscheme.exceptions.SchemeException
+import mscheme.util.Arity
+import mscheme.values.IList
+import mscheme.values.ValueTraits.toSymbol
 
-import mscheme.code.Assignment;
-import mscheme.compiler.Compiler;
-import mscheme.environment.Reference;
-import mscheme.environment.StaticEnvironment;
-import mscheme.exceptions.SchemeException;
-import mscheme.util.Arity;
-import mscheme.values.IList;
-import mscheme.values.ValueTraits;
+internal object Set : CheckedTranslator(Arity.exactly(2)) {
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun checkedTranslate(
+        compilationEnv: StaticEnvironment,
+        arguments: IList
+    ): Any {
+        val symbol = toSymbol(arguments.head)
+        val value = arguments.tail.head
 
-final class Set
-    extends CheckedTranslator {
+        return translate(
+            compilationEnv.getDelayedReferenceFor(symbol),
+            Compiler(compilationEnv).getForceable(value)
+        )
+    }
 
-  final static ITranslator INSTANCE = new Set();
-
-  private Set() {
-    super(Arity.exactly(2));
-  }
-
-  protected Object checkedTranslate(StaticEnvironment compilationEnv,
-      IList arguments)
-      throws SchemeException, InterruptedException {
-    String symbol = ValueTraits.toSymbol(arguments.getHead());
-    Object value = arguments.getTail().getHead();
-
-    return translate(compilationEnv.getDelayedReferenceFor(symbol),
-        new Compiler(compilationEnv).getForceable(value));
-  }
-
-  static Object translate(Reference reference, Object code) {
-    return Assignment.create(reference, code);
-  }
+    fun translate(reference: Reference, code: Any?): Any =
+        Assignment.create(reference, code)
 }

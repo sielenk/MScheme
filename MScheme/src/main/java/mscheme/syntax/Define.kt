@@ -22,15 +22,14 @@ package mscheme.syntax
 import mscheme.compiler.Compiler
 import mscheme.environment.StaticEnvironment
 import mscheme.exceptions.SchemeException
-import mscheme.util.Arity.Companion.atLeast
-import mscheme.util.Arity.Companion.exactly
+import mscheme.util.Arity
 import mscheme.values.IList
 import mscheme.values.ListFactory.prepend
 import mscheme.values.ValueTraits.isPair
 import mscheme.values.ValueTraits.toConstPair
 import mscheme.values.ValueTraits.toSymbol
 
-internal object Define : CheckedTranslator(atLeast(2)) {
+internal object Define : CheckedTranslator(Arity.atLeast(2)) {
     override fun preTranslate(compilationEnv: StaticEnvironment) {
     }
 
@@ -62,7 +61,7 @@ internal object Define : CheckedTranslator(atLeast(2)) {
             }
         } else {
             if (!arguments.tail.tail.isEmpty) {
-                arityError(arguments, exactly(2))
+                arityError(arguments, Arity.exactly(2))
             }
 
             val symbol = toSymbol(arguments.head)

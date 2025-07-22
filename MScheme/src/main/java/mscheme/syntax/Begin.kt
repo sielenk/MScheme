@@ -19,16 +19,16 @@
  */
 package mscheme.syntax
 
-import mscheme.code.Sequence.Companion.create
+import mscheme.code.Sequence
 import mscheme.environment.StaticEnvironment
 import mscheme.exceptions.SchemeException
-import mscheme.util.Arity.Companion.atLeast
+import mscheme.util.Arity
 import mscheme.values.IList
 
 internal class Begin private constructor(
     private val _tag: SequenceTags
 ) : CheckedTranslator(
-    atLeast(if (_tag == SequenceTags.BEGIN) 1 else 0)
+    Arity.atLeast(if (_tag == SequenceTags.BEGIN) 1 else 0)
 ) {
     override fun preTranslate(compilationEnv: StaticEnvironment) {
         if (_tag != SequenceTags.BEGIN) {
@@ -40,7 +40,7 @@ internal class Begin private constructor(
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment, arguments: IList
     ): Any? =
-        create(_tag, arguments.getCompiledArray(compilationEnv))
+        Sequence.create(_tag, arguments.getCompiledArray(compilationEnv))
 
 
     companion object {

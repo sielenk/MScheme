@@ -19,10 +19,10 @@ the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
 package mscheme.syntax
 
-import mscheme.code.Application.Companion.create
+import mscheme.code.Application
 import mscheme.environment.StaticEnvironment
 import mscheme.exceptions.SchemeException
-import mscheme.util.Arity.Companion.atLeast
+import mscheme.util.Arity
 import mscheme.values.IList
 import mscheme.values.ListFactory.prepend
 import mscheme.values.ValueTraits.isSymbol
@@ -31,7 +31,7 @@ import mscheme.values.functions.YCombinator
 
 
 // *** let ***
-internal object Let : LetBase(atLeast(2)) {
+internal object Let : LetBase(Arity.atLeast(2)) {
     @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment,
@@ -77,7 +77,7 @@ internal object Let : LetBase(atLeast(2)) {
             // argument, which is to be bound to the "curried"
             // closure -- the YCombinator does it's magic ...
 
-            compiledProc = create(
+            compiledProc = Application.create(
                 arrayOf<Any?>(
                     YCombinator,
                     compiledProc
@@ -89,6 +89,6 @@ internal object Let : LetBase(atLeast(2)) {
 
         compiledLet[0] = compiledProc
 
-        return create(compiledLet)
+        return Application.create(compiledLet)
     }
 }

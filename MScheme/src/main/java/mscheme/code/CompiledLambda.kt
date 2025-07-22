@@ -19,8 +19,8 @@
  */
 package mscheme.code
 
-import mscheme.code.Sequence.Companion.create
-import mscheme.compiler.Compiler.Companion.force
+import mscheme.code.Sequence
+import mscheme.compiler.Compiler
 import mscheme.compiler.IForceable
 import mscheme.environment.DynamicEnvironment
 import mscheme.environment.StaticEnvironment
@@ -83,7 +83,7 @@ class CompiledLambda private constructor(
         @JvmStatic
         @Throws(SchemeException::class, InterruptedException::class)
         fun create(arity: Arity, body: IList, env: StaticEnvironment): CompiledLambda {
-            val compiledBody = create(body.getCompiledArray(env))
+            val compiledBody = Sequence.create(body.getCompiledArray(env))
 
             return create(arity, env.size, compiledBody)
         }

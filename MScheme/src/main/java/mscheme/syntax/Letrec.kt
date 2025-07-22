@@ -20,19 +20,18 @@ Boston, MA  02111-1307, USA. */
 package mscheme.syntax
 
 import mscheme.code.Application
-import mscheme.code.CompiledLambda.Companion.create
+import mscheme.code.CompiledLambda
 import mscheme.code.Sequence
 import mscheme.compiler.Compiler
 import mscheme.environment.StaticEnvironment
 import mscheme.exceptions.SchemeException
-import mscheme.util.Arity.Companion.atLeast
-import mscheme.util.Arity.Companion.exactly
+import mscheme.util.Arity
 import mscheme.values.IList
 import mscheme.values.ValueTraits.toSymbol
 
 
 // *** letrec ***
-internal object Letrec : LetBase(atLeast(2)) {
+internal object Letrec : LetBase(Arity.atLeast(2)) {
     @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment,
@@ -80,8 +79,8 @@ internal object Letrec : LetBase(atLeast(2)) {
 
         return Application.create(
             arrayOf<Any?>(
-                create(
-                    exactly(0),
+                CompiledLambda.create(
+                    Arity.exactly(0),
                     bodyCompilationEnv.size,
                     Sequence.create(
                         compiledLetrec
