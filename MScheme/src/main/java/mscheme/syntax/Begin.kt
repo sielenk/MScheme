@@ -17,42 +17,43 @@
  * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package mscheme.syntax
 
-package mscheme.syntax;
+import mscheme.code.Sequence.Companion.create
+import mscheme.environment.StaticEnvironment
+import mscheme.exceptions.SchemeException
+import mscheme.util.Arity.Companion.atLeast
+import mscheme.values.IList
 
-import mscheme.code.Sequence;
-import mscheme.environment.StaticEnvironment;
-import mscheme.exceptions.SchemeException;
-import mscheme.util.Arity;
-import mscheme.values.IList;
-
-final class Begin
-    extends CheckedTranslator
-    implements ISequenceTags {
-
-  private final int _tag;
-
-  final static ITranslator INSTANCE_BEGIN = new Begin(TAG_BEGIN);
-
-  final static ITranslator INSTANCE_AND = new Begin(TAG_AND);
-
-  final static ITranslator INSTANCE_OR = new Begin(TAG_OR);
-
-  private Begin(int tag) {
-    super(Arity.atLeast((tag == TAG_BEGIN) ? 1 : 0));
-    _tag = tag;
-  }
-
-  protected void preTranslate(StaticEnvironment compilationEnv) {
-    if (_tag != TAG_BEGIN) {
-      super.preTranslate(compilationEnv);
+internal class Begin private constructor(
+    private val _tag: Int
+) : CheckedTranslator(
+    atLeast(if (_tag == ISequenceTags.TAG_BEGIN) 1 else 0)
+), ISequenceTags {
+    override fun preTranslate(compilationEnv: StaticEnvironment) {
+        if (_tag != ISequenceTags.TAG_BEGIN) {
+            super.preTranslate(compilationEnv)
+        }
     }
-  }
 
-  protected Object checkedTranslate(StaticEnvironment compilationEnv,
-      IList arguments)
-      throws SchemeException, InterruptedException {
-    return Sequence
-        .create(_tag, arguments.getCompiledArray(compilationEnv));
-  }
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun checkedTranslate(
+        compilationEnv: StaticEnvironment, arguments: IList
+    ): Any? =
+        create(_tag, arguments.getCompiledArray(compilationEnv))
+
+
+    companion object {
+        @JvmField
+        val INSTANCE_BEGIN: ITranslator =
+            Begin(ISequenceTags.TAG_BEGIN)
+
+        @JvmField
+        val INSTANCE_AND: ITranslator =
+            Begin(ISequenceTags.TAG_AND)
+
+        @JvmField
+        val INSTANCE_OR: ITranslator =
+            Begin(ISequenceTags.TAG_OR)
+    }
 }
