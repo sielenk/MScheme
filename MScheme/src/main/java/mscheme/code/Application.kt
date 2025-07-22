@@ -17,70 +17,67 @@
  * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package mscheme.code
 
-package mscheme.code;
+import mscheme.code.CodeArray.force
+import mscheme.code.CodeArray.printTuple
+import mscheme.compiler.IForceable
+import mscheme.exceptions.CompileError
+import mscheme.exceptions.SchemeException
+import mscheme.machine.IContinuation
+import mscheme.machine.Registers
+import mscheme.values.IList
+import mscheme.values.ListFactory.create
+import mscheme.values.ListFactory.prepend
+import mscheme.values.ValueTraits.apply
 
-import mscheme.compiler.IForceable;
-import mscheme.exceptions.CompileError;
-import mscheme.exceptions.SchemeException;
-import mscheme.machine.IContinuation;
-import mscheme.machine.Registers;
-import mscheme.values.IList;
-import mscheme.values.ListFactory;
-import mscheme.values.ValueTraits;
-import org.jetbrains.annotations.NotNull;
+class Application private constructor(private val _application: Array<Any?>) : IForceable,
+    IReduceable {
+    @Throws(CompileError::class)
+    override fun force(): Any? {
+        force(_application)
+        return this
+    }
 
-public final class Application
-    implements IForceable, IReduceable {
+    override fun toString(): String =
+        "app:${printTuple(_application)}"
 
-  private final Object[] _application;
+    override fun reduce(state: Registers): Any? =
+        prepareNext(
+            state, create(),
+            _application.size - 1
+        )
 
-  private Application(Object[] application) {
-    _application = application;
-  }
+    private fun createPush(done: IList, index: Int): IContinuation =
+        IContinuation { registers: Registers, value: Any? ->
+            prepareNext(
+                registers, prepend(value, done),
+                index - 1
+            )
+        }
 
-  public static Application create(Object[] application) {
-    return new Application(application);
-  }
 
-  public Object force()
-      throws CompileError {
-    CodeArray.force(_application);
-    return this;
-  }
+    private fun prepareNext(
+        registers: Registers, done: IList, index: Int
+    ): Any? {
+        registers.push(
+            if (index == 0)
+                createCall(done)
+            else
+                createPush(done, index)
+        )
 
-  public String toString() {
-    return "app:" + CodeArray.printTuple(_application);
-  }
+        return _application[index]
+    }
 
-  public Object reduce(@NotNull Registers registers) {
-    return prepareNext(registers, ListFactory.create(),
-        _application.length - 1);
-  }
+    companion object {
+        @JvmStatic
+        fun create(application: Array<Any?>): Application =
+            Application(application)
 
-  public static IContinuation createCall(final IList done) {
-    return new IContinuation() {
-      public Object invoke(@NotNull Registers registers, Object value)
-          throws InterruptedException, SchemeException {
-        return ValueTraits.apply(registers, value, done);
-      }
-    };
-  }
-
-  private IContinuation createPush(final IList done, final int index) {
-    return new IContinuation() {
-      public Object invoke(@NotNull Registers registers, Object value) {
-        return prepareNext(registers, ListFactory.prepend(value, done),
-            index - 1);
-      }
-    };
-  }
-
-  private Object prepareNext(Registers registers, final IList done,
-      final int index) {
-    registers.push((index == 0) ? createCall(done)
-        : createPush(done, index));
-
-    return _application[index];
-  }
+        fun createCall(done: IList): IContinuation =
+            IContinuation { registers: Registers, value: Any? ->
+                apply(registers, value, done)
+            }
+    }
 }

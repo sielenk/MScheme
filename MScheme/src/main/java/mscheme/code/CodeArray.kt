@@ -24,11 +24,8 @@ import mscheme.exceptions.CompileError
 
 internal object CodeArray {
     @JvmStatic
-    fun printTuple(tuple: Array<Any?>): String = tuple.joinToString(
-        prefix = "<", separator = ", ", postfix = ">",
-    ) {
-        it.toString()
-    }
+    fun printTuple(tuple: Array<Any?>): String =
+        tuple.joinToString(prefix = "<", postfix = ">")
 
     @JvmStatic
     @Throws(CompileError::class)
