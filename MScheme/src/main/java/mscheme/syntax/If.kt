@@ -17,44 +17,38 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.syntax
 
-package mscheme.syntax;
-
-
-import mscheme.code.Selection;
-import mscheme.compiler.Compiler;
-import mscheme.environment.StaticEnvironment;
-import mscheme.exceptions.SchemeException;
-import mscheme.util.Arity;
-import mscheme.values.IList;
-
-
-final class If
-    extends CheckedTranslator {
-
-  final static ITranslator INSTANCE = new If();
-
-  private If() {
-    super(Arity.inRange(2, 3));
-  }
+import mscheme.code.Selection.Companion.create
+import mscheme.compiler.Compiler
+import mscheme.environment.StaticEnvironment
+import mscheme.exceptions.SchemeException
+import mscheme.util.Arity.Companion.inRange
+import mscheme.values.IList
+import java.lang.Boolean
+import kotlin.Any
+import kotlin.Throws
 
 
-  protected Object checkedTranslate(
-      StaticEnvironment compilationEnv,
-      IList arguments
-  ) throws SchemeException, InterruptedException {
-    Object flag = arguments.getHead();
-    Object onTrue = arguments.getTail().getHead();
-    Object onFalse =
-        arguments.getTail().getTail().isEmpty()
-            ? Boolean.FALSE
-            : arguments.getTail().getTail().getHead();
+internal object If : CheckedTranslator(inRange(2, 3)) {
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun checkedTranslate(
+        compilationEnv: StaticEnvironment, arguments: IList
+    ): Any {
+        val flag = arguments.head
+        val onTrue = arguments.tail.head
+        val onFalse =
+            if (arguments.tail.tail.isEmpty)
+                Boolean.FALSE
+            else
+                arguments.tail.tail.head
 
-    Compiler compiler = new Compiler(compilationEnv);
+        val compiler = Compiler(compilationEnv)
 
-    return Selection.create(
-        compiler.getForceable(flag),
-        compiler.getForceable(onTrue),
-        compiler.getForceable(onFalse));
-  }
+        return create(
+            compiler.getForceable(flag),
+            compiler.getForceable(onTrue),
+            compiler.getForceable(onFalse)
+        )
+    }
 }
