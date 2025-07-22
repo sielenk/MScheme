@@ -17,70 +17,69 @@
  * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package mscheme.syntax
 
-package mscheme.syntax;
+import mscheme.code.CompiledLambda
+import mscheme.environment.StaticEnvironment
+import mscheme.exceptions.SchemeException
+import mscheme.util.Arity
+import mscheme.util.Arity.Companion.atLeast
+import mscheme.util.Arity.Companion.exactly
+import mscheme.values.IList
+import mscheme.values.ListFactory.create
+import mscheme.values.ListFactory.prepend
+import mscheme.values.ValueTraits.isList
+import mscheme.values.ValueTraits.isPair
+import mscheme.values.ValueTraits.toConstPair
+import mscheme.values.ValueTraits.toList
 
-import mscheme.code.CompiledLambda;
-import mscheme.environment.StaticEnvironment;
-import mscheme.exceptions.SchemeException;
-import mscheme.util.Arity;
-import mscheme.values.IList;
-import mscheme.values.IPair;
-import mscheme.values.ListFactory;
-import mscheme.values.ValueTraits;
+internal object Lambda : CheckedTranslator(atLeast(2)) {
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun checkedTranslate(
+        compilationEnv: StaticEnvironment,
+        arguments: IList
+    ): Any {
+        val rawFormals = arguments.head
+        val body = arguments.tail
 
-final class Lambda
-    extends CheckedTranslator {
+        val formals: IList
+        val arity: Arity
 
-  final static ITranslator INSTANCE = new Lambda();
+        if (isList(rawFormals)) {
+            formals = toList(rawFormals)
+            arity = exactly(formals.length)
+        } else {
+            // rawFormals is an improper list.
+            // This happens for lambda expressions
+            // with optional parameters like
+            // (lambda (x y . rest) [...])
+            // or
+            // (lambda args [...]).
+            // The following code transforms the improper
+            // or not-at-all list into a proper one and
+            // counts the required parameters (two in the
+            // first example and none in second).
 
-  private Lambda() {
-    super(Arity.atLeast(2));
-  }
+            var current = rawFormals
+            var minArity = 0
+            var result = create()
 
-  protected Object checkedTranslate(StaticEnvironment compilationEnv,
-      IList arguments)
-      throws SchemeException, InterruptedException {
-    Object rawFormals = arguments.getHead();
-    IList body = arguments.getTail();
+            while (isPair(current)) {
+                val currentPair = toConstPair(current)
 
-    final IList formals;
-    final Arity arity;
+                ++minArity
+                result = prepend(currentPair.first, result)
+                current = currentPair.second
+            }
 
-    if (ValueTraits.isList(rawFormals)) {
-      formals = ValueTraits.toList(rawFormals);
-      arity = Arity.exactly(formals.getLength());
-    } else {
-      // rawFormals is an improper list.
-      // This happens for lambda expressions
-      // with optional parameters like
-      // (lambda (x y . rest) [...])
-      // or
-      // (lambda args [...]).
-      // The following code transforms the improper
-      // or not-at-all list into a proper one and
-      // counts the required parameters (two in the
-      // first example and none in second).
+            result = prepend(current, result)
 
-      Object current = rawFormals;
-      int minArity = 0;
-      IList result = ListFactory.create();
+            formals = result.getReversed()
+            arity = atLeast(minArity)
+        }
 
-      while (ValueTraits.isPair(current)) {
-        IPair currentPair = ValueTraits.toConstPair(current);
-
-        ++minArity;
-        result = ListFactory.prepend(currentPair.getFirst(), result);
-        current = currentPair.getSecond();
-      }
-
-      result = ListFactory.prepend(current, result);
-
-      formals = result.getReversed();
-      arity = Arity.atLeast(minArity);
+        return CompiledLambda.create(
+            arity, body, compilationEnv.createChild(formals)
+        )
     }
-
-    return CompiledLambda.create(arity, body, compilationEnv
-        .createChild(formals));
-  }
 }

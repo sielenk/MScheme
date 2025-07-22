@@ -53,7 +53,7 @@ internal object Define : CheckedTranslator(atLeast(2)) {
             compilationEnv.setStateDefinitionBody(symbol)
             try {
                 return Set.translate(
-                    ref, Lambda.INSTANCE.translate(
+                    ref, Lambda.translate(
                         compilationEnv, prepend(formals, body)
                     )
                 )
