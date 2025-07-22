@@ -9,7 +9,7 @@ package mscheme.machine
 import mscheme.exceptions.SchemeException
 
 
-interface IContinuation {
+fun interface IContinuation {
     @Throws(SchemeException::class, InterruptedException::class)
     fun invoke(registers: Registers, value: Any?): Any?
 }

@@ -17,81 +17,58 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.code
 
-package mscheme.code;
+import mscheme.compiler.Compiler.Companion.force
+import mscheme.compiler.IForceable
+import mscheme.exceptions.CompileError
+import mscheme.machine.IContinuation
+import mscheme.machine.Registers
+import mscheme.values.ValueTraits.isTrue
 
-import mscheme.compiler.Compiler;
-import mscheme.compiler.IForceable;
-import mscheme.exceptions.CompileError;
-import mscheme.machine.Registers;
-import mscheme.values.ValueTraits;
-import org.jetbrains.annotations.NotNull;
+class Selection internal constructor(
+    private val _test: Any?,
+    private val _onTrue: Any?,
+    private val _onFalse: Any?
+) : IReduceable {
+    override fun toString(): String =
+        "sel:<$_test, $_onTrue, $_onFalse>"
 
-
-public final class Selection
-    implements IReduceable {
-
-  private final Object _test;
-  private final Object _onTrue;
-  private final Object _onFalse;
-
-  Selection(
-      Object test,
-      Object onTrue,
-      Object onFalse
-  ) {
-    _test = test;
-    _onTrue = onTrue;
-    _onFalse = onFalse;
-  }
-
-  public static Object create(
-      Object test,
-      Object onTrue,
-      Object onFalse
-  ) {
-    return new ForceableSelection(test, onTrue, onFalse);
-  }
-
-  public String toString() {
-    return "sel:<" + _test + ", " + _onTrue + ", " + _onFalse + '>';
-  }
-
-  /* (non-Javadoc)
+    /* (non-Javadoc)
    * @see mscheme.code.Reduceable#reduce(mscheme.machine.Stack, mscheme.environment.DynamicEnvironment)
    */
-  public Object reduce(@NotNull Registers registers) {
-    registers.push(
-        (registers1, value) -> ValueTraits.isTrue(value)
-            ? _onTrue
-            : _onFalse);
+    override fun reduce(state: Registers): Any? {
+        state.push { _: Registers?, value: Any? ->
+            if (isTrue(value))
+                _onTrue
+            else
+                _onFalse
+        }
 
-    return _test;
-  }
+        return _test
+    }
+
+    companion object {
+        @JvmStatic
+        fun create(
+            test: Any?,
+            onTrue: Any?,
+            onFalse: Any?
+        ): Any =
+            ForceableSelection(test, onTrue, onFalse)
+    }
 }
 
-final class ForceableSelection
-    implements IForceable {
-
-  private final Object _test;
-  private final Object _onTrue;
-  private final Object _onFalse;
-
-  public ForceableSelection(
-      Object test,
-      Object onTrue,
-      Object onFalse
-  ) {
-    _test = test;
-    _onTrue = onTrue;
-    _onFalse = onFalse;
-  }
-
-  public Object force()
-      throws CompileError {
-    return new Selection(
-        Compiler.force(_test),
-        Compiler.force(_onTrue),
-        Compiler.force(_onFalse));
-  }
+internal class ForceableSelection(
+    private val _test: Any?,
+    private val _onTrue: Any?,
+    private val _onFalse: Any?
+) : IForceable {
+    @Throws(CompileError::class)
+    override fun force(): Any =
+        Selection(
+            force(_test),
+            force(_onTrue),
+            force(_onFalse)
+        )
 }
