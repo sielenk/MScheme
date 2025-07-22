@@ -17,57 +17,43 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.syntax
 
-package mscheme.syntax;
 
+object TranslatorFactory {
+    val beginToken: ITranslator
+        get() = Begin.INSTANCE_BEGIN
 
-public abstract class TranslatorFactory {
+    val andToken: ITranslator
+        get() = Begin.INSTANCE_AND
 
-  public static ITranslator getBeginToken() {
-    return Begin.INSTANCE_BEGIN;
-  }
+    val orToken: ITranslator
+        get() = Begin.INSTANCE_OR
 
-  public static ITranslator getAndToken() {
-    return Begin.INSTANCE_AND;
-  }
+    val setToken: ITranslator
+        get() = Set
 
-  public static ITranslator getOrToken() {
-    return Begin.INSTANCE_OR;
-  }
+    val defineToken: ITranslator
+        get() = Define
 
-  public static ITranslator getSetToken() {
-    return Set.INSTANCE;
-  }
+    val defineSyntaxToken: ITranslator
+        get() = DefineSyntax
 
-  public static ITranslator getDefineToken() {
-    return Define.INSTANCE;
-  }
+    val lambdaToken: ITranslator
+        get() = Lambda
 
-  public static ITranslator getDefineSyntaxToken() {
-    return DefineSyntax.INSTANCE;
-  }
+    val letToken: ITranslator
+        get() = Let
 
-  public static ITranslator getLambdaToken() {
-    return Lambda.INSTANCE;
-  }
+    val letStarToken: ITranslator
+        get() = LetStar
 
-  public static ITranslator getLetToken() {
-    return Let.INSTANCE;
-  }
+    val letrecToken: ITranslator
+        get() = Letrec
 
-  public static ITranslator getLetStarToken() {
-    return LetStar.INSTANCE;
-  }
+    val ifToken: ITranslator
+        get() = If
 
-  public static ITranslator getLetrecToken() {
-    return Letrec.INSTANCE;
-  }
-
-  public static ITranslator getIfToken() {
-    return If.INSTANCE;
-  }
-
-  public static ITranslator getQuoteToken() {
-    return Quote.INSTANCE;
-  }
+    val quoteToken: ITranslator
+        get() = Quote
 }

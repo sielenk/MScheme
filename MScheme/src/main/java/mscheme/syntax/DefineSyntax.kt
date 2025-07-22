@@ -17,96 +17,81 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.syntax
 
-package mscheme.syntax;
+import mscheme.code.Application
+import mscheme.compiler.Compiler
+import mscheme.environment.Environment.Companion.getSchemeReportEnvironment
+import mscheme.environment.StaticEnvironment
+import mscheme.exceptions.SchemeException
+import mscheme.machine.Machine
+import mscheme.util.Arity.Companion.exactly
+import mscheme.values.IList
+import mscheme.values.IPair
+import mscheme.values.ListFactory.create
+import mscheme.values.ValueTraits.toStaticEnvironment
+import mscheme.values.ValueTraits.toSymbol
+import mscheme.values.functions.ApplyFunction
 
-import mscheme.code.Application;
-import mscheme.compiler.Compiler;
-import mscheme.environment.Environment;
-import mscheme.environment.StaticEnvironment;
-import mscheme.exceptions.SchemeException;
-import mscheme.machine.Machine;
-import mscheme.util.Arity;
-import mscheme.values.IList;
-import mscheme.values.IPair;
-import mscheme.values.ListFactory;
-import mscheme.values.ValueTraits;
-import mscheme.values.functions.ApplyFunction;
-import org.jetbrains.annotations.NotNull;
+internal class Macro(
+    private val _transformer: Any?,
+    private val _definitionEnv: StaticEnvironment
+) : ITranslator {
+    @Throws(InterruptedException::class, SchemeException::class)
+    override fun translate(
+        usageEnv: StaticEnvironment,
+        arguments: IList
+    ): Any? {
+        // (apply tranformer def_env use_env args)
 
-
-final class Macro
-    implements ITranslator {
-
-  final static Machine MACHINE =
-      new Machine(
-          Environment.getSchemeReportEnvironment()
-      );
-
-  private final static Object APPLY
-      = ApplyFunction.INSTANCE;
-
-  private final Object _transformer;
-  private final StaticEnvironment _definitionEnv;
-
-  Macro(Object transformer, StaticEnvironment definitionEnv) {
-    _transformer = transformer;
-    _definitionEnv = definitionEnv;
-  }
-
-  public Object translate(
-      @NotNull StaticEnvironment usageEnv,
-      @NotNull IList arguments
-  ) throws InterruptedException, SchemeException {
-    // (apply tranformer def_env use_env args)
-
-    IPair result = (IPair) MACHINE.execute(
-        Application.create(
-            new Object[]
-                {
+        val result = MACHINE.execute(
+            Application.create(
+                arrayOf(
                     APPLY,
                     _transformer,
                     _definitionEnv,
                     usageEnv,
                     arguments
-                }
-        )
-    );
+                )
+            )
+        ) as IPair?
 
-    return new Compiler(
-        ValueTraits.toStaticEnvironment(result.getFirst())
-    ).getForceable(
-        result.getSecond());
-  }
+        return Compiler(
+            toStaticEnvironment(result!!.first)
+        ).getForceable(
+            result.second
+        )
+    }
+
+    companion object {
+        val MACHINE: Machine =
+            Machine(getSchemeReportEnvironment())
+
+        private val APPLY: Any =
+            ApplyFunction
+    }
 }
 
-final class DefineSyntax
-    extends CheckedTranslator {
+internal object DefineSyntax : CheckedTranslator(exactly(2)) {
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun checkedTranslate(
+        compilationEnv: StaticEnvironment,
+        arguments: IList
+    ): Any {
+        val symbol = toSymbol(arguments.head)
+        val value = arguments.tail.head
 
-  final static ITranslator INSTANCE = new DefineSyntax();
+        val macro = Macro(
+            Macro.Companion.MACHINE.evaluate(value),
+            compilationEnv
+        )
 
-  private DefineSyntax() {
-    super(Arity.exactly(2));
-  }
+        compilationEnv.defineSyntax(symbol, macro)
+        Macro.Companion.MACHINE
+            .environment
+            .static
+            .defineSyntax(symbol, macro)
 
-  protected Object checkedTranslate(
-      StaticEnvironment compilationEnv,
-      IList arguments
-  ) throws SchemeException, InterruptedException {
-    String symbol = ValueTraits.toSymbol(arguments.getHead());
-    Object value = arguments.getTail().getHead();
-
-    Macro macro = new Macro(
-        Macro.MACHINE.evaluate(value),
-        compilationEnv);
-
-    compilationEnv.defineSyntax(symbol, macro);
-    Macro
-        .MACHINE
-        .getEnvironment()
-        .getStatic()
-        .defineSyntax(symbol, macro);
-
-    return ListFactory.create();
-  }
+        return create()
+    }
 }

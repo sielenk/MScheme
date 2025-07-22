@@ -106,7 +106,7 @@ public class TestEnvironment
     } catch (SymbolNotFoundException e) {
     }
 
-    ITranslator token = TranslatorFactory.getBeginToken();
+    ITranslator token = TranslatorFactory.INSTANCE.getBeginToken();
     env.defineSyntax(sym1, token);
 
     assertSame(env.getSyntaxFor(sym1), token);

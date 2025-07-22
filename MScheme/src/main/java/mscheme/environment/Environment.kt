@@ -95,51 +95,51 @@ class Environment private constructor(
 
                 staticBindings.defineSyntax(
                     "quote",
-                    TranslatorFactory.getQuoteToken()
+                    TranslatorFactory.quoteToken
                 )
                 staticBindings.defineSyntax(
                     "if",
-                    TranslatorFactory.getIfToken()
+                    TranslatorFactory.ifToken
                 )
                 staticBindings.defineSyntax(
                     "begin",
-                    TranslatorFactory.getBeginToken()
+                    TranslatorFactory.beginToken
                 )
                 staticBindings.defineSyntax(
                     "and",
-                    TranslatorFactory.getAndToken()
+                    TranslatorFactory.andToken
                 )
                 staticBindings.defineSyntax(
                     "or",
-                    TranslatorFactory.getOrToken()
+                    TranslatorFactory.orToken
                 )
                 staticBindings.defineSyntax(
                     "lambda",
-                    TranslatorFactory.getLambdaToken()
+                    TranslatorFactory.lambdaToken
                 )
                 staticBindings.defineSyntax(
                     "let",
-                    TranslatorFactory.getLetToken()
+                    TranslatorFactory.letToken
                 )
                 staticBindings.defineSyntax(
                     "let*",
-                    TranslatorFactory.getLetStarToken()
+                    TranslatorFactory.letStarToken
                 )
                 staticBindings.defineSyntax(
                     "letrec",
-                    TranslatorFactory.getLetrecToken()
+                    TranslatorFactory.letrecToken
                 )
                 staticBindings.defineSyntax(
                     "define",
-                    TranslatorFactory.getDefineToken()
+                    TranslatorFactory.defineToken
                 )
                 staticBindings.defineSyntax(
                     "set!",
-                    TranslatorFactory.getSetToken()
+                    TranslatorFactory.setToken
                 )
                 staticBindings.defineSyntax(
                     "define-syntax",
-                    TranslatorFactory.getDefineSyntaxToken()
+                    TranslatorFactory.defineSyntaxToken
                 )
             } catch (e: AlreadyBound) {
                 throw RuntimeException(

@@ -65,7 +65,7 @@ class CompiledLambda private constructor(
 
     @Throws(CompileError::class)
     override fun force(): Any? {
-        _compiledBody = force(_compiledBody)
+        _compiledBody = Compiler.force(_compiledBody)
         return this
     }
 
