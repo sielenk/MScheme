@@ -17,66 +17,67 @@
  * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package mscheme.syntax
 
-package mscheme.syntax;
+import mscheme.compiler.Compiler
+import mscheme.environment.StaticEnvironment
+import mscheme.exceptions.SchemeException
+import mscheme.util.Arity.Companion.atLeast
+import mscheme.util.Arity.Companion.exactly
+import mscheme.values.IList
+import mscheme.values.ListFactory.prepend
+import mscheme.values.ValueTraits.isPair
+import mscheme.values.ValueTraits.toConstPair
+import mscheme.values.ValueTraits.toSymbol
 
-import mscheme.compiler.Compiler;
-import mscheme.environment.Reference;
-import mscheme.environment.StaticEnvironment;
-import mscheme.exceptions.SchemeException;
-import mscheme.util.Arity;
-import mscheme.values.IList;
-import mscheme.values.ListFactory;
-import mscheme.values.ValueTraits;
-
-final class Define
-    extends CheckedTranslator {
-
-  final static ITranslator INSTANCE = new Define();
-
-  private Define() {
-    super(Arity.atLeast(2));
-  }
-
-  protected void preTranslate(StaticEnvironment compilationEnv) {
-  }
-
-  protected Object checkedTranslate(StaticEnvironment compilationEnv,
-      IList arguments)
-      throws SchemeException, InterruptedException {
-    if (ValueTraits.isPair(arguments.getHead())) {
-      //    (define (f x y) (+ x y))
-      // -> (define f (lambda (x y) (+ x y)))
-      String symbol = ValueTraits.toSymbol(ValueTraits.toConstPair(
-          arguments.getHead()).getFirst());
-      Object formals = ValueTraits.toConstPair(arguments.getHead())
-          .getSecond();
-      IList body = arguments.getTail();
-
-      Reference ref = compilationEnv.define(symbol);
-      compilationEnv.setStateDefinitionBody(symbol);
-      try {
-        return Set.translate(ref, Lambda.INSTANCE.translate(
-            compilationEnv, ListFactory.prepend(formals, body)));
-      } finally {
-        compilationEnv.setStateOpen(symbol);
-      }
-    } else {
-      if (!arguments.getTail().getTail().isEmpty()) {
-        arityError(arguments, Arity.exactly(2));
-      }
-
-      String symbol = ValueTraits.toSymbol(arguments.getHead());
-      Object value = arguments.getTail().getHead();
-
-      Reference ref = compilationEnv.define(symbol);
-      compilationEnv.setStateDefinitionBody(symbol);
-      try {
-        return Set.translate(ref, new Compiler(compilationEnv)
-            .getForceable(value));
-      } finally {
-        compilationEnv.setStateOpen(symbol);
-      }
+internal object Define : CheckedTranslator(atLeast(2)) {
+    override fun preTranslate(compilationEnv: StaticEnvironment) {
     }
-  }
+
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun checkedTranslate(
+        compilationEnv: StaticEnvironment, arguments: IList
+    ): Any {
+        if (isPair(arguments.head)) {
+            //    (define (f x y) (+ x y))
+            // -> (define f (lambda (x y) (+ x y)))
+            val symbol = toSymbol(
+                toConstPair(
+                    arguments.head
+                ).first
+            )
+            val formals = toConstPair(arguments.head).second
+            val body = arguments.tail
+
+            val ref = compilationEnv.define(symbol)
+            compilationEnv.setStateDefinitionBody(symbol)
+            try {
+                return Set.translate(
+                    ref, Lambda.INSTANCE.translate(
+                        compilationEnv, prepend(formals, body)
+                    )
+                )
+            } finally {
+                compilationEnv.setStateOpen(symbol)
+            }
+        } else {
+            if (!arguments.tail.tail.isEmpty) {
+                arityError(arguments, exactly(2))
+            }
+
+            val symbol = toSymbol(arguments.head)
+            val value = arguments.tail.head
+
+            val ref = compilationEnv.define(symbol)
+            compilationEnv.setStateDefinitionBody(symbol)
+            try {
+                return Set.translate(
+                    ref,
+                    Compiler(compilationEnv).getForceable(value)
+                )
+            } finally {
+                compilationEnv.setStateOpen(symbol)
+            }
+        }
+    }
 }
