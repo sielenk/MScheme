@@ -104,20 +104,14 @@ final class Order {
     }
     while (!tail.isEmpty());
 
-    switch (mode) {
-      case LT:
-        return strict & rising;
-      case LE:
-        return rising;
-      case EQ:
-        return rising & falling;
-      case GE:
-        return falling;
-      case GT:
-        return strict & falling;
-    }
-
-    return false; // unknown mode ...
+    return switch (mode) {
+      case LT -> strict & rising;
+      case LE -> rising;
+      case EQ -> rising & falling;
+      case GE -> falling;
+      case GT -> strict & falling;
+      default -> false;
+    };
   }
 }
 
