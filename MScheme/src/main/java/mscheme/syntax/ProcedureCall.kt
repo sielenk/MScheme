@@ -17,37 +17,28 @@
  * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package mscheme.syntax
 
-package mscheme.syntax;
+import mscheme.code.Application
+import mscheme.compiler.Compiler
+import mscheme.environment.StaticEnvironment
+import mscheme.exceptions.SchemeException
+import mscheme.values.IList
 
-import mscheme.code.Application;
-import mscheme.compiler.Compiler;
-import mscheme.environment.StaticEnvironment;
-import mscheme.exceptions.SchemeException;
-import mscheme.values.IList;
-import org.jetbrains.annotations.NotNull;
+class ProcedureCall private constructor(private val _head: Any?) : ITranslator {
+    @Throws(InterruptedException::class, SchemeException::class)
+    override fun translate(compilationEnv: StaticEnvironment, arguments: IList): Any {
+        compilationEnv.setStateClosed()
 
-public final class ProcedureCall
-    implements ITranslator {
+        val compiledList = arguments.getCompiledArray(compilationEnv, 1)
 
-  private final Object _head;
+        compiledList[0] = Compiler(compilationEnv).getForceable(_head)
 
-  private ProcedureCall(Object head) {
-    _head = head;
-  }
+        return Application.create(compiledList)
+    }
 
-  public static ProcedureCall create(Object head) {
-    return new ProcedureCall(head);
-  }
-
-  public Object translate(@NotNull StaticEnvironment compilationEnv, @NotNull IList arguments)
-      throws InterruptedException, SchemeException {
-    compilationEnv.setStateClosed();
-
-    Object[] compiledList = arguments.getCompiledArray(compilationEnv, 1);
-
-    compiledList[0] = new Compiler(compilationEnv).getForceable(_head);
-
-    return Application.create(compiledList);
-  }
+    companion object {
+        fun create(head: Any?): ProcedureCall =
+            ProcedureCall(head)
+    }
 }
