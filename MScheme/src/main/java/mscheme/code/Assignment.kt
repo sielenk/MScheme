@@ -17,54 +17,48 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.code
 
-package mscheme.code;
+import mscheme.compiler.Compiler.Companion.force
+import mscheme.compiler.IForceable
+import mscheme.environment.Reference
+import mscheme.exceptions.CompileError
+import mscheme.machine.Registers
 
-import mscheme.compiler.Compiler;
-import mscheme.compiler.IForceable;
-import mscheme.environment.Reference;
-import mscheme.exceptions.CompileError;
-import mscheme.machine.Registers;
-import org.jetbrains.annotations.NotNull;
+class Assignment private constructor(
+    private var _binding: Reference,
+    private var _expression: Any?
+) : IForceable, IReduceable {
+    @Throws(CompileError::class)
+    override fun force(): Any? {
+        _binding = _binding.forceRef()
+        _expression = force(_expression)
+        return this
+    }
 
+    override fun toString(): String =
+        "set:<$_binding, $_expression>"
 
-public final class Assignment
-    implements IForceable, IReduceable {
-
-  private Reference _binding;
-  private Object _expression;
-
-
-  private Assignment(Reference binding, Object expression) {
-    _binding = binding;
-    _expression = expression;
-  }
-
-  public static Assignment create(
-      Reference binding,
-      Object valueCalculation
-  ) {
-    return new Assignment(binding, valueCalculation);
-  }
-
-  public Object force()
-      throws CompileError {
-    _binding = _binding.forceRef();
-    _expression = Compiler.force(_expression);
-    return this;
-  }
-
-  public String toString() {
-    return "set:<" + _binding + ' ' + _expression + '>';
-  }
-
-  /* (non-Javadoc)
+    /* (non-Javadoc)
    * @see mscheme.code.Reduceable#reduce(mscheme.machine.Stack, mscheme.environment.DynamicEnvironment)
    */
-  public Object reduce(@NotNull Registers registers) {
-    registers.push(
-        (registers1, value) -> registers1.assign(_binding, value));
+    override fun reduce(state: Registers): Any? {
+        state.push { state1: Registers, value: Any? ->
+            state1.assign(
+                _binding,
+                value
+            )
+        }
 
-    return _expression;
-  }
+        return _expression
+    }
+
+    companion object {
+        @JvmStatic
+        fun create(
+            binding: Reference,
+            valueCalculation: Any?
+        ): Assignment =
+            Assignment(binding, valueCalculation)
+    }
 }

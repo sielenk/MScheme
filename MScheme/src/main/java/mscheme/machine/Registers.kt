@@ -16,7 +16,7 @@ import mscheme.machine.stack.Stack
 class Registers internal constructor(var environment: DynamicEnvironment) {
     val stack: Stack = Stack()
 
-    fun push(k: IContinuation?) {
+    fun push(k: IContinuation) {
         stack.push(StackFrame(this.environment, k))
     }
 
