@@ -17,86 +17,78 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.syntax
 
-package mscheme.syntax;
+import mscheme.code.Application.Companion.create
+import mscheme.environment.StaticEnvironment
+import mscheme.exceptions.SchemeException
+import mscheme.util.Arity.Companion.atLeast
+import mscheme.values.IList
+import mscheme.values.ListFactory.prepend
+import mscheme.values.ValueTraits.isSymbol
+import mscheme.values.ValueTraits.toSymbol
+import mscheme.values.functions.YCombinator
 
-
-import mscheme.code.Application;
-import mscheme.environment.StaticEnvironment;
-import mscheme.exceptions.SchemeException;
-import mscheme.util.Arity;
-import mscheme.values.IList;
-import mscheme.values.ListFactory;
-import mscheme.values.ValueTraits;
-import mscheme.values.functions.YCombinator;
 
 // *** let ***
+internal object Let : LetBase(atLeast(2)) {
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun checkedTranslate(
+        compilationEnv: StaticEnvironment,
+        arguments: IList
+    ): Any {
+        var arguments = arguments
+        val name: String?
 
-final class Let
-    extends LetBase {
+        if (isSymbol(arguments.head)) {
+            if (arguments.length < 3) {
+                arityError(arguments)
+            }
+            // named let
+            // (let <var> ((<var> <init>) ...) <body>)
+            name = toSymbol(arguments.head)
+            arguments = arguments.tail
+        } else {
+            // (let ((<var> <init>) ...) <body>)
+            name = null
+        }
 
-  final static ITranslator INSTANCE = new Let();
+        val formalsInitsBody = splitArguments(arguments)
+        var formals = formalsInitsBody[0]
+        val inits = formalsInitsBody[1]
+        val body = formalsInitsBody[2]
 
-  private Let() {
-    super(Arity.atLeast(2));
-  }
+        if (name != null) {
+            // for the named let, the usually anonymous
+            // closure gets a name to be recursively callable.
+            // to ensure this names uniqueness, it is prepended to
+            // the formals list.
+            formals = prepend(name, formals)
+        }
 
+        var compiledProc =
+            Lambda.translate(
+                compilationEnv,
+                prepend(formals, body)
+            )
 
-  protected Object checkedTranslate(
-      StaticEnvironment compilationEnv,
-      IList arguments
-  ) throws SchemeException, InterruptedException {
-    String name;
-    if (ValueTraits.isSymbol(arguments.getHead())) {
-      if (arguments.getLength() < 3) {
-        arityError(arguments);
-      }
-      // named let
-      // (let <var> ((<var> <init>) ...) <body>)
-      name = ValueTraits.toSymbol(arguments.getHead());
-      arguments = arguments.getTail();
-    } else {
-      // (let ((<var> <init>) ...) <body>)
-      name = null;
+        if (name != null) {
+            // the "raw" closure of a named-let has one additional
+            // argument, which is to be bound to the "curried"
+            // closure -- the YCombinator does it's magic ...
+
+            compiledProc = create(
+                arrayOf<Any?>(
+                    YCombinator,
+                    compiledProc
+                )
+            )
+        }
+
+        val compiledLet = inits.getCompiledArray(compilationEnv, 1)
+
+        compiledLet[0] = compiledProc
+
+        return create(compiledLet)
     }
-
-    IList[] formalsInitsBody = splitArguments(arguments);
-    IList formals = formalsInitsBody[0];
-    IList inits = formalsInitsBody[1];
-    IList body = formalsInitsBody[2];
-
-    if (name != null) {
-      // for the named let, the usually anonymous
-      // closure gets a name to be recursively callable.
-      // to ensure this names uniqueness, it is prepended to
-      // the formals list.
-      formals = ListFactory.prepend(name, formals);
-    }
-
-    Object compiledProc =
-        Lambda.INSTANCE.translate(
-            compilationEnv,
-            ListFactory.prepend(formals, body)
-        );
-
-    if (name != null) {
-      // the "raw" closure of a named-let has one additional
-      // argument, which is to be bound to the "curried"
-      // closure -- the YCombinator does it's magic ...
-
-      compiledProc = Application.create(
-          new Object[]
-              {
-                  YCombinator.INSTANCE,
-                  compiledProc
-              }
-      );
-    }
-
-    Object[] compiledLet = inits.getCompiledArray(compilationEnv, 1);
-
-    compiledLet[0] = compiledProc;
-
-    return Application.create(compiledLet);
-  }
 }

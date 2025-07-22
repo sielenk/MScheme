@@ -17,90 +17,77 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.syntax
 
-package mscheme.syntax;
+import mscheme.code.Application
+import mscheme.code.CompiledLambda.Companion.create
+import mscheme.code.Sequence
+import mscheme.compiler.Compiler
+import mscheme.environment.StaticEnvironment
+import mscheme.exceptions.SchemeException
+import mscheme.util.Arity.Companion.atLeast
+import mscheme.util.Arity.Companion.exactly
+import mscheme.values.IList
+import mscheme.values.ValueTraits.toSymbol
 
-
-import mscheme.code.Application;
-import mscheme.code.CompiledLambda;
-import mscheme.code.Sequence;
-import mscheme.compiler.Compiler;
-import mscheme.environment.StaticEnvironment;
-import mscheme.exceptions.SchemeException;
-import mscheme.util.Arity;
-import mscheme.values.IList;
-import mscheme.values.ValueTraits;
 
 // *** letrec ***
+internal object Letrec : LetBase(atLeast(2)) {
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun checkedTranslate(
+        compilationEnv: StaticEnvironment,
+        arguments: IList
+    ): Any {
+        // (letrec ((<var> <init>) ...) <body>)
 
-final class Letrec
-    extends LetBase {
+        val formalsInitsBody = splitArguments(arguments)
+        var formals = formalsInitsBody[0]
+        var inits = formalsInitsBody[1]
+        val body = formalsInitsBody[2]
 
-  final static ITranslator INSTANCE = new Letrec();
+        val numberOfFormals = formals.length
 
-  private Letrec() {
-    super(Arity.atLeast(2));
-  }
+        val bodyCompilationEnv = compilationEnv.createChild(formals)
 
+        val compiledBody = body.getCompiledArray(bodyCompilationEnv)
 
-  protected Object checkedTranslate(
-      StaticEnvironment compilationEnv,
-      IList arguments
-  ) throws SchemeException, InterruptedException {
-    // (letrec ((<var> <init>) ...) <body>)
+        val compiledLetrec = arrayOfNulls<Any>(numberOfFormals + compiledBody.size)
 
-    IList[] formalsInitsBody = splitArguments(arguments);
-    IList formals = formalsInitsBody[0];
-    IList inits = formalsInitsBody[1];
-    IList body = formalsInitsBody[2];
+        val compiler = Compiler(bodyCompilationEnv)
 
-    int numberOfFormals = formals.getLength();
+        // prepend the initialisations to the body
+        var index = 0
+        while (!formals.isEmpty) {
+            val formal = toSymbol(formals.head)
+            val init = inits.head
 
-    StaticEnvironment
-        bodyCompilationEnv = compilationEnv.createChild(formals);
+            compiledLetrec[index++] = Set.translate(
+                bodyCompilationEnv.getReferenceFor(formal),
+                compiler.getForceable(init)
+            )
 
-    Object[] compiledBody = body.getCompiledArray(bodyCompilationEnv);
+            formals = formals.tail
+            inits = inits.tail
+        }
 
-    Object[] compiledLetrec
-        = new Object[numberOfFormals + compiledBody.length];
+        System.arraycopy(
+            compiledBody,
+            0,
+            compiledLetrec,
+            index,
+            compiledBody.size
+        )
 
-    Compiler compiler = new Compiler(bodyCompilationEnv);
-
-    // prepend the initialisations to the body
-    int index = 0;
-    while (!formals.isEmpty()) {
-      String formal = ValueTraits.toSymbol(formals.getHead());
-      Object init = inits.getHead();
-
-      compiledLetrec[index++]
-          = Set.translate(
-          bodyCompilationEnv.getReferenceFor(formal),
-          compiler.getForceable(init)
-      );
-
-      formals = formals.getTail();
-      inits = inits.getTail();
-    }
-
-    System.arraycopy(
-        compiledBody,
-        0,
-        compiledLetrec,
-        index,
-        compiledBody.length
-    );
-
-    return Application.create(
-        new Object[]
-            {
-                CompiledLambda.create(
-                    Arity.exactly(0),
-                    bodyCompilationEnv.getSize(),
+        return Application.create(
+            arrayOf<Any?>(
+                create(
+                    exactly(0),
+                    bodyCompilationEnv.size,
                     Sequence.create(
                         compiledLetrec
                     )
                 )
-            }
-    );
-  }
+            )
+        )
+    }
 }
