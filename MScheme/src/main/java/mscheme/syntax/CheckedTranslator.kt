@@ -17,52 +17,51 @@
  * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package mscheme.syntax
 
-package mscheme.syntax;
+import mscheme.environment.StaticEnvironment
+import mscheme.exceptions.SchemeException
+import mscheme.exceptions.SyntaxArityError
+import mscheme.util.Arity
+import mscheme.values.IList
 
-import mscheme.environment.StaticEnvironment;
-import mscheme.exceptions.SchemeException;
-import mscheme.exceptions.SyntaxArityError;
-import mscheme.util.Arity;
-import mscheme.values.IList;
-
-abstract class CheckedTranslator
-    implements ITranslator {
-
-  private final Arity _arity;
-
-  protected CheckedTranslator(Arity arity) {
-    _arity = arity;
-  }
-
-  protected static void arityError(IList arguments, Arity arity)
-      throws SyntaxArityError {
-    throw new SyntaxArityError(arguments, arity);
-  }
-
-  protected void arityError(IList arguments)
-      throws SyntaxArityError {
-    throw new SyntaxArityError(arguments, _arity);
-  }
-
-  public final Object translate(StaticEnvironment compilationEnv,
-      IList arguments)
-      throws SchemeException, InterruptedException {
-    int len = arguments.getLength();
-
-    if (!_arity.isValid(len)) {
-      arityError(arguments);
+internal abstract class CheckedTranslator protected constructor(
+    private val _arity: Arity
+) : ITranslator {
+    @Throws(SyntaxArityError::class)
+    protected fun arityError(arguments: IList) {
+        throw SyntaxArityError(arguments, _arity)
     }
 
-    preTranslate(compilationEnv);
-    return checkedTranslate(compilationEnv, arguments);
-  }
+    @Throws(SchemeException::class, InterruptedException::class)
+    override fun translate(
+        compilationEnv: StaticEnvironment, arguments: IList
+    ): Any? {
+        val len = arguments.length
 
-  protected void preTranslate(StaticEnvironment compilationEnv) {
-    compilationEnv.setStateClosed();
-  }
+        if (!_arity.isValid(len)) {
+            arityError(arguments)
+        }
 
-  protected abstract Object checkedTranslate(
-      StaticEnvironment compilationEnv, IList arguments)
-      throws SchemeException, InterruptedException;
+        preTranslate(compilationEnv)
+
+        return checkedTranslate(compilationEnv, arguments)
+    }
+
+    protected open fun preTranslate(compilationEnv: StaticEnvironment) {
+        compilationEnv.setStateClosed()
+    }
+
+    @Throws(SchemeException::class, InterruptedException::class)
+    protected abstract fun checkedTranslate(
+        compilationEnv: StaticEnvironment, arguments: IList
+    ): Any?
+
+    companion object {
+        @JvmStatic
+        @Throws(SyntaxArityError::class)
+        protected fun arityError(arguments: IList, arity: Arity) {
+            throw SyntaxArityError(arguments, arity)
+        }
+    }
 }
