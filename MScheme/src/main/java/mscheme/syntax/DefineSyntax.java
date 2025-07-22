@@ -32,6 +32,7 @@ import mscheme.values.IPair;
 import mscheme.values.ListFactory;
 import mscheme.values.ValueTraits;
 import mscheme.values.functions.ApplyFunction;
+import org.jetbrains.annotations.NotNull;
 
 
 final class Macro
@@ -54,9 +55,9 @@ final class Macro
   }
 
   public Object translate(
-      StaticEnvironment usageEnv,
-      IList arguments
-  ) throws SchemeException, InterruptedException {
+      @NotNull StaticEnvironment usageEnv,
+      @NotNull IList arguments
+  ) throws InterruptedException, SchemeException {
     // (apply tranformer def_env use_env args)
 
     IPair result = (IPair) MACHINE.execute(

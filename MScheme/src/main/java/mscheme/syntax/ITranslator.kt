@@ -17,22 +17,17 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.syntax
 
-package mscheme.syntax;
-
-import mscheme.environment.StaticEnvironment;
-import mscheme.exceptions.SchemeException;
-import mscheme.values.IList;
-
+import mscheme.environment.StaticEnvironment
+import mscheme.exceptions.SchemeException
+import mscheme.values.IList
 
 /**
  * This interface is used to compile lists. Due to the special nature of syntactic keywords in
  * Scheme - they are not reserved - their bindings are stored in the static environment.
  */
-public interface ITranslator {
-
-  Object translate(
-      StaticEnvironment compilationEnv,
-      IList arguments
-  ) throws SchemeException, InterruptedException;
+fun interface ITranslator {
+    @Throws(SchemeException::class, InterruptedException::class)
+    fun translate(compilationEnv: StaticEnvironment, arguments: IList): Any?
 }

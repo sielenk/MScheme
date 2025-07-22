@@ -25,6 +25,7 @@ import mscheme.compiler.Compiler;
 import mscheme.environment.StaticEnvironment;
 import mscheme.exceptions.SchemeException;
 import mscheme.values.IList;
+import org.jetbrains.annotations.NotNull;
 
 public final class ProcedureCall
     implements ITranslator {
@@ -39,8 +40,8 @@ public final class ProcedureCall
     return new ProcedureCall(head);
   }
 
-  public Object translate(StaticEnvironment compilationEnv, IList arguments)
-      throws SchemeException, InterruptedException {
+  public Object translate(@NotNull StaticEnvironment compilationEnv, @NotNull IList arguments)
+      throws InterruptedException, SchemeException {
     compilationEnv.setStateClosed();
 
     Object[] compiledList = arguments.getCompiledArray(compilationEnv, 1);
