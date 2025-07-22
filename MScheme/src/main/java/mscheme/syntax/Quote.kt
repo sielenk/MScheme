@@ -17,31 +17,21 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.syntax
 
-package mscheme.syntax;
+import mscheme.environment.StaticEnvironment
+import mscheme.exceptions.TypeError
+import mscheme.util.Arity.Companion.exactly
+import mscheme.values.IList
+import mscheme.values.ValueTraits.getConst
 
-
-import mscheme.environment.StaticEnvironment;
-import mscheme.exceptions.TypeError;
-import mscheme.util.Arity;
-import mscheme.values.IList;
-import mscheme.values.ValueTraits;
 
 // *** quote ***
-
-final class Quote
-    extends CheckedTranslator {
-
-  final static ITranslator INSTANCE = new Quote();
-
-  private Quote() {
-    super(Arity.exactly(1));
-  }
-
-  protected Object checkedTranslate(
-      StaticEnvironment compilationEnv,
-      IList arguments
-  ) throws TypeError {
-    return ValueTraits.getConst(arguments.getHead());
-  }
+internal object Quote : CheckedTranslator(exactly(1)) {
+    @Throws(TypeError::class)
+    override fun checkedTranslate(
+        compilationEnv: StaticEnvironment,
+        arguments: IList
+    ): Any? =
+        getConst(arguments.head)
 }
