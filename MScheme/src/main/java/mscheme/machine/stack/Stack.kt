@@ -41,7 +41,7 @@ class Stack : IStack {
 
         internal constructor(slice: Slice) {
             _mark = slice._mark
-            _stack = slice._stack.copy
+            _stack = slice._stack.getCopy()
             _next = null
         }
     }
@@ -62,7 +62,7 @@ class Stack : IStack {
             return slice._stack.isEmpty
         }
 
-    override fun pop(): StackFrame? {
+    override fun pop(): StackFrame {
         while (_top._next != null && _top._stack.isEmpty) {
             _top = _top._next!!
         }
@@ -70,7 +70,7 @@ class Stack : IStack {
         return _top._stack.pop()
     }
 
-    override fun push(frame: StackFrame?) {
+    override fun push(frame: StackFrame) {
         _top._stack.push(frame)
     }
 
@@ -102,6 +102,7 @@ class Stack : IStack {
 
                 return top
             }
+
             slice = slice._next!!
         }
 

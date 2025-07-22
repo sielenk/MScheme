@@ -214,7 +214,7 @@ class Machine : Runnable {
             if (!stack.isEmpty) {
                 val frame = stack.pop()
 
-                _state.environment = frame!!.environment!!
+                _state.environment = frame.environment!!
 
                 current = frame.continuation!!.invoke(_state, current)
             } else {

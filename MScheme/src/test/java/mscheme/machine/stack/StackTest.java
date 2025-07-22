@@ -55,17 +55,21 @@ public abstract class StackTest extends TestCase {
   }
 
   public void testPush() {
-    _stack.push(null);
+    _stack.push(createFrame());
 
     assertFalse(_stack.isEmpty());
   }
 
   public void testPop1() {
+    Throwable actual = null;
+
     try {
       _stack.pop();
-      fail();
     } catch (Throwable t) {
+      actual = t;
     }
+
+    assertNotNull(actual);
   }
 
   public void testPop2() {

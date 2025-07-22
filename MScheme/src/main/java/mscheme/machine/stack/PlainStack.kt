@@ -7,38 +7,34 @@
 package mscheme.machine.stack
 
 import mscheme.machine.StackFrame
+import java.util.Stack
 
 /**
  * @author sielenk
  */
-internal class PlainStack : IStack {
-    private var _stack: Array<StackFrame?>
+internal class PlainStack(
+    private var _stack: Array<StackFrame?>,
     private var _sp: Int
+) : IStack {
 
-    constructor(other: PlainStack) {
-        _sp = other._sp
-        _stack = arrayOfNulls<StackFrame>(_sp)
+    constructor() : this(INITIAL_STACK, 0)
 
-        System.arraycopy(other._stack, 0, _stack, 0, _sp)
-    }
+    constructor(other: PlainStack) : this(
+        other._stack.copyOf(), other._sp
+    )
 
-    constructor() {
-        _sp = 0
-        _stack = arrayOfNulls<StackFrame>(INITIAL_STACK_SIZE)
-    }
-
-    val copy: PlainStack
-        get() = PlainStack(this)
+    fun getCopy(): PlainStack =
+        PlainStack(this)
 
     override val isEmpty: Boolean
         get() = _sp <= 0
 
-    override fun pop(): StackFrame? {
+    override fun pop(): StackFrame {
         assertFull()
-        return _stack[--_sp]
+        return _stack[--_sp]!!
     }
 
-    override fun push(frame: StackFrame?) {
+    override fun push(frame: StackFrame) {
         if (_sp >= _stack.size) {
             enlarge()
         }
@@ -64,6 +60,6 @@ internal class PlainStack : IStack {
     }
 
     companion object {
-        private const val INITIAL_STACK_SIZE = 0
+        private val INITIAL_STACK = arrayOf<StackFrame?>()
     }
 }

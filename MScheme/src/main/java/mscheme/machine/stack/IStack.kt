@@ -26,6 +26,6 @@ import mscheme.machine.StackFrame
 internal interface IStack {
     val isEmpty: Boolean
 
-    fun pop(): StackFrame?
-    fun push(frame: StackFrame?)
+    fun pop(): StackFrame
+    fun push(frame: StackFrame)
 }

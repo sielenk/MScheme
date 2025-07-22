@@ -20,7 +20,6 @@ class Registers internal constructor(var environment: DynamicEnvironment) {
         stack.push(StackFrame(this.environment, k))
     }
 
-    fun assign(key: Reference, value: Any?): Any? {
-        return environment.assign(key, value)
-    }
+    fun assign(key: Reference, value: Any?): Any? =
+        environment.assign(key, value)
 }
