@@ -37,8 +37,7 @@ public abstract class TestSchemeBase
   }
 
 
-  protected void setUp()
-      throws Exception {
+  protected void setUp() {
     machine = new Machine();
   }
 
@@ -46,6 +45,9 @@ public abstract class TestSchemeBase
     machine = null;
   }
 
+  public Machine getMachine() {
+    return machine;
+  }
 
   public Object quote(String expression)
       throws SchemeException, InterruptedException {
@@ -60,7 +62,8 @@ public abstract class TestSchemeBase
   public void check(String in, String out)
       throws SchemeException, InterruptedException {
     Object value = eval(in);
-    boolean success = ValueTraits.equal(value, quote(out));
+    Object expected = quote(out);
+    boolean success = ValueTraits.equal(value, expected);
 
     if (!success) {
       System.out.println(

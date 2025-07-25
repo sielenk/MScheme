@@ -24,6 +24,7 @@ public class AllTests {
     suite.addTestSuite(TestValue.class);
     suite.addTestSuite(TestMachine.class);
     suite.addTestSuite(TestR5RS.class);
+    suite.addTestSuite(TestJavaInterop.class);
     //$JUnit-END$
     return suite;
   }

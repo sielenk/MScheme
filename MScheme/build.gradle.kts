@@ -33,6 +33,7 @@ repositories {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation("junit:junit:4.13.1")
 }
 

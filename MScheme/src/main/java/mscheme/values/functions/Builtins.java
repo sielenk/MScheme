@@ -24,6 +24,14 @@ import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import kotlin.reflect.KClass;
+import kotlin.reflect.KProperty0;
+import kotlin.reflect.KVisibility;
 import mscheme.environment.Environment;
 import mscheme.exceptions.CharExpected;
 import mscheme.exceptions.CloseException;
@@ -53,6 +61,7 @@ import mscheme.values.ScmNumber;
 import mscheme.values.ScmString;
 import mscheme.values.ScmVector;
 import mscheme.values.ValueTraits;
+import org.jetbrains.annotations.NotNull;
 
 final class Order {
 
@@ -738,53 +747,50 @@ public class Builtins {
   //  }
 
   public static void getBuiltins(Environment target) throws CompileError {
-    Field[] fields = Builtins.class.getFields();
-    for (Field field : fields) {
-      int mo = field.getModifiers();
+    var jClass = Builtins.class;
+    var kClass = kotlin.jvm.JvmClassMappingKt.getKotlinClass(jClass);
+    var members = kClass.getMembers();
 
-      if (!Modifier.isStatic(mo) || !Modifier.isPublic(mo)) {
-        continue;
-      }
+    Map<String, Function> kFields = Map.ofEntries(
+        members.stream()
+            .filter(it -> it instanceof KProperty0<?> && it.getVisibility() == KVisibility.PUBLIC)
+            .map(it -> Map.entry(it.getName(), ((KProperty0<?>) it).get()))
+            .filter(it -> it.getValue() instanceof Function)
+            .map(it -> Map.entry(parseName(it.getKey()), (Function) it.getValue()))
+            .toArray(Entry[]::new)
+    );
 
-      if (!Function.class.isAssignableFrom(field.getType())) {
-        continue;
-      }
+    kFields.forEach((schemeName, function) -> {
+          try {
+            target.define(schemeName, function);
+          } catch (Exception e) {
+            System.err.println("Error while defining " + schemeName + ": " + e.getMessage());
+          }
+        }
+    );
 
-      final String schemeName = parseName(field.getName());
-      try {
-        final Object value = field.get(null);
-        target.define(schemeName, value);
-      } catch (Exception e) {
-      }
-    }
-
-    Method[] methods = Builtins.class.getMethods();
-    for (Method me : methods) {
+    var allMethods = jClass.getMethods();
+    var methods = Arrays.stream(allMethods).filter(me -> {
       int mo = me.getModifiers();
 
       if (!Modifier.isStatic(mo) || !Modifier.isPublic(mo)) {
-        continue;
+        return false;
       }
 
-      if (!paramsValid(me.getParameterTypes())) {
-        continue;
+      Class<?>[] parameterTypes = me.getParameterTypes();
+
+      if (!paramsValid(parameterTypes)) {
+        return false;
       }
 
-      if (!Object.class.isAssignableFrom(me.getReturnType())) {
-        continue;
-      }
+      return Object.class.isAssignableFrom(me.getReturnType());
+    }).toList();
 
+    for (Method me : methods) {
       final String schemeName = parseName(me.getName());
 
-      if ((me.getParameterTypes().length == 1) &&
-          (me.getParameterTypes()[0] == IList.class)
-      ) {
-        target.define(schemeName, me);
-      } else {
-        target.define(schemeName, me);
-      }
+      target.define(schemeName, me);
     }
-
   }
 
   private static String parseName(String name) {
