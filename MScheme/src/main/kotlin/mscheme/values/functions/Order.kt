@@ -18,75 +18,64 @@
  * the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA  02111-1307, USA.
  */
+package mscheme.values.functions
 
-package mscheme.values.functions;
+import mscheme.exceptions.RuntimeArityError
+import mscheme.exceptions.SchemeRuntimeError
+import mscheme.exceptions.TypeError
+import mscheme.util.Arity.Companion.atLeast
+import mscheme.values.IList
+import mscheme.values.ValueTraits.toScmNumber
 
-import mscheme.exceptions.RuntimeArityError;
-import mscheme.exceptions.SchemeRuntimeError;
-import mscheme.exceptions.TypeError;
-import mscheme.util.Arity;
-import mscheme.values.IList;
-import mscheme.values.ScmNumber;
-import mscheme.values.ValueTraits;
+enum class Order {
+    LT, LE, EQ, GE, GT;
 
+    companion object {
+        @JvmStatic
+        @Throws(SchemeRuntimeError::class, TypeError::class)
+        fun check(arguments: IList, mode: Order): Boolean {
+            val arity = atLeast(2)
+            val len = arguments.length
 
-final class Order {
+            if (!arity.isValid(len)) {
+                throw RuntimeArityError(arguments, arity)
+            }
 
-  public final static int LT = -2;
+            var curr = toScmNumber(arguments.head)
+            var tail = arguments.tail
 
-  public final static int LE = -1;
+            var rising = true
+            var strict = true
+            var falling = true
 
-  public final static int EQ = 0;
+            do {
+                val next = toScmNumber(tail.head)
+                tail = tail.tail
 
-  public final static int GE = 1;
+                if (curr.isEqualTo(next)) {
+                    strict = false
+                } else {
+                    if (curr.isLessThan(next)) {
+                        falling = false
+                    } else {
+                        rising = false
+                    }
 
-  public final static int GT = 2;
+                    if (!rising and !falling) {
+                        return false
+                    }
+                }
 
-  public static boolean check(IList arguments, int mode)
-      throws SchemeRuntimeError, TypeError {
-    final Arity arity = Arity.atLeast(2);
-    int len = arguments.getLength();
+                curr = next
+            } while (!tail.isEmpty)
 
-    if (!arity.isValid(len)) {
-      throw new RuntimeArityError(arguments, arity);
-    }
-
-    ScmNumber curr = ValueTraits.toScmNumber(arguments.getHead());
-    IList tail = arguments.getTail();
-
-    boolean rising = true;
-    boolean strict = true;
-    boolean falling = true;
-
-    do {
-      ScmNumber next = ValueTraits.toScmNumber(tail.getHead());
-      tail = tail.getTail();
-
-      if (curr.isEqualTo(next)) {
-        strict = false;
-      } else {
-        if (curr.isLessThan(next)) {
-          falling = false;
-        } else {
-          rising = false;
+            return when (mode) {
+                LT -> strict and rising
+                LE -> rising
+                EQ -> rising and falling
+                GE -> falling
+                GT -> strict and falling
+            }
         }
-
-        if (!rising & !falling) {
-          return false;
-        }
-      }
-
-      curr = next;
     }
-    while (!tail.isEmpty());
-
-    return switch (mode) {
-      case LT -> strict & rising;
-      case LE -> rising;
-      case EQ -> rising & falling;
-      case GE -> falling;
-      case GT -> strict & falling;
-      default -> false;
-    };
-  }
 }
