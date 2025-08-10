@@ -19,12 +19,18 @@
  * Boston, MA  02111-1307, USA.
  */
 
+@file:OptIn(KspExperimental::class)
+
 package de.masitec.mscheme.ksp
 
+import com.google.devtools.ksp.KspExperimental
+import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.symbol.KSAnnotated
+import com.google.devtools.ksp.symbol.KSFunctionDeclaration
+import de.masitec.mscheme.ksp.annotations.ScmFunction
 
 
 class MSchemeSymbolProcessor(
@@ -32,6 +38,25 @@ class MSchemeSymbolProcessor(
 ) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
         environment.logger.info("MSchemeSymbolProcessor.process invoked")
+
+        // Find symbols annotated with @MSchemeBuiltins
+        val symbols =
+            resolver.getSymbolsWithAnnotation(ScmFunction::class.qualifiedName!!)
+
+        // Process symbols
+        symbols.filterIsInstance<KSFunctionDeclaration>()
+            .forEach { functionDeclaration ->
+                val functionName = functionDeclaration.qualifiedName
+                val annotation: ScmFunction = functionDeclaration
+                    .getAnnotationsByType(ScmFunction::class)
+                    .first()
+
+                if (functionName != null) {
+                    environment.logger.logging("'${functionName.asString()}' -> '${annotation.name}'")
+                    // generateRuntimeReflectionReplacement(classDeclaration)
+                }
+            }
+
         return emptyList()
     }
 }
