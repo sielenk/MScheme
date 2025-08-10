@@ -39,14 +39,12 @@ import mscheme.exceptions.NumberExpected;
 import mscheme.exceptions.OpenException;
 import mscheme.exceptions.PairExpected;
 import mscheme.exceptions.PortExpected;
-import mscheme.exceptions.RuntimeArityError;
 import mscheme.exceptions.SchemeRuntimeError;
 import mscheme.exceptions.StringExpected;
 import mscheme.exceptions.SymbolExpected;
 import mscheme.exceptions.TypeError;
 import mscheme.exceptions.VectorException;
 import mscheme.exceptions.VectorExpected;
-import mscheme.util.Arity;
 import mscheme.values.Empty;
 import mscheme.values.Function;
 import mscheme.values.IList;
@@ -58,66 +56,6 @@ import mscheme.values.ScmString;
 import mscheme.values.ScmVector;
 import mscheme.values.ValueTraits;
 
-final class Order {
-
-  public final static int LT = -2;
-
-  public final static int LE = -1;
-
-  public final static int EQ = 0;
-
-  public final static int GE = 1;
-
-  public final static int GT = 2;
-
-  public static boolean check(IList arguments, int mode)
-      throws SchemeRuntimeError, TypeError {
-    final Arity arity = Arity.atLeast(2);
-    int len = arguments.getLength();
-
-    if (!arity.isValid(len)) {
-      throw new RuntimeArityError(arguments, arity);
-    }
-
-    ScmNumber curr = ValueTraits.toScmNumber(arguments.getHead());
-    IList tail = arguments.getTail();
-
-    boolean rising = true;
-    boolean strict = true;
-    boolean falling = true;
-
-    do {
-      ScmNumber next = ValueTraits.toScmNumber(tail.getHead());
-      tail = tail.getTail();
-
-      if (curr.isEqualTo(next)) {
-        strict = false;
-      } else {
-        if (curr.isLessThan(next)) {
-          falling = false;
-        } else {
-          rising = false;
-        }
-
-        if (!rising & !falling) {
-          return false;
-        }
-      }
-
-      curr = next;
-    }
-    while (!tail.isEmpty());
-
-    return switch (mode) {
-      case LT -> strict & rising;
-      case LE -> rising;
-      case EQ -> rising & falling;
-      case GE -> falling;
-      case GT -> strict & falling;
-      default -> false;
-    };
-  }
-}
 
 public class Builtins {
 
