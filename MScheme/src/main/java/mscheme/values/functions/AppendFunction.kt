@@ -19,7 +19,7 @@ the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
 package mscheme.values.functions
 
-import mscheme.exceptions.RuntimeError
+import mscheme.exceptions.SchemeRuntimeError
 import mscheme.exceptions.TypeError
 import mscheme.machine.Registers
 import mscheme.values.Function
@@ -33,13 +33,13 @@ internal class AppendHelper1(initial: Any?) : Reducer(initial) {
 }
 
 internal object AppendHelper2 : Reducer(ListFactory.create()) {
-    @Throws(RuntimeError::class, TypeError::class)
+    @Throws(SchemeRuntimeError::class, TypeError::class)
     override fun combine(fst: Any?, snd: Any?): Any? =
         AppendHelper1(snd).foldRight(ValueTraits.toList(fst))
 }
 
 object AppendFunction : Function() {
-    @Throws(RuntimeError::class, TypeError::class)
+    @Throws(SchemeRuntimeError::class, TypeError::class)
     override fun call(state: Registers, arguments: IList): Any? =
         AppendHelper2.reduceRight(arguments)
 }

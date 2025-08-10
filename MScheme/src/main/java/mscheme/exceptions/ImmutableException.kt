@@ -17,16 +17,9 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.exceptions
 
-package mscheme.exceptions;
 
-
-public final class ImmutableException
-    extends RuntimeError {
-
-  private static final long serialVersionUID = 1L;
-
-  public ImmutableException(Object cause) {
-    super(cause, "attempt to modify constant value");
-  }
-}
+class ImmutableException(
+    cause: Any?
+) : SchemeRuntimeError(cause, "attempt to modify constant value")

@@ -19,14 +19,14 @@ the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
 package mscheme.values.functions
 
-import mscheme.exceptions.RuntimeError
+import mscheme.exceptions.SchemeRuntimeError
 import mscheme.exceptions.TypeError
 import mscheme.machine.Registers
 
 object DynamicWindFunction : TernaryFunction() {
-    @Throws(RuntimeError::class, TypeError::class)
+    @Throws(SchemeRuntimeError::class, TypeError::class)
     override fun checkedCall(state: Registers, fst: Any?, snd: Any?, trd: Any?): Any? {
         //TODO add implementation
-        throw RuntimeError(null, "")
+        throw SchemeRuntimeError(null, "")
     }
 }

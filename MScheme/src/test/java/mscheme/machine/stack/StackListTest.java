@@ -6,7 +6,7 @@
  */
 package mscheme.machine.stack;
 
-import mscheme.exceptions.RuntimeError;
+import mscheme.exceptions.SchemeRuntimeError;
 import mscheme.machine.StackFrame;
 import mscheme.machine.stack.Stack.Mark;
 
@@ -29,7 +29,7 @@ public class StackListTest extends StackTest {
   }
 
 
-  public final void testMark() throws RuntimeError {
+  public final void testMark() throws SchemeRuntimeError {
     final int SIZE1 = 5;
     final int SIZE2 = 3;
     final int SIZE = SIZE1 + SIZE2;

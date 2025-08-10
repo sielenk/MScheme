@@ -17,21 +17,11 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.exceptions
 
-package mscheme.exceptions;
+import mscheme.values.ScmVector
 
-import mscheme.values.ScmVector;
-
-
-public class InvalidVectorIndexException
-    extends VectorException {
-
-  private static final long serialVersionUID = 1L;
-
-  public InvalidVectorIndexException(
-      ScmVector vector,
-      int index
-  ) {
-    super(vector, index);
-  }
-}
+class InvalidVectorIndexException(
+    vector: ScmVector?,
+    index: Int
+) : VectorException(vector, index)

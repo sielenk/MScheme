@@ -17,19 +17,10 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.exceptions
 
-package mscheme.exceptions;
 
-
-public class ParseException
-    extends RuntimeError {
-
-  private static final long serialVersionUID = 1L;
-
-  public final String _message;
-
-  public ParseException(Object port, String message) {
-    super(port);
-    _message = message;
-  }
-}
+class ParseException(
+    port: Any?,
+    message: String?
+) : SchemeRuntimeError(port, message)

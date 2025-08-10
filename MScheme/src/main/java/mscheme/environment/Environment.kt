@@ -21,7 +21,7 @@ package mscheme.environment
 
 import mscheme.exceptions.AlreadyBound
 import mscheme.exceptions.CompileError
-import mscheme.exceptions.RuntimeError
+import mscheme.exceptions.SchemeRuntimeError
 import mscheme.syntax.TranslatorFactory
 import mscheme.values.functions.Builtins
 import java.io.IOException
@@ -63,14 +63,14 @@ class Environment private constructor(
     fun lookupNoThrow(ref: Reference): Any? =
         dynamic.lookupNoThrow(ref)
 
-    @Throws(RuntimeError::class)
+    @Throws(SchemeRuntimeError::class)
     fun lookup(ref: Reference): Any =
-        lookupNoThrow(ref) ?: throw RuntimeError(
+        lookupNoThrow(ref) ?: throw SchemeRuntimeError(
             ref.symbol,
             "uninitialized variable"
         )
 
-    @Throws(CompileError::class, RuntimeError::class)
+    @Throws(CompileError::class, SchemeRuntimeError::class)
     fun lookup(key: String): Any =
         lookup(static.getReferenceFor(key)) // ***********************************************************************
 

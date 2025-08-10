@@ -17,22 +17,15 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.exceptions
 
-package mscheme.exceptions;
+import mscheme.util.Arity
+import mscheme.values.IList
 
-import mscheme.util.Arity;
-import mscheme.values.IList;
-
-
-public final class RuntimeArityError
-    extends RuntimeError {
-
-  private static final long serialVersionUID = 1L;
-
-  public RuntimeArityError(IList arguments, Arity expected) {
-    super(
-        arguments,
-        "expected " + expected.toString() + " argument(s)"
-    );
-  }
-}
+class RuntimeArityError(
+    arguments: IList?,
+    expected: Arity
+) : SchemeRuntimeError(
+    arguments,
+    "expected $expected argument(s)"
+)

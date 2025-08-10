@@ -17,21 +17,11 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.exceptions
 
-package mscheme.exceptions;
+import mscheme.values.ScmString
 
-import mscheme.values.ScmString;
-
-
-public class InvalidStringIndexException
-    extends StringException {
-
-  private static final long serialVersionUID = 1L;
-
-  public InvalidStringIndexException(
-      ScmString string,
-      int index
-  ) {
-    super(string, index);
-  }
-}
+class InvalidStringIndexException(
+    string: ScmString,
+    index: Int
+) : StringException(string, index)

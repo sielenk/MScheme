@@ -19,17 +19,17 @@ the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
 package mscheme.values.functions
 
-import mscheme.exceptions.RuntimeError
+import mscheme.exceptions.SchemeRuntimeError
 import mscheme.exceptions.TypeError
 import mscheme.values.IList
 
 internal abstract class Reducer protected constructor(
     private val _initial: Any?
 ) {
-    @Throws(RuntimeError::class, TypeError::class)
+    @Throws(SchemeRuntimeError::class, TypeError::class)
     protected abstract fun combine(fst: Any?, snd: Any?): Any?
 
-    @Throws(RuntimeError::class, TypeError::class)
+    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun reduceLeft(list: IList): Any? {
         if (list.isEmpty) {
             return _initial
@@ -46,7 +46,7 @@ internal abstract class Reducer protected constructor(
         }
     }
 
-    @Throws(RuntimeError::class, TypeError::class)
+    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun foldLeft(list: IList): Any? {
         var result = _initial
 
@@ -59,7 +59,7 @@ internal abstract class Reducer protected constructor(
         return result
     }
 
-    @Throws(RuntimeError::class, TypeError::class)
+    @Throws(SchemeRuntimeError::class, TypeError::class)
     private fun reduceRightHelper(list: IList): Any? {
         val tail = list.tail
 
@@ -72,14 +72,14 @@ internal abstract class Reducer protected constructor(
             )
     }
 
-    @Throws(RuntimeError::class, TypeError::class)
+    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun reduceRight(list: IList): Any? =
         if (list.isEmpty)
             _initial
         else
             reduceRightHelper(list)
 
-    @Throws(RuntimeError::class, TypeError::class)
+    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun foldRight(list: IList): Any? =
         if (list.isEmpty)
             _initial

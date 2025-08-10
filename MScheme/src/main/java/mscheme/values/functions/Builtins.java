@@ -21,15 +21,11 @@
 package mscheme.values.functions;
 
 import java.io.StringReader;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Collectors;
-import kotlin.reflect.KClass;
 import kotlin.reflect.KProperty0;
 import kotlin.reflect.KVisibility;
 import mscheme.environment.Environment;
@@ -44,7 +40,7 @@ import mscheme.exceptions.OpenException;
 import mscheme.exceptions.PairExpected;
 import mscheme.exceptions.PortExpected;
 import mscheme.exceptions.RuntimeArityError;
-import mscheme.exceptions.RuntimeError;
+import mscheme.exceptions.SchemeRuntimeError;
 import mscheme.exceptions.StringExpected;
 import mscheme.exceptions.SymbolExpected;
 import mscheme.exceptions.TypeError;
@@ -61,7 +57,6 @@ import mscheme.values.ScmNumber;
 import mscheme.values.ScmString;
 import mscheme.values.ScmVector;
 import mscheme.values.ValueTraits;
-import org.jetbrains.annotations.NotNull;
 
 final class Order {
 
@@ -76,7 +71,7 @@ final class Order {
   public final static int GT = 2;
 
   public static boolean check(IList arguments, int mode)
-      throws RuntimeError, TypeError {
+      throws SchemeRuntimeError, TypeError {
     final Arity arity = Arity.atLeast(2);
     int len = arguments.getLength();
 
@@ -174,31 +169,31 @@ public class Builtins {
 
   public static Object _3C(IList arguments)
     // <
-      throws RuntimeError, TypeError {
+      throws SchemeRuntimeError, TypeError {
     return ValueTraits.toScmBoolean(Order.check(arguments, Order.LT));
   }
 
   public static Object _3C_3D(IList arguments)
     // <=
-      throws RuntimeError, TypeError {
+      throws SchemeRuntimeError, TypeError {
     return ValueTraits.toScmBoolean(Order.check(arguments, Order.LE));
   }
 
   public static Object _3D(IList arguments)
     // =
-      throws RuntimeError, TypeError {
+      throws SchemeRuntimeError, TypeError {
     return ValueTraits.toScmBoolean(Order.check(arguments, Order.EQ));
   }
 
   public static Object _3E_3D(IList arguments)
     // >=
-      throws RuntimeError, TypeError {
+      throws SchemeRuntimeError, TypeError {
     return ValueTraits.toScmBoolean(Order.check(arguments, Order.GE));
   }
 
   public static Object _3E(IList arguments)
     // >
-      throws RuntimeError, TypeError {
+      throws SchemeRuntimeError, TypeError {
     return ValueTraits.toScmBoolean(Order.check(arguments, Order.GT));
   }
 
@@ -211,7 +206,7 @@ public class Builtins {
 
   public static Object _2B(IList arguments)
     // +
-      throws RuntimeError, TypeError {
+      throws SchemeRuntimeError, TypeError {
     ScmNumber sum = ScmNumber.create(0);
     IList tail = arguments;
 
@@ -227,7 +222,7 @@ public class Builtins {
 
   public static Object _2D(IList arguments)
     // -
-      throws RuntimeError, TypeError {
+      throws SchemeRuntimeError, TypeError {
     ScmNumber result = ValueTraits.toScmNumber(arguments.getHead());
     IList rest = arguments.getTail();
 
@@ -249,7 +244,7 @@ public class Builtins {
 
   public static Object _2A(IList arguments)
     // *
-      throws RuntimeError, TypeError {
+      throws SchemeRuntimeError, TypeError {
     ScmNumber product = ScmNumber.create(1);
     IList tail = arguments;
 
@@ -266,7 +261,7 @@ public class Builtins {
 
   public static Object _2F(IList arguments)
     // /
-      throws RuntimeError, TypeError {
+      throws SchemeRuntimeError, TypeError {
     ScmNumber result = ValueTraits.toScmNumber(arguments.getHead());
     IList rest = arguments.getTail();
 
@@ -610,18 +605,18 @@ public class Builtins {
   public final static Function eval = EvalFunction.INSTANCE;
 
   public static Object scheme_2Dreport_2Denvironment(Object fst)
-      throws RuntimeError, TypeError {
+      throws SchemeRuntimeError, TypeError {
     if (ValueTraits.toScmNumber(fst).getInteger() != 5) {
-      throw new RuntimeError(fst);
+      throw new SchemeRuntimeError(fst);
     }
 
     return Environment.getSchemeReportEnvironment();
   }
 
   public static Object null_2Denvironment(Object fst)
-      throws RuntimeError, TypeError {
+      throws SchemeRuntimeError, TypeError {
     if (ValueTraits.toScmNumber(fst).getInteger() != 5) {
-      throw new RuntimeError(fst);
+      throw new SchemeRuntimeError(fst);
     }
 
     return Environment.getNullEnvironment();
@@ -673,21 +668,21 @@ public class Builtins {
   // 6.6.2 Input
 
   public static Object read(Object fst)
-      throws RuntimeError, TypeError {
+      throws SchemeRuntimeError, TypeError {
     try {
       return ValueTraits.toInputPort(fst).read();
     } catch (InterruptedException e) {
-      throw new RuntimeError(fst, e.toString());
+      throw new SchemeRuntimeError(fst, e.toString());
     }
   }
 
   public static Object read_2Dchar(Object fst)
-      throws RuntimeError, TypeError {
+      throws SchemeRuntimeError, TypeError {
     return ValueTraits.toInputPort(fst).readScmChar();
   }
 
   public static Object peek_2Dchar(Object fst)
-      throws RuntimeError, TypeError {
+      throws SchemeRuntimeError, TypeError {
     return ValueTraits.toInputPort(fst).peekScmChar();
   }
 
@@ -704,19 +699,19 @@ public class Builtins {
   // 6.6.3 Output
 
   public static Object write(Object fst, Object snd)
-      throws RuntimeError, TypeError {
+      throws SchemeRuntimeError, TypeError {
     ValueTraits.toOutputPort(snd).write(fst);
     return snd;
   }
 
   public static Object display(Object fst, Object snd)
-      throws RuntimeError, TypeError {
+      throws SchemeRuntimeError, TypeError {
     ValueTraits.toOutputPort(snd).display(fst);
     return snd;
   }
 
   public static Object write_2Dchar(Object fst, Object snd)
-      throws RuntimeError, TypeError {
+      throws SchemeRuntimeError, TypeError {
     ValueTraits.toOutputPort(snd).writeScmChar(ValueTraits.toScmChar(fst));
     return snd;
   }

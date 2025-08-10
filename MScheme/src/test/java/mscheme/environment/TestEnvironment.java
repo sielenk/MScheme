@@ -21,7 +21,7 @@ Boston, MA  02111-1307, USA. */
 package mscheme.environment;
 
 
-import mscheme.exceptions.RuntimeError;
+import mscheme.exceptions.SchemeRuntimeError;
 import mscheme.exceptions.SymbolNotFoundException;
 import mscheme.exceptions.UnexpectedSyntax;
 import mscheme.syntax.ITranslator;
@@ -129,7 +129,7 @@ public class TestEnvironment
     try {
       env.lookup(sym1);
       fail("expected UninitializedSymbolException");
-    } catch (RuntimeError e) {
+    } catch (SchemeRuntimeError e) {
     }
 
     env.assign(sym1, val1);

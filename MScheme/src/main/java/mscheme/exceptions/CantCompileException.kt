@@ -17,16 +17,9 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.exceptions
 
-package mscheme.exceptions;
 
-
-public final class CantCompileException
-    extends CompileError {
-
-  private static final long serialVersionUID = 1L;
-
-  public CantCompileException(Object cause) {
-    super(cause, "can't compile");
-  }
-}
+class CantCompileException(
+    cause: Any?
+) : CompileError(cause, "can't compile")

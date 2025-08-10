@@ -21,7 +21,7 @@ package mscheme.environment
 
 import mscheme.exceptions.ListExpected
 import mscheme.exceptions.PairExpected
-import mscheme.exceptions.RuntimeError
+import mscheme.exceptions.SchemeRuntimeError
 import mscheme.util.Arity
 import mscheme.values.IList
 import java.util.*
@@ -77,7 +77,7 @@ class DynamicEnvironment private constructor(
 
     fun lookup(ref: Reference): Any =
         lookupNoThrow(ref)
-            ?: throw RuntimeError(
+            ?: throw SchemeRuntimeError(
                 ref.symbol,
                 "uninitialized variable"
             )

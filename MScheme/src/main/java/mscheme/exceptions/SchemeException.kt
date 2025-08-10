@@ -17,41 +17,13 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.exceptions
 
-package mscheme.exceptions;
 
-
-public abstract class SchemeException
-    extends Exception {
-
-  private static final long serialVersionUID = 1L;
-
-  private final Object _cause;
-  private final String _message;
-
-  public SchemeException(
-      Object cause,
-      String message
-  ) {
-    _cause = cause;
-    _message = message;
-  }
-
-  public Object getCauseValue() {
-    return _cause;
-  }
-
-  public String getMessage() {
-    return _message;
-  }
-
-  public String toString() {
-    return
-        "'" +
-            ((_cause == null)
-                ? "nothing"
-                : getCauseValue().toString()) +
-            "' caused a\n" +
-            super.toString();
-  }
+abstract class SchemeException(
+    val causeValue: Any?,
+    message: String?
+) : Exception(message) {
+    override fun toString(): String =
+        "'${causeValue ?: "nothing"}' caused a\n${super.toString()}"
 }

@@ -65,11 +65,11 @@ object ValueTraits {
                         }
                     }
                 } catch (e1: IllegalArgumentException) {
-                    throw RuntimeError(function, e1.toString())
+                    throw SchemeRuntimeError(function, e1.toString())
                 } catch (e1: IllegalAccessException) {
-                    throw RuntimeError(function, e1.toString())
+                    throw SchemeRuntimeError(function, e1.toString())
                 } catch (e1: InvocationTargetException) {
-                    throw RuntimeError(function, e1.toString())
+                    throw SchemeRuntimeError(function, e1.toString())
                 }
             }
 
@@ -89,9 +89,9 @@ object ValueTraits {
                         return function.get(arguments.head)
                     }
                 } catch (e: IllegalArgumentException) {
-                    throw RuntimeError(function, e.toString())
+                    throw SchemeRuntimeError(function, e.toString())
                 } catch (e: IllegalAccessException) {
-                    throw RuntimeError(function, e.toString())
+                    throw SchemeRuntimeError(function, e.toString())
                 }
             }
 

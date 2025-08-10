@@ -17,24 +17,11 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.exceptions
 
-package mscheme.exceptions;
+import mscheme.values.ScmString
 
-import mscheme.values.ScmString;
-
-
-public class StringException
-    extends RuntimeError {
-
-  private static final long serialVersionUID = 1L;
-
-  public final int _index;
-
-  public StringException(
-      ScmString string,
-      int index
-  ) {
-    super(string);
-    _index = index;
-  }
-}
+open class StringException(
+    string: ScmString,
+    val index: Int
+) : SchemeRuntimeError(string)

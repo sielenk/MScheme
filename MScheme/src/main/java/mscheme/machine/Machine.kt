@@ -23,7 +23,7 @@ import mscheme.code.IReduceable
 import mscheme.compiler.Compiler
 import mscheme.environment.DynamicEnvironment
 import mscheme.environment.Environment
-import mscheme.exceptions.RuntimeError
+import mscheme.exceptions.SchemeRuntimeError
 import mscheme.exceptions.SchemeException
 import mscheme.exceptions.TypeError
 import mscheme.values.*
@@ -233,7 +233,7 @@ class Machine : Runnable {
                     Subcontinuation(
                         _state.stack.continuation
                     ),
-                    error is RuntimeError
+                    error is SchemeRuntimeError
                 )
 
                 // Avoid endless loop if the
