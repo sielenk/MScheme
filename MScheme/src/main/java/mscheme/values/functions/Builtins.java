@@ -748,10 +748,12 @@ public class Builtins {
 
     Map<String, Function> kFields = Map.ofEntries(
         members.stream()
-            .filter(it -> it instanceof KProperty0<?> && it.getVisibility() == KVisibility.PUBLIC)
+            .filter(it -> it instanceof KProperty0<?>
+                && it.getVisibility() == KVisibility.PUBLIC)
             .map(it -> Map.entry(it.getName(), ((KProperty0<?>) it).get()))
             .filter(it -> it.getValue() instanceof Function)
-            .map(it -> Map.entry(parseName(it.getKey()), (Function) it.getValue()))
+            .map(it -> Map.entry(parseName(it.getKey()),
+                (Function) it.getValue()))
             .toArray(Entry[]::new)
     );
 
@@ -759,7 +761,8 @@ public class Builtins {
           try {
             target.define(schemeName, function);
           } catch (Exception e) {
-            System.err.println("Error while defining " + schemeName + ": " + e.getMessage());
+            System.err.println(
+                "Error while defining " + schemeName + ": " + e.getMessage());
           }
         }
     );

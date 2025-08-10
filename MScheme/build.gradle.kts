@@ -21,6 +21,7 @@
 
 plugins {
     kotlin("jvm").version("2.2.0")
+    id("com.google.devtools.ksp").version("2.2.0-2.0.2")
     id("application")
 }
 
@@ -35,6 +36,9 @@ repositories {
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     testImplementation("junit:junit:4.13.1")
+
+    implementation(project(":MScheme-ksp"))
+    ksp(project(":MScheme-ksp"))
 }
 
 application {
@@ -80,14 +84,25 @@ val createInit = tasks.register("createInit") {
     }
 }
 
+
 sourceSets {
     main {
         java {
             srcDir(generatedDir)
         }
+        kotlin {
+            srcDir("build/generated/ksp/main/kotlin")
+        }
+    }
+    test {
+        kotlin {
+            srcDir("build/generated/ksp/test/kotlin")
+        }
     }
 }
 
-tasks.compileKotlin.configure {
+tasks.matching {
+    it.name in setOf("kspKotlin", "compileKotlin")
+}.configureEach {
     dependsOn(createInit)
 }
