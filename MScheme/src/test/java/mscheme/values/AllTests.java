@@ -25,6 +25,9 @@ public class AllTests {
     suite.addTestSuite(ValueTraitsTest.class);
     suite.addTestSuite(TestList.class);
     //$JUnit-END$
+
+    suite.addTest(mscheme.values.functions.AllTests.suite());
+
     return suite;
   }
 }

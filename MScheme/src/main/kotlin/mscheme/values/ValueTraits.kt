@@ -15,6 +15,10 @@ import java.lang.reflect.Field
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
+import kotlin.reflect.KCallable
+import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
+import kotlin.reflect.cast
 
 /**
  * @author sielenk
@@ -36,6 +40,41 @@ object ValueTraits {
     @Throws(SchemeException::class, InterruptedException::class)
     fun apply(state: Registers, function: Any?, arguments: IList): Any? {
         when (function) {
+            is KCallable<*> -> {
+                val types = function.parameters
+                    .map { it.type.classifier as KClass<*> }
+                val hasTailParam = types.lastOrNull() == IList::class
+                val fixCount = types.size - if (hasTailParam) 1 else 0
+                var restOpt: IList? = arguments
+                val argumentArray = types.map { type ->
+                    val rest = restOpt ?: throw RuntimeArityError(
+                        arguments,
+                        if (hasTailParam)
+                            Arity.atLeast(fixCount)
+                        else
+                            Arity.exactly(fixCount)
+                    )
+
+                    if (type == IList::class) {
+                        restOpt = null
+                        rest
+                    } else {
+                        restOpt = rest.tail
+                        type.cast(rest.head)
+                    }
+                }.toTypedArray()
+
+                try {
+                    return function.call(*argumentArray)
+                } catch (e1: IllegalArgumentException) {
+                    throw SchemeRuntimeError(function, e1.toString())
+                } catch (e1: IllegalAccessException) {
+                    throw SchemeRuntimeError(function, e1.toString())
+                } catch (e1: InvocationTargetException) {
+                    throw SchemeRuntimeError(function, e1.toString())
+                }
+            }
+
             is Method -> {
                 val parameterTypes = function.parameterTypes
                 val methodExpectsIList = ((parameterTypes.size == 1) &&
@@ -264,7 +303,7 @@ object ValueTraits {
 
     @JvmStatic
     fun isFunction(o: Any?): Boolean =
-        o is Function || o is Method || o is Field
+        o is Function || o is KCallable<*> || o is Method || o is Field
 
     @JvmStatic
     @Throws(IOException::class)

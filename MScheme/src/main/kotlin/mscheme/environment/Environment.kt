@@ -23,7 +23,7 @@ import mscheme.exceptions.AlreadyBound
 import mscheme.exceptions.CompileError
 import mscheme.exceptions.SchemeRuntimeError
 import mscheme.syntax.TranslatorFactory
-import mscheme.values.functions.Builtins
+import mscheme.values.functions.getBuiltins
 import java.io.IOException
 import java.io.Writer
 
@@ -156,7 +156,9 @@ class Environment private constructor(
                 getNullEnvironment()
 
             try {
-                Builtins.getBuiltins(result)
+                for ((name, value) in getBuiltins()) {
+                    result.define(name, value)
+                }
             } catch (e: CompileError) {
                 throw RuntimeException(
                     "unexpected CompileError"

@@ -21,17 +21,9 @@
 package mscheme.values.functions;
 
 import java.io.StringReader;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Map.Entry;
-import kotlin.reflect.KProperty0;
-import kotlin.reflect.KVisibility;
 import mscheme.environment.Environment;
 import mscheme.exceptions.CharExpected;
 import mscheme.exceptions.CloseException;
-import mscheme.exceptions.CompileError;
 import mscheme.exceptions.ImmutableException;
 import mscheme.exceptions.InvalidStringIndexException;
 import mscheme.exceptions.ListExpected;
@@ -678,94 +670,4 @@ public class Builtins {
   //          new StringWriter()
   //      );
   //  }
-
-  public static void getBuiltins(Environment target) throws CompileError {
-    var jClass = Builtins.class;
-    var kClass = kotlin.jvm.JvmClassMappingKt.getKotlinClass(jClass);
-    var members = kClass.getMembers();
-
-    Map<String, Function> kFields = Map.ofEntries(
-        members.stream()
-            .filter(it -> it instanceof KProperty0<?>
-                && it.getVisibility() == KVisibility.PUBLIC)
-            .map(it -> Map.entry(it.getName(), ((KProperty0<?>) it).get()))
-            .filter(it -> it.getValue() instanceof Function)
-            .map(it -> Map.entry(parseName(it.getKey()),
-                (Function) it.getValue()))
-            .toArray(Entry[]::new)
-    );
-
-    kFields.forEach((schemeName, function) -> {
-          try {
-            target.define(schemeName, function);
-          } catch (Exception e) {
-            System.err.println(
-                "Error while defining " + schemeName + ": " + e.getMessage());
-          }
-        }
-    );
-
-    var allMethods = jClass.getMethods();
-    var methods = Arrays.stream(allMethods).filter(me -> {
-      int mo = me.getModifiers();
-
-      if (!Modifier.isStatic(mo) || !Modifier.isPublic(mo)) {
-        return false;
-      }
-
-      Class<?>[] parameterTypes = me.getParameterTypes();
-
-      if (!paramsValid(parameterTypes)) {
-        return false;
-      }
-
-      return Object.class.isAssignableFrom(me.getReturnType());
-    }).toList();
-
-    for (Method me : methods) {
-      final String schemeName = parseName(me.getName());
-
-      target.define(schemeName, me);
-    }
-  }
-
-  private static String parseName(String name) {
-    StringBuilder buf = new StringBuilder();
-
-    for (
-        int index = name.startsWith("__") ? 2 : 0;
-        index < name.length();
-        ++index
-    ) {
-      char c = name.charAt(index);
-
-      if (c == '_') {
-        buf.append(
-            (char) Integer.parseInt(
-                name.substring(index + 1, index + 3),
-                16
-            )
-        );
-        index += 2;
-      } else {
-        buf.append(c);
-      }
-    }
-
-    return buf.toString();
-  }
-
-  private static boolean paramsValid(Class<?>[] params) {
-    if (params.length == 1) {
-      return (params[0] == Object.class) || (params[0] == IList.class);
-    } else {
-      for (Class<?> param : params) {
-        if (param != Object.class) {
-          return false;
-        }
-      }
-    }
-
-    return true;
-  }
 }
