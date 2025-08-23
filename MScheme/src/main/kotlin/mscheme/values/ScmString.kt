@@ -110,6 +110,7 @@ abstract class ScmString protected constructor() : IComparable, IOutputable {
                 when (c) {
                     '\n' -> destination.write("\\n")
                     '"' -> destination.write("\\\"")
+                    '\\' -> destination.write("\\\\")
                     else -> destination.write(c.code)
                 }
             }
