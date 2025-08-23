@@ -23,19 +23,21 @@ public class OutputPortTest
     super(name);
   }
 
-  private static void checkReadWrite(Object o)
+  private static void checkReadWrite(Object expected)
       throws Exception {
     PipedReader inPipe = new PipedReader();
 
     {
       PipedWriter outPipe = new PipedWriter(inPipe);
       OutputPort out = OutputPort.create(outPipe);
-      out.write(o);
+      out.write(expected);
       out.close();
       outPipe.close();
     }
 
-    assertTrue(ValueTraits.equal(o, InputPort.create(inPipe).read()));
+    Object actual = InputPort.create(inPipe).read();
+
+    assertTrue(ValueTraits.equal(expected, actual));
   }
 
   public void testReadWriteBoolean()
@@ -71,5 +73,11 @@ public class OutputPortTest
     checkReadWrite(ScmVector.create());
     checkReadWrite(ScmVector.create(new Object[]
         {ValueTraits.toScmChar('b'), ValueTraits.toScmChar('\n')}));
+  }
+
+  public void testReadWriteString()
+      throws Exception {
+    checkReadWrite(ScmString.create("Hallo World"));
+    checkReadWrite(ScmString.create("And now the bad bits: \n \" \\ öäü"));
   }
 }

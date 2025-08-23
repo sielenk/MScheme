@@ -221,7 +221,17 @@ class InputPort private constructor(
 
             when (c) {
                 '"' -> return ScmString.createConst(buf.toString())
-                '\\' -> buf.append(readNoEof())
+                '\\' -> {
+                    val esc = readNoEof()
+                    buf.append(
+                        when (esc) {
+                            'n' -> '\n'
+                            '\\' -> '\\'
+                            '"' -> '"'
+                            else -> esc
+                        }
+                    )
+                }
                 else -> buf.append(c)
             }
         }
