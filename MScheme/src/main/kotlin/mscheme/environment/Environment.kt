@@ -40,7 +40,7 @@ class Environment private constructor(
         return this
     }
 
-    // *** Envrionment access ************************************************
+    // *** Environment access ************************************************
 
     // *** code access (compiletime) ***
 
