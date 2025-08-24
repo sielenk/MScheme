@@ -29,7 +29,7 @@ class GetBuiltinsTest(testName: String) : TestCase(testName) {
         val builtinsList = getBuiltins().toList()
         val builtinsMap = builtinsList.toMap().toSortedMap()
 
-        assertEquals(builtinsList.size, 95)
-        assertEquals(builtinsList.size, builtinsMap.size)
+        assertEquals(95, builtinsList.size)
+        assertEquals(95, builtinsMap.size)
     }
 }
