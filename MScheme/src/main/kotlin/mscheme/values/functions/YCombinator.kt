@@ -28,7 +28,6 @@ import mscheme.values.ListFactory
 import mscheme.values.ValueTraits
 
 internal class YWrappedFunction(private val _f: Function?) : Function() {
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun call(state: Registers, arguments: IList): Any? =
         ValueTraits.apply(
             state,
@@ -38,7 +37,6 @@ internal class YWrappedFunction(private val _f: Function?) : Function() {
 }
 
 object YCombinator : UnaryValueFunction() {
-    @Throws(TypeError::class)
     override fun checkedCall(argument: Any?): Any =
         YWrappedFunction(argument as Function?)
 }

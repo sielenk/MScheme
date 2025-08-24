@@ -24,6 +24,5 @@ interface IMutablePair : IPair, IMutable {
     @set:Throws(ImmutableException::class)
     override var first: Any?
 
-    @set:Throws(ImmutableException::class)
     override var second: Any?
 }

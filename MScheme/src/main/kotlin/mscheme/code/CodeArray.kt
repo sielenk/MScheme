@@ -23,12 +23,9 @@ import mscheme.compiler.Compiler
 import mscheme.exceptions.CompileError
 
 internal object CodeArray {
-    @JvmStatic
     fun printTuple(tuple: Array<Any?>): String =
         tuple.joinToString(prefix = "<", postfix = ">")
 
-    @JvmStatic
-    @Throws(CompileError::class)
     fun force(array: Array<Any?>) {
         for (i in array.indices) {
             array[i] = Compiler.force(array[i])

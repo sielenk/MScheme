@@ -22,33 +22,27 @@ package mscheme.values
 
 object ListFactory {
     // *** List creation ***
-    @JvmStatic
     fun prepend(head: Any?, tail: IList): IList =
         PairOrList.prepend(head, tail)
 
     fun prependConst(head: Any?, tail: IList): IList =
         PairOrList.prependConst(head, tail)
 
-    @JvmStatic
     fun create(): IList =
         Empty
 
-    @JvmStatic
     fun createConst(): IList =
         Empty
 
-    @JvmStatic
     fun create(first: Any?): IList =
         prepend(first, create())
 
     fun createConst(first: Any?): IList =
         prependConst(first, createConst())
 
-    @JvmStatic
     fun create(first: Any?, second: Any?): IList =
         prepend(first, create(second))
 
-    @JvmStatic
     fun create(first: Any?, second: Any?, third: Any?): IList =
         prepend(first, create(second, third))
 
@@ -64,15 +58,12 @@ object ListFactory {
         )
 
     // *** Pair creation ***
-    @JvmStatic
     fun createPair(fst: Any?, snd: Any?): IMutablePair =
         PairOrList.create(fst, snd)
 
-    @JvmStatic
     fun createConstPair(fst: Any?, snd: Any?): IPair =
         PairOrList.createConst(fst, snd)
 
-    @JvmStatic
     fun createConst(first: Any?, second: Any?): IList =
         prependConst(first, createConst(second))
 }

@@ -22,7 +22,6 @@ package mscheme.util
 import mscheme.exceptions.RuntimeArityError
 
 class Arity private constructor(val min: Int, val max: Int) {
-    @get:Throws(RuntimeArityError::class)
     val oneLess: Arity
         get() {
             var newMin = this.min - 1
@@ -71,15 +70,12 @@ class Arity private constructor(val min: Int, val max: Int) {
     }
 
     companion object {
-        @JvmStatic
         fun exactly(arity: Int): Arity =
             Arity(arity, arity)
 
-        @JvmStatic
         fun atLeast(arity: Int): Arity =
             Arity(arity, -1)
 
-        @JvmStatic
         fun inRange(lo: Int, hi: Int): Arity =
             Arity(lo, hi)
     }

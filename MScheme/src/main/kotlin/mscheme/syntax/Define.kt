@@ -33,7 +33,6 @@ internal object Define : CheckedTranslator(Arity.atLeast(2)) {
     override fun preTranslate(compilationEnv: StaticEnvironment) {
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment, arguments: IList
     ): Any {

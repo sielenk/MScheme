@@ -37,7 +37,6 @@ internal class Macro(
     private val _transformer: Any?,
     private val _definitionEnv: StaticEnvironment
 ) : ITranslator {
-    @Throws(InterruptedException::class, SchemeException::class)
     override fun translate(
         usageEnv: StaticEnvironment,
         arguments: IList
@@ -73,7 +72,6 @@ internal class Macro(
 }
 
 internal object DefineSyntax : CheckedTranslator(exactly(2)) {
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment,
         arguments: IList
@@ -82,12 +80,12 @@ internal object DefineSyntax : CheckedTranslator(exactly(2)) {
         val value = arguments.tail.head
 
         val macro = Macro(
-            Macro.Companion.MACHINE.evaluate(value),
+            Macro.MACHINE.evaluate(value),
             compilationEnv
         )
 
         compilationEnv.defineSyntax(symbol, macro)
-        Macro.Companion.MACHINE
+        Macro.MACHINE
             .environment
             .static
             .defineSyntax(symbol, macro)

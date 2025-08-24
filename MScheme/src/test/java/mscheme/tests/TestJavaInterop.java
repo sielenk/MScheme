@@ -121,7 +121,8 @@ public class TestJavaInterop extends TestSchemeBase {
   public void test_staticMethodArgs()
       throws InterruptedException, SchemeException, NoSuchMethodException {
     var machine = getMachine();
-    var method = getClass().getMethod("staticMethodArgs", Object.class, Object.class);
+    var method = getClass().getMethod("staticMethodArgs", Object.class,
+        Object.class);
     var environment = machine.getEnvironment();
 
     environment.define("foo", method);
@@ -163,10 +164,10 @@ public class TestJavaInterop extends TestSchemeBase {
   }
 
   public static Object staticMethodArgs(Object fst, Object snd) {
-    return PairOrList.create(fst, snd);
+    return PairOrList.Companion.create(fst, snd);
   }
 
   public Object methodArgs(Object fst, Object snd) {
-    return PairOrList.create(fst, snd);
+    return PairOrList.Companion.create(fst, snd);
   }
 }

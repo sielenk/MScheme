@@ -33,7 +33,6 @@ internal class ConstScmString(
     override fun get_(index: Int): Char =
         _string[index]
 
-    @Throws(ImmutableException::class)
     override fun set_(index: Int, c: Char) {
         throw ImmutableException(this)
     }
@@ -75,20 +74,17 @@ abstract class ScmString protected constructor() : IComparable, IOutputable {
     abstract val javaString: String
 
     // accessors
-    @Throws(InvalidStringIndexException::class)
     private fun validateIndex(index: Int) {
         if ((index < 0) || (this.length <= index)) {
             throw InvalidStringIndexException(this, index)
         }
     }
 
-    @Throws(InvalidStringIndexException::class, ImmutableException::class)
     fun set(index: Int, c: Char) {
         validateIndex(index)
         set_(index, c)
     }
 
-    @Throws(InvalidStringIndexException::class)
     fun get(index: Int): Char {
         validateIndex(index)
         return get_(index)
@@ -96,12 +92,10 @@ abstract class ScmString protected constructor() : IComparable, IOutputable {
 
     abstract val length: Int
 
-    @Throws(ImmutableException::class)
     protected abstract fun set_(index: Int, c: Char)
 
     protected abstract fun get_(index: Int): Char
 
-    @Throws(IOException::class)
     override fun outputOn(destination: Writer, doWrite: Boolean) {
         if (doWrite) {
             destination.write('"'.code) // "
@@ -134,15 +128,12 @@ abstract class ScmString protected constructor() : IComparable, IOutputable {
 
 
     companion object {
-        @JvmStatic
         fun create(size: Int, fill: Char): ScmString =
             MutableScmString(size, fill)
 
-        @JvmStatic
         fun create(javaString: String): ScmString =
             MutableScmString(javaString)
 
-        @JvmStatic
         fun createConst(javaString: String): ScmString =
             ConstScmString(javaString)
     }

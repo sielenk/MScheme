@@ -31,7 +31,6 @@ import kotlin.Throws
 
 
 internal object If : CheckedTranslator(Arity.inRange(2, 3)) {
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment, arguments: IList
     ): Any {

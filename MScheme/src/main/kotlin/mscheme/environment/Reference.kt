@@ -34,11 +34,9 @@ sealed class Reference protected constructor(
 
     abstract val index: Int
 
-    @Throws(CompileError::class)
     abstract fun forceRef(): Reference
 
-    @Throws(CompileError::class)
-    override fun force(): Any? =
+    override fun force(): Reference =
         forceRef()
 
     override fun toString(): String =
@@ -72,7 +70,6 @@ internal class DelayedReference(
             "$symbol delayed reference"
         )
 
-    @Throws(CompileError::class)
     override fun forceRef(): Reference =
         _env.getReferenceFor(symbol, _restricted)
 }

@@ -18,7 +18,6 @@ class SubcontinuationController internal constructor(
     private val _mark: Stack.Mark =
         state.stack.createMark()
 
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedCall(state: Registers, fst: Any?): Any? =
         ValueTraits.apply(
             state,

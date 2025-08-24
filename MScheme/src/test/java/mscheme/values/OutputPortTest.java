@@ -29,15 +29,15 @@ public class OutputPortTest
 
     {
       PipedWriter outPipe = new PipedWriter(inPipe);
-      OutputPort out = OutputPort.create(outPipe);
+      OutputPort out = OutputPort.Companion.create(outPipe);
       out.write(expected);
       out.close();
       outPipe.close();
     }
 
-    Object actual = InputPort.create(inPipe).read();
+    Object actual = InputPort.Companion.create(inPipe).read();
 
-    assertTrue(ValueTraits.equal(expected, actual));
+    assertTrue(ValueTraits.INSTANCE.equal(expected, actual));
   }
 
   public void testReadWriteBoolean()
@@ -48,36 +48,36 @@ public class OutputPortTest
 
   public void testReadWriteChar()
       throws Exception {
-    checkReadWrite(ValueTraits.toScmChar('a'));
-    checkReadWrite(ValueTraits.toScmChar('\n'));
-    checkReadWrite(ValueTraits.toScmChar(' '));
+    checkReadWrite(ValueTraits.INSTANCE.toScmChar('a'));
+    checkReadWrite(ValueTraits.INSTANCE.toScmChar('\n'));
+    checkReadWrite(ValueTraits.INSTANCE.toScmChar(' '));
   }
 
   public void testReadWriteNumber()
       throws Exception {
-    checkReadWrite(ValueTraits.toScmNumber(-1));
-    checkReadWrite(ValueTraits.toScmNumber(0));
-    checkReadWrite(ValueTraits.toScmNumber(12));
+    checkReadWrite(ValueTraits.INSTANCE.toScmNumber(-1));
+    checkReadWrite(ValueTraits.INSTANCE.toScmNumber(0));
+    checkReadWrite(ValueTraits.INSTANCE.toScmNumber(12));
   }
 
   public void testReadWriteList()
       throws Exception {
-    checkReadWrite(ListFactory.create());
-    checkReadWrite(ListFactory.create(ValueTraits.TRUE));
-    checkReadWrite(ListFactory.create(ValueTraits.toScmChar('b'),
-        ValueTraits.toScmChar('\n')));
+    checkReadWrite(ListFactory.INSTANCE.create());
+    checkReadWrite(ListFactory.INSTANCE.create(ValueTraits.TRUE));
+    checkReadWrite(ListFactory.INSTANCE.create(ValueTraits.INSTANCE.toScmChar('b'),
+        ValueTraits.INSTANCE.toScmChar('\n')));
   }
 
   public void testReadWriteVector()
       throws Exception {
-    checkReadWrite(ScmVector.create());
-    checkReadWrite(ScmVector.create(new Object[]
-        {ValueTraits.toScmChar('b'), ValueTraits.toScmChar('\n')}));
+    checkReadWrite(ScmVector.Companion.create());
+    checkReadWrite(ScmVector.Companion.create(new Object[]
+        {ValueTraits.INSTANCE.toScmChar('b'), ValueTraits.INSTANCE.toScmChar('\n')}));
   }
 
   public void testReadWriteString()
       throws Exception {
-    checkReadWrite(ScmString.create("Hallo World"));
-    checkReadWrite(ScmString.create("And now the bad bits: \n \" \\ öäü"));
+    checkReadWrite(ScmString.Companion.create("Hallo World"));
+    checkReadWrite(ScmString.Companion.create("And now the bad bits: \n \" \\ öäü"));
   }
 }

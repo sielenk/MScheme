@@ -29,7 +29,6 @@ import mscheme.values.IList
 import mscheme.values.ValueTraits.toSymbol
 
 internal object Set : CheckedTranslator(Arity.exactly(2)) {
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment,
         arguments: IList

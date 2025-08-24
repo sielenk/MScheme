@@ -33,13 +33,11 @@ internal class AppendHelper1(initial: Any?) : Reducer(initial) {
 }
 
 internal object AppendHelper2 : Reducer(ListFactory.create()) {
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     override fun combine(fst: Any?, snd: Any?): Any? =
         AppendHelper1(snd).foldRight(ValueTraits.toList(fst))
 }
 
 object AppendFunction : Function() {
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     override fun call(state: Registers, arguments: IList): Any? =
         AppendHelper2.reduceRight(arguments)
 }

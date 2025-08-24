@@ -23,10 +23,8 @@ import mscheme.exceptions.SchemeException
 import mscheme.machine.Registers
 
 abstract class BinaryValueFunction : BinaryFunction() {
-    @Throws(SchemeException::class)
     override fun checkedCall(state: Registers, fst: Any?, snd: Any?): Any? =
         checkedCall(fst, snd)
 
-    @Throws(SchemeException::class)
     protected abstract fun checkedCall(fst: Any?, snd: Any?): Any?
 }

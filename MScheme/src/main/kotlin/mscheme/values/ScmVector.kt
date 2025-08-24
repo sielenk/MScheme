@@ -34,8 +34,7 @@ internal class ConstScmVector : ScmVector {
     override fun elementInit(obj: Any?): Any? =
         ValueTraits.getConst(obj)
 
-    @Throws(ImmutableException::class)
-    public override fun modify() {
+    override fun modify() {
         throw ImmutableException(this)
     }
 }
@@ -78,27 +77,23 @@ abstract class ScmVector : IComparable, IOutputable {
         get() = _data.size
 
 
-    @Throws(InvalidVectorIndexException::class)
     fun validateIndex(index: Int) {
         if ((index < 0) || (this.length <= index)) {
             throw InvalidVectorIndexException(this, index)
         }
     }
 
-    @Throws(VectorException::class)
     fun get(index: Int): Any? {
         validateIndex(index)
         return _data[index]
     }
 
-    @Throws(InvalidVectorIndexException::class, ImmutableException::class)
     fun set(index: Int, value: Any?) {
         validateIndex(index)
         modify()
         _data[index] = value
     }
 
-    @Throws(ImmutableException::class)
     protected abstract fun modify()
 
     // implementation of Comparable
@@ -126,7 +121,6 @@ abstract class ScmVector : IComparable, IOutputable {
         return true
     }
 
-    @Throws(IOException::class)
     override fun outputOn(destination: Writer, doWrite: Boolean) {
         destination.write("#(")
         for (i in 0..<this.length) {
@@ -154,23 +148,18 @@ abstract class ScmVector : IComparable, IOutputable {
         private val EMPTY: ScmVector =
             ConstScmVector(0, null)
 
-        @JvmStatic
         fun create(): ScmVector =
             EMPTY
 
-        @JvmStatic
         fun create(data: Array<Any?>): ScmVector =
             if (data.isEmpty()) EMPTY else MutableScmVector(data)
 
-        @JvmStatic
         fun createConst(data: Array<Any?>): ScmVector =
             if (data.isEmpty()) EMPTY else ConstScmVector(data)
 
-        @JvmStatic
         fun create(size: Int, fill: Any?): ScmVector =
             if (size == 0) EMPTY else MutableScmVector(size, fill)
 
-        @JvmStatic
         fun create(list: IList): ScmVector {
             val result: ScmVector = create(list.length, null)
 

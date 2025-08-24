@@ -28,6 +28,5 @@ import mscheme.values.IList
  * Scheme - they are not reserved - their bindings are stored in the static environment.
  */
 fun interface ITranslator {
-    @Throws(SchemeException::class, InterruptedException::class)
     fun translate(compilationEnv: StaticEnvironment, arguments: IList): Any?
 }

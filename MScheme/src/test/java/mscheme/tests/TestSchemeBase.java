@@ -51,7 +51,7 @@ public abstract class TestSchemeBase
 
   public Object quote(String expression)
       throws SchemeException, InterruptedException {
-    return Machine.parse(expression);
+    return Machine.Companion.parse(expression);
   }
 
   public Object eval(String expression)
@@ -63,7 +63,7 @@ public abstract class TestSchemeBase
       throws SchemeException, InterruptedException {
     Object value = eval(in);
     Object expected = quote(out);
-    boolean success = ValueTraits.equal(value, expected);
+    boolean success = ValueTraits.INSTANCE.equal(value, expected);
 
     if (!success) {
       System.out.println(

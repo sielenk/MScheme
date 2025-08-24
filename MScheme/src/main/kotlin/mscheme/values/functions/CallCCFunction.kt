@@ -25,7 +25,6 @@ import mscheme.values.ListFactory
 import mscheme.values.ValueTraits
 
 object CallCCFunction : UnaryFunction() {
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedCall(state: Registers, fst: Any?): Any? =
         ValueTraits.apply(
             state,

@@ -28,11 +28,9 @@ abstract class BinaryFunction : CheckedFunction() {
     override val arity: Arity =
         Arity.exactly(2)
 
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedCall(state: Registers, args: IList): Any? =
         checkedCall(state, args.head, args.tail.head)
 
-    @Throws(SchemeException::class, InterruptedException::class)
     protected abstract fun checkedCall(
         state: Registers, fst: Any?, snd: Any?
     ): Any?

@@ -51,7 +51,6 @@ class CompiledLambda private constructor(
         override val arity: Arity
             get() = _arity
 
-        @Throws(ListExpected::class, PairExpected::class)
         override fun checkedCall(state: Registers, args: IList): Any? {
             val newEnvironment = _enclosingEnvironment.createChild(
                 _arity, _frameSize, args
@@ -63,8 +62,7 @@ class CompiledLambda private constructor(
         }
     }
 
-    @Throws(CompileError::class)
-    override fun force(): Any? {
+    override fun force(): CompiledLambda {
         _compiledBody = Compiler.force(_compiledBody)
         return this
     }
@@ -76,13 +74,18 @@ class CompiledLambda private constructor(
         Closure(state.environment)
 
     companion object {
-        @JvmStatic
-        fun create(arity: Arity, frameSize: Int, compiledBody: Any?): CompiledLambda =
+        fun create(
+            arity: Arity,
+            frameSize: Int,
+            compiledBody: Any?
+        ): CompiledLambda =
             CompiledLambda(arity, frameSize, compiledBody)
 
-        @JvmStatic
-        @Throws(SchemeException::class, InterruptedException::class)
-        fun create(arity: Arity, body: IList, env: StaticEnvironment): CompiledLambda {
+        fun create(
+            arity: Arity,
+            body: IList,
+            env: StaticEnvironment
+        ): CompiledLambda {
             val compiledBody = Sequence.create(body.getCompiledArray(env))
 
             return create(arity, env.size, compiledBody)

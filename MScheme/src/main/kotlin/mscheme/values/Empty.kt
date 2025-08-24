@@ -30,7 +30,6 @@ object Empty : IList, IOutputable, ICompileable {
         // implementation of List
         get() = true
 
-    @Throws(ListExpected::class)
     override fun validate(): IList =
         this
 
@@ -46,7 +45,6 @@ object Empty : IList, IOutputable, ICompileable {
     override fun getReversed(): IList =
         this
 
-    @get:Throws(PairExpected::class)
     override val head: Any?
         get() {
             throw PairExpected(this)

@@ -67,18 +67,14 @@ class ScmNumber private constructor(
     fun divide(other: ScmNumber): ScmNumber =
         ScmNumber(_value.divide(other._value))
 
-    @Throws(IOException::class)
     override fun outputOn(destination: Writer, doWrite: Boolean) {
         destination.write(_value.toString())
     }
 
     companion object {
-        @JvmStatic
         fun create(v: Int): ScmNumber =
             ScmNumber(BigInteger.valueOf(v.toLong()))
 
-        @JvmStatic
-        @Throws(NumberFormatException::class)
         fun create(v: String): ScmNumber =
             ScmNumber(BigInteger(v))
     }

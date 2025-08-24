@@ -28,12 +28,10 @@ import mscheme.values.IList
 internal abstract class CheckedTranslator protected constructor(
     private val _arity: Arity
 ) : ITranslator {
-    @Throws(SyntaxArityError::class)
     protected fun arityError(arguments: IList) {
         throw SyntaxArityError(arguments, _arity)
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun translate(
         compilationEnv: StaticEnvironment, arguments: IList
     ): Any? {
@@ -52,15 +50,12 @@ internal abstract class CheckedTranslator protected constructor(
         compilationEnv.setStateClosed()
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     protected abstract fun checkedTranslate(
         compilationEnv: StaticEnvironment, arguments: IList
     ): Any?
 
     companion object {
-        @JvmStatic
-        @Throws(SyntaxArityError::class)
-        protected fun arityError(arguments: IList, arity: Arity) {
+        fun arityError(arguments: IList, arity: Arity) {
             throw SyntaxArityError(arguments, arity)
         }
     }

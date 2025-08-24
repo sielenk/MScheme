@@ -32,7 +32,6 @@ import mscheme.values.ValueTraits.toSymbol
 
 // *** let* ***
 internal object LetStar : LetBase(Arity.atLeast(2)) {
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment,
         arguments: IList
@@ -61,7 +60,6 @@ internal object LetStar : LetBase(Arity.atLeast(2)) {
 }
 
 internal class LetStarHelper(private val _body: IList) {
-    @Throws(SchemeException::class, InterruptedException::class)
     fun translate(outerEnvironment: StaticEnvironment, bindings: IList): Any? {
         if (bindings.isEmpty) {
             return Sequence.create(_body.getCompiledArray(outerEnvironment))

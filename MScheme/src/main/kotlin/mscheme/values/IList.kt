@@ -43,10 +43,8 @@ interface IList {
     @get:Throws(PairExpected::class)
     val tail: IList
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun getCompiledArray(compilationEnv: StaticEnvironment): Array<Any?>
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun getCompiledArray(compilationEnv: StaticEnvironment, index: Int): Array<Any?>
 
     fun getArray(): Array<Any?>

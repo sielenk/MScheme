@@ -29,8 +29,7 @@ class Assignment private constructor(
     private var _binding: Reference,
     private var _expression: Any?
 ) : IForceable, IReduceable {
-    @Throws(CompileError::class)
-    override fun force(): Any? {
+    override fun force(): Assignment {
         _binding = _binding.forceRef()
         _expression = Compiler.force(_expression)
         return this
@@ -54,7 +53,6 @@ class Assignment private constructor(
     }
 
     companion object {
-        @JvmStatic
         fun create(
             binding: Reference,
             valueCalculation: Any?

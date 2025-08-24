@@ -6,12 +6,12 @@
  */
 package mscheme.compiler
 
+import mscheme.code.IReduceable
 import mscheme.exceptions.CompileError
 
 /**
  * @author sielenk
  */
 interface IForceable {
-    @Throws(CompileError::class)
-    fun force(): Any?
+    fun force(): IReduceable
 }

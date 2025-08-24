@@ -24,7 +24,6 @@ import mscheme.exceptions.TypeError
 import mscheme.machine.Registers
 
 object DynamicWindFunction : TernaryFunction() {
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     override fun checkedCall(state: Registers, fst: Any?, snd: Any?, trd: Any?): Any? {
         //TODO add implementation
         throw SchemeRuntimeError(null, "")

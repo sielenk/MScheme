@@ -34,7 +34,7 @@ public class TestInputPort
   public void testCharIO()
       throws Exception {
     StringReader source = new StringReader("test");
-    InputPort in = InputPort.create(source);
+    InputPort in = InputPort.Companion.create(source);
 
     assertTrue(in.isReady());
     assertEquals('t', in.peekChar());
@@ -58,20 +58,20 @@ public class TestInputPort
     StringReader source = new StringReader(
         " \t \n ; test# 1 2 \"\"\" ;;; 3 \n  \n ;  fkdjhgd "
     );
-    InputPort in = InputPort.create(source);
+    InputPort in = InputPort.Companion.create(source);
 
-    assertTrue(ValueTraits.eq(in.read(), InputPort.EOF_VALUE));
+    assertTrue(ValueTraits.INSTANCE.eq(in.read(), InputPort.Companion.getEOF_VALUE()));
   }
 
   public void testBool()
       throws Exception {
     StringReader source = new StringReader(" #t #f #t#f ");
-    InputPort in = InputPort.create(source);
+    InputPort in = InputPort.Companion.create(source);
 
-    assertTrue(ValueTraits.eq(in.read(), ValueTraits.TRUE));
-    assertTrue(ValueTraits.eq(in.read(), ValueTraits.FALSE));
-    assertTrue(ValueTraits.eq(in.read(), ValueTraits.TRUE));
-    assertTrue(ValueTraits.eq(in.read(), ValueTraits.FALSE));
+    assertTrue(ValueTraits.INSTANCE.eq(in.read(), ValueTraits.TRUE));
+    assertTrue(ValueTraits.INSTANCE.eq(in.read(), ValueTraits.FALSE));
+    assertTrue(ValueTraits.INSTANCE.eq(in.read(), ValueTraits.TRUE));
+    assertTrue(ValueTraits.INSTANCE.eq(in.read(), ValueTraits.FALSE));
     assertEquals(' ', in.readChar());
     assertEquals(in.readChar(), InputPort.EOF);
   }
@@ -81,13 +81,13 @@ public class TestInputPort
     StringReader source = new StringReader(
         "-2 -1 0 1 2"
     );
-    InputPort in = InputPort.create(source);
+    InputPort in = InputPort.Companion.create(source);
 
-    assertTrue(ValueTraits.eqv(in.read(), ScmNumber.create(-2)));
-    assertTrue(ValueTraits.eqv(in.read(), ScmNumber.create(-1)));
-    assertTrue(ValueTraits.eqv(in.read(), ScmNumber.create(0)));
-    assertTrue(ValueTraits.eqv(in.read(), ScmNumber.create(1)));
-    assertTrue(ValueTraits.eqv(in.read(), ScmNumber.create(2)));
+    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ScmNumber.Companion.create(-2)));
+    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ScmNumber.Companion.create(-1)));
+    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ScmNumber.Companion.create(0)));
+    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ScmNumber.Companion.create(1)));
+    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ScmNumber.Companion.create(2)));
     assertEquals(in.readChar(), InputPort.EOF);
   }
 
@@ -96,15 +96,15 @@ public class TestInputPort
     StringReader source = new StringReader(
         "#\\# #\\\\ #\\\" #\\  #\\newline #\\space #\\a"
     );
-    InputPort in = InputPort.create(source);
+    InputPort in = InputPort.Companion.create(source);
 
-    assertTrue(ValueTraits.eqv(in.read(), ValueTraits.toScmChar('#')));
-    assertTrue(ValueTraits.eqv(in.read(), ValueTraits.toScmChar('\\')));
-    assertTrue(ValueTraits.eqv(in.read(), ValueTraits.toScmChar('"')));
-    assertTrue(ValueTraits.eqv(in.read(), ValueTraits.toScmChar(' ')));
-    assertTrue(ValueTraits.eqv(in.read(), ValueTraits.toScmChar('\n')));
-    assertTrue(ValueTraits.eqv(in.read(), ValueTraits.toScmChar(' ')));
-    assertTrue(ValueTraits.eqv(in.read(), ValueTraits.toScmChar('a')));
+    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ValueTraits.INSTANCE.toScmChar('#')));
+    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ValueTraits.INSTANCE.toScmChar('\\')));
+    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ValueTraits.INSTANCE.toScmChar('"')));
+    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ValueTraits.INSTANCE.toScmChar(' ')));
+    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ValueTraits.INSTANCE.toScmChar('\n')));
+    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ValueTraits.INSTANCE.toScmChar(' ')));
+    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ValueTraits.INSTANCE.toScmChar('a')));
     assertEquals(in.readChar(), InputPort.EOF);
   }
 
@@ -120,44 +120,46 @@ public class TestInputPort
             + '"' + str2 + '"' + ' '
             + '"' + str3a + '"'
     );
-    InputPort in = InputPort.create(source);
+    InputPort in = InputPort.Companion.create(source);
 
-    assertTrue(ValueTraits.equal(in.read(), ScmString.create(str1)));
-    assertTrue(ValueTraits.equal(in.read(), ScmString.create(str2)));
-    assertTrue(ValueTraits.equal(in.read(), ScmString.create(str3b)));
+    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ScmString.Companion.create(str1)));
+    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ScmString.Companion.create(str2)));
+    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ScmString.Companion.create(str3b)));
   }
 
   public void testList()
       throws Exception {
-    Object one = ScmNumber.create(1);
-    Object two = ScmNumber.create(2);
-    Object three = ScmNumber.create(3);
+    Object one = ScmNumber.Companion.create(1);
+    Object two = ScmNumber.Companion.create(2);
+    Object three = ScmNumber.Companion.create(3);
 
     StringReader source = new StringReader(
         "()(1 .2)(1 2 3)(1 .(2 .(3 .())))"
     );
-    InputPort in = InputPort.create(source);
+    InputPort in = InputPort.Companion.create(source);
 
-    assertTrue(ValueTraits.equal(in.read(), ListFactory.create()));
-    assertTrue(ValueTraits.equal(in.read(), ListFactory.createPair(one, two)));
-    assertTrue(ValueTraits.equal(in.read(), ListFactory.create(one, two, three)));
-    assertTrue(ValueTraits.equal(in.read(), ListFactory.create(one, two, three)));
+    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ListFactory.INSTANCE.create()));
+    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ListFactory.INSTANCE.createPair(one, two)));
+    assertTrue(
+        ValueTraits.INSTANCE.equal(in.read(), ListFactory.INSTANCE.create(one, two, three)));
+    assertTrue(
+        ValueTraits.INSTANCE.equal(in.read(), ListFactory.INSTANCE.create(one, two, three)));
   }
 
   public void testVector()
       throws Exception {
-    Object one = ScmNumber.create(1);
-    Object two = ScmNumber.create(2);
-    ScmVector v = ScmVector.create(3, one);
+    Object one = ScmNumber.Companion.create(1);
+    Object two = ScmNumber.Companion.create(2);
+    ScmVector v = ScmVector.Companion.create(3, one);
     v.set(2, two);
     StringReader source = new StringReader(
         "#() #(1 1) #(1 1 2)"
     );
-    InputPort in = InputPort.create(source);
+    InputPort in = InputPort.Companion.create(source);
 
-    assertTrue(ValueTraits.equal(in.read(), ScmVector.create()));
-    assertTrue(ValueTraits.equal(in.read(), ScmVector.create(2, one)));
-    assertTrue(ValueTraits.equal(in.read(), v));
+    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ScmVector.Companion.create()));
+    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ScmVector.Companion.create(2, one)));
+    assertTrue(ValueTraits.INSTANCE.equal(in.read(), v));
   }
 
   public void testSymbol()
@@ -166,17 +168,17 @@ public class TestInputPort
     StringReader source = new StringReader(
         "Hallo hallo HALLO HaLlO hAlLo + - ... ?12"
     );
-    InputPort in = InputPort.create(source);
+    InputPort in = InputPort.Companion.create(source);
 
-    assertTrue(ValueTraits.eq(in.read(), test));
-    assertTrue(ValueTraits.eq(in.read(), test));
-    assertTrue(ValueTraits.eq(in.read(), test));
-    assertTrue(ValueTraits.eq(in.read(), test));
-    assertTrue(ValueTraits.eq(in.read(), test));
-    assertTrue(ValueTraits.eq(in.read(), "+"));
-    assertTrue(ValueTraits.eq(in.read(), "-"));
-    assertTrue(ValueTraits.eq(in.read(), "..."));
-    assertTrue(ValueTraits.eq(in.read(), "?12"));
+    assertTrue(ValueTraits.INSTANCE.eq(in.read(), test));
+    assertTrue(ValueTraits.INSTANCE.eq(in.read(), test));
+    assertTrue(ValueTraits.INSTANCE.eq(in.read(), test));
+    assertTrue(ValueTraits.INSTANCE.eq(in.read(), test));
+    assertTrue(ValueTraits.INSTANCE.eq(in.read(), test));
+    assertTrue(ValueTraits.INSTANCE.eq(in.read(), "+"));
+    assertTrue(ValueTraits.INSTANCE.eq(in.read(), "-"));
+    assertTrue(ValueTraits.INSTANCE.eq(in.read(), "..."));
+    assertTrue(ValueTraits.INSTANCE.eq(in.read(), "?12"));
   }
 
   public void testAbbrev()
@@ -184,7 +186,7 @@ public class TestInputPort
     StringReader source = new StringReader(
         "'a ' a `a ,a ,@a"
     );
-    InputPort in = InputPort.create(source);
+    InputPort in = InputPort.Companion.create(source);
 
     String a = "a";
     String q = "quote";
@@ -192,10 +194,10 @@ public class TestInputPort
     String uq = "unquote";
     String uqs = "unquote-splicing";
 
-    assertTrue(ValueTraits.equal(in.read(), ListFactory.create(q, a)));
-    assertTrue(ValueTraits.equal(in.read(), ListFactory.create(q, a)));
-    assertTrue(ValueTraits.equal(in.read(), ListFactory.create(qq, a)));
-    assertTrue(ValueTraits.equal(in.read(), ListFactory.create(uq, a)));
-    assertTrue(ValueTraits.equal(in.read(), ListFactory.create(uqs, a)));
+    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ListFactory.INSTANCE.create(q, a)));
+    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ListFactory.INSTANCE.create(q, a)));
+    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ListFactory.INSTANCE.create(qq, a)));
+    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ListFactory.INSTANCE.create(uq, a)));
+    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ListFactory.INSTANCE.create(uqs, a)));
   }
 }

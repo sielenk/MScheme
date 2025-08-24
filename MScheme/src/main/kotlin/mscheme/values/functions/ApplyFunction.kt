@@ -30,7 +30,6 @@ object ApplyFunction : CheckedFunction() {
     override val arity: Arity =
         Arity.atLeast(2)
 
-    @Throws(SchemeException::class)
     override fun checkedCall(state: Registers, args: IList): Any? {
         val func = args.head
 

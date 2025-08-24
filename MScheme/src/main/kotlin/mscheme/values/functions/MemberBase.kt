@@ -26,7 +26,6 @@ import mscheme.values.ValueTraits
 abstract class MemberBase : BinaryValueFunction() {
     protected abstract fun equal(fst: Any?, snd: Any?): Boolean
 
-    @Throws(ListExpected::class, PairExpected::class)
     override fun checkedCall(fst: Any?, snd: Any?): Any? {
         var tail = ValueTraits.toList(snd)
 

@@ -27,12 +27,9 @@ import mscheme.util.Arity
 abstract class Function {
     // abstract function interface
 
-    @Throws(SchemeException::class, InterruptedException::class)
     abstract fun call(state: Registers, arguments: IList): Any?
 
     companion object {
-        @JvmStatic
-        @Throws(SchemeException::class)
         fun checkArguments(arity: Arity, arguments: IList): Int {
             val len = arguments.length
 

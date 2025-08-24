@@ -31,7 +31,6 @@ class Environment private constructor(
     val static: StaticEnvironment,
     val dynamic: DynamicEnvironment
 ) {
-    @Throws(IOException::class)
     fun writeOn(destination: Writer) {
         destination.write("#[environment]")
     }
@@ -44,7 +43,6 @@ class Environment private constructor(
 
     // *** code access (compiletime) ***
 
-    @Throws(CompileError::class)
     fun define(key: String, value: Any?): Reference {
         val newReference = static.define(key)
         assign(newReference, value)
@@ -63,7 +61,6 @@ class Environment private constructor(
     fun lookupNoThrow(ref: Reference): Any? =
         dynamic.lookupNoThrow(ref)
 
-    @Throws(SchemeRuntimeError::class)
     fun lookup(ref: Reference): Any =
         lookupNoThrow(ref) ?: throw SchemeRuntimeError(
             ref.symbol,
@@ -81,11 +78,9 @@ class Environment private constructor(
                 DynamicEnvironment.create()
             )
 
-        @JvmStatic
         fun getEmpty(): Environment =
             create()
 
-        @JvmStatic
         fun getNullEnvironment(): Environment {
             val result: Environment =
                 getEmpty()
@@ -150,7 +145,6 @@ class Environment private constructor(
             return result
         }
 
-        @JvmStatic
         fun getSchemeReportEnvironment(): Environment {
             val result: Environment =
                 getNullEnvironment()

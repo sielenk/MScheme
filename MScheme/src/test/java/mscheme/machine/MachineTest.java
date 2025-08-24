@@ -47,8 +47,8 @@ public class MachineTest
   protected void setUp() throws Exception {
     super.setUp();
 
-    _environment = Environment.getNullEnvironment();
-    _key = _environment.define(ValueTraits.createUniqueSymbol(), O1);
+    _environment = Environment.Companion.getNullEnvironment();
+    _key = _environment.define(ValueTraits.INSTANCE.createUniqueSymbol(), O1);
     _machine = new Machine(_environment);
   }
 
@@ -87,7 +87,7 @@ public class MachineTest
       Object onTrue,
       Object onFalse) throws Exception {
     return _machine.evaluate(
-        Selection.create(test, onTrue, onFalse));
+        Selection.Companion.create(test, onTrue, onFalse));
   }
 
   final public void testSelection() throws Exception {
@@ -102,7 +102,7 @@ public class MachineTest
   private Object execAssign(
       Object value) throws Exception {
     _machine.execute(
-        Assignment.create(_key, value));
+        Assignment.Companion.create(_key, value));
 
     return _environment.lookup(_key);
   }
@@ -113,34 +113,34 @@ public class MachineTest
   }
 
   final public void testSequence() throws Exception {
-    Object[] sequence = {Assignment.create(_key, O3), O2};
+    Object[] sequence = {Assignment.Companion.create(_key, O3), O2};
 
     assertSame(O1, _environment.lookup(_key));
-    assertSame(O2, _machine.execute(Sequence.create(sequence)));
+    assertSame(O2, _machine.execute(Sequence.Companion.create(sequence)));
     assertSame(O3, _environment.lookup(_key));
   }
 
   final public void testConj() throws Exception {
-    Object assignment = Assignment.create(_key, O2);
+    Object assignment = Assignment.Companion.create(_key, O2);
     Object[] sequence1 = {Boolean.FALSE, assignment};
     Object[] sequence2 = {Boolean.TRUE, assignment};
 
     assertSame(O1, _environment.lookup(_key));
-    _machine.execute(Sequence.createConj(sequence1));
+    _machine.execute(Sequence.Companion.createConj(sequence1));
     assertSame(O1, _environment.lookup(_key));
-    _machine.execute(Sequence.createConj(sequence2));
+    _machine.execute(Sequence.Companion.createConj(sequence2));
     assertSame(O2, _environment.lookup(_key));
   }
 
   final public void testDisj() throws Exception {
-    Object assignment = Assignment.create(_key, O2);
+    Object assignment = Assignment.Companion.create(_key, O2);
     Object[] sequence1 = {Boolean.TRUE, assignment};
     Object[] sequence2 = {Boolean.FALSE, assignment};
 
     assertSame(O1, _environment.lookup(_key));
-    _machine.execute(Sequence.createDisj(sequence1));
+    _machine.execute(Sequence.Companion.createDisj(sequence1));
     assertSame(O1, _environment.lookup(_key));
-    _machine.execute(Sequence.createDisj(sequence2));
+    _machine.execute(Sequence.Companion.createDisj(sequence2));
     assertSame(O2, _environment.lookup(_key));
   }
 
@@ -148,7 +148,7 @@ public class MachineTest
     Object[] sequence = {AppendFunction.INSTANCE};
 
     assertTrue(
-        ValueTraits.isEmpty(
-            _machine.execute(Application.create(sequence))));
+        ValueTraits.INSTANCE.isEmpty(
+            _machine.execute(Application.Companion.create(sequence))));
   }
 }

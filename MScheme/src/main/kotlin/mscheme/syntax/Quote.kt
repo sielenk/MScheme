@@ -28,7 +28,6 @@ import mscheme.values.ValueTraits.getConst
 
 // *** quote ***
 internal object Quote : CheckedTranslator(Arity.exactly(1)) {
-    @Throws(TypeError::class)
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment,
         arguments: IList

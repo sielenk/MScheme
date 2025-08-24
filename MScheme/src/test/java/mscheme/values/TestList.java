@@ -41,12 +41,12 @@ public class TestList
   }
 
   protected void setUp() {
-    emptyList = ListFactory.create();
+    emptyList = ListFactory.INSTANCE.create();
 
     firstElement = "x";
     secondElement = "y";
     lastElement = secondElement;
-    occupiedList = ListFactory.create(firstElement, secondElement);
+    occupiedList = ListFactory.INSTANCE.create(firstElement, secondElement);
     occupiedListLength = 2;
   }
 
@@ -67,14 +67,14 @@ public class TestList
 
   public void testEmptyIsUnique()
       throws Exception {
-    assertSame("empty isn't unique", emptyList, ListFactory.create());
+    assertSame("empty isn't unique", emptyList, ListFactory.INSTANCE.create());
   }
 
   public void testOccupiedList()
       throws Exception {
     assertNotSame("occupied list equals (==) empty list", occupiedList, emptyList);
 
-    assertSame("toPair returned somethig wrong", ValueTraits.toConstPair(
+    assertSame("toPair returned somethig wrong", ValueTraits.INSTANCE.toConstPair(
         occupiedList).getFirst(), occupiedList.getHead());
   }
 

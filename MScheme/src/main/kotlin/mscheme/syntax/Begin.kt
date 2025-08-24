@@ -36,7 +36,6 @@ internal class Begin private constructor(
         }
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment, arguments: IList
     ): Any? =
@@ -44,15 +43,12 @@ internal class Begin private constructor(
 
 
     companion object {
-        @JvmField
         val INSTANCE_BEGIN: ITranslator =
             Begin(SequenceTags.BEGIN)
 
-        @JvmField
         val INSTANCE_AND: ITranslator =
             Begin(SequenceTags.AND)
 
-        @JvmField
         val INSTANCE_OR: ITranslator =
             Begin(SequenceTags.OR)
     }

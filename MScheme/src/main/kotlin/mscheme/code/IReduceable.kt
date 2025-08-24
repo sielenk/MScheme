@@ -16,6 +16,5 @@ import mscheme.machine.Registers
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 interface IReduceable {
-    @Throws(SchemeException::class)
     fun reduce(state: Registers): Any?
 }

@@ -93,33 +93,26 @@ object Builtins {
     fun inexact_3F(argument: Any?): Any =
         ValueTraits.FALSE
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun _3C(arguments: IList): Any =
         ValueTraits.toScmBoolean(check(arguments, Order.LT))
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun _3C_3D(arguments: IList): Any =
         ValueTraits.toScmBoolean(check(arguments, Order.LE))
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun _3D(arguments: IList): Any =
         ValueTraits.toScmBoolean(check(arguments, Order.EQ))
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun _3E_3D(arguments: IList): Any =
         ValueTraits.toScmBoolean(check(arguments, Order.GE))
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun _3E(arguments: IList): Any =
         ValueTraits.toScmBoolean(check(arguments, Order.GT))
 
-    @Throws(TypeError::class)
     fun zero_3F(argument: Any?): Any =
         ValueTraits.toScmBoolean(
             toScmNumber(argument).integer == 0
         )
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun _2B(arguments: IList): Any {
         var sum = ScmNumber.create(0)
         var tail = arguments
@@ -135,7 +128,6 @@ object Builtins {
         return sum
     }
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun _2D(arguments: IList): Any {
         var result = toScmNumber(arguments.head)
         var rest = arguments.tail
@@ -155,7 +147,6 @@ object Builtins {
         }
     }
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun _2A(arguments: IList): Any {
         var product = ScmNumber.create(1)
         var tail = arguments
@@ -171,7 +162,6 @@ object Builtins {
         return product
     }
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun _2F(arguments: IList): Any {
         var result = toScmNumber(arguments.head)
         var rest = arguments.tail
@@ -206,21 +196,17 @@ object Builtins {
     fun cons(fst: Any?, snd: Any?): Any =
         createPair(fst, snd)
 
-    @Throws(PairExpected::class)
     fun car(argument: Any?): Any? =
         toConstPair(argument).first
 
-    @Throws(PairExpected::class)
     fun cdr(argument: Any?): Any? =
         toConstPair(argument).second
 
-    @Throws(PairExpected::class, ImmutableException::class)
     fun set_2Dcar_21(fst: Any?, snd: Any?): Any? {
         toMutablePair(fst).first = snd
         return snd
     }
 
-    @Throws(PairExpected::class, ImmutableException::class)
     fun set_2Dcdr_21(fst: Any?, snd: Any?): Any? {
         toMutablePair(fst).second = snd
         return snd
@@ -232,7 +218,6 @@ object Builtins {
     fun list_3F(argument: Any?): Any = // list?
         ValueTraits.toScmBoolean(isList(argument))
 
-    @Throws(ListExpected::class)
     fun list(argument: IList): Any {
         // Without first-class continuations, it would be safe to
         // omit the call to getCopy(). But multiple returns have to
@@ -240,14 +225,12 @@ object Builtins {
         return argument.getCopy()
     }
 
-    @Throws(ListExpected::class)
     fun length(argument: Any?): Any =
         ScmNumber.create(toList(argument).length)
 
     val append: Function =
         AppendFunction
 
-    @Throws(ListExpected::class)
     fun reverse(argument: Any?): Any =
         toList(argument).getReversed()
 
@@ -273,11 +256,9 @@ object Builtins {
     fun symbol_3F(argument: Any?): Any = // symbol?
         ValueTraits.toScmBoolean(isSymbol(argument))
 
-    @Throws(SymbolExpected::class)
     fun symbol_2D_3Estring(argument: Any?): Any =
         createConst(toSymbol(argument))
 
-    @Throws(StringExpected::class)
     fun string_2D_3Esymbol(argument: Any?): Any =
         toScmString(argument).javaString
 
@@ -285,50 +266,41 @@ object Builtins {
     fun char_3F(argument: Any?) = // char?
         ValueTraits.toScmBoolean(isScmChar(argument))
 
-    @Throws(CharExpected::class)
     fun char_3C_3F(fst: Any?, snd: Any?): Any =
         ValueTraits.toScmBoolean(toScmChar(fst) < toScmChar(snd))
 
-    @Throws(CharExpected::class)
     fun char_3C_3D_3F(fst: Any?, snd: Any?): Any {
         return ValueTraits.toScmBoolean(
             toScmChar(fst) <= toScmChar(snd)
         )
     }
 
-    @Throws(CharExpected::class)
     fun char_3D_3F(fst: Any?, snd: Any?): Any =
         ValueTraits.toScmBoolean(
             toScmChar(fst) == toScmChar(snd)
         )
 
-    @Throws(CharExpected::class)
     fun char_3E_3D_3F(fst: Any?, snd: Any?): Any =
         ValueTraits.toScmBoolean(
             toScmChar(fst) >= toScmChar(snd)
         )
 
-    @Throws(CharExpected::class)
     fun char_3E_3F(fst: Any?, snd: Any?): Any =
         ValueTraits.toScmBoolean(
             toScmChar(fst) > toScmChar(snd)
         )
 
-    @Throws(CharExpected::class)
     fun char_2D_3Einteger(argument: Any?): Any =
         ScmNumber.create(toScmChar(argument).code)
 
-    @Throws(NumberExpected::class)
     fun integer_2D_3Echar(argument: Any?): Any =
         ValueTraits.toScmChar(
             toScmNumber(argument).integer.toChar()
         )
 
-    @Throws(CharExpected::class)
     fun char_2Dupcase(argument: Any?): Any =
         ValueTraits.toScmChar(toScmChar(argument).uppercaseChar())
 
-    @Throws(CharExpected::class)
     fun char_2Ddowncase(argument: Any?): Any =
         ValueTraits.toScmChar(toScmChar(argument).lowercaseChar())
 
@@ -336,18 +308,15 @@ object Builtins {
     fun string_3F(argument: Any?): Any = // string?
         ValueTraits.toScmBoolean(isScmString(argument))
 
-    @Throws(TypeError::class)
     fun make_2Dstring(k: Any?, c: Any?): Any =
         ScmString.create(
             toScmNumber(k).integer,
             toScmChar(c)
         )
 
-    @Throws(TypeError::class)
     fun string_2Dlength(str: Any?): Any =
         ScmNumber.create(toScmString(str).length)
 
-    @Throws(TypeError::class, InvalidStringIndexException::class)
     fun string_2Dref(str: Any?, k: Any?): Any =
         ValueTraits.toScmChar(
             toScmString(str).get(
@@ -355,11 +324,6 @@ object Builtins {
             )
         )
 
-    @Throws(
-        TypeError::class,
-        InvalidStringIndexException::class,
-        ImmutableException::class
-    )
     fun string_2Dset_21(str: Any?, k: Any?, c: Any?): Any? {
         toScmString(str).set(
             toScmNumber(k).integer,
@@ -369,11 +333,6 @@ object Builtins {
         return c
     }
 
-    @Throws(
-        TypeError::class,
-        InvalidStringIndexException::class,
-        ImmutableException::class
-    )
     fun string_2Dappend(arguments: IList): Any {
         val accu = StringBuilder()
 
@@ -388,19 +347,9 @@ object Builtins {
         return ScmString.create(accu.toString())
     }
 
-    @Throws(
-        TypeError::class,
-        InvalidStringIndexException::class,
-        ImmutableException::class
-    )
     fun string_2Dcopy(string: Any?): Any =
         ScmString.create(toScmString(string).javaString)
 
-    @Throws(
-        TypeError::class,
-        InvalidStringIndexException::class,
-        ImmutableException::class
-    )
     fun string_2D_3Elist(scmString: Any?): Any {
         val javaString = toScmString(scmString).javaString
         var result = ListFactory.create()
@@ -415,11 +364,6 @@ object Builtins {
         return result
     }
 
-    @Throws(
-        TypeError::class,
-        InvalidStringIndexException::class,
-        ImmutableException::class
-    )
     fun list_2D_3Estring(list: Any?): Any {
         val accu = StringBuilder()
 
@@ -436,21 +380,17 @@ object Builtins {
     fun vector_3F(argument: Any?) = // vector?
         ValueTraits.toScmBoolean(isScmVector(argument))
 
-    @Throws(TypeError::class)
     fun make_2Dvector(k: Any?, obj: Any?): Any =
         ScmVector.create(toScmNumber(k).integer, obj)
 
-    @Throws(TypeError::class)
     fun vector_2Dlength(str: Any?): Any =
         ScmNumber.create(toScmVector(str).length)
 
-    @Throws(TypeError::class, VectorException::class)
     fun vector_2Dref(vector: Any?, k: Any?): Any? =
         toScmVector(vector).get(
             toScmNumber(k).integer
         )
 
-    @Throws(TypeError::class, VectorException::class, ImmutableException::class)
     fun vector_2Dset_21(vector: Any?, k: Any?, obj: Any?): Any? {
         toScmVector(vector).set(
             toScmNumber(k).integer, obj
@@ -459,15 +399,12 @@ object Builtins {
         return obj
     }
 
-    @Throws(ListExpected::class)
     fun vector(arguments: IList): Any =
         ScmVector.create(arguments)
 
-    @Throws(VectorExpected::class)
     fun vector_2D_3Elist(argument: Any?): Any =
         toScmVector(argument).list
 
-    @Throws(ListExpected::class)
     fun list_2D_3Evector(argument: Any?): Any =
         ScmVector.create(toList(argument))
 
@@ -487,7 +424,6 @@ object Builtins {
     val eval: Function =
         EvalFunction
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun scheme_2Dreport_2Denvironment(fst: Any?): Any {
         if (toScmNumber(fst).integer != 5) {
             throw SchemeRuntimeError(fst)
@@ -496,7 +432,6 @@ object Builtins {
         return getSchemeReportEnvironment()
     }
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun null_2Denvironment(fst: Any?): Any {
         if (toScmNumber(fst).integer != 5) {
             throw SchemeRuntimeError(fst)
@@ -510,36 +445,29 @@ object Builtins {
     fun port_3F(argument: Any?): Any = // port?
         ValueTraits.toScmBoolean(isPort(argument))
 
-    @Throws(PortExpected::class)
     fun input_2Dport_3F(argument: Any?): Any =
         ValueTraits.toScmBoolean(argument is InputPort)
 
-    @Throws(PortExpected::class)
     fun output_2Dport_3F(argument: Any?): Any =
         ValueTraits.toScmBoolean(argument is OutputPort)
 
-    @Throws(StringExpected::class, OpenException::class)
     fun open_2Dinput_2Dfile(argument: Any?): Any =
         InputPort.create(toScmString(argument))
 
-    @Throws(StringExpected::class, OpenException::class)
     fun open_2Doutput_2Dfile(argument: Any?): Any =
         OutputPort.create(toScmString(argument))
 
-    @Throws(PortExpected::class, CloseException::class)
     fun close_2Dinput_2Dport(argument: Any?): Any? {
         toInputPort(argument).close()
         return argument
     }
 
-    @Throws(PortExpected::class, CloseException::class)
     fun close_2Doutput_2Dport(argument: Any?): Any? {
         toOutputPort(argument).close()
         return argument
     }
 
     // 6.6.2 Input
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun read(fst: Any?): Any? =
         try {
             toInputPort(fst).read()
@@ -547,35 +475,29 @@ object Builtins {
             throw SchemeRuntimeError(fst, e.toString())
         }
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun read_2Dchar(fst: Any?): Any? =
         toInputPort(fst).readScmChar()
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun peek_2Dchar(fst: Any?): Any? =
         toInputPort(fst).peekScmChar()
 
     fun eof_2Dobject_3F(fst: Any?): Any =
         ValueTraits.toScmBoolean(eq(fst, InputPort.EOF_VALUE))
 
-    @Throws(TypeError::class)
     fun char_2Dready_3F(fst: Any?): Any =
         ValueTraits.toScmBoolean(toInputPort(fst).isReady)
 
     // 6.6.3 Output
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun write(fst: Any?, snd: Any?): Any? {
         toOutputPort(snd).write(fst)
         return snd
     }
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun display(fst: Any?, snd: Any?): Any? {
         toOutputPort(snd).display(fst)
         return snd
     }
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun write_2Dchar(fst: Any?, snd: Any?): Any? {
         toOutputPort(snd).writeScmChar(toScmChar(fst))
         return snd
@@ -591,7 +513,6 @@ object Builtins {
     val __y_2Dcombinator: Function =
         YCombinator
 
-    @Throws(TypeError::class)
     fun __open_2Dinput_2Dstring(argument: Any?): Any =
         InputPort.create(StringReader(toScmString(argument).javaString))
 

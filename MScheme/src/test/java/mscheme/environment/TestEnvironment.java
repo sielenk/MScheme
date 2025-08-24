@@ -44,12 +44,12 @@ public class TestEnvironment
   }
 
   protected void setUp() {
-    env = Environment.getEmpty();
+    env = Environment.Companion.getEmpty();
 
     sym1 = "test1";
     sym2 = "test2";
 
-    val1 = ListFactory.create();
+    val1 = ListFactory.INSTANCE.create();
     val2 = Boolean.TRUE;
   }
 
@@ -92,7 +92,7 @@ public class TestEnvironment
 
   public void testSyntax()
       throws Exception {
-    StaticEnvironment env = new StaticEnvironment();
+    StaticEnvironment env = new StaticEnvironment(null);
 
     try {
       env.getSyntaxFor(sym1);

@@ -26,10 +26,8 @@ import mscheme.values.IList
 internal abstract class Reducer protected constructor(
     private val _initial: Any?
 ) {
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     protected abstract fun combine(fst: Any?, snd: Any?): Any?
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun reduceLeft(list: IList): Any? {
         if (list.isEmpty) {
             return _initial
@@ -46,7 +44,6 @@ internal abstract class Reducer protected constructor(
         }
     }
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun foldLeft(list: IList): Any? {
         var result = _initial
 
@@ -59,7 +56,6 @@ internal abstract class Reducer protected constructor(
         return result
     }
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     private fun reduceRightHelper(list: IList): Any? {
         val tail = list.tail
 
@@ -72,14 +68,12 @@ internal abstract class Reducer protected constructor(
             )
     }
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun reduceRight(list: IList): Any? =
         if (list.isEmpty)
             _initial
         else
             reduceRightHelper(list)
 
-    @Throws(SchemeRuntimeError::class, TypeError::class)
     fun foldRight(list: IList): Any? =
         if (list.isEmpty)
             _initial

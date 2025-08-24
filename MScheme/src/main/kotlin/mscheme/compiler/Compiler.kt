@@ -17,7 +17,6 @@ import mscheme.values.ValueTraits
 
 
 class Compiler(private val _env: StaticEnvironment) {
-    @Throws(SchemeException::class, InterruptedException::class)
     fun getForceable(obj: Any?): Any? =
         if (ValueTraits.isScmVector(obj)) {
             throw CantCompileException(obj)
@@ -31,7 +30,6 @@ class Compiler(private val _env: StaticEnvironment) {
             ValueTraits.getConst(obj)
         }
 
-    @Throws(SchemeException::class)
     fun getTranslator(obj: Any?): ITranslator {
         if (obj is String) {
             val result = _env.getSyntaxFor(obj)
@@ -49,8 +47,6 @@ class Compiler(private val _env: StaticEnvironment) {
         force(getForceable(compilee))
 
     companion object {
-        @JvmStatic
-        @Throws(CompileError::class)
         fun force(o: Any?): Any? =
             if (o is IForceable) o.force() else o
     }

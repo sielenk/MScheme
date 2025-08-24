@@ -26,7 +26,6 @@ import mscheme.exceptions.SchemeException
 import mscheme.values.IList
 
 class ProcedureCall private constructor(private val _head: Any?) : ITranslator {
-    @Throws(InterruptedException::class, SchemeException::class)
     override fun translate(compilationEnv: StaticEnvironment, arguments: IList): Any {
         compilationEnv.setStateClosed()
 

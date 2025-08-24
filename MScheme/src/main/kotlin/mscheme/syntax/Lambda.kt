@@ -32,7 +32,6 @@ import mscheme.values.ValueTraits.toConstPair
 import mscheme.values.ValueTraits.toList
 
 internal object Lambda : CheckedTranslator(Arity.atLeast(2)) {
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment,
         arguments: IList

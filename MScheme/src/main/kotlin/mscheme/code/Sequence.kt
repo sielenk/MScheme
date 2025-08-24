@@ -19,22 +19,18 @@ the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
 package mscheme.code
 
-import mscheme.code.CodeArray.force
-import mscheme.code.CodeArray.printTuple
 import mscheme.compiler.IForceable
-import mscheme.exceptions.CompileError
-import mscheme.machine.IContinuation
 import mscheme.machine.Registers
 import mscheme.syntax.SequenceTags
-import mscheme.values.ValueTraits.isTrue
+import mscheme.values.ValueTraits
+
 
 class Sequence private constructor(
     private val _tag: SequenceTags,
     private val _sequence: Array<Any?>
 ) : IForceable, IReduceable {
-    @Throws(CompileError::class)
-    override fun force(): Any? {
-        force(_sequence)
+    override fun force(): Sequence {
+        CodeArray.force(_sequence)
         return this
     }
 
@@ -44,7 +40,7 @@ class Sequence private constructor(
             SequenceTags.AND -> "and"
             SequenceTags.OR -> "or"
         }
-    }:<${printTuple(_sequence)}>"
+    }:<${CodeArray.printTuple(_sequence)}>"
 
     override fun reduce(state: Registers): Any? =
         prepareNext(state, 0)
@@ -54,25 +50,22 @@ class Sequence private constructor(
         index: Int
     ): Any? {
         if (index + 1 < _sequence.size) {
-            registers.push(
-                object : IContinuation {
-                    override fun invoke(registers: Registers, value: Any?): Any? =
-                        if (((_tag == SequenceTags.AND) && !isTrue(value))
-                            ||
-                            ((_tag == SequenceTags.OR) && isTrue(value))
-                        ) {
-                            value
-                        } else {
-                            prepareNext(registers, index + 1)
-                        }
-                })
+            registers.push { registers, value ->
+                if (((_tag == SequenceTags.AND) && !ValueTraits.isTrue(value))
+                    ||
+                    ((_tag == SequenceTags.OR) && ValueTraits.isTrue(value))
+                ) {
+                    value
+                } else {
+                    prepareNext(registers, index + 1)
+                }
+            }
         }
 
         return _sequence[index]
     }
 
     companion object {
-        @JvmStatic
         fun create(tag: SequenceTags, sequence: Array<Any?>): Any? =
             when (sequence.size) {
                 0 -> tag == SequenceTags.AND
@@ -80,15 +73,12 @@ class Sequence private constructor(
                 else -> Sequence(tag, sequence)
             }
 
-        @JvmStatic
         fun create(sequence: Array<Any?>): Any? =
             create(SequenceTags.BEGIN, sequence)
 
-        @JvmStatic
         fun createConj(sequence: Array<Any?>): Any? =
             create(SequenceTags.AND, sequence)
 
-        @JvmStatic
         fun createDisj(sequence: Array<Any?>): Any? =
             create(SequenceTags.OR, sequence)
     }

@@ -10,6 +10,5 @@ import mscheme.exceptions.SchemeException
 
 
 fun interface IContinuation {
-    @Throws(SchemeException::class, InterruptedException::class)
     fun invoke(registers: Registers, value: Any?): Any?
 }

@@ -31,10 +31,10 @@ import mscheme.values.ListFactory.create
 import mscheme.values.ListFactory.prepend
 import mscheme.values.ValueTraits.apply
 
-class Application private constructor(private val _application: Array<Any?>) : IForceable,
-    IReduceable {
-    @Throws(CompileError::class)
-    override fun force(): Any? {
+class Application private constructor(
+    private val _application: Array<Any?>
+) : IForceable, IReduceable {
+    override fun force(): Application {
         force(_application)
         return this
     }
@@ -71,7 +71,6 @@ class Application private constructor(private val _application: Array<Any?>) : I
     }
 
     companion object {
-        @JvmStatic
         fun create(application: Array<Any?>): Application =
             Application(application)
 

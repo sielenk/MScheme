@@ -18,6 +18,5 @@ interface IOutputable {
      *
      * @param destination the java writer which expects the output.
      */
-    @Throws(IOException::class)
     fun outputOn(destination: Writer, doWrite: Boolean)
 }

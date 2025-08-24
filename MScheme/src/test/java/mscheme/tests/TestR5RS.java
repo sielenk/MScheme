@@ -70,7 +70,7 @@ public class TestR5RS
     check("#t", "#t");
 
     try {
-      ValueTraits.toMutablePair(eval("'(1 . 2)")).setFirst(quote("a"));
+      ValueTraits.INSTANCE.toMutablePair(eval("'(1 . 2)")).setFirst(quote("a"));
       fail();
     } catch (ImmutableException e) {
     }

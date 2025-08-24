@@ -29,7 +29,6 @@ import java.io.Writer
 class OutputPort private constructor(private val _writer: Writer) : Port() {
     // specialisation of Port
 
-    @Throws(IOException::class)
     fun writeOn(destination: Writer) {
         destination.write("#[output port]")
     }
@@ -38,7 +37,6 @@ class OutputPort private constructor(private val _writer: Writer) : Port() {
         this
 
 
-    @Throws(CloseException::class)
     fun close() {
         try {
             _writer.close()
@@ -48,7 +46,6 @@ class OutputPort private constructor(private val _writer: Writer) : Port() {
     }
 
     // output port
-    @Throws(WriteException::class)
     fun writeChar(c: Char) {
         try {
             _writer.write(c.code)
@@ -58,12 +55,10 @@ class OutputPort private constructor(private val _writer: Writer) : Port() {
         }
     }
 
-    @Throws(WriteException::class)
     fun writeScmChar(c: Char) {
         writeChar(c)
     }
 
-    @Throws(WriteException::class)
     fun write(datum: Any?) {
         try {
             ValueTraits.write(_writer, datum)
@@ -73,7 +68,6 @@ class OutputPort private constructor(private val _writer: Writer) : Port() {
         }
     }
 
-    @Throws(WriteException::class)
     fun display(datum: Any?) {
         try {
             ValueTraits.display(_writer, datum)
@@ -84,16 +78,12 @@ class OutputPort private constructor(private val _writer: Writer) : Port() {
     }
 
     companion object {
-        @JvmStatic
         fun create(writer: Writer): OutputPort =
             OutputPort(writer)
 
-        @JvmStatic
-        @Throws(OpenException::class)
         fun create(filename: ScmString): OutputPort =
             create(filename.javaString)
 
-        @Throws(OpenException::class)
         fun create(filename: String): OutputPort =
             try {
                 create(FileWriter(filename))

@@ -23,10 +23,8 @@ import mscheme.exceptions.SchemeException
 import mscheme.machine.Registers
 
 abstract class ValueThunk : Thunk() {
-    @Throws(SchemeException::class)
     override fun checkedCall(state: Registers): Any? =
         checkedCall()
 
-    @Throws(SchemeException::class)
     protected abstract fun checkedCall(): Any?
 }

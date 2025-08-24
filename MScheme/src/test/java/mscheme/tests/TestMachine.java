@@ -66,9 +66,9 @@ public class TestMachine
 
     _val1 = Boolean.TRUE;
     _val2 = Boolean.FALSE;
-    _unval = ListFactory.create();
+    _unval = ListFactory.INSTANCE.create();
 
-    _environment = Environment.getNullEnvironment();
+    _environment = Environment.Companion.getNullEnvironment();
 
     machine = new Machine(_environment);
   }
@@ -80,8 +80,9 @@ public class TestMachine
 
   private Object evaluate(String expression)
       throws SchemeException, InterruptedException {
-    return machine.evaluate(InputPort.create(new StringReader(expression))
-        .read());
+    return machine.evaluate(
+        InputPort.Companion.create(new StringReader(expression)).read()
+    );
   }
 
   public void testTestValues()
@@ -142,7 +143,7 @@ public class TestMachine
   public void testPair1()
       throws Exception {
     try {
-      machine.evaluate(ListFactory.createPair(_val1, _val2));
+      machine.evaluate(ListFactory.INSTANCE.createPair(_val1, _val2));
       fail("expected ListExpected");
     } catch (ListExpected e) {
     }
@@ -151,7 +152,7 @@ public class TestMachine
   public void testPair2()
       throws Exception {
     try {
-      machine.evaluate(ListFactory.create(_val1));
+      machine.evaluate(ListFactory.INSTANCE.create(_val1));
       fail("expected FunctionExpected");
     } catch (FunctionExpected e) {
     }
@@ -162,7 +163,7 @@ public class TestMachine
     assertSame(
         _unval,
         machine.evaluate(
-            ListFactory.create(
+            ListFactory.INSTANCE.create(
                 "quote",
                 _unval)));
   }
@@ -172,15 +173,15 @@ public class TestMachine
     define(_sym1, _val1);
     define(_sym2, _val2);
 
-    assertSame(_val1, machine.evaluate(ListFactory.prepend("if",
-        ListFactory.create(Boolean.TRUE, _sym1, _sym2))));
+    assertSame(_val1, machine.evaluate(ListFactory.INSTANCE.prepend("if",
+        ListFactory.INSTANCE.create(Boolean.TRUE, _sym1, _sym2))));
 
-    assertSame(_val1, machine.evaluate(ListFactory.prepend("if",
-        ListFactory.create(Boolean.TRUE, _sym1))));
+    assertSame(_val1, machine.evaluate(ListFactory.INSTANCE.prepend("if",
+        ListFactory.INSTANCE.create(Boolean.TRUE, _sym1))));
 
     assertSame(_val2, machine
-        .evaluate(ListFactory.prepend("if", ListFactory
-            .create(Boolean.FALSE, _sym1, _sym2))));
+        .evaluate(ListFactory.INSTANCE.prepend("if", ListFactory
+            .INSTANCE.create(Boolean.FALSE, _sym1, _sym2))));
   }
 
   public void testBegin()
@@ -188,7 +189,7 @@ public class TestMachine
     define(_sym2, _val2);
 
     try {
-      machine.evaluate(ListFactory.create("begin", _sym1,
+      machine.evaluate(ListFactory.INSTANCE.create("begin", _sym1,
           _sym2));
       fail("begin failed");
     } catch (SchemeException e) {
@@ -197,7 +198,7 @@ public class TestMachine
     _environment.define(_sym1, _val1);
 
     assertSame(_val2, machine.evaluate(
-        ListFactory.create("begin", _sym1, _sym2)));
+        ListFactory.INSTANCE.create("begin", _sym1, _sym2)));
   }
 
   public void testLambdaFailures()
@@ -224,19 +225,19 @@ public class TestMachine
   public void testLambdaNoArgs()
       throws Exception {
     Function func = (Function) machine.evaluate(
-        ListFactory.create("lambda",
-            ListFactory.create(), _val1));
+        ListFactory.INSTANCE.create("lambda",
+            ListFactory.INSTANCE.create(), _val1));
 
-    assertSame(_val1, machine.evaluate(ListFactory.create(func)));
+    assertSame(_val1, machine.evaluate(ListFactory.INSTANCE.create(func)));
 
     try {
-      machine.evaluate(ListFactory.create(func, _unval));
+      machine.evaluate(ListFactory.INSTANCE.create(func, _unval));
       fail("expected CantEvaluateException");
     } catch (CantCompileException e) {
     }
 
     try {
-      machine.evaluate(ListFactory.create(func, _val1));
+      machine.evaluate(ListFactory.INSTANCE.create(func, _val1));
       fail("expected RuntimeArityError");
     } catch (RuntimeArityError e) {
     }
@@ -246,11 +247,11 @@ public class TestMachine
       throws Exception {
     Function func = (Function) evaluate("(lambda (x y) x)");
 
-    assertSame(_val1, machine.evaluate(ListFactory.create(func, _val1,
+    assertSame(_val1, machine.evaluate(ListFactory.INSTANCE.create(func, _val1,
         _val2)));
 
     try {
-      machine.evaluate(ListFactory.create(func, _val1));
+      machine.evaluate(ListFactory.INSTANCE.create(func, _val1));
       fail("expected RuntimeArityError");
     } catch (RuntimeArityError e) {
     }
@@ -261,15 +262,16 @@ public class TestMachine
     Function func = (Function) evaluate("(lambda (x . y) y)");
 
     try {
-      machine.evaluate(ListFactory.create(func));
+      machine.evaluate(ListFactory.INSTANCE.create(func));
       fail("expected RuntimeArityError");
     } catch (RuntimeArityError e) {
     }
 
-    assertSame(ListFactory.create(), machine.evaluate(ListFactory.create(
-        func, _val1)));
+    assertSame(ListFactory.INSTANCE.create(),
+        machine.evaluate(ListFactory.INSTANCE.create(
+            func, _val1)));
 
-    assertSame(_val2, ((IList) machine.evaluate(ListFactory.create(func,
+    assertSame(_val2, ((IList) machine.evaluate(ListFactory.INSTANCE.create(func,
         _val1, _val2))).getHead());
   }
 
@@ -277,18 +279,18 @@ public class TestMachine
       throws Exception {
     Function func = (Function) evaluate("(lambda x x)");
 
-    IPair pair2 = ListFactory.createPair(_val2, ListFactory.create());
-    IPair pair1 = ListFactory.createPair(_val1, pair2);
+    IPair pair2 = ListFactory.INSTANCE.createPair(_val2, ListFactory.INSTANCE.create());
+    IPair pair1 = ListFactory.INSTANCE.createPair(_val1, pair2);
 
-    Object result = machine.evaluate(ListFactory.createPair(func, pair1));
+    Object result = machine.evaluate(ListFactory.INSTANCE.createPair(func, pair1));
 
-    assertTrue(ValueTraits.equal(result, pair1));
-    assertFalse(ValueTraits.eq(result, pair1));
+    assertTrue(ValueTraits.INSTANCE.equal(result, pair1));
+    assertFalse(ValueTraits.INSTANCE.eq(result, pair1));
   }
 
   public void testDefineNormal()
       throws Exception {
-    machine.evaluate(ListFactory.create("define", "a", _val1));
+    machine.evaluate(ListFactory.INSTANCE.create("define", "a", _val1));
 
     assertSame(_val1, machine.evaluate("a"));
   }
@@ -297,7 +299,7 @@ public class TestMachine
       throws Exception {
     evaluate("(define f (lambda (x) x))");
 
-    assertSame(_val1, machine.evaluate(ListFactory.create("f", _val1)));
+    assertSame(_val1, machine.evaluate(ListFactory.INSTANCE.create("f", _val1)));
   }
 
   public void testDefineFunction()
@@ -305,18 +307,19 @@ public class TestMachine
     evaluate("(define (f x y) x)");
     evaluate("(define (g . x) x)");
 
-    assertTrue("function creation failed - ", machine.evaluate("f") instanceof Function);
+    assertTrue("function creation failed - ",
+        machine.evaluate("f") instanceof Function);
 
     assertSame("function application failed - ", _val1, machine
-        .evaluate(ListFactory.create("f", _val1, _val2)));
+        .evaluate(ListFactory.INSTANCE.create("f", _val1, _val2)));
   }
 
   public void testCallCC()
       throws Exception {
-    assertSame(_val1, machine.evaluate(ListFactory.create(
+    assertSame(_val1, machine.evaluate(ListFactory.INSTANCE.create(
         mscheme.values.functions.CallCCFunction.INSTANCE, ListFactory
-            .create("lambda", ListFactory
-                .create("return"), ListFactory
-                .create("return", _val1)))));
+            .INSTANCE.create("lambda",
+                ListFactory.INSTANCE.create("return"),
+                ListFactory.INSTANCE.create("return", _val1)))));
   }
 }

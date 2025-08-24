@@ -27,10 +27,9 @@ import java.io.IOException
 import java.io.Writer
 import java.util.*
 
-class StaticEnvironment @JvmOverloads internal constructor(
+class StaticEnvironment internal constructor(
     val parent: StaticEnvironment? = null
 ) {
-    @Throws(IOException::class)
     fun writeOn(destination: Writer) {
         destination.write("#[static environment]")
     }
@@ -73,16 +72,13 @@ class StaticEnvironment @JvmOverloads internal constructor(
     fun createChild(): StaticEnvironment =
         StaticEnvironment(this)
 
-    @Throws(CompileError::class, TypeError::class)
     fun createChild(symbols: IList): StaticEnvironment =
         StaticEnvironment(this, symbols)
 
-    @Throws(CompileError::class)
     fun createChild(symbol: String): StaticEnvironment =
         StaticEnvironment(this, symbol)
 
     // *** instance access ***************************************************
-    @Throws(CompileError::class)
     fun setStateOpen(v: Any?) {
         when (_state) {
             State.OPEN -> throw CompileError(
@@ -98,7 +94,6 @@ class StaticEnvironment @JvmOverloads internal constructor(
         }
     }
 
-    @Throws(CompileError::class)
     fun setStateDefinitionBody(v: Any?) {
         when (_state) {
             State.OPEN -> _state = State.DEF_BODY
@@ -120,7 +115,6 @@ class StaticEnvironment @JvmOverloads internal constructor(
         }
     }
 
-    @Throws(CompileError::class)
     fun define(symbol: String): Reference {
         if (_state != State.OPEN) {
             throw CompileError(
@@ -158,7 +152,6 @@ class StaticEnvironment @JvmOverloads internal constructor(
     }
 
 
-    @Throws(AlreadyBound::class)
     fun defineSyntax(symbol: String, value: ITranslator) {
         val key = symbol
 
@@ -198,7 +191,6 @@ class StaticEnvironment @JvmOverloads internal constructor(
             result
     }
 
-    @Throws(SymbolNotFoundException::class)
     private fun lookup(key: String): Any =
         lookupNoThrow(key) ?: throw SymbolNotFoundException(key)
 
@@ -206,7 +198,6 @@ class StaticEnvironment @JvmOverloads internal constructor(
     fun getSyntaxFor(key: String): ITranslator? =
         lookup(key) as? ITranslator
 
-    @Throws(UnexpectedSyntax::class)
     fun getDelayedReferenceFor(key: String): Reference {
         val o = delayedLookup(key)
 
@@ -217,7 +208,6 @@ class StaticEnvironment @JvmOverloads internal constructor(
         }
     }
 
-    @Throws(CompileError::class)
     fun getReferenceFor(key: String, restricted: Boolean): Reference {
         val o = lookup(key)
 
@@ -245,7 +235,6 @@ class StaticEnvironment @JvmOverloads internal constructor(
     // ***********************************************************************
 
     companion object {
-        @JvmStatic
         fun create(): StaticEnvironment =
             StaticEnvironment()
     }

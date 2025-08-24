@@ -30,7 +30,6 @@ class DynamicEnvironment private constructor(
     private val _globals: Vector<Any?>,
     private val _frames: Array<Array<Any?>>
 ) {
-    @Throws(ListExpected::class, PairExpected::class)
     fun createChild(
         arity: Arity,
         frameSize: Int,
@@ -92,7 +91,6 @@ class DynamicEnvironment private constructor(
                 parent._frames + arrayOfNulls(size)
             )
 
-        @Throws(PairExpected::class, ListExpected::class)
         private fun create(
             parent: DynamicEnvironment,
             arity: Arity,
@@ -117,7 +115,6 @@ class DynamicEnvironment private constructor(
             return result
         }
 
-        @JvmStatic
         fun create(): DynamicEnvironment =
             DynamicEnvironment(
                 Vector<Any?>(),

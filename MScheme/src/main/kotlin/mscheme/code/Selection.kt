@@ -49,7 +49,6 @@ class Selection internal constructor(
     }
 
     companion object {
-        @JvmStatic
         fun create(
             test: Any?,
             onTrue: Any?,
@@ -64,8 +63,7 @@ internal class ForceableSelection(
     private val _onTrue: Any?,
     private val _onFalse: Any?
 ) : IForceable {
-    @Throws(CompileError::class)
-    override fun force(): Any =
+    override fun force(): Selection =
         Selection(
             Compiler.force(_test),
             Compiler.force(_onTrue),

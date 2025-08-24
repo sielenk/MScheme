@@ -84,7 +84,6 @@ class Machine : Runnable {
             environment.define(
                 "reset-input-port",
                 object : UnaryValueFunction() {
-                    @Throws(TypeError::class)
                     override fun checkedCall(argument: Any?): Any? {
                         val result: Any? = _stdin
                         _stdin = argument as InputPort?
@@ -103,7 +102,6 @@ class Machine : Runnable {
             environment.define(
                 "reset-output-port",
                 object : UnaryValueFunction() {
-                    @Throws(TypeError::class)
                     override fun checkedCall(argument: Any?): Any? {
                         val result: Any? = _stdout
                         _stdout = argument as OutputPort?
@@ -123,7 +121,6 @@ class Machine : Runnable {
             environment.define(
                 "reset-error-handler",
                 object : UnaryValueFunction() {
-                    @Throws(TypeError::class)
                     override fun checkedCall(argument: Any?): Any {
                         val oldErrorHandler: Any? = _errorHandler
 
@@ -184,7 +181,6 @@ class Machine : Runnable {
         private val _state: Registers =
             Registers(environment)
 
-        @Throws(SchemeException::class, InterruptedException::class)
         fun execute(expression: Any?): Any? {
             var current = expression
 
@@ -206,7 +202,6 @@ class Machine : Runnable {
             return current
         }
 
-        @Throws(SchemeException::class, InterruptedException::class)
         private fun invoke(current: Any?): Any? {
             var current = current
             val stack = _state.stack
@@ -224,7 +219,6 @@ class Machine : Runnable {
             return current
         }
 
-        @Throws(SchemeException::class, InterruptedException::class)
         private fun handleError(error: SchemeException): Any? {
             if (_errorHandler != null) {
                 val errorValue = ListFactory.create(
@@ -251,11 +245,9 @@ class Machine : Runnable {
         }
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun execute(expression: Any?): Any? =
         Executor(this.environment.dynamic).execute(expression)
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun compile(compilee: Any?): Any? =
         Compiler(this.environment.static).compile(compilee)
 
@@ -268,8 +260,6 @@ class Machine : Runnable {
         evaluate(parse(expression))
 
     companion object {
-        @JvmStatic
-        @Throws(SchemeException::class, InterruptedException::class)
         fun parse(expression: String): Any? =
             InputPort.create(StringReader(expression)).read()
     }

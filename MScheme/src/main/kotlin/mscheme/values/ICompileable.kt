@@ -28,6 +28,5 @@ interface ICompileable {
     /**
      * Compiles a value as normal code.
      */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun getForceable(compilationEnv: StaticEnvironment): Any?
 }

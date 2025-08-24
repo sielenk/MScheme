@@ -23,10 +23,8 @@ import mscheme.exceptions.SchemeException
 import mscheme.machine.Registers
 
 abstract class UnaryValueFunction : UnaryFunction() {
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedCall(state: Registers, fst: Any?): Any? =
         checkedCall(fst)
 
-    @Throws(SchemeException::class, InterruptedException::class)
     protected abstract fun checkedCall(argument: Any?): Any?
 }

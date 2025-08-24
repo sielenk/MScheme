@@ -11,7 +11,6 @@ import mscheme.machine.Registers
 import mscheme.machine.stack.Stack
 
 class Subcontinuation(private val _slice: Stack.Slice) : UnaryFunction() {
-    @Throws(SchemeException::class)
     override fun checkedCall(state: Registers, fst: Any?): Any? {
         state.stack.reinstate(_slice)
         return fst

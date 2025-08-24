@@ -28,10 +28,8 @@ abstract class Thunk : CheckedFunction() {
     override val arity: Arity =
         Arity.exactly(0)
 
-    @Throws(SchemeException::class)
     override fun checkedCall(state: Registers, args: IList): Any? =
         checkedCall(state)
 
-    @Throws(SchemeException::class)
     protected abstract fun checkedCall(state: Registers): Any?
 }

@@ -89,7 +89,6 @@ internal class ListEnumerator(private var _tortoise: Any?) : Enumeration<Any?> {
 abstract class PairOrList protected constructor(
 ) : IPair, IList, ICompileable, IComparable, IOutputable {
     // implementation of Outputable
-    @Throws(IOException::class)
     override fun outputOn(destination: Writer, doWrite: Boolean) {
         destination.write('('.code)
 
@@ -130,11 +129,9 @@ abstract class PairOrList protected constructor(
                 && ValueTraits.equal(first, other.first)
                 && ValueTraits.equal(second, other.second)
 
-    @Throws(SchemeException::class)
     fun getTranslator(compilationEnv: StaticEnvironment?): ITranslator =
         ProcedureCall.create(this)
 
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun getForceable(compilationEnv: StaticEnvironment): Any? {
         val list = validate()
 
@@ -172,7 +169,6 @@ abstract class PairOrList protected constructor(
             return false
         }
 
-    @Throws(ListExpected::class)
     override fun validate(): IList =
         if (isValid)
             this
@@ -242,17 +238,15 @@ abstract class PairOrList protected constructor(
         }
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun getCompiledArray(compilationEnv: StaticEnvironment): Array<Any?> =
         getCompiledArray(compilationEnv, 0)
 
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun getCompiledArray(compilationEnv: StaticEnvironment, index: Int): Array<Any?> {
         val compiledHead = Compiler(compilationEnv)
             .getForceable(head)
         val result = tail.getCompiledArray(compilationEnv, index + 1)
 
-        result!![index] = compiledHead
+        result[index] = compiledHead
 
         return result
     }
@@ -279,22 +273,18 @@ abstract class PairOrList protected constructor(
     }
 
     companion object {
-        @JvmStatic
         fun prepend(head: Any?, tail: IList): IList {
             return MutablePairOrList(head, tail)
         }
 
-        @JvmStatic
         fun prependConst(head: Any?, tail: IList): IList {
             return ConstPairOrList(head, tail)
         }
 
-        @JvmStatic
         fun create(first: Any?, second: Any?): IMutablePair {
             return MutablePairOrList(first, second)
         }
 
-        @JvmStatic
         fun createConst(first: Any?, second: Any?): IPair {
             return ConstPairOrList(first, second)
         }

@@ -31,9 +31,9 @@ public class TestArity
 
 
   public void testExactly() {
-    Arity arity0 = Arity.exactly(0);
-    Arity arity1 = Arity.exactly(1);
-    Arity arity2 = Arity.exactly(2);
+    Arity arity0 = Arity.Companion.exactly(0);
+    Arity arity1 = Arity.Companion.exactly(1);
+    Arity arity2 = Arity.Companion.exactly(2);
 
     assertTrue(arity0.isValid(0));
     assertFalse(arity0.isValid(1));
@@ -50,9 +50,9 @@ public class TestArity
   }
 
   public void testAtLeast() {
-    Arity arity0 = Arity.atLeast(0);
-    Arity arity1 = Arity.atLeast(1);
-    Arity arity2 = Arity.atLeast(2);
+    Arity arity0 = Arity.Companion.atLeast(0);
+    Arity arity1 = Arity.Companion.atLeast(1);
+    Arity arity2 = Arity.Companion.atLeast(2);
 
     assertTrue(arity0.isValid(0));
     assertTrue(arity0.isValid(1));
@@ -69,7 +69,7 @@ public class TestArity
   }
 
   public void testInarity() {
-    Arity arity = Arity.inRange(2, 3);
+    Arity arity = Arity.Companion.inRange(2, 3);
 
     assertFalse(arity.isValid(0));
     assertFalse(arity.isValid(1));

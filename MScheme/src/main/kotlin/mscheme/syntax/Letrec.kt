@@ -32,7 +32,6 @@ import mscheme.values.ValueTraits.toSymbol
 
 // *** letrec ***
 internal object Letrec : LetBase(Arity.atLeast(2)) {
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment,
         arguments: IList

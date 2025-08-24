@@ -24,12 +24,12 @@ public class ValueTraitsTest extends TestCase {
   }
 
   final public void testIsTrue() {
-    assertTrue(ValueTraits.isTrue(Boolean.TRUE));
-    assertFalse(ValueTraits.isTrue(Boolean.FALSE));
+    assertTrue(ValueTraits.INSTANCE.isTrue(Boolean.TRUE));
+    assertFalse(ValueTraits.INSTANCE.isTrue(Boolean.FALSE));
 
-    assertTrue(ValueTraits.isTrue(ValueTraits.TRUE));
-    assertFalse(ValueTraits.isTrue(ValueTraits.FALSE));
+    assertTrue(ValueTraits.INSTANCE.isTrue(ValueTraits.TRUE));
+    assertFalse(ValueTraits.INSTANCE.isTrue(ValueTraits.FALSE));
 
-    assertTrue(ValueTraits.isTrue(new Object()));
+    assertTrue(ValueTraits.INSTANCE.isTrue(new Object()));
   }
 }

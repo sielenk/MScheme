@@ -31,8 +31,6 @@ enum class Order {
     LT, LE, EQ, GE, GT;
 
     companion object {
-        @JvmStatic
-        @Throws(SchemeRuntimeError::class, TypeError::class)
         fun check(arguments: IList, mode: Order): Boolean {
             val arity = atLeast(2)
             val len = arguments.length

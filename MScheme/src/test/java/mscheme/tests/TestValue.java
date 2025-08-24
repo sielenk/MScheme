@@ -51,35 +51,35 @@ public class TestValue
   private int countTypes(Object v) {
     int count = 0;
 
-    if (ValueTraits.isList(v)) {
+    if (ValueTraits.INSTANCE.isList(v)) {
       ++count;
     }
 
-    if (ValueTraits.isScmBoolean(v)) {
+    if (ValueTraits.INSTANCE.isScmBoolean(v)) {
       ++count;
     }
-    if (ValueTraits.isPair(v)) {
+    if (ValueTraits.INSTANCE.isPair(v)) {
       ++count;
     }
-    if (ValueTraits.isSymbol(v)) {
+    if (ValueTraits.INSTANCE.isSymbol(v)) {
       ++count;
     }
-    if (ValueTraits.isScmNumber(v)) {
+    if (ValueTraits.INSTANCE.isScmNumber(v)) {
       ++count;
     }
-    if (ValueTraits.isScmChar(v)) {
+    if (ValueTraits.INSTANCE.isScmChar(v)) {
       ++count;
     }
-    if (ValueTraits.isScmString(v)) {
+    if (ValueTraits.INSTANCE.isScmString(v)) {
       ++count;
     }
-    if (ValueTraits.isScmVector(v)) {
+    if (ValueTraits.INSTANCE.isScmVector(v)) {
       ++count;
     }
-    if (ValueTraits.isPort(v)) {
+    if (ValueTraits.INSTANCE.isPort(v)) {
       ++count;
     }
-    if (ValueTraits.isFunction(v)) {
+    if (ValueTraits.INSTANCE.isFunction(v)) {
       ++count;
     }
 
@@ -90,59 +90,59 @@ public class TestValue
     int count = 0;
 
     try {
-      ValueTraits.toList(v);
+      ValueTraits.INSTANCE.toList(v);
       ++count;
     } catch (TypeError e) {
     }
 
     try {
-      ValueTraits.toConstPair(v);
+      ValueTraits.INSTANCE.toConstPair(v);
       ++count;
     } catch (TypeError e) {
     }
     try {
-      ValueTraits.toSymbol(v);
+      ValueTraits.INSTANCE.toSymbol(v);
       ++count;
     } catch (TypeError e) {
     }
     try {
-      ValueTraits.toScmNumber(v);
+      ValueTraits.INSTANCE.toScmNumber(v);
       ++count;
     } catch (TypeError e) {
     }
     try {
-      ValueTraits.toScmChar(v);
+      ValueTraits.INSTANCE.toScmChar(v);
       ++count;
     } catch (TypeError e) {
     }
     try {
-      ValueTraits.toScmString(v);
+      ValueTraits.INSTANCE.toScmString(v);
       ++count;
     } catch (TypeError e) {
     }
     try {
-      ValueTraits.toScmVector(v);
+      ValueTraits.INSTANCE.toScmVector(v);
       ++count;
     } catch (TypeError e) {
     }
     try {
-      ValueTraits.toInputPort(v);
+      ValueTraits.INSTANCE.toInputPort(v);
       ++count;
     } catch (TypeError e) {
     }
     try {
-      ValueTraits.toOutputPort(v);
+      ValueTraits.INSTANCE.toOutputPort(v);
       ++count;
     } catch (TypeError e) {
     }
 
     try {
-      ValueTraits.toEnvironment(v);
+      ValueTraits.INSTANCE.toEnvironment(v);
       ++count;
     } catch (TypeError e) {
     }
     try {
-      ValueTraits.toStaticEnvironment(v);
+      ValueTraits.INSTANCE.toStaticEnvironment(v);
       ++count;
     } catch (TypeError e) {
     }
@@ -151,7 +151,7 @@ public class TestValue
   }
 
   private void commonTests(Object v, int castCount) {
-    assertTrue(ValueTraits.isTrue(v));
+    assertTrue(ValueTraits.INSTANCE.isTrue(v));
 
     assertEquals(1, countTypes(v));
     assertEquals(countCasts(v), castCount);
@@ -166,69 +166,69 @@ public class TestValue
       throws Exception {
     final Object False = ValueTraits.FALSE;
 
-    assertFalse(ValueTraits.isTrue(False));
+    assertFalse(ValueTraits.INSTANCE.isTrue(False));
 
     assertEquals(1, countTypes(False));
     assertEquals(0, countCasts(False));
 
-    assertTrue(ValueTraits.isScmBoolean(False));
+    assertTrue(ValueTraits.INSTANCE.isScmBoolean(False));
   }
 
   public void testTrue()
       throws Exception {
     final Object True = ValueTraits.TRUE;
 
-    assertTrue(ValueTraits.isTrue(True));
+    assertTrue(ValueTraits.INSTANCE.isTrue(True));
 
     assertEquals(1, countTypes(True));
     assertEquals(0, countCasts(True));
 
-    assertTrue(ValueTraits.isScmBoolean(True));
+    assertTrue(ValueTraits.INSTANCE.isScmBoolean(True));
   }
 
   public void testEmpty()
       throws Exception {
-    final Object empty = ListFactory.create();
+    final Object empty = ListFactory.INSTANCE.create();
 
-    assertTrue(ValueTraits.isTrue(empty));
+    assertTrue(ValueTraits.INSTANCE.isTrue(empty));
 
     assertEquals(1, countTypes(empty)); // List
     assertEquals(1, countCasts(empty));
 
-    assertTrue(ValueTraits.isEmpty(empty));
+    assertTrue(ValueTraits.INSTANCE.isEmpty(empty));
 
-    assertTrue(ValueTraits.isList(empty));
-    assertSame(ValueTraits.toList(empty), empty);
+    assertTrue(ValueTraits.INSTANCE.isList(empty));
+    assertSame(ValueTraits.INSTANCE.toList(empty), empty);
   }
 
   public void testPair()
       throws Exception {
-    final Object pair = ListFactory.createPair(
+    final Object pair = ListFactory.INSTANCE.createPair(
         ValueTraits.TRUE,
         ValueTraits.TRUE
     );
 
     commonTests(pair);
-    assertTrue(ValueTraits.isPair(pair));
-    assertSame(ValueTraits.toConstPair(pair), pair);
+    assertTrue(ValueTraits.INSTANCE.isPair(pair));
+    assertSame(ValueTraits.INSTANCE.toConstPair(pair), pair);
   }
 
   public void testList()
       throws Exception {
-    final Object list = ListFactory.create(
+    final Object list = ListFactory.INSTANCE.create(
         ValueTraits.TRUE
     );
 
-    assertTrue(ValueTraits.isTrue(list));
+    assertTrue(ValueTraits.INSTANCE.isTrue(list));
 
     assertEquals(2, countTypes(list)); // List and Pair
     assertEquals(2, countCasts(list));
 
-    assertTrue(ValueTraits.isPair(list));
-    assertSame(ValueTraits.toConstPair(list), list);
+    assertTrue(ValueTraits.INSTANCE.isPair(list));
+    assertSame(ValueTraits.INSTANCE.toConstPair(list), list);
 
-    assertTrue(ValueTraits.isList(list));
-    assertSame(ValueTraits.toList(list), list);
+    assertTrue(ValueTraits.INSTANCE.isList(list));
+    assertSame(ValueTraits.INSTANCE.toList(list), list);
   }
 
   public void testSymbol()
@@ -236,8 +236,8 @@ public class TestValue
     final Object symbol = "test";
 
     commonTests(symbol);
-    assertTrue(ValueTraits.isSymbol(symbol));
-    assertSame(ValueTraits.toSymbol(symbol), symbol);
+    assertTrue(ValueTraits.INSTANCE.isSymbol(symbol));
+    assertSame(ValueTraits.INSTANCE.toSymbol(symbol), symbol);
   }
 
   public void testFunction()
@@ -245,105 +245,105 @@ public class TestValue
     final Object function = CallCCFunction.INSTANCE;
 
     commonTests(function, 0);
-    assertTrue(ValueTraits.isFunction(function));
+    assertTrue(ValueTraits.INSTANCE.isFunction(function));
   }
 
   public void testNumber()
       throws Exception {
-    final Object number = ScmNumber.create(49875);
+    final Object number = ScmNumber.Companion.create(49875);
 
     commonTests(number);
-    assertTrue(ValueTraits.isScmNumber(number));
-    assertSame(ValueTraits.toScmNumber(number), number);
+    assertTrue(ValueTraits.INSTANCE.isScmNumber(number));
+    assertSame(ValueTraits.INSTANCE.toScmNumber(number), number);
   }
 
   public void testChar()
       throws Exception {
-    final Object character = ValueTraits.toScmChar('a');
+    final Object character = ValueTraits.INSTANCE.toScmChar('a');
 
     commonTests(character);
-    assertTrue(ValueTraits.isScmChar(character));
-    assertSame(ValueTraits.toScmChar(character), character);
+    assertTrue(ValueTraits.INSTANCE.isScmChar(character));
+    assertSame(ValueTraits.INSTANCE.toScmChar(character), character);
   }
 
   public void testString()
       throws Exception {
-    final Object string = ScmString.create("Hallo !");
+    final Object string = ScmString.Companion.create("Hallo !");
 
     commonTests(string);
-    assertTrue(ValueTraits.isScmString(string));
-    assertSame(ValueTraits.toScmString(string), string);
+    assertTrue(ValueTraits.INSTANCE.isScmString(string));
+    assertSame(ValueTraits.INSTANCE.toScmString(string), string);
   }
 
   public void testVector()
       throws Exception {
-    final Object vector = ScmVector.create();
+    final Object vector = ScmVector.Companion.create();
 
     commonTests(vector);
-    assertTrue(ValueTraits.isScmVector(vector));
-    assertSame(ValueTraits.toScmVector(vector), vector);
+    assertTrue(ValueTraits.INSTANCE.isScmVector(vector));
+    assertSame(ValueTraits.INSTANCE.toScmVector(vector), vector);
   }
 
   public void testOutputPort()
       throws Exception {
-    final Object port = OutputPort.create(new StringWriter());
+    final Object port = OutputPort.Companion.create(new StringWriter());
 
     commonTests(port);
-    assertTrue(ValueTraits.isPort(port));
-    assertSame(ValueTraits.toOutputPort(port), port);
+    assertTrue(ValueTraits.INSTANCE.isPort(port));
+    assertSame(ValueTraits.INSTANCE.toOutputPort(port), port);
   }
 
   public void testInputPort()
       throws Exception {
-    final Object port = InputPort.create(new StringReader(""));
+    final Object port = InputPort.Companion.create(new StringReader(""));
 
     commonTests(port);
-    assertTrue(ValueTraits.isPort(port));
-    assertSame(ValueTraits.toInputPort(port), port);
+    assertTrue(ValueTraits.INSTANCE.isPort(port));
+    assertSame(ValueTraits.INSTANCE.toInputPort(port), port);
   }
 
   public void testEnvironment()
       throws Exception {
-    final Object environment = Environment.getEmpty();
+    final Object environment = Environment.Companion.getEmpty();
 
-    assertTrue(ValueTraits.isTrue(environment));
+    assertTrue(ValueTraits.INSTANCE.isTrue(environment));
 
     assertEquals(0, countTypes(environment));
     assertEquals(1, countCasts(environment));
 
-    assertSame(ValueTraits.toEnvironment(environment), environment);
+    assertSame(ValueTraits.INSTANCE.toEnvironment(environment), environment);
   }
 
   public void testStaticEnvironment()
       throws Exception {
-    final Object environment = Environment.getEmpty().getStatic();
+    final Object environment = Environment.Companion.getEmpty().getStatic();
 
-    assertTrue(ValueTraits.isTrue(environment));
+    assertTrue(ValueTraits.INSTANCE.isTrue(environment));
 
     assertEquals(0, countTypes(environment));
     assertEquals(1, countCasts(environment));
 
-    assertSame(ValueTraits.toStaticEnvironment(environment), environment);
+    assertSame(ValueTraits.INSTANCE.toStaticEnvironment(environment), environment);
   }
 
 
   private int eqHelper(Object fst, Object snd) {
-    boolean eq = ValueTraits.eq(fst, snd);
-    boolean eqv = ValueTraits.eqv(fst, snd);
-    boolean equal = ValueTraits.equal(fst, snd);
+    boolean eq = ValueTraits.INSTANCE.eq(fst, snd);
+    boolean eqv = ValueTraits.INSTANCE.eqv(fst, snd);
+    boolean equal = ValueTraits.INSTANCE.equal(fst, snd);
 
     // reflexivity
-    assertTrue(ValueTraits.eq(fst, fst));
-    assertTrue(ValueTraits.eq(snd, snd));
-    assertTrue(ValueTraits.eqv(fst, fst));
-    assertTrue(ValueTraits.eqv(snd, snd));
-    assertTrue(ValueTraits.equal(fst, fst));
-    assertTrue(ValueTraits.equal(snd, snd));
+    assertTrue(ValueTraits.INSTANCE.eq(fst, fst));
+    assertTrue(ValueTraits.INSTANCE.eq(snd, snd));
+    assertTrue(ValueTraits.INSTANCE.eqv(fst, fst));
+    assertTrue(ValueTraits.INSTANCE.eqv(snd, snd));
+    assertTrue(ValueTraits.INSTANCE.equal(fst, fst));
+    assertTrue(ValueTraits.INSTANCE.equal(snd, snd));
 
     // symmetry
-    assertEquals(eq, ValueTraits.eq(snd, fst));
-    assertEquals(eqv, ValueTraits.eqv(snd, fst));
-    assertEquals(equal, ValueTraits.equal(snd, fst));
+    assertEquals(eq, ValueTraits.INSTANCE.eq(snd, fst));
+    assertEquals(eqv, ValueTraits.INSTANCE.eqv(snd, fst));
+    assertEquals(equal, ValueTraits.INSTANCE.equal(snd, fst));
 
     assertTrue(!eq | eqv); // aka. eq  -> eqv
     assertTrue(!eqv | equal); // aka. eqv -> equal
@@ -384,23 +384,23 @@ public class TestValue
     ));
 
     assertEquals(3, eqHelper(
-        ListFactory.create(),
-        ListFactory.create()
+        ListFactory.INSTANCE.create(),
+        ListFactory.INSTANCE.create()
     ));
 
     // eqv equivalent values
 
     assertTrue(
         eqHelper(
-            ScmNumber.create(7123645),
-            ScmNumber.create(7123645)
+            ScmNumber.Companion.create(7123645),
+            ScmNumber.Companion.create(7123645)
         ) >= 2
     );
 
     assertTrue(
         eqHelper(
-            ValueTraits.toScmChar('u'),
-            ValueTraits.toScmChar('u')
+            ValueTraits.INSTANCE.toScmChar('u'),
+            ValueTraits.INSTANCE.toScmChar('u')
         ) >= 2
     );
 
@@ -408,37 +408,37 @@ public class TestValue
 
     assertTrue(
         eqHelper(
-            ScmVector.create(),
-            ScmVector.create()
+            ScmVector.Companion.create(),
+            ScmVector.Companion.create()
         ) >= 1
     );
 
     assertTrue(
         eqHelper(
-            ScmVector.create(5, v),
-            ScmVector.create(5, v)
+            ScmVector.Companion.create(5, v),
+            ScmVector.Companion.create(5, v)
         ) >= 1
     );
 
     assertTrue(
         eqHelper(
-            ScmString.create(""),
-            ScmString.create("")
+            ScmString.Companion.create(""),
+            ScmString.Companion.create("")
         ) >= 1
     );
 
     assertTrue(
         eqHelper(
-            ScmString.create("Hallo"),
-            ScmString.create("Hallo")
+            ScmString.Companion.create("Hallo"),
+            ScmString.Companion.create("Hallo")
         ) >= 1
     );
 
     // equal equivalent but eqv different values
 
     assertEquals(1, eqHelper(
-        ListFactory.createPair(v, v),
-        ListFactory.createPair(v, v)
+        ListFactory.INSTANCE.createPair(v, v),
+        ListFactory.INSTANCE.createPair(v, v)
     ));
 
     // different values
@@ -454,18 +454,18 @@ public class TestValue
     ));
 
     assertEquals(0, eqHelper(
-        ScmVector.create(5, u),
-        ScmVector.create(5, v)
+        ScmVector.Companion.create(5, u),
+        ScmVector.Companion.create(5, v)
     ));
 
     assertEquals(0, eqHelper(
-        ScmVector.create(7, v),
-        ScmVector.create(5, v)
+        ScmVector.Companion.create(7, v),
+        ScmVector.Companion.create(5, v)
     ));
 
     assertEquals(0, eqHelper(
-        ScmString.create("Hallo 1"),
-        ScmString.create("Hallo 2")
+        ScmString.Companion.create("Hallo 1"),
+        ScmString.Companion.create("Hallo 2")
     ));
   }
 }

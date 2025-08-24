@@ -28,10 +28,8 @@ abstract class UnaryFunction : CheckedFunction() {
     override val arity: Arity =
         Arity.exactly(1)
 
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedCall(state: Registers, args: IList): Any? =
         checkedCall(state, args.head)
 
-    @Throws(SchemeException::class, InterruptedException::class)
     protected abstract fun checkedCall(state: Registers, fst: Any?): Any?
 }

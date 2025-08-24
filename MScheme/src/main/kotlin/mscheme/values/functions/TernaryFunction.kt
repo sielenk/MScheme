@@ -28,13 +28,11 @@ abstract class TernaryFunction : CheckedFunction() {
     override val arity: Arity =
         Arity.exactly(3)
 
-    @Throws(SchemeException::class)
     override fun checkedCall(state: Registers, args: IList): Any? =
         checkedCall(
             state, args.head, args.tail.head, args.tail.tail.head
         )
 
-    @Throws(SchemeException::class)
     protected abstract fun checkedCall(
         state: Registers, fst: Any?, snd: Any?, trd: Any?
     ): Any?

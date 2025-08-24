@@ -32,7 +32,6 @@ import mscheme.values.functions.YCombinator
 
 // *** let ***
 internal object Let : LetBase(Arity.atLeast(2)) {
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment,
         arguments: IList

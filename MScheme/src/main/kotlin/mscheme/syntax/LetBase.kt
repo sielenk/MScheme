@@ -30,9 +30,7 @@ internal abstract class LetBase protected constructor(
     arity: Arity
 ) : CheckedTranslator(arity) {
     companion object {
-        @JvmStatic
-        @Throws(SchemeException::class)
-        protected fun splitArguments(arguments: IList): Array<IList> {
+        fun splitArguments(arguments: IList): Array<IList> {
             var bindings = toList(arguments.head)
             val body = arguments.tail
 

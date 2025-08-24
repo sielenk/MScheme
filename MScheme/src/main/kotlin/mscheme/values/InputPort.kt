@@ -27,7 +27,6 @@ import mscheme.values.ListFactory
 import java.io.*
 
 internal object EofValue : IOutputable {
-    @Throws(IOException::class)
     override fun outputOn(destination: Writer, doWrite: Boolean) {
         destination.write("#[eof]")
     }
@@ -39,13 +38,11 @@ class InputPort private constructor(
 ) : Port() {
     // specialisation of Port
 
-    @Throws(IOException::class)
     fun writeOn(destination: Writer) {
         destination.write("#[input port]")
     }
 
 
-    @Throws(CloseException::class)
     fun close() {
         try {
             _reader.close()
@@ -55,7 +52,6 @@ class InputPort private constructor(
     }
 
     // input port
-    @Throws(ReadException::class, ParseException::class, InterruptedException::class)
     fun read(): Any? =
         try {
             parseDatum()
@@ -78,7 +74,6 @@ class InputPort private constructor(
                 || (c == '"'.code) // "
                 || (c == ';'.code)
 
-    @Throws(IOException::class)
     private fun skipWSread(): Int {
         var inComment = false
 
@@ -100,7 +95,6 @@ class InputPort private constructor(
         }
     }
 
-    @Throws(IOException::class, ParseException::class)
     private fun readNoEof(): Char {
         val c = _reader.read()
 
@@ -114,7 +108,6 @@ class InputPort private constructor(
         return c.toChar()
     }
 
-    @Throws(IOException::class, ParseException::class)
     private fun parseChar(): Char {
         var c = readNoEof().code
 
@@ -147,7 +140,6 @@ class InputPort private constructor(
         }
     }
 
-    @Throws(IOException::class, ParseException::class)
     private fun parseVector(index: Int): Array<Any?> {
         val la = skipWSread()
 
@@ -170,7 +162,6 @@ class InputPort private constructor(
         }
     }
 
-    @Throws(IOException::class, ParseException::class)
     private fun parseList(closeToken: Char): Any {
         var la = skipWSread()
 
@@ -212,7 +203,6 @@ class InputPort private constructor(
         }
     }
 
-    @Throws(IOException::class, ParseException::class)
     private fun parseString(): ScmString {
         val buf = StringBuilder()
 
@@ -232,6 +222,7 @@ class InputPort private constructor(
                         }
                     )
                 }
+
                 else -> buf.append(c)
             }
         }
@@ -253,7 +244,6 @@ class InputPort private constructor(
         isInitial(c) || isDigit(c) || ("+-.@".indexOf(c) != -1)
 
 
-    @Throws(IOException::class, ParseException::class)
     private fun parseNumOrSym(initial: Char): Any? {
         var initial = initial
         val buf = StringBuilder()
@@ -319,7 +309,6 @@ class InputPort private constructor(
         return str.intern()
     }
 
-    @Throws(IOException::class, ParseException::class)
     private fun parseDatum(): Any? {
         val la1 = skipWSread()
 
@@ -345,10 +334,12 @@ class InputPort private constructor(
                 "quote",
                 parseDatum()
             )
+
             '`'.code -> return ListFactory.createConst(
                 "quasiquote",
                 parseDatum()
             )
+
             ','.code -> {
                 val la2 = _reader.read()
                 val sym: String?
@@ -372,7 +363,6 @@ class InputPort private constructor(
     }
 
 
-    @Throws(ReadException::class)
     fun readChar(): Int {
         try {
             return _reader.read()
@@ -381,7 +371,6 @@ class InputPort private constructor(
         }
     }
 
-    @Throws(ReadException::class)
     fun readScmChar(): Any? {
         val c = readChar()
 
@@ -391,7 +380,6 @@ class InputPort private constructor(
             ValueTraits.toScmChar(c.toChar())
     }
 
-    @Throws(ReadException::class)
     fun peekChar(): Int {
         try {
             val result = _reader.read()
@@ -404,7 +392,6 @@ class InputPort private constructor(
         }
     }
 
-    @Throws(ReadException::class)
     fun peekScmChar(): Any? {
         val c = peekChar()
 
@@ -425,33 +412,20 @@ class InputPort private constructor(
         }
 
     companion object {
-        @JvmField
-        val EOF: Int = -1
+        const val EOF: Int = -1
 
-        @JvmField
         val EOF_VALUE: Any = EofValue
 
         private val _plus: Any = "+"
         private val _minus: Any = "-"
         private val _ellipsis: Any = "..."
 
-        @JvmStatic
-        fun create(reader: Reader): InputPort {
-            return InputPort(
-                if (reader is PushbackReader)
-                    reader
-                else
-                    PushbackReader(reader)
-            )
-        }
+        fun create(reader: Reader): InputPort =
+            InputPort(reader as? PushbackReader ?: PushbackReader(reader))
 
-        @JvmStatic
-        @Throws(OpenException::class)
-        fun create(filename: ScmString): InputPort {
-            return create(filename.javaString)
-        }
+        fun create(filename: ScmString): InputPort =
+            create(filename.javaString)
 
-        @Throws(OpenException::class)
         fun create(filename: String): InputPort {
             try {
                 return create(FileReader(filename))

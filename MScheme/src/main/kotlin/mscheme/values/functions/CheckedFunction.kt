@@ -28,11 +28,9 @@ import mscheme.values.IList
 abstract class CheckedFunction : Function() {
     protected abstract val arity: Arity
 
-    @Throws(SchemeException::class, InterruptedException::class)
     protected abstract fun checkedCall(state: Registers, args: IList): Any?
 
     // implementation of Function
-    @Throws(SchemeException::class, InterruptedException::class)
     override fun call(state: Registers, arguments: IList): Any? {
         checkArguments(this.arity, arguments)
 
