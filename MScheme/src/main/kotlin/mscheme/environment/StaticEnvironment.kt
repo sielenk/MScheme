@@ -194,7 +194,6 @@ class StaticEnvironment internal constructor(
     private fun lookup(key: String): Any =
         lookupNoThrow(key) ?: throw SymbolNotFoundException(key)
 
-    @Throws(SymbolNotFoundException::class)
     fun getSyntaxFor(key: String): ITranslator? =
         lookup(key) as? ITranslator
 
@@ -225,7 +224,6 @@ class StaticEnvironment internal constructor(
         }
     }
 
-    @Throws(CompileError::class)
     fun getReferenceFor(key: String): Reference =
         getReferenceFor(key, false)
 

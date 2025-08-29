@@ -53,7 +53,6 @@ class Environment private constructor(
     fun assign(key: Reference, value: Any?): Any? =
         dynamic.assign(key, value)
 
-    @Throws(CompileError::class)
     fun assign(key: String, value: Any?): Any? =
         assign(static.getReferenceFor(key), value)
 
@@ -67,7 +66,6 @@ class Environment private constructor(
             "uninitialized variable"
         )
 
-    @Throws(CompileError::class, SchemeRuntimeError::class)
     fun lookup(key: String): Any =
         lookup(static.getReferenceFor(key)) // ***********************************************************************
 

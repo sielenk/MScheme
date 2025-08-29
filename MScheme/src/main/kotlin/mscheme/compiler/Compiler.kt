@@ -42,7 +42,6 @@ class Compiler(private val _env: StaticEnvironment) {
         return ProcedureCall.create(obj)
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun compile(compilee: Any?): Any? =
         force(getForceable(compilee))
 

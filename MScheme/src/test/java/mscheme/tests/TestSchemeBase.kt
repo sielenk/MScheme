@@ -38,17 +38,14 @@ abstract class TestSchemeBase(name: String?) : TestCase(name) {
         machine = null
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun quote(expression: String): Any? {
         return parse(expression)
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun eval(expression: String): Any? {
         return machine!!.evaluate(expression)
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun check(`in`: String, out: String) {
         val value = eval(`in`)
         val expected = quote(out)

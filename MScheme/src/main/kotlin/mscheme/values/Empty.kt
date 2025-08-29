@@ -56,7 +56,6 @@ object Empty : IList, IOutputable, ICompileable {
             throw PairExpected(this)
         }
 
-    @Throws(CantCompileException::class)
     override fun getForceable(compilationEnv: StaticEnvironment): Any? {
         throw CantCompileException(this)
     }
@@ -73,7 +72,6 @@ object Empty : IList, IOutputable, ICompileable {
     override fun getArray(index: Int): Array<Any?> =
         arrayOfNulls(index)
 
-    @Throws(IOException::class)
     override fun outputOn(destination: Writer, doWrite: Boolean) {
         destination.write("()")
     }

@@ -23,7 +23,6 @@ internal class StackListTest(name: String?) : StackTest(name) {
     }
 
 
-    @Throws(SchemeRuntimeError::class)
     fun testMark() {
         val SIZE1 = 5
         val SIZE2 = 3

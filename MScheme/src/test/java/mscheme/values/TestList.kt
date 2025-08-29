@@ -62,12 +62,10 @@ class TestList
         assertNotSame(firstElement, lastElement)
     }
 
-    @Throws(Exception::class)
     fun testEmptyIsUnique() {
         assertSame("empty isn't unique", emptyList, ListFactory.create())
     }
 
-    @Throws(Exception::class)
     fun testOccupiedList() {
         assertNotSame("occupied list equals (==) empty list", occupiedList, emptyList)
 
@@ -84,14 +82,12 @@ class TestList
         assertFalse(occupiedList!!.isEmpty)
     }
 
-    @Throws(Exception::class)
     fun testGetLength() {
         TestCase.assertEquals(0, emptyList!!.length)
 
         TestCase.assertEquals(occupiedList!!.length, occupiedListLength)
     }
 
-    @Throws(Exception::class)
     fun testGetHead() {
         try {
             emptyList!!.head
@@ -102,7 +98,6 @@ class TestList
         assertSame("getHead failed", occupiedList!!.head, firstElement)
     }
 
-    @Throws(Exception::class)
     fun testGetTail() {
         try {
             assertNotNull(emptyList!!.tail)
@@ -113,7 +108,6 @@ class TestList
         assertSame("getTail failed", occupiedList!!.tail.head, secondElement)
     }
 
-    @Throws(Exception::class)
     fun testGetReversed() {
         assertSame("failed on emptyList", emptyList!!.getReversed(), emptyList)
 

@@ -28,9 +28,7 @@ import mscheme.values.ValueTraits.equal
 import mscheme.values.ValueTraits.eqv
 import java.io.StringReader
 
-class TestInputPort
-    (name: String?) : TestCase(name) {
-    @Throws(Exception::class)
+class TestInputPort(name: String?) : TestCase(name) {
     fun testCharIO() {
         val source = StringReader("test")
         val `in` = InputPort.Companion.create(source)
@@ -52,7 +50,6 @@ class TestInputPort
         assertTrue(`in`.isReady)
     }
 
-    @Throws(Exception::class)
     fun testWS() {
         val source = StringReader(
             " \t \n ; test# 1 2 \"\"\" ;;; 3 \n  \n ;  fkdjhgd "
@@ -62,7 +59,6 @@ class TestInputPort
         assertTrue(eq(`in`.read(), EOF_VALUE))
     }
 
-    @Throws(Exception::class)
     fun testBool() {
         val source = StringReader(" #t #f #t#f ")
         val `in` = InputPort.Companion.create(source)
@@ -75,7 +71,6 @@ class TestInputPort
         TestCase.assertEquals(`in`.readChar(), InputPort.EOF)
     }
 
-    @Throws(Exception::class)
     fun testNumber() {
         val source = StringReader(
             "-2 -1 0 1 2"
@@ -90,7 +85,6 @@ class TestInputPort
         TestCase.assertEquals(`in`.readChar(), InputPort.EOF)
     }
 
-    @Throws(Exception::class)
     fun testChar() {
         val source = StringReader(
             "#\\# #\\\\ #\\\" #\\  #\\newline #\\space #\\a"
@@ -107,7 +101,6 @@ class TestInputPort
         TestCase.assertEquals(`in`.readChar(), InputPort.EOF)
     }
 
-    @Throws(Exception::class)
     fun testString() {
         val str1 = ""
         val str2 = " Hallo ! "
@@ -126,7 +119,6 @@ class TestInputPort
         assertTrue(equal(`in`.read(), ScmString.Companion.create(str3b)))
     }
 
-    @Throws(Exception::class)
     fun testList() {
         val one: Any = ScmNumber.Companion.create(1)
         val two: Any = ScmNumber.Companion.create(2)
@@ -147,7 +139,6 @@ class TestInputPort
         )
     }
 
-    @Throws(Exception::class)
     fun testVector() {
         val one: Any = ScmNumber.Companion.create(1)
         val two: Any = ScmNumber.Companion.create(2)
@@ -163,7 +154,6 @@ class TestInputPort
         assertTrue(equal(`in`.read(), v))
     }
 
-    @Throws(Exception::class)
     fun testSymbol() {
         val test: Any = "hallo"
         val source = StringReader(
@@ -182,7 +172,6 @@ class TestInputPort
         assertTrue(eq(`in`.read(), "?12"))
     }
 
-    @Throws(Exception::class)
     fun testAbbrev() {
         val source = StringReader(
             "'a ' a `a ,a ,@a"

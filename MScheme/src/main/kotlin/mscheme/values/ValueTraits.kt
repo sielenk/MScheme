@@ -161,7 +161,6 @@ object ValueTraits {
     fun isList(o: Any?): Boolean =
         o is IList && o.isValid
 
-    @Throws(ListExpected::class)
     fun toList(o: Any?): IList =
         if (o is IList)
             o.validate()
@@ -171,7 +170,6 @@ object ValueTraits {
     fun isPair(o: Any?): Boolean =
         o is IPair
 
-    @Throws(PairExpected::class)
     fun toConstPair(o: Any?): IPair {
         if (o is IPair) {
             return o
@@ -180,7 +178,6 @@ object ValueTraits {
         }
     }
 
-    @Throws(PairExpected::class, ImmutableException::class)
     fun toMutablePair(o: Any?): IMutablePair =
         when (o) {
             is IMutablePair ->
@@ -194,11 +191,9 @@ object ValueTraits {
         }
 
 
-    @Throws(InputPortExpected::class)
     fun toInputPort(o: Any?): InputPort =
         o as? InputPort ?: throw InputPortExpected(o)
 
-    @Throws(SymbolExpected::class)
     fun toSymbol(o: Any?): String =
         o as? String ?: throw SymbolExpected(o)
 
@@ -214,37 +209,30 @@ object ValueTraits {
     fun toScmBoolean(o: Any?): Boolean =
         isTrue(o)
 
-    @Throws(NumberExpected::class)
     fun toScmNumber(o: Any?): ScmNumber =
         o as? ScmNumber ?: throw NumberExpected(o)
 
     fun toScmNumber(i: Int): Any =
         ScmNumber.create(i)
 
-    @Throws(CharExpected::class)
     fun toScmChar(o: Any?): Char =
         o as? Char ?: throw CharExpected(o)
 
     fun toScmChar(c: Char): Char =
         c
 
-    @Throws(StringExpected::class)
     fun toScmString(o: Any?): ScmString =
         o as? ScmString ?: throw StringExpected(o)
 
-    @Throws(VectorExpected::class)
     fun toScmVector(o: Any?): ScmVector =
         o as? ScmVector ?: throw VectorExpected(o)
 
-    @Throws(OutputPortExpected::class)
     fun toOutputPort(o: Any?): OutputPort =
         o as? OutputPort ?: throw OutputPortExpected(o)
 
-    @Throws(EnvironmentExpected::class)
     fun toEnvironment(o: Any?): Environment =
         o as? Environment ?: throw EnvironmentExpected(o)
 
-    @Throws(EnvironmentExpected::class)
     fun toStaticEnvironment(o: Any?): StaticEnvironment =
         o as? StaticEnvironment ?: throw EnvironmentExpected(o)
 
@@ -272,7 +260,6 @@ object ValueTraits {
     fun isFunction(o: Any?): Boolean =
         o is Function || o is KCallable<*> || o is Method || o is Field
 
-    @Throws(IOException::class)
     fun output(destination: Writer, doWrite: Boolean, o: Any?) {
         if (o is Char) {
             if (doWrite) {
@@ -299,12 +286,10 @@ object ValueTraits {
         }
     }
 
-    @Throws(IOException::class)
     fun display(destination: Writer, o: Any?) {
         output(destination, false, o)
     }
 
-    @Throws(IOException::class)
     fun write(destination: Writer, o: Any?) {
         output(destination, true, o)
     }

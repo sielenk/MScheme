@@ -33,14 +33,12 @@ class TestR5RS
     // 4 Expressions
     // 4.1 Primitive expression types
     /** 4.1.1 Variable references */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test4_1_1() {
         eval("(define x 28)")
         check("x", "28")
     }
 
     /** 4.1.2 Literal expressions */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test4_1_2() {
         check("(quote a)", "a")
         check("(quote #(a b c))", "#(a b c)")
@@ -81,7 +79,6 @@ class TestR5RS
 
 
     /** 4.1.3 Procedure calls */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test4_1_3() {
         check("(+ 3 4)", "7")
         check("((if #f + *) 3 4)", "12")
@@ -95,7 +92,6 @@ class TestR5RS
 
 
     /** 4.1.4 Procedures */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test4_1_4() {
         assertTrue(eval("(lambda (x) (+ x x))") is Function)
         check("((lambda (x) (+ x x)) 4)", "8")
@@ -125,7 +121,6 @@ class TestR5RS
 
 
     /** 4.1.5 Conditionals */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test4_1_5() {
         check("(if (> 3 2) 'yes 'no)", "yes")
         check("(if (> 2 3) 'yes 'no)", "no")
@@ -139,7 +134,6 @@ class TestR5RS
 
 
     /** 4.1.6 Assignments */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test4_1_6() {
         eval("(define x 2)")
         check("(+ x 1)", "3")
@@ -149,7 +143,6 @@ class TestR5RS
 
     // 4.2 Derived expression types
     /** 4.2.1 Conditionals */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun no_test4_2_1_cond() {
         check(
             "(cond ((> 3 2) 'greater)\n" +
@@ -169,7 +162,6 @@ class TestR5RS
         )
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test4_2_1_and() {
         check(
             "(and (= 2 2) (> 2 1))",
@@ -189,7 +181,6 @@ class TestR5RS
         )
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test4_2_1_or() {
         check(
             "(or (= 2 2) (> 2 1))",
@@ -211,7 +202,6 @@ class TestR5RS
 
 
     /** 4.2.2 Binding constructs */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test4_2_2_let() {
         check(
             "(let ((x 2) (y 3))\n" +
@@ -240,7 +230,6 @@ class TestR5RS
         }
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test4_2_2_letstar() {
         check(
             "(let ((x 2) (y 3))\n" +
@@ -265,7 +254,6 @@ class TestR5RS
         }
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test4_2_2_letrec() {
         check(
             "(letrec ((even?\n" +
@@ -285,7 +273,6 @@ class TestR5RS
         check("(letrec ((x (lambda () y)) (y (lambda () x))) 0)", "0")
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test4_2_2_common() {
         check("(let ((x 1)) (let    () (define x 2)) x)", "1")
         check("(let ((x 1)) (let*   () (define x 2)) x)", "1")
@@ -294,7 +281,6 @@ class TestR5RS
 
 
     /** 4.2.3 Sequencing */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test4_2_3() {
         eval("(define x 0)")
         check(
@@ -306,7 +292,6 @@ class TestR5RS
 
 
     /** 4.2.4 Iteration */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test4_2_4_named_let() {
         check(
             "(let f ((x 3) (y 7))\n" +
@@ -317,7 +302,6 @@ class TestR5RS
 
     /** 4.2.5 Delayed evaluation */
     /** 4.2.6 Quasiquotation */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun notest4_2_6() {
         check("`(list ,(+ 1 2) 4)", "(list 3 4)")
         check(
@@ -344,7 +328,6 @@ class TestR5RS
 
 
     /** 5.2 Definitions */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test5_2() {
         try {
             eval("(define x 1 2 3)")
@@ -379,7 +362,6 @@ class TestR5RS
 
 
     /** 5.3 Syntax definitions */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test5_3() {
         eval(
             "(define-syntax static-cons " +
@@ -396,7 +378,6 @@ class TestR5RS
 
 
     /** 6.1 Equivalence predicates */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test6_1() {
         // eqv?
         check("(eqv? 'a 'a)", "#t")
@@ -412,7 +393,6 @@ class TestR5RS
 
     // 6.2 Numbers
     /** 6.2.5 Numerical operations */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun testNumbers() {
         check("(+ 3 4)", "7")
         check("(+ 3)", "3")
@@ -440,7 +420,6 @@ class TestR5RS
     // 6.3 Other data types
     // 6.3.1 Booleans
     /** 6.3.2 Pairs and lists */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test6_3_2() {
         // pair?
         check("(pair? '(a . b))", "#t")
@@ -539,7 +518,6 @@ class TestR5RS
 
 
     /** 6.3.3 Symbols */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test6_3_3() {
         // symbol?
         check("(symbol? 'foo)", "#t")
@@ -558,7 +536,6 @@ class TestR5RS
 
 
     /** 6.3.5 Strings */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test6_3_5() {
         eval("(define (f) (make-string 3 #\\*))")
         eval("(define (g) \"***\"))")
@@ -580,7 +557,6 @@ class TestR5RS
 
 
     /** 6.3.6 Vectors */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test6_3_6() {
         check("(vector-ref '#(1 1 2 3 5 8 13 21) 5)", "8")
         check("(vector 'a 'b 'c)", "#(a b c)")
@@ -590,7 +566,6 @@ class TestR5RS
 
 
     /** 6.4 Control features */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test6_4_procedureq() {
         check("(procedure?  car)", "#t")
         check("(procedure? 'car)", "#f")
@@ -599,7 +574,6 @@ class TestR5RS
         check("(call-with-current-continuation procedure?)", "#t")
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test6_4_apply() {
         check("(apply + (list 3 4))", "7")
         check("(apply + 1 2 '(3 4))", "10")
@@ -614,7 +588,6 @@ class TestR5RS
         )
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test6_4_map() {
         check(
             "(map + '(1 2 3) '(4 5 6))",
@@ -622,7 +595,6 @@ class TestR5RS
         )
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test6_4_for_each() {
         eval("(define count 0)")
         check(
@@ -636,7 +608,6 @@ class TestR5RS
         )
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test6_4_force() {
         check(
             "(force (delay (+ 1 2)))",
@@ -667,7 +638,6 @@ class TestR5RS
         check("(force p)", "6")
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test6_4_callcc() {
         check(
             "(let ((path '())\n" +
@@ -692,7 +662,6 @@ class TestR5RS
 
 
     /** 6.5 Eval */
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test6_5() {
         check("(eval '(* 7 3) (scheme-report-environment 5))", "21")
         check(
@@ -705,7 +674,6 @@ class TestR5RS
 
 
     /** additional stuff */
-    @Throws(Exception::class)
     fun testSpawn() {
         check("(spawn (lambda (c) 7))", "7")
         check(

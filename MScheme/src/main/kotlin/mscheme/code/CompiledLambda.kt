@@ -43,7 +43,6 @@ class CompiledLambda private constructor(
     internal inner class Closure(
         private val _enclosingEnvironment: DynamicEnvironment
     ) : CheckedFunction() {
-        @Throws(IOException::class)
         fun write(destination: Writer) {
             destination.write("#[closure]")
         }

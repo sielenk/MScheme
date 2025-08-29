@@ -90,7 +90,6 @@ class Stack : IStack {
         return mark
     }
 
-    @Throws(SchemeRuntimeError::class)
     fun cutSlice(mark: Mark): Slice {
         val top = _top
 

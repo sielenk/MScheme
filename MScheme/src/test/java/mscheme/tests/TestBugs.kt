@@ -22,9 +22,7 @@ package mscheme.tests
 import mscheme.exceptions.CompileError
 import mscheme.exceptions.SchemeException
 
-class TestBugs
-    (name: String?) : TestSchemeBase(name) {
-    @Throws(SchemeException::class, InterruptedException::class)
+class TestBugs(name: String?) : TestSchemeBase(name) {
     fun test_2002_19_03() {
         // This failed, because set! didn't use delayed
         // references, MHS 2002-19-03
@@ -44,7 +42,6 @@ class TestBugs
         )
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test_2002_04_09() {
         // It is now illegal to internally redefine a symbol.
         try {
@@ -54,7 +51,6 @@ class TestBugs
         }
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test_2002_04_15a() {
         // Internal definitions are not allowed after the
         // first expression.
@@ -84,7 +80,6 @@ class TestBugs
         }
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test_2002_04_15ba() {
         // no nested definitions
         try {
@@ -94,7 +89,6 @@ class TestBugs
         }
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test_2002_04_15bb() {
         // no nested definitions
         try {
@@ -104,7 +98,6 @@ class TestBugs
         }
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun test_2002_04_15c() {
         try {
             eval(
@@ -149,7 +142,6 @@ class TestBugs
         }
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun xtest_todo01() {
         try {
             eval("(cons (define a 1) 2)")

@@ -21,13 +21,11 @@ internal abstract class StackTest(name: String?) : TestCase(name) {
     protected abstract fun createStack(): IStack
 
 
-    @Throws(Exception::class)
     override fun setUp() {
         super.setUp()
         _stack = createStack()
     }
 
-    @Throws(Exception::class)
     override fun tearDown() {
         super.tearDown()
         _stack = null

@@ -164,7 +164,6 @@ class Machine : Runnable {
         }
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun unprotectedRun(): Any? =
         evaluate(InputPort.create(StringReader(IInit.REP)).read())
 
@@ -251,11 +250,9 @@ class Machine : Runnable {
     fun compile(compilee: Any?): Any? =
         Compiler(this.environment.static).compile(compilee)
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun evaluate(evaluatee: Any?): Any? =
         execute(compile(evaluatee))
 
-    @Throws(SchemeException::class, InterruptedException::class)
     fun evaluate(expression: String): Any? =
         evaluate(parse(expression))
 

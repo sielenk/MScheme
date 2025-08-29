@@ -26,7 +26,6 @@ import mscheme.exceptions.SchemeException
 interface IList {
     val isValid: Boolean
 
-    @Throws(ListExpected::class)
     fun validate(): IList
 
     val isEmpty: Boolean

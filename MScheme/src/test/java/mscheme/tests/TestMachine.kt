@@ -55,7 +55,6 @@ class TestMachine
 
     private var _environment: Environment? = null
 
-    @Throws(Exception::class)
     override fun setUp() {
         _sym1 = "test1"
         _sym2 = "test2"
@@ -74,14 +73,12 @@ class TestMachine
         _environment = null
     }
 
-    @Throws(SchemeException::class, InterruptedException::class)
     private fun evaluate(expression: String): Any? {
         return machine!!.evaluate(
-            InputPort.Companion.create(StringReader(expression)).read()
+            InputPort.create(StringReader(expression)).read()
         )
     }
 
-    @Throws(Exception::class)
     fun testTestValues() {
         val compiler = Compiler(_environment!!.static)
 
@@ -99,13 +96,11 @@ class TestMachine
         assertSame(_environment, machine!!.environment)
     }
 
-    @Throws(Exception::class)
     fun testValue() {
         assertSame(_val1, machine!!.evaluate(_val1))
         assertSame(_val2, machine!!.evaluate(_val2))
     }
 
-    @Throws(Exception::class)
     fun testUnevaluatable() {
         try {
             machine!!.evaluate(_unval)
@@ -114,12 +109,10 @@ class TestMachine
         }
     }
 
-    @Throws(Exception::class)
     private fun define(s: String, v: Any?) {
         _environment!!.define(s, v)
     }
 
-    @Throws(Exception::class)
     fun testSymbol() {
         try {
             machine!!.evaluate(_sym1!!)
@@ -140,7 +133,6 @@ class TestMachine
         )
     }
 
-    @Throws(Exception::class)
     fun testPair1() {
         try {
             machine!!.evaluate(createPair(_val1, _val2))
@@ -149,7 +141,6 @@ class TestMachine
         }
     }
 
-    @Throws(Exception::class)
     fun testPair2() {
         try {
             machine!!.evaluate(create(_val1))
@@ -158,7 +149,6 @@ class TestMachine
         }
     }
 
-    @Throws(Exception::class)
     fun testQuote() {
         assertSame(
             _unval,
@@ -171,7 +161,6 @@ class TestMachine
         )
     }
 
-    @Throws(Exception::class)
     fun testIf() {
         define(_sym1!!, _val1)
         define(_sym2!!, _val2)
@@ -200,7 +189,6 @@ class TestMachine
         )
     }
 
-    @Throws(Exception::class)
     fun testBegin() {
         define(_sym2!!, _val2)
 
@@ -224,7 +212,6 @@ class TestMachine
         )
     }
 
-    @Throws(Exception::class)
     fun testLambdaFailures() {
         try {
             evaluate("(lambda () #(1 2 3))")
@@ -245,7 +232,6 @@ class TestMachine
         }
     }
 
-    @Throws(Exception::class)
     fun testLambdaNoArgs() {
         val func = machine!!.evaluate(
             create(
@@ -269,7 +255,6 @@ class TestMachine
         }
     }
 
-    @Throws(Exception::class)
     fun testLambdaWithSimpleArgs() {
         val func = evaluate("(lambda (x y) x)") as Function?
 
@@ -289,7 +274,6 @@ class TestMachine
         }
     }
 
-    @Throws(Exception::class)
     fun testLambdaWithOptionalArgs() {
         val func = evaluate("(lambda (x . y) y)") as Function?
 
@@ -318,7 +302,6 @@ class TestMachine
         )
     }
 
-    @Throws(Exception::class)
     fun testLambdaOptionalIsNewList() {
         val func = evaluate("(lambda x x)") as Function?
 
@@ -331,21 +314,18 @@ class TestMachine
         assertFalse(eq(result, pair1))
     }
 
-    @Throws(Exception::class)
     fun testDefineNormal() {
         machine!!.evaluate(create("define", "a", _val1))
 
         assertSame(_val1, machine!!.evaluate("a"))
     }
 
-    @Throws(Exception::class)
     fun testApplication() {
         evaluate("(define f (lambda (x) x))")
 
         assertSame(_val1, machine!!.evaluate(ListFactory.create("f", _val1)))
     }
 
-    @Throws(Exception::class)
     fun testDefineFunction() {
         evaluate("(define (f x y) x)")
         evaluate("(define (g . x) x)")
@@ -361,7 +341,6 @@ class TestMachine
         )
     }
 
-    @Throws(Exception::class)
     fun testCallCC() {
         assertSame(
             _val1, machine!!.evaluate(

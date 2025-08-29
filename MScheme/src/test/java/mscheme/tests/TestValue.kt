@@ -57,7 +57,6 @@ import java.io.StringWriter
 
 class TestValue
     (name: String?) : TestCase(name) {
-    @Throws(Exception::class)
     override fun setUp() {
     }
 
@@ -175,7 +174,6 @@ class TestValue
     }
 
 
-    @Throws(Exception::class)
     fun testFalse() {
         val False: Any = ValueTraits.FALSE
 
@@ -187,7 +185,6 @@ class TestValue
         assertTrue(isScmBoolean(False))
     }
 
-    @Throws(Exception::class)
     fun testTrue() {
         val True: Any = ValueTraits.TRUE
 
@@ -199,7 +196,6 @@ class TestValue
         assertTrue(isScmBoolean(True))
     }
 
-    @Throws(Exception::class)
     fun testEmpty() {
         val empty: Any = ListFactory.create()
 
@@ -214,7 +210,6 @@ class TestValue
         assertSame(toList(empty), empty)
     }
 
-    @Throws(Exception::class)
     fun testPair() {
         val pair: Any = createPair(
             ValueTraits.TRUE,
@@ -226,7 +221,6 @@ class TestValue
         assertSame(toConstPair(pair), pair)
     }
 
-    @Throws(Exception::class)
     fun testList() {
         val list: Any = create(
             ValueTraits.TRUE
@@ -244,7 +238,6 @@ class TestValue
         assertSame(toList(list), list)
     }
 
-    @Throws(Exception::class)
     fun testSymbol() {
         val symbol: Any = "test"
 
@@ -253,7 +246,6 @@ class TestValue
         assertSame(toSymbol(symbol), symbol)
     }
 
-    @Throws(Exception::class)
     fun testFunction() {
         val function: Any = CallCCFunction
 
@@ -261,7 +253,6 @@ class TestValue
         assertTrue(isFunction(function))
     }
 
-    @Throws(Exception::class)
     fun testNumber() {
         val number: Any = ScmNumber.Companion.create(49875)
 
@@ -270,7 +261,6 @@ class TestValue
         assertSame(toScmNumber(number), number)
     }
 
-    @Throws(Exception::class)
     fun testChar() {
         val character: Any = ValueTraits.toScmChar('a')
 
@@ -279,7 +269,6 @@ class TestValue
         assertSame(toScmChar(character), character)
     }
 
-    @Throws(Exception::class)
     fun testString() {
         val string: Any = ScmString.Companion.create("Hallo !")
 
@@ -288,7 +277,6 @@ class TestValue
         assertSame(toScmString(string), string)
     }
 
-    @Throws(Exception::class)
     fun testVector() {
         val vector: Any = ScmVector.Companion.create()
 
@@ -297,7 +285,6 @@ class TestValue
         assertSame(toScmVector(vector), vector)
     }
 
-    @Throws(Exception::class)
     fun testOutputPort() {
         val port: Any = OutputPort.Companion.create(StringWriter())
 
@@ -306,7 +293,6 @@ class TestValue
         assertSame(toOutputPort(port), port)
     }
 
-    @Throws(Exception::class)
     fun testInputPort() {
         val port: Any = InputPort.Companion.create(StringReader(""))
 
@@ -315,7 +301,6 @@ class TestValue
         assertSame(toInputPort(port), port)
     }
 
-    @Throws(Exception::class)
     fun testEnvironment() {
         val environment: Any = getEmpty()
 
@@ -327,7 +312,6 @@ class TestValue
         assertSame(toEnvironment(environment), environment)
     }
 
-    @Throws(Exception::class)
     fun testStaticEnvironment() {
         val environment: Any = getEmpty().static
 
@@ -372,7 +356,6 @@ class TestValue
         }
     }
 
-    @Throws(Exception::class)
     fun testEq() {
         val u: Any = "u"
         val v: Any = "v"
