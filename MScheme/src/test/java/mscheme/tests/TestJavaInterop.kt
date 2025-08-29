@@ -18,156 +18,151 @@
  * the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA  02111-1307, USA.
  */
+package mscheme.tests
 
-package mscheme.tests;
+import mscheme.exceptions.SchemeException
+import mscheme.values.IList
+import mscheme.values.PairOrList
 
-import mscheme.exceptions.SchemeException;
-import mscheme.values.IList;
-import mscheme.values.PairOrList;
-import mscheme.values.ValueTraits;
+class TestJavaInterop(name: String?) : TestSchemeBase(name) {
+    fun test_staticField() {
+        val machine = machine!!
+        val field = javaClass.getField("testFieldStatic")
 
-public class TestJavaInterop extends TestSchemeBase {
+        machine.environment.define("foo", field)
 
-  public TestJavaInterop(String name) {
-    super(name);
-  }
+        testFieldStatic = "something"
+        check("(foo)", "something")
 
-  public void test_staticField()
-      throws InterruptedException, SchemeException, NoSuchFieldException {
-    var machine = getMachine();
-    var field = getClass().getField("testFieldStatic");
+        testFieldStatic = "something_else"
+        check("(foo)", "something_else")
+    }
 
-    machine.getEnvironment().define("foo", field);
+    fun test_field() {
+        val machine = machine!!
+        val field = javaClass.getField("testField")
+        val environment = machine.environment
 
-    testFieldStatic = "something";
-    check("(foo)", "something");
+        environment.define("bar", this)
+        environment.define("foo", field)
 
-    testFieldStatic = "something_else";
-    check("(foo)", "something_else");
-  }
+        testField = "something"
+        check("(foo bar)", "something")
 
-  public void test_field()
-      throws InterruptedException, SchemeException, NoSuchFieldException {
-    var machine = getMachine();
-    var field = getClass().getField("testField");
-    var environment = machine.getEnvironment();
+        testField = "something_else"
+        check("(foo bar)", "something_else")
+    }
 
-    environment.define("bar", this);
-    environment.define("foo", field);
+    fun test_staticMethod() {
+        val machine = machine!!
+        val method = javaClass.getMethod("staticMethod")
+        val environment = machine.environment
 
-    testField = "something";
-    check("(foo bar)", "something");
+        environment.define("foo", method)
 
-    testField = "something_else";
-    check("(foo bar)", "something_else");
-  }
+        testFieldStatic = "something"
+        check("(foo)", "something")
 
-  public void test_staticMethod()
-      throws InterruptedException, SchemeException, NoSuchMethodException {
-    var machine = getMachine();
-    var method = getClass().getMethod("staticMethod");
-    var environment = machine.getEnvironment();
+        testFieldStatic = "something_else"
+        check("(foo)", "something_else")
+    }
 
-    environment.define("foo", method);
+    fun test_method() {
+        val machine = machine!!
+        val method = javaClass.getMethod("method")
+        val environment = machine.environment
 
-    testFieldStatic = "something";
-    check("(foo)", "something");
+        environment.define("bar", this)
+        environment.define("foo", method)
 
-    testFieldStatic = "something_else";
-    check("(foo)", "something_else");
-  }
+        testField = "something"
+        check("(foo bar)", "something")
 
-  public void test_method()
-      throws InterruptedException, SchemeException, NoSuchMethodException {
-    var machine = getMachine();
-    var method = getClass().getMethod("method");
-    var environment = machine.getEnvironment();
+        testField = "something_else"
+        check("(foo bar)", "something_else")
+    }
 
-    environment.define("bar", this);
-    environment.define("foo", method);
+    fun test_staticMethodList() {
+        val machine = machine!!
+        val method = javaClass.getMethod("staticMethodList", IList::class.java)
+        val environment = machine.environment
 
-    testField = "something";
-    check("(foo bar)", "something");
+        environment.define("foo", method)
 
-    testField = "something_else";
-    check("(foo bar)", "something_else");
-  }
+        check("(foo)", "()")
+        check("(foo 1 2 3)", "(1 2 3)")
+    }
 
-  public void test_staticMethodList()
-      throws InterruptedException, SchemeException, NoSuchMethodException {
-    var machine = getMachine();
-    var method = getClass().getMethod("staticMethodList", IList.class);
-    var environment = machine.getEnvironment();
+    fun test_methodList() {
+        val machine = machine!!
+        val method = javaClass.getMethod("methodList", IList::class.java)
+        val environment = machine.environment
 
-    environment.define("foo", method);
+        environment.define("bar", this)
+        environment.define("foo", method)
 
-    check("(foo)", "()");
-    check("(foo 1 2 3)", "(1 2 3)");
-  }
+        check("(foo bar)", "()")
+        check("(foo bar 1 2 3)", "(1 2 3)")
+    }
 
-  public void test_methodList()
-      throws InterruptedException, SchemeException, NoSuchMethodException {
-    var machine = getMachine();
-    var method = getClass().getMethod("methodList", IList.class);
-    var environment = machine.getEnvironment();
+    fun test_staticMethodArgs() {
+        val machine = machine!!
+        val method = javaClass.getMethod(
+            "staticMethodArgs", Any::class.java,
+            Any::class.java
+        )
+        val environment = machine.environment
 
-    environment.define("bar", this);
-    environment.define("foo", method);
+        environment.define("foo", method)
 
-    check("(foo bar)", "()");
-    check("(foo bar 1 2 3)", "(1 2 3)");
-  }
+        check("(foo 2 #f)", "(2 . #f)")
+        check("(foo '(#t #f) '(1 2 3))", "((#t #f) . (1 2 3))")
+    }
 
-  public void test_staticMethodArgs()
-      throws InterruptedException, SchemeException, NoSuchMethodException {
-    var machine = getMachine();
-    var method = getClass().getMethod("staticMethodArgs", Object.class,
-        Object.class);
-    var environment = machine.getEnvironment();
+    fun test_methodArgs() {
+        val machine = machine!!
+        val method = javaClass.getMethod("methodArgs", Any::class.java, Any::class.java)
+        val environment = machine.environment
 
-    environment.define("foo", method);
+        environment.define("bar", this)
+        environment.define("foo", method)
 
-    check("(foo 2 #f)", "(2 . #f)");
-    check("(foo '(#t #f) '(1 2 3))", "((#t #f) . (1 2 3))");
-  }
+        check("(foo bar 1 #t)", "(1 . #t)")
+        check("(foo bar '() '())", "(() . ()))")
+    }
 
-  public void test_methodArgs()
-      throws InterruptedException, SchemeException, NoSuchMethodException {
-    var machine = getMachine();
-    var method = getClass().getMethod("methodArgs", Object.class, Object.class);
-    var environment = machine.getEnvironment();
+    @JvmField
+    var testField: Any? = null
 
-    environment.define("bar", this);
-    environment.define("foo", method);
+    fun method(): Any? {
+        return testField
+    }
 
-    check("(foo bar 1 #t)", "(1 . #t)");
-    check("(foo bar '() '())", "(() . ()))");
-  }
+    fun methodList(arguments: IList?): Any? {
+        return arguments
+    }
 
-  public static Object testFieldStatic = null;
-  public Object testField = null;
+    fun methodArgs(fst: Any?, snd: Any?): Any {
+        return PairOrList.create(fst, snd)
+    }
 
-  public static Object staticMethod() {
-    return testFieldStatic;
-  }
+    companion object {
+        @JvmField
+        var testFieldStatic: Any? = null
 
-  public Object method() {
-    return testField;
-  }
+        @JvmStatic
+        fun staticMethod(): Any? {
+            return testFieldStatic
+        }
 
-  public static Object staticMethodList(IList arguments) {
-    return arguments;
-  }
+        @JvmStatic
+        fun staticMethodList(arguments: IList?): Any? {
+            return arguments
+        }
 
-  public Object methodList(IList arguments) {
-    return arguments;
-  }
-
-  public static Object staticMethodArgs(Object fst, Object snd) {
-    return PairOrList.Companion.create(fst, snd);
-  }
-
-  public Object methodArgs(Object fst, Object snd) {
-    return PairOrList.Companion.create(fst, snd);
-  }
+        @JvmStatic
+        fun staticMethodArgs(fst: Any?, snd: Any?): Any {
+            return PairOrList.create(fst, snd)
+        }
+    }
 }

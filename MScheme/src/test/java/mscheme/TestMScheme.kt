@@ -17,30 +17,33 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme
 
-package mscheme;
+import junit.framework.Test
+import junit.framework.TestSuite
+import junit.textui.TestRunner
+import mscheme.environment.TestEnvironment
+import mscheme.machine.AllTests
+import mscheme.util.TestArity
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+object TestMScheme {
+    fun suite(): Test {
+        val suite = TestSuite("All MScheme Tests")
 
-public class TestMScheme {
+        suite.addTestSuite(TestArity::class.java)
+        suite.addTestSuite(TestEnvironment::class.java)
 
-  public static Test suite() {
-    TestSuite suite = new TestSuite("All MScheme Tests");
+        suite.addTest(AllTests.suite())
+        suite.addTest(mscheme.values.AllTests.suite())
+        suite.addTest(mscheme.tests.AllTests.suite())
 
-    suite.addTestSuite(mscheme.util.TestArity.class);
-    suite.addTestSuite(mscheme.environment.TestEnvironment.class);
+        return suite
+    }
 
-    suite.addTest(mscheme.machine.AllTests.suite());
-    suite.addTest(mscheme.values.AllTests.suite());
-    suite.addTest(mscheme.tests.AllTests.suite());
-
-    return suite;
-  }
-
-  public static void main(String[] args) {
-    junit.textui.TestRunner.run(
-        suite()
-    );
-  }
+    @JvmStatic
+    fun main(args: Array<String>) {
+        TestRunner.run(
+            suite()
+        )
+    }
 }

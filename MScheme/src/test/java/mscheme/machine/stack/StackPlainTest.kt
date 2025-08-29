@@ -2,41 +2,36 @@
  * Created on 02.01.2004
  *
  */
-package mscheme.machine.stack;
+package mscheme.machine.stack
 
 
 /**
  * @author sielenk
  */
-public class StackPlainTest extends StackTest {
+internal class StackPlainTest(name: String?) : StackTest(name) {
+    private var _stack: PlainStack? = null
 
-  public StackPlainTest(String name) {
-    super(name);
-  }
-
-  private PlainStack _stack;
-
-  protected IStack createStack() {
-    return _stack = new PlainStack();
-  }
-
-  public void testCopy() {
-    final int SIZE = 50;
-
-    for (int i = 0; i < SIZE; ++i) {
-      _stack.push(createFrame());
+    override fun createStack(): IStack {
+        return PlainStack().also { _stack = it }
     }
 
-    IStack otherStack = _stack.getCopy();
+    fun testCopy() {
+        val SIZE = 50
 
-    for (int j = 0; j < SIZE; ++j) {
-      assertFalse(_stack.isEmpty());
-      assertFalse(otherStack.isEmpty());
+        for (i in 0..<SIZE) {
+            _stack!!.push(createFrame())
+        }
 
-      assertSame(_stack.pop(), otherStack.pop());
+        val otherStack: IStack = _stack!!.getCopy()
+
+        for (j in 0..<SIZE) {
+            assertFalse(_stack!!.isEmpty)
+            assertFalse(otherStack.isEmpty)
+
+            assertSame(_stack!!.pop(), otherStack.pop())
+        }
+
+        assertTrue(_stack!!.isEmpty)
+        assertTrue(otherStack.isEmpty)
     }
-
-    assertTrue(_stack.isEmpty());
-    assertTrue(otherStack.isEmpty());
-  }
 }

@@ -16,114 +16,120 @@
  * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package mscheme.values
 
-package mscheme.values;
+import junit.framework.TestCase
+import mscheme.exceptions.PairExpected
+import mscheme.values.ListFactory.create
+import mscheme.values.ValueTraits.toConstPair
 
-import mscheme.exceptions.PairExpected;
+class TestList
+    (name: String?) : TestCase(name) {
+    var firstElement: Any? = null
 
-public class TestList
-    extends junit.framework.TestCase {
+    var secondElement: Any? = null
 
-  Object firstElement;
+    var lastElement: Any? = null
 
-  Object secondElement;
+    var emptyList: IList? = null
 
-  Object lastElement;
+    var occupiedList: IList? = null
 
-  IList emptyList;
+    var occupiedListLength: Int = 0
 
-  IList occupiedList;
+    override fun setUp() {
+        emptyList = ListFactory.create()
 
-  int occupiedListLength;
-
-  public TestList(String name) {
-    super(name);
-  }
-
-  protected void setUp() {
-    emptyList = ListFactory.INSTANCE.create();
-
-    firstElement = "x";
-    secondElement = "y";
-    lastElement = secondElement;
-    occupiedList = ListFactory.INSTANCE.create(firstElement, secondElement);
-    occupiedListLength = 2;
-  }
-
-  protected void tearDown() {
-    firstElement = null;
-    secondElement = null;
-    emptyList = null;
-    occupiedList = null;
-  }
-
-  public void testTestValues() {
-    assertTrue(occupiedListLength >= 2);
-
-    assertNotSame(firstElement, secondElement);
-
-    assertNotSame(firstElement, lastElement);
-  }
-
-  public void testEmptyIsUnique()
-      throws Exception {
-    assertSame("empty isn't unique", emptyList, ListFactory.INSTANCE.create());
-  }
-
-  public void testOccupiedList()
-      throws Exception {
-    assertNotSame("occupied list equals (==) empty list", occupiedList, emptyList);
-
-    assertSame("toPair returned somethig wrong", ValueTraits.INSTANCE.toConstPair(
-        occupiedList).getFirst(), occupiedList.getHead());
-  }
-
-  public void testIsEmpty() {
-    assertTrue(emptyList.isEmpty());
-
-    assertFalse(occupiedList.isEmpty());
-  }
-
-  public void testGetLength()
-      throws Exception {
-    assertEquals(0, emptyList.getLength());
-
-    assertEquals(occupiedList.getLength(), occupiedListLength);
-  }
-
-  public void testGetHead()
-      throws Exception {
-    try {
-      emptyList.getHead();
-      fail("PairExpected expected");
-    } catch (PairExpected e) {
+        firstElement = "x"
+        secondElement = "y"
+        lastElement = secondElement
+        occupiedList = create(firstElement, secondElement)
+        occupiedListLength = 2
     }
 
-    assertSame("getHead failed", occupiedList.getHead(), firstElement);
-  }
-
-  public void testGetTail()
-      throws Exception {
-    try {
-      assertNotNull(emptyList.getTail());
-      fail("PairExpected expected");
-    } catch (PairExpected e) {
+    override fun tearDown() {
+        firstElement = null
+        secondElement = null
+        emptyList = null
+        occupiedList = null
     }
 
-    assertSame("getTail failed", occupiedList.getTail().getHead(), secondElement);
-  }
+    fun testTestValues() {
+        assertTrue(occupiedListLength >= 2)
 
-  public void testGetReversed()
-      throws Exception {
-    assertSame("failed on emptyList", emptyList.getReversed(), emptyList);
+        assertNotSame(firstElement, secondElement)
 
-    assertEquals("length mismatch ", occupiedList.getReversed().getLength(), occupiedListLength);
+        assertNotSame(firstElement, lastElement)
+    }
 
-    assertSame("previous last isn't first now", occupiedList.getReversed()
-        .getHead(), lastElement);
-  }
+    @Throws(Exception::class)
+    fun testEmptyIsUnique() {
+        assertSame("empty isn't unique", emptyList, ListFactory.create())
+    }
 
-  public void testGetCodeList() {
-    // ...
-  }
+    @Throws(Exception::class)
+    fun testOccupiedList() {
+        assertNotSame("occupied list equals (==) empty list", occupiedList, emptyList)
+
+        assertSame(
+            "toPair returned somethig wrong", toConstPair(
+                occupiedList
+            ).first, occupiedList!!.head
+        )
+    }
+
+    fun testIsEmpty() {
+        assertTrue(emptyList!!.isEmpty)
+
+        assertFalse(occupiedList!!.isEmpty)
+    }
+
+    @Throws(Exception::class)
+    fun testGetLength() {
+        TestCase.assertEquals(0, emptyList!!.length)
+
+        TestCase.assertEquals(occupiedList!!.length, occupiedListLength)
+    }
+
+    @Throws(Exception::class)
+    fun testGetHead() {
+        try {
+            emptyList!!.head
+            fail("PairExpected expected")
+        } catch (e: PairExpected) {
+        }
+
+        assertSame("getHead failed", occupiedList!!.head, firstElement)
+    }
+
+    @Throws(Exception::class)
+    fun testGetTail() {
+        try {
+            assertNotNull(emptyList!!.tail)
+            fail("PairExpected expected")
+        } catch (e: PairExpected) {
+        }
+
+        assertSame("getTail failed", occupiedList!!.tail.head, secondElement)
+    }
+
+    @Throws(Exception::class)
+    fun testGetReversed() {
+        assertSame("failed on emptyList", emptyList!!.getReversed(), emptyList)
+
+        TestCase.assertEquals(
+            "length mismatch ",
+            occupiedList!!.getReversed().length,
+            occupiedListLength
+        )
+
+        assertSame(
+            "previous last isn't first now", occupiedList!!.getReversed()
+                .head, lastElement
+        )
+    }
+
+    fun testGetCodeList() {
+        // ...
+    }
 }

@@ -17,128 +17,122 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.environment
 
-package mscheme.environment;
-
-
-import mscheme.exceptions.SchemeRuntimeError;
-import mscheme.exceptions.SymbolNotFoundException;
-import mscheme.exceptions.UnexpectedSyntax;
-import mscheme.syntax.ITranslator;
-import mscheme.syntax.TranslatorFactory;
-import mscheme.values.ListFactory;
-
-
-public class TestEnvironment
-    extends junit.framework.TestCase {
-
-
-  protected Environment env;
-  protected String sym1;
-  protected String sym2;
-  protected Object val1;
-  protected Object val2;
-
-  public TestEnvironment(String name) {
-    super(name);
-  }
-
-  protected void setUp() {
-    env = Environment.Companion.getEmpty();
-
-    sym1 = "test1";
-    sym2 = "test2";
-
-    val1 = ListFactory.INSTANCE.create();
-    val2 = Boolean.TRUE;
-  }
-
-  protected void tearDown() {
-    env = null;
-    sym1 = sym2 = null;
-    val1 = val2 = null;
-  }
+import junit.framework.TestCase
+import mscheme.environment.Environment.Companion.getEmpty
+import mscheme.exceptions.SchemeRuntimeError
+import mscheme.exceptions.SymbolNotFoundException
+import mscheme.exceptions.UnexpectedSyntax
+import mscheme.syntax.TranslatorFactory.beginToken
+import mscheme.values.ListFactory.create
+import java.lang.Boolean
+import kotlin.Any
+import kotlin.Exception
+import kotlin.String
+import kotlin.Throws
 
 
-  public void testTestPattern() {
-    assertNotSame("different symbols are equal (==)", sym1, sym2);
-    assertFalse("different symbols are equal (equals)", sym1.equals(sym2));
-    assertNotSame("different entities are equal (==)", val1, val2);
-    assertFalse("different entities are equals (equals)", val1.equals(val2));
-  }
+class TestEnvironment(name: String) : TestCase(name) {
+    private var env: Environment? = null
+    private var sym1: String? = null
+    private var sym2: String? = null
+    private var val1: Any? = null
+    private var val2: Any? = null
 
-  public void testNormal()
-      throws Exception {
-    try {
-      env.lookup(sym1);
-      fail("env not empty");
-    } catch (SymbolNotFoundException e) {
+    override fun setUp() {
+        env = getEmpty()
+
+        sym1 = "test1"
+        sym2 = "test2"
+
+        val1 = create()
+        val2 = Boolean.TRUE
     }
 
-    try {
-      env.assign(sym1, val1);
-      fail("expected SymbolNotFound exception");
-    } catch (SymbolNotFoundException e) {
+    override fun tearDown() {
+        env = null
+        sym2 = null
+        sym1 = null
+        val2 = null
+        val1 = null
     }
 
-    env.define(sym1, val1);
 
-    assertSame("lookup failed", env.lookup(sym1), val1);
-
-    env.assign(sym1, val2);
-
-    assertSame("assign failed", env.lookup(sym1), val2);
-  }
-
-  public void testSyntax()
-      throws Exception {
-    StaticEnvironment env = new StaticEnvironment(null);
-
-    try {
-      env.getSyntaxFor(sym1);
-      fail("expected SymbolNotFoundException");
-    } catch (SymbolNotFoundException e) {
+    fun testTestPattern() {
+        assertNotSame("different symbols are equal (==)", sym1, sym2)
+        assertFalse("different symbols are equal (equals)", sym1 == sym2)
+        assertNotSame("different entities are equal (==)", val1, val2)
+        assertFalse("different entities are equals (equals)", val1 == val2)
     }
 
-    try {
-      env.getSyntaxFor(sym1);
-      fail("expected SymbolNotFoundException");
-    } catch (SymbolNotFoundException e) {
+    fun testNormal() {
+        try {
+            env!!.lookup(sym1!!)
+            fail("env not empty")
+        } catch (e: SymbolNotFoundException) {
+        }
+
+        try {
+            env!!.assign(sym1!!, val1)
+            fail("expected SymbolNotFound exception")
+        } catch (e: SymbolNotFoundException) {
+        }
+
+        env!!.define(sym1!!, val1)
+
+        assertSame("lookup failed", env!!.lookup(sym1!!), val1)
+
+        env!!.assign(sym1!!, val2)
+
+        assertSame("assign failed", env!!.lookup(sym1!!), val2)
     }
 
-    ITranslator token = TranslatorFactory.INSTANCE.getBeginToken();
-    env.defineSyntax(sym1, token);
+    fun testSyntax() {
+        val env = StaticEnvironment(null)
 
-    assertSame(env.getSyntaxFor(sym1), token);
+        try {
+            env.getSyntaxFor(sym1!!)
+            fail("expected SymbolNotFoundException")
+        } catch (e: SymbolNotFoundException) {
+        }
 
-    try {
-      env.getReferenceFor(sym1);
-      fail("expected UnexpectedSyntax");
-    } catch (UnexpectedSyntax e) {
+        try {
+            env.getSyntaxFor(sym1!!)
+            fail("expected SymbolNotFoundException")
+        } catch (e: SymbolNotFoundException) {
+        }
+
+        val token = beginToken
+        env.defineSyntax(sym1!!, token)
+
+        assertSame(env.getSyntaxFor(sym1!!), token)
+
+        try {
+            env.getReferenceFor(sym1!!)
+            fail("expected UnexpectedSyntax")
+        } catch (e: UnexpectedSyntax) {
+        }
+
+        val reference = env.define(sym2!!)
+
+        assertSame(env.getReferenceFor(sym2!!), reference)
     }
 
-    Reference reference = env.define(sym2);
+    fun testExtendedStatic() {
+        env!!.static.define(sym1!!)
 
-    assertSame(env.getReferenceFor(sym2), reference);
-  }
+        try {
+            env!!.lookup(sym1!!)
+            fail("expected UninitializedSymbolException")
+        } catch (e: SchemeRuntimeError) {
+        }
 
-  public void testExtendedStatic()
-      throws Exception {
-    env.getStatic().define(sym1);
+        env!!.assign(sym1!!, val1)
 
-    try {
-      env.lookup(sym1);
-      fail("expected UninitializedSymbolException");
-    } catch (SchemeRuntimeError e) {
+        assertSame(env!!.lookup(sym1!!), val1)
     }
 
-    env.assign(sym1, val1);
-
-    assertSame(env.lookup(sym1), val1);
-  }
-
-  public void testDynamic()
-      throws Exception {
-
-  }
+    fun testDynamic() {
+    }
 }

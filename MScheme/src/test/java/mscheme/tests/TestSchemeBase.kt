@@ -17,66 +17,55 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.tests
 
-package mscheme.tests;
+import junit.framework.TestCase
+import mscheme.exceptions.SchemeException
+import mscheme.machine.Machine
+import mscheme.machine.Machine.Companion.parse
+import mscheme.values.ValueTraits.equal
 
-import junit.framework.TestCase;
-import mscheme.exceptions.SchemeException;
-import mscheme.machine.Machine;
-import mscheme.values.ValueTraits;
-
-
-public abstract class TestSchemeBase
-    extends TestCase {
-
-  private Machine machine;
+abstract class TestSchemeBase(name: String?) : TestCase(name) {
+    var machine: Machine? = null
+        private set
 
 
-  public TestSchemeBase(String name) {
-    super(name);
-  }
-
-
-  protected void setUp() {
-    machine = new Machine();
-  }
-
-  protected void tearDown() {
-    machine = null;
-  }
-
-  public Machine getMachine() {
-    return machine;
-  }
-
-  public Object quote(String expression)
-      throws SchemeException, InterruptedException {
-    return Machine.Companion.parse(expression);
-  }
-
-  public Object eval(String expression)
-      throws SchemeException, InterruptedException {
-    return machine.evaluate(expression);
-  }
-
-  public void check(String in, String out)
-      throws SchemeException, InterruptedException {
-    Object value = eval(in);
-    Object expected = quote(out);
-    boolean success = ValueTraits.INSTANCE.equal(value, expected);
-
-    if (!success) {
-      System.out.println(
-          "*** evaluation of ***\n" +
-              in + '\n' +
-              "*** returned ***\n" +
-              value + '\n' +
-              "*** expected was ***\n" +
-              out + '\n' +
-              "*** end ***"
-      );
+    override fun setUp() {
+        machine = Machine()
     }
 
-    assertTrue(success);
-  }
+    override fun tearDown() {
+        machine = null
+    }
+
+    @Throws(SchemeException::class, InterruptedException::class)
+    fun quote(expression: String): Any? {
+        return parse(expression)
+    }
+
+    @Throws(SchemeException::class, InterruptedException::class)
+    fun eval(expression: String): Any? {
+        return machine!!.evaluate(expression)
+    }
+
+    @Throws(SchemeException::class, InterruptedException::class)
+    fun check(`in`: String, out: String) {
+        val value = eval(`in`)
+        val expected = quote(out)
+        val success = equal(value, expected)
+
+        if (!success) {
+            println(
+                "*** evaluation of ***\n" +
+                        `in` + '\n' +
+                        "*** returned ***\n" +
+                        value + '\n' +
+                        "*** expected was ***\n" +
+                        out + '\n' +
+                        "*** end ***"
+            )
+        }
+
+        assertTrue(success)
+    }
 }

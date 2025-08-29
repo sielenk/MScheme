@@ -17,187 +17,188 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.values
 
-package mscheme.values;
+import junit.framework.TestCase
+import mscheme.values.InputPort.Companion.EOF_VALUE
+import mscheme.values.ListFactory.create
+import mscheme.values.ListFactory.createPair
+import mscheme.values.ValueTraits.eq
+import mscheme.values.ValueTraits.equal
+import mscheme.values.ValueTraits.eqv
+import java.io.StringReader
 
-import java.io.StringReader;
+class TestInputPort
+    (name: String?) : TestCase(name) {
+    @Throws(Exception::class)
+    fun testCharIO() {
+        val source = StringReader("test")
+        val `in` = InputPort.Companion.create(source)
 
+        assertTrue(`in`.isReady)
+        TestCase.assertEquals('t'.code, `in`.peekChar())
+        TestCase.assertEquals('t'.code, `in`.readChar())
+        assertTrue(`in`.isReady)
+        TestCase.assertEquals('e'.code, `in`.peekChar())
+        TestCase.assertEquals('e'.code, `in`.readChar())
+        assertTrue(`in`.isReady)
+        TestCase.assertEquals('s'.code, `in`.readChar())
+        TestCase.assertEquals('t'.code, `in`.peekChar())
+        assertTrue(`in`.isReady)
+        TestCase.assertEquals('t'.code, `in`.readChar())
+        assertTrue(`in`.isReady)
+        TestCase.assertEquals(`in`.peekChar(), InputPort.EOF)
+        TestCase.assertEquals(`in`.readChar(), InputPort.EOF)
+        assertTrue(`in`.isReady)
+    }
 
-public class TestInputPort
-    extends junit.framework.TestCase {
+    @Throws(Exception::class)
+    fun testWS() {
+        val source = StringReader(
+            " \t \n ; test# 1 2 \"\"\" ;;; 3 \n  \n ;  fkdjhgd "
+        )
+        val `in` = InputPort.Companion.create(source)
 
-  public TestInputPort(String name) {
-    super(name);
-  }
+        assertTrue(eq(`in`.read(), EOF_VALUE))
+    }
 
+    @Throws(Exception::class)
+    fun testBool() {
+        val source = StringReader(" #t #f #t#f ")
+        val `in` = InputPort.Companion.create(source)
 
-  public void testCharIO()
-      throws Exception {
-    StringReader source = new StringReader("test");
-    InputPort in = InputPort.Companion.create(source);
+        assertTrue(eq(`in`.read(), ValueTraits.TRUE))
+        assertTrue(eq(`in`.read(), ValueTraits.FALSE))
+        assertTrue(eq(`in`.read(), ValueTraits.TRUE))
+        assertTrue(eq(`in`.read(), ValueTraits.FALSE))
+        TestCase.assertEquals(' '.code, `in`.readChar())
+        TestCase.assertEquals(`in`.readChar(), InputPort.EOF)
+    }
 
-    assertTrue(in.isReady());
-    assertEquals('t', in.peekChar());
-    assertEquals('t', in.readChar());
-    assertTrue(in.isReady());
-    assertEquals('e', in.peekChar());
-    assertEquals('e', in.readChar());
-    assertTrue(in.isReady());
-    assertEquals('s', in.readChar());
-    assertEquals('t', in.peekChar());
-    assertTrue(in.isReady());
-    assertEquals('t', in.readChar());
-    assertTrue(in.isReady());
-    assertEquals(in.peekChar(), InputPort.EOF);
-    assertEquals(in.readChar(), InputPort.EOF);
-    assertTrue(in.isReady());
-  }
+    @Throws(Exception::class)
+    fun testNumber() {
+        val source = StringReader(
+            "-2 -1 0 1 2"
+        )
+        val `in` = InputPort.Companion.create(source)
 
-  public void testWS()
-      throws Exception {
-    StringReader source = new StringReader(
-        " \t \n ; test# 1 2 \"\"\" ;;; 3 \n  \n ;  fkdjhgd "
-    );
-    InputPort in = InputPort.Companion.create(source);
+        assertTrue(eqv(`in`.read(), ScmNumber.Companion.create(-2)))
+        assertTrue(eqv(`in`.read(), ScmNumber.Companion.create(-1)))
+        assertTrue(eqv(`in`.read(), ScmNumber.Companion.create(0)))
+        assertTrue(eqv(`in`.read(), ScmNumber.Companion.create(1)))
+        assertTrue(eqv(`in`.read(), ScmNumber.Companion.create(2)))
+        TestCase.assertEquals(`in`.readChar(), InputPort.EOF)
+    }
 
-    assertTrue(ValueTraits.INSTANCE.eq(in.read(), InputPort.Companion.getEOF_VALUE()));
-  }
+    @Throws(Exception::class)
+    fun testChar() {
+        val source = StringReader(
+            "#\\# #\\\\ #\\\" #\\  #\\newline #\\space #\\a"
+        )
+        val `in` = InputPort.Companion.create(source)
 
-  public void testBool()
-      throws Exception {
-    StringReader source = new StringReader(" #t #f #t#f ");
-    InputPort in = InputPort.Companion.create(source);
+        assertTrue(eqv(`in`.read(), ValueTraits.toScmChar('#')))
+        assertTrue(eqv(`in`.read(), ValueTraits.toScmChar('\\')))
+        assertTrue(eqv(`in`.read(), ValueTraits.toScmChar('"')))
+        assertTrue(eqv(`in`.read(), ValueTraits.toScmChar(' ')))
+        assertTrue(eqv(`in`.read(), ValueTraits.toScmChar('\n')))
+        assertTrue(eqv(`in`.read(), ValueTraits.toScmChar(' ')))
+        assertTrue(eqv(`in`.read(), ValueTraits.toScmChar('a')))
+        TestCase.assertEquals(`in`.readChar(), InputPort.EOF)
+    }
 
-    assertTrue(ValueTraits.INSTANCE.eq(in.read(), ValueTraits.TRUE));
-    assertTrue(ValueTraits.INSTANCE.eq(in.read(), ValueTraits.FALSE));
-    assertTrue(ValueTraits.INSTANCE.eq(in.read(), ValueTraits.TRUE));
-    assertTrue(ValueTraits.INSTANCE.eq(in.read(), ValueTraits.FALSE));
-    assertEquals(' ', in.readChar());
-    assertEquals(in.readChar(), InputPort.EOF);
-  }
+    @Throws(Exception::class)
+    fun testString() {
+        val str1 = ""
+        val str2 = " Hallo ! "
+        val str3a = " \\\\ \\\" \n "
+        val str3b = " \\ \" \n "
 
-  public void testNumber()
-      throws Exception {
-    StringReader source = new StringReader(
-        "-2 -1 0 1 2"
-    );
-    InputPort in = InputPort.Companion.create(source);
+        val source = StringReader(
+            ('"'.toString() + str1 + '"' + ' '
+                    + '"' + str2 + '"' + ' '
+                    + '"' + str3a + '"')
+        )
+        val `in` = InputPort.Companion.create(source)
 
-    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ScmNumber.Companion.create(-2)));
-    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ScmNumber.Companion.create(-1)));
-    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ScmNumber.Companion.create(0)));
-    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ScmNumber.Companion.create(1)));
-    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ScmNumber.Companion.create(2)));
-    assertEquals(in.readChar(), InputPort.EOF);
-  }
+        assertTrue(equal(`in`.read(), ScmString.Companion.create(str1)))
+        assertTrue(equal(`in`.read(), ScmString.Companion.create(str2)))
+        assertTrue(equal(`in`.read(), ScmString.Companion.create(str3b)))
+    }
 
-  public void testChar()
-      throws Exception {
-    StringReader source = new StringReader(
-        "#\\# #\\\\ #\\\" #\\  #\\newline #\\space #\\a"
-    );
-    InputPort in = InputPort.Companion.create(source);
+    @Throws(Exception::class)
+    fun testList() {
+        val one: Any = ScmNumber.Companion.create(1)
+        val two: Any = ScmNumber.Companion.create(2)
+        val three: Any = ScmNumber.Companion.create(3)
 
-    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ValueTraits.INSTANCE.toScmChar('#')));
-    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ValueTraits.INSTANCE.toScmChar('\\')));
-    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ValueTraits.INSTANCE.toScmChar('"')));
-    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ValueTraits.INSTANCE.toScmChar(' ')));
-    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ValueTraits.INSTANCE.toScmChar('\n')));
-    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ValueTraits.INSTANCE.toScmChar(' ')));
-    assertTrue(ValueTraits.INSTANCE.eqv(in.read(), ValueTraits.INSTANCE.toScmChar('a')));
-    assertEquals(in.readChar(), InputPort.EOF);
-  }
+        val source = StringReader(
+            "()(1 .2)(1 2 3)(1 .(2 .(3 .())))"
+        )
+        val `in` = InputPort.Companion.create(source)
 
-  public void testString()
-      throws Exception {
-    String str1 = "";
-    String str2 = " Hallo ! ";
-    String str3a = " \\\\ \\\" \n ";
-    String str3b = " \\ \" \n ";
+        assertTrue(equal(`in`.read(), ListFactory.create()))
+        assertTrue(equal(`in`.read(), createPair(one, two)))
+        assertTrue(
+            equal(`in`.read(), create(one, two, three))
+        )
+        assertTrue(
+            equal(`in`.read(), create(one, two, three))
+        )
+    }
 
-    StringReader source = new StringReader(
-        '"' + str1 + '"' + ' '
-            + '"' + str2 + '"' + ' '
-            + '"' + str3a + '"'
-    );
-    InputPort in = InputPort.Companion.create(source);
+    @Throws(Exception::class)
+    fun testVector() {
+        val one: Any = ScmNumber.Companion.create(1)
+        val two: Any = ScmNumber.Companion.create(2)
+        val v = ScmVector.Companion.create(3, one)
+        v.set(2, two)
+        val source = StringReader(
+            "#() #(1 1) #(1 1 2)"
+        )
+        val `in` = InputPort.Companion.create(source)
 
-    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ScmString.Companion.create(str1)));
-    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ScmString.Companion.create(str2)));
-    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ScmString.Companion.create(str3b)));
-  }
+        assertTrue(equal(`in`.read(), ScmVector.Companion.create()))
+        assertTrue(equal(`in`.read(), ScmVector.Companion.create(2, one)))
+        assertTrue(equal(`in`.read(), v))
+    }
 
-  public void testList()
-      throws Exception {
-    Object one = ScmNumber.Companion.create(1);
-    Object two = ScmNumber.Companion.create(2);
-    Object three = ScmNumber.Companion.create(3);
+    @Throws(Exception::class)
+    fun testSymbol() {
+        val test: Any = "hallo"
+        val source = StringReader(
+            "Hallo hallo HALLO HaLlO hAlLo + - ... ?12"
+        )
+        val `in` = InputPort.Companion.create(source)
 
-    StringReader source = new StringReader(
-        "()(1 .2)(1 2 3)(1 .(2 .(3 .())))"
-    );
-    InputPort in = InputPort.Companion.create(source);
+        assertTrue(eq(`in`.read(), test))
+        assertTrue(eq(`in`.read(), test))
+        assertTrue(eq(`in`.read(), test))
+        assertTrue(eq(`in`.read(), test))
+        assertTrue(eq(`in`.read(), test))
+        assertTrue(eq(`in`.read(), "+"))
+        assertTrue(eq(`in`.read(), "-"))
+        assertTrue(eq(`in`.read(), "..."))
+        assertTrue(eq(`in`.read(), "?12"))
+    }
 
-    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ListFactory.INSTANCE.create()));
-    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ListFactory.INSTANCE.createPair(one, two)));
-    assertTrue(
-        ValueTraits.INSTANCE.equal(in.read(), ListFactory.INSTANCE.create(one, two, three)));
-    assertTrue(
-        ValueTraits.INSTANCE.equal(in.read(), ListFactory.INSTANCE.create(one, two, three)));
-  }
+    @Throws(Exception::class)
+    fun testAbbrev() {
+        val source = StringReader(
+            "'a ' a `a ,a ,@a"
+        )
+        val `in` = InputPort.Companion.create(source)
 
-  public void testVector()
-      throws Exception {
-    Object one = ScmNumber.Companion.create(1);
-    Object two = ScmNumber.Companion.create(2);
-    ScmVector v = ScmVector.Companion.create(3, one);
-    v.set(2, two);
-    StringReader source = new StringReader(
-        "#() #(1 1) #(1 1 2)"
-    );
-    InputPort in = InputPort.Companion.create(source);
+        val a = "a"
+        val q = "quote"
+        val qq = "quasiquote"
+        val uq = "unquote"
+        val uqs = "unquote-splicing"
 
-    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ScmVector.Companion.create()));
-    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ScmVector.Companion.create(2, one)));
-    assertTrue(ValueTraits.INSTANCE.equal(in.read(), v));
-  }
-
-  public void testSymbol()
-      throws Exception {
-    Object test = "hallo";
-    StringReader source = new StringReader(
-        "Hallo hallo HALLO HaLlO hAlLo + - ... ?12"
-    );
-    InputPort in = InputPort.Companion.create(source);
-
-    assertTrue(ValueTraits.INSTANCE.eq(in.read(), test));
-    assertTrue(ValueTraits.INSTANCE.eq(in.read(), test));
-    assertTrue(ValueTraits.INSTANCE.eq(in.read(), test));
-    assertTrue(ValueTraits.INSTANCE.eq(in.read(), test));
-    assertTrue(ValueTraits.INSTANCE.eq(in.read(), test));
-    assertTrue(ValueTraits.INSTANCE.eq(in.read(), "+"));
-    assertTrue(ValueTraits.INSTANCE.eq(in.read(), "-"));
-    assertTrue(ValueTraits.INSTANCE.eq(in.read(), "..."));
-    assertTrue(ValueTraits.INSTANCE.eq(in.read(), "?12"));
-  }
-
-  public void testAbbrev()
-      throws Exception {
-    StringReader source = new StringReader(
-        "'a ' a `a ,a ,@a"
-    );
-    InputPort in = InputPort.Companion.create(source);
-
-    String a = "a";
-    String q = "quote";
-    String qq = "quasiquote";
-    String uq = "unquote";
-    String uqs = "unquote-splicing";
-
-    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ListFactory.INSTANCE.create(q, a)));
-    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ListFactory.INSTANCE.create(q, a)));
-    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ListFactory.INSTANCE.create(qq, a)));
-    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ListFactory.INSTANCE.create(uq, a)));
-    assertTrue(ValueTraits.INSTANCE.equal(in.read(), ListFactory.INSTANCE.create(uqs, a)));
-  }
+        assertTrue(equal(`in`.read(), create(q, a)))
+        assertTrue(equal(`in`.read(), create(q, a)))
+        assertTrue(equal(`in`.read(), create(qq, a)))
+        assertTrue(equal(`in`.read(), create(uq, a)))
+        assertTrue(equal(`in`.read(), create(uqs, a)))
+    }
 }

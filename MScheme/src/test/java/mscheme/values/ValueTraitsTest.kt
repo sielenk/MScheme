@@ -4,9 +4,13 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package mscheme.values;
+package mscheme.values
 
-import junit.framework.TestCase;
+import junit.framework.TestCase
+import mscheme.values.ValueTraits.isTrue
+import java.lang.Boolean
+import kotlin.Any
+import kotlin.String
 
 /**
  * @author sielenk
@@ -14,22 +18,18 @@ import junit.framework.TestCase;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class ValueTraitsTest extends TestCase {
+class ValueTraitsTest
+/**
+ * Constructor for ValueTraitsTest.
+ */
+    (name: String?) : TestCase(name) {
+    fun testIsTrue() {
+        assertTrue(isTrue(Boolean.TRUE))
+        assertFalse(isTrue(Boolean.FALSE))
 
-  /**
-   * Constructor for ValueTraitsTest.
-   */
-  public ValueTraitsTest(String name) {
-    super(name);
-  }
+        assertTrue(isTrue(ValueTraits.TRUE))
+        assertFalse(isTrue(ValueTraits.FALSE))
 
-  final public void testIsTrue() {
-    assertTrue(ValueTraits.INSTANCE.isTrue(Boolean.TRUE));
-    assertFalse(ValueTraits.INSTANCE.isTrue(Boolean.FALSE));
-
-    assertTrue(ValueTraits.INSTANCE.isTrue(ValueTraits.TRUE));
-    assertFalse(ValueTraits.INSTANCE.isTrue(ValueTraits.FALSE));
-
-    assertTrue(ValueTraits.INSTANCE.isTrue(new Object()));
-  }
+        assertTrue(isTrue(Any()))
+    }
 }

@@ -33,5 +33,4 @@ object AllTests {
         //$JUnit-END$
         return suite
     }
-
 }

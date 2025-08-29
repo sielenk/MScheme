@@ -4,11 +4,12 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package mscheme.values;
+package mscheme.values
 
-import java.io.PipedReader;
-import java.io.PipedWriter;
-import junit.framework.TestCase;
+import junit.framework.TestCase
+import mscheme.values.ValueTraits.equal
+import java.io.PipedReader
+import java.io.PipedWriter
 
 /**
  * @author sielenk
@@ -16,68 +17,75 @@ import junit.framework.TestCase;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class OutputPortTest
-    extends TestCase {
-
-  public OutputPortTest(String name) {
-    super(name);
-  }
-
-  private static void checkReadWrite(Object expected)
-      throws Exception {
-    PipedReader inPipe = new PipedReader();
-
-    {
-      PipedWriter outPipe = new PipedWriter(inPipe);
-      OutputPort out = OutputPort.Companion.create(outPipe);
-      out.write(expected);
-      out.close();
-      outPipe.close();
+class OutputPortTest
+    (name: String?) : TestCase(name) {
+    @Throws(Exception::class)
+    fun testReadWriteBoolean() {
+        checkReadWrite(ValueTraits.TRUE)
+        checkReadWrite(ValueTraits.FALSE)
     }
 
-    Object actual = InputPort.Companion.create(inPipe).read();
+    @Throws(Exception::class)
+    fun testReadWriteChar() {
+        checkReadWrite(ValueTraits.toScmChar('a'))
+        checkReadWrite(ValueTraits.toScmChar('\n'))
+        checkReadWrite(ValueTraits.toScmChar(' '))
+    }
 
-    assertTrue(ValueTraits.INSTANCE.equal(expected, actual));
-  }
+    @Throws(Exception::class)
+    fun testReadWriteNumber() {
+        checkReadWrite(ValueTraits.toScmNumber(-1))
+        checkReadWrite(ValueTraits.toScmNumber(0))
+        checkReadWrite(ValueTraits.toScmNumber(12))
+    }
 
-  public void testReadWriteBoolean()
-      throws Exception {
-    checkReadWrite(ValueTraits.TRUE);
-    checkReadWrite(ValueTraits.FALSE);
-  }
+    @Throws(Exception::class)
+    fun testReadWriteList() {
+        checkReadWrite(ListFactory.create())
+        checkReadWrite(ListFactory.create(ValueTraits.TRUE))
+        checkReadWrite(
+            ListFactory.create(
+                ValueTraits.toScmChar('b'),
+                ValueTraits.toScmChar('\n')
+            )
+        )
+    }
 
-  public void testReadWriteChar()
-      throws Exception {
-    checkReadWrite(ValueTraits.INSTANCE.toScmChar('a'));
-    checkReadWrite(ValueTraits.INSTANCE.toScmChar('\n'));
-    checkReadWrite(ValueTraits.INSTANCE.toScmChar(' '));
-  }
+    @Throws(Exception::class)
+    fun testReadWriteVector() {
+        checkReadWrite(ScmVector.create())
+        checkReadWrite(
+            ScmVector.create(
+                arrayOf(
+                    ValueTraits.toScmChar('b'),
+                    ValueTraits.toScmChar('\n')
+                )
+            )
+        )
+    }
 
-  public void testReadWriteNumber()
-      throws Exception {
-    checkReadWrite(ValueTraits.INSTANCE.toScmNumber(-1));
-    checkReadWrite(ValueTraits.INSTANCE.toScmNumber(0));
-    checkReadWrite(ValueTraits.INSTANCE.toScmNumber(12));
-  }
+    @Throws(Exception::class)
+    fun testReadWriteString() {
+        checkReadWrite(ScmString.create("Hallo World"))
+        checkReadWrite(ScmString.create("And now the bad bits: \n \" \\ öäü"))
+    }
 
-  public void testReadWriteList()
-      throws Exception {
-    checkReadWrite(ListFactory.INSTANCE.create());
-    checkReadWrite(ListFactory.INSTANCE.create(ValueTraits.TRUE));
-    checkReadWrite(ListFactory.INSTANCE.create(ValueTraits.INSTANCE.toScmChar('b'),
-        ValueTraits.INSTANCE.toScmChar('\n')));
-  }
+    companion object {
+        @Throws(Exception::class)
+        private fun checkReadWrite(expected: Any?) {
+            val inPipe = PipedReader()
 
-  public void testReadWriteVector()
-      throws Exception {
-    checkReadWrite(ScmVector.Companion.create());
-    checkReadWrite(ScmVector.Companion.create(new Object[]
-        {ValueTraits.INSTANCE.toScmChar('b'), ValueTraits.INSTANCE.toScmChar('\n')}));
-  }
+            run {
+                val outPipe = PipedWriter(inPipe)
+                val out = OutputPort.create(outPipe)
+                out.write(expected)
+                out.close()
+                outPipe.close()
+            }
 
-  public void testReadWriteString()
-      throws Exception {
-    checkReadWrite(ScmString.Companion.create("Hallo World"));
-    checkReadWrite(ScmString.Companion.create("And now the bad bits: \n \" \\ öäü"));
-  }
+            val actual = InputPort.create(inPipe).read()
+
+            assertTrue(equal(expected, actual))
+        }
+    }
 }

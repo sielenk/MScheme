@@ -4,10 +4,10 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package mscheme.tests;
+package mscheme.tests
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import junit.framework.Test
+import junit.framework.TestSuite
 
 /**
  * @author sielenk
@@ -15,17 +15,17 @@ import junit.framework.TestSuite;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class AllTests {
-
-  public static Test suite() {
-    TestSuite suite = new TestSuite("Test for mscheme.tests");
-    //$JUnit-BEGIN$
-    suite.addTestSuite(TestBugs.class);
-    suite.addTestSuite(TestValue.class);
-    suite.addTestSuite(TestMachine.class);
-    suite.addTestSuite(TestR5RS.class);
-    suite.addTestSuite(TestJavaInterop.class);
-    //$JUnit-END$
-    return suite;
-  }
+object AllTests {
+    @JvmStatic
+    fun suite(): Test {
+        val suite = TestSuite("Test for mscheme.tests")
+        //$JUnit-BEGIN$
+        suite.addTestSuite(TestBugs::class.java)
+        suite.addTestSuite(TestValue::class.java)
+        suite.addTestSuite(TestMachine::class.java)
+        suite.addTestSuite(TestR5RS::class.java)
+        suite.addTestSuite(TestJavaInterop::class.java)
+        //$JUnit-END$
+        return suite
+    }
 }

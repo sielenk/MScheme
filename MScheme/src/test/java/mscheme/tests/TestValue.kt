@@ -17,455 +17,483 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.tests
 
-package mscheme.tests;
+import junit.framework.TestCase
+import mscheme.environment.Environment.Companion.getEmpty
+import mscheme.exceptions.TypeError
+import mscheme.values.*
+import mscheme.values.ListFactory.create
+import mscheme.values.ListFactory.createPair
+import mscheme.values.ValueTraits.eq
+import mscheme.values.ValueTraits.equal
+import mscheme.values.ValueTraits.eqv
+import mscheme.values.ValueTraits.isEmpty
+import mscheme.values.ValueTraits.isFunction
+import mscheme.values.ValueTraits.isList
+import mscheme.values.ValueTraits.isPair
+import mscheme.values.ValueTraits.isPort
+import mscheme.values.ValueTraits.isScmBoolean
+import mscheme.values.ValueTraits.isScmChar
+import mscheme.values.ValueTraits.isScmNumber
+import mscheme.values.ValueTraits.isScmString
+import mscheme.values.ValueTraits.isScmVector
+import mscheme.values.ValueTraits.isSymbol
+import mscheme.values.ValueTraits.isTrue
+import mscheme.values.ValueTraits.toConstPair
+import mscheme.values.ValueTraits.toEnvironment
+import mscheme.values.ValueTraits.toInputPort
+import mscheme.values.ValueTraits.toList
+import mscheme.values.ValueTraits.toOutputPort
+import mscheme.values.ValueTraits.toScmChar
+import mscheme.values.ValueTraits.toScmNumber
+import mscheme.values.ValueTraits.toScmString
+import mscheme.values.ValueTraits.toScmVector
+import mscheme.values.ValueTraits.toStaticEnvironment
+import mscheme.values.ValueTraits.toSymbol
+import mscheme.values.functions.CallCCFunction
+import java.io.StringReader
+import java.io.StringWriter
 
-import java.io.StringReader;
-import java.io.StringWriter;
-import mscheme.environment.Environment;
-import mscheme.exceptions.TypeError;
-import mscheme.values.InputPort;
-import mscheme.values.ListFactory;
-import mscheme.values.OutputPort;
-import mscheme.values.ScmNumber;
-import mscheme.values.ScmString;
-import mscheme.values.ScmVector;
-import mscheme.values.ValueTraits;
-import mscheme.values.functions.CallCCFunction;
-
-public class TestValue
-    extends junit.framework.TestCase {
-
-  public TestValue(String name) {
-    super(name);
-  }
-
-  protected void setUp()
-      throws Exception {
-  }
-
-  protected void tearDown() {
-  }
-
-
-  private int countTypes(Object v) {
-    int count = 0;
-
-    if (ValueTraits.INSTANCE.isList(v)) {
-      ++count;
+class TestValue
+    (name: String?) : TestCase(name) {
+    @Throws(Exception::class)
+    override fun setUp() {
     }
 
-    if (ValueTraits.INSTANCE.isScmBoolean(v)) {
-      ++count;
-    }
-    if (ValueTraits.INSTANCE.isPair(v)) {
-      ++count;
-    }
-    if (ValueTraits.INSTANCE.isSymbol(v)) {
-      ++count;
-    }
-    if (ValueTraits.INSTANCE.isScmNumber(v)) {
-      ++count;
-    }
-    if (ValueTraits.INSTANCE.isScmChar(v)) {
-      ++count;
-    }
-    if (ValueTraits.INSTANCE.isScmString(v)) {
-      ++count;
-    }
-    if (ValueTraits.INSTANCE.isScmVector(v)) {
-      ++count;
-    }
-    if (ValueTraits.INSTANCE.isPort(v)) {
-      ++count;
-    }
-    if (ValueTraits.INSTANCE.isFunction(v)) {
-      ++count;
+    override fun tearDown() {
     }
 
-    return count;
-  }
 
-  private int countCasts(Object v) {
-    int count = 0;
+    private fun countTypes(v: Any?): Int {
+        var count = 0
 
-    try {
-      ValueTraits.INSTANCE.toList(v);
-      ++count;
-    } catch (TypeError e) {
+        if (isList(v)) {
+            ++count
+        }
+
+        if (isScmBoolean(v)) {
+            ++count
+        }
+        if (isPair(v)) {
+            ++count
+        }
+        if (isSymbol(v)) {
+            ++count
+        }
+        if (isScmNumber(v)) {
+            ++count
+        }
+        if (isScmChar(v)) {
+            ++count
+        }
+        if (isScmString(v)) {
+            ++count
+        }
+        if (isScmVector(v)) {
+            ++count
+        }
+        if (isPort(v)) {
+            ++count
+        }
+        if (isFunction(v)) {
+            ++count
+        }
+
+        return count
     }
 
-    try {
-      ValueTraits.INSTANCE.toConstPair(v);
-      ++count;
-    } catch (TypeError e) {
+    private fun countCasts(v: Any?): Int {
+        var count = 0
+
+        try {
+            toList(v)
+            ++count
+        } catch (e: TypeError) {
+        }
+
+        try {
+            toConstPair(v)
+            ++count
+        } catch (e: TypeError) {
+        }
+        try {
+            toSymbol(v)
+            ++count
+        } catch (e: TypeError) {
+        }
+        try {
+            toScmNumber(v)
+            ++count
+        } catch (e: TypeError) {
+        }
+        try {
+            toScmChar(v)
+            ++count
+        } catch (e: TypeError) {
+        }
+        try {
+            toScmString(v)
+            ++count
+        } catch (e: TypeError) {
+        }
+        try {
+            toScmVector(v)
+            ++count
+        } catch (e: TypeError) {
+        }
+        try {
+            toInputPort(v)
+            ++count
+        } catch (e: TypeError) {
+        }
+        try {
+            toOutputPort(v)
+            ++count
+        } catch (e: TypeError) {
+        }
+
+        try {
+            toEnvironment(v)
+            ++count
+        } catch (e: TypeError) {
+        }
+        try {
+            toStaticEnvironment(v)
+            ++count
+        } catch (e: TypeError) {
+        }
+
+        return count
     }
-    try {
-      ValueTraits.INSTANCE.toSymbol(v);
-      ++count;
-    } catch (TypeError e) {
-    }
-    try {
-      ValueTraits.INSTANCE.toScmNumber(v);
-      ++count;
-    } catch (TypeError e) {
-    }
-    try {
-      ValueTraits.INSTANCE.toScmChar(v);
-      ++count;
-    } catch (TypeError e) {
-    }
-    try {
-      ValueTraits.INSTANCE.toScmString(v);
-      ++count;
-    } catch (TypeError e) {
-    }
-    try {
-      ValueTraits.INSTANCE.toScmVector(v);
-      ++count;
-    } catch (TypeError e) {
-    }
-    try {
-      ValueTraits.INSTANCE.toInputPort(v);
-      ++count;
-    } catch (TypeError e) {
-    }
-    try {
-      ValueTraits.INSTANCE.toOutputPort(v);
-      ++count;
-    } catch (TypeError e) {
+
+    private fun commonTests(v: Any?, castCount: Int = 1) {
+        assertTrue(isTrue(v))
+
+        TestCase.assertEquals(1, countTypes(v))
+        TestCase.assertEquals(countCasts(v), castCount)
     }
 
-    try {
-      ValueTraits.INSTANCE.toEnvironment(v);
-      ++count;
-    } catch (TypeError e) {
+
+    @Throws(Exception::class)
+    fun testFalse() {
+        val False: Any = ValueTraits.FALSE
+
+        assertFalse(isTrue(False))
+
+        TestCase.assertEquals(1, countTypes(False))
+        TestCase.assertEquals(0, countCasts(False))
+
+        assertTrue(isScmBoolean(False))
     }
-    try {
-      ValueTraits.INSTANCE.toStaticEnvironment(v);
-      ++count;
-    } catch (TypeError e) {
+
+    @Throws(Exception::class)
+    fun testTrue() {
+        val True: Any = ValueTraits.TRUE
+
+        assertTrue(isTrue(True))
+
+        TestCase.assertEquals(1, countTypes(True))
+        TestCase.assertEquals(0, countCasts(True))
+
+        assertTrue(isScmBoolean(True))
     }
 
-    return count;
-  }
+    @Throws(Exception::class)
+    fun testEmpty() {
+        val empty: Any = ListFactory.create()
 
-  private void commonTests(Object v, int castCount) {
-    assertTrue(ValueTraits.INSTANCE.isTrue(v));
+        assertTrue(isTrue(empty))
 
-    assertEquals(1, countTypes(v));
-    assertEquals(countCasts(v), castCount);
-  }
+        TestCase.assertEquals(1, countTypes(empty)) // List
+        TestCase.assertEquals(1, countCasts(empty))
 
-  private void commonTests(Object v) {
-    commonTests(v, 1);
-  }
+        assertTrue(isEmpty(empty))
 
-
-  public void testFalse()
-      throws Exception {
-    final Object False = ValueTraits.FALSE;
-
-    assertFalse(ValueTraits.INSTANCE.isTrue(False));
-
-    assertEquals(1, countTypes(False));
-    assertEquals(0, countCasts(False));
-
-    assertTrue(ValueTraits.INSTANCE.isScmBoolean(False));
-  }
-
-  public void testTrue()
-      throws Exception {
-    final Object True = ValueTraits.TRUE;
-
-    assertTrue(ValueTraits.INSTANCE.isTrue(True));
-
-    assertEquals(1, countTypes(True));
-    assertEquals(0, countCasts(True));
-
-    assertTrue(ValueTraits.INSTANCE.isScmBoolean(True));
-  }
-
-  public void testEmpty()
-      throws Exception {
-    final Object empty = ListFactory.INSTANCE.create();
-
-    assertTrue(ValueTraits.INSTANCE.isTrue(empty));
-
-    assertEquals(1, countTypes(empty)); // List
-    assertEquals(1, countCasts(empty));
-
-    assertTrue(ValueTraits.INSTANCE.isEmpty(empty));
-
-    assertTrue(ValueTraits.INSTANCE.isList(empty));
-    assertSame(ValueTraits.INSTANCE.toList(empty), empty);
-  }
-
-  public void testPair()
-      throws Exception {
-    final Object pair = ListFactory.INSTANCE.createPair(
-        ValueTraits.TRUE,
-        ValueTraits.TRUE
-    );
-
-    commonTests(pair);
-    assertTrue(ValueTraits.INSTANCE.isPair(pair));
-    assertSame(ValueTraits.INSTANCE.toConstPair(pair), pair);
-  }
-
-  public void testList()
-      throws Exception {
-    final Object list = ListFactory.INSTANCE.create(
-        ValueTraits.TRUE
-    );
-
-    assertTrue(ValueTraits.INSTANCE.isTrue(list));
-
-    assertEquals(2, countTypes(list)); // List and Pair
-    assertEquals(2, countCasts(list));
-
-    assertTrue(ValueTraits.INSTANCE.isPair(list));
-    assertSame(ValueTraits.INSTANCE.toConstPair(list), list);
-
-    assertTrue(ValueTraits.INSTANCE.isList(list));
-    assertSame(ValueTraits.INSTANCE.toList(list), list);
-  }
-
-  public void testSymbol()
-      throws Exception {
-    final Object symbol = "test";
-
-    commonTests(symbol);
-    assertTrue(ValueTraits.INSTANCE.isSymbol(symbol));
-    assertSame(ValueTraits.INSTANCE.toSymbol(symbol), symbol);
-  }
-
-  public void testFunction()
-      throws Exception {
-    final Object function = CallCCFunction.INSTANCE;
-
-    commonTests(function, 0);
-    assertTrue(ValueTraits.INSTANCE.isFunction(function));
-  }
-
-  public void testNumber()
-      throws Exception {
-    final Object number = ScmNumber.Companion.create(49875);
-
-    commonTests(number);
-    assertTrue(ValueTraits.INSTANCE.isScmNumber(number));
-    assertSame(ValueTraits.INSTANCE.toScmNumber(number), number);
-  }
-
-  public void testChar()
-      throws Exception {
-    final Object character = ValueTraits.INSTANCE.toScmChar('a');
-
-    commonTests(character);
-    assertTrue(ValueTraits.INSTANCE.isScmChar(character));
-    assertSame(ValueTraits.INSTANCE.toScmChar(character), character);
-  }
-
-  public void testString()
-      throws Exception {
-    final Object string = ScmString.Companion.create("Hallo !");
-
-    commonTests(string);
-    assertTrue(ValueTraits.INSTANCE.isScmString(string));
-    assertSame(ValueTraits.INSTANCE.toScmString(string), string);
-  }
-
-  public void testVector()
-      throws Exception {
-    final Object vector = ScmVector.Companion.create();
-
-    commonTests(vector);
-    assertTrue(ValueTraits.INSTANCE.isScmVector(vector));
-    assertSame(ValueTraits.INSTANCE.toScmVector(vector), vector);
-  }
-
-  public void testOutputPort()
-      throws Exception {
-    final Object port = OutputPort.Companion.create(new StringWriter());
-
-    commonTests(port);
-    assertTrue(ValueTraits.INSTANCE.isPort(port));
-    assertSame(ValueTraits.INSTANCE.toOutputPort(port), port);
-  }
-
-  public void testInputPort()
-      throws Exception {
-    final Object port = InputPort.Companion.create(new StringReader(""));
-
-    commonTests(port);
-    assertTrue(ValueTraits.INSTANCE.isPort(port));
-    assertSame(ValueTraits.INSTANCE.toInputPort(port), port);
-  }
-
-  public void testEnvironment()
-      throws Exception {
-    final Object environment = Environment.Companion.getEmpty();
-
-    assertTrue(ValueTraits.INSTANCE.isTrue(environment));
-
-    assertEquals(0, countTypes(environment));
-    assertEquals(1, countCasts(environment));
-
-    assertSame(ValueTraits.INSTANCE.toEnvironment(environment), environment);
-  }
-
-  public void testStaticEnvironment()
-      throws Exception {
-    final Object environment = Environment.Companion.getEmpty().getStatic();
-
-    assertTrue(ValueTraits.INSTANCE.isTrue(environment));
-
-    assertEquals(0, countTypes(environment));
-    assertEquals(1, countCasts(environment));
-
-    assertSame(ValueTraits.INSTANCE.toStaticEnvironment(environment), environment);
-  }
-
-
-  private int eqHelper(Object fst, Object snd) {
-    boolean eq = ValueTraits.INSTANCE.eq(fst, snd);
-    boolean eqv = ValueTraits.INSTANCE.eqv(fst, snd);
-    boolean equal = ValueTraits.INSTANCE.equal(fst, snd);
-
-    // reflexivity
-    assertTrue(ValueTraits.INSTANCE.eq(fst, fst));
-    assertTrue(ValueTraits.INSTANCE.eq(snd, snd));
-    assertTrue(ValueTraits.INSTANCE.eqv(fst, fst));
-    assertTrue(ValueTraits.INSTANCE.eqv(snd, snd));
-    assertTrue(ValueTraits.INSTANCE.equal(fst, fst));
-    assertTrue(ValueTraits.INSTANCE.equal(snd, snd));
-
-    // symmetry
-    assertEquals(eq, ValueTraits.INSTANCE.eq(snd, fst));
-    assertEquals(eqv, ValueTraits.INSTANCE.eqv(snd, fst));
-    assertEquals(equal, ValueTraits.INSTANCE.equal(snd, fst));
-
-    assertTrue(!eq | eqv); // aka. eq  -> eqv
-    assertTrue(!eqv | equal); // aka. eqv -> equal
-
-    if (eq) {
-      return 3;
-    } else if (eqv) {
-      return 2;
-    } else if (equal) {
-      return 1;
-    } else {
-      return 0;
+        assertTrue(isList(empty))
+        assertSame(toList(empty), empty)
     }
-  }
 
-  public void testEq()
-      throws Exception {
-    Object u = "u";
-    Object v = "v";
+    @Throws(Exception::class)
+    fun testPair() {
+        val pair: Any = createPair(
+            ValueTraits.TRUE,
+            ValueTraits.TRUE
+        )
 
-    // eq equivalent values
+        commonTests(pair)
+        assertTrue(isPair(pair))
+        assertSame(toConstPair(pair), pair)
+    }
 
-    assertEquals(3, eqHelper(v, v));
+    @Throws(Exception::class)
+    fun testList() {
+        val list: Any = create(
+            ValueTraits.TRUE
+        )
 
-    assertEquals(3, eqHelper(
-        ValueTraits.TRUE,
-        ValueTraits.TRUE
-    ));
+        assertTrue(isTrue(list))
 
-    assertEquals(3, eqHelper(
-        ValueTraits.FALSE,
-        ValueTraits.FALSE
-    ));
+        TestCase.assertEquals(2, countTypes(list)) // List and Pair
+        TestCase.assertEquals(2, countCasts(list))
 
-    assertEquals(3, eqHelper(
-        "a",
-        "a"
-    ));
+        assertTrue(isPair(list))
+        assertSame(toConstPair(list), list)
 
-    assertEquals(3, eqHelper(
-        ListFactory.INSTANCE.create(),
-        ListFactory.INSTANCE.create()
-    ));
+        assertTrue(isList(list))
+        assertSame(toList(list), list)
+    }
 
-    // eqv equivalent values
+    @Throws(Exception::class)
+    fun testSymbol() {
+        val symbol: Any = "test"
 
-    assertTrue(
-        eqHelper(
-            ScmNumber.Companion.create(7123645),
-            ScmNumber.Companion.create(7123645)
-        ) >= 2
-    );
+        commonTests(symbol)
+        assertTrue(isSymbol(symbol))
+        assertSame(toSymbol(symbol), symbol)
+    }
 
-    assertTrue(
-        eqHelper(
-            ValueTraits.INSTANCE.toScmChar('u'),
-            ValueTraits.INSTANCE.toScmChar('u')
-        ) >= 2
-    );
+    @Throws(Exception::class)
+    fun testFunction() {
+        val function: Any = CallCCFunction
 
-    // equal equivalent but eqv unspec. values
+        commonTests(function, 0)
+        assertTrue(isFunction(function))
+    }
 
-    assertTrue(
-        eqHelper(
-            ScmVector.Companion.create(),
-            ScmVector.Companion.create()
-        ) >= 1
-    );
+    @Throws(Exception::class)
+    fun testNumber() {
+        val number: Any = ScmNumber.Companion.create(49875)
 
-    assertTrue(
-        eqHelper(
-            ScmVector.Companion.create(5, v),
-            ScmVector.Companion.create(5, v)
-        ) >= 1
-    );
+        commonTests(number)
+        assertTrue(isScmNumber(number))
+        assertSame(toScmNumber(number), number)
+    }
 
-    assertTrue(
-        eqHelper(
-            ScmString.Companion.create(""),
-            ScmString.Companion.create("")
-        ) >= 1
-    );
+    @Throws(Exception::class)
+    fun testChar() {
+        val character: Any = ValueTraits.toScmChar('a')
 
-    assertTrue(
-        eqHelper(
-            ScmString.Companion.create("Hallo"),
-            ScmString.Companion.create("Hallo")
-        ) >= 1
-    );
+        commonTests(character)
+        assertTrue(isScmChar(character))
+        assertSame(toScmChar(character), character)
+    }
 
-    // equal equivalent but eqv different values
+    @Throws(Exception::class)
+    fun testString() {
+        val string: Any = ScmString.Companion.create("Hallo !")
 
-    assertEquals(1, eqHelper(
-        ListFactory.INSTANCE.createPair(v, v),
-        ListFactory.INSTANCE.createPair(v, v)
-    ));
+        commonTests(string)
+        assertTrue(isScmString(string))
+        assertSame(toScmString(string), string)
+    }
 
-    // different values
+    @Throws(Exception::class)
+    fun testVector() {
+        val vector: Any = ScmVector.Companion.create()
 
-    assertEquals(0, eqHelper(
-        ValueTraits.TRUE,
-        ValueTraits.FALSE
-    ));
+        commonTests(vector)
+        assertTrue(isScmVector(vector))
+        assertSame(toScmVector(vector), vector)
+    }
 
-    assertEquals(0, eqHelper(
-        "u",
-        "v"
-    ));
+    @Throws(Exception::class)
+    fun testOutputPort() {
+        val port: Any = OutputPort.Companion.create(StringWriter())
 
-    assertEquals(0, eqHelper(
-        ScmVector.Companion.create(5, u),
-        ScmVector.Companion.create(5, v)
-    ));
+        commonTests(port)
+        assertTrue(isPort(port))
+        assertSame(toOutputPort(port), port)
+    }
 
-    assertEquals(0, eqHelper(
-        ScmVector.Companion.create(7, v),
-        ScmVector.Companion.create(5, v)
-    ));
+    @Throws(Exception::class)
+    fun testInputPort() {
+        val port: Any = InputPort.Companion.create(StringReader(""))
 
-    assertEquals(0, eqHelper(
-        ScmString.Companion.create("Hallo 1"),
-        ScmString.Companion.create("Hallo 2")
-    ));
-  }
+        commonTests(port)
+        assertTrue(isPort(port))
+        assertSame(toInputPort(port), port)
+    }
+
+    @Throws(Exception::class)
+    fun testEnvironment() {
+        val environment: Any = getEmpty()
+
+        assertTrue(isTrue(environment))
+
+        TestCase.assertEquals(0, countTypes(environment))
+        TestCase.assertEquals(1, countCasts(environment))
+
+        assertSame(toEnvironment(environment), environment)
+    }
+
+    @Throws(Exception::class)
+    fun testStaticEnvironment() {
+        val environment: Any = getEmpty().static
+
+        assertTrue(isTrue(environment))
+
+        TestCase.assertEquals(0, countTypes(environment))
+        TestCase.assertEquals(1, countCasts(environment))
+
+        assertSame(toStaticEnvironment(environment), environment)
+    }
+
+
+    private fun eqHelper(fst: Any?, snd: Any?): Int {
+        val eq = eq(fst, snd)
+        val eqv = eqv(fst, snd)
+        val equal = equal(fst, snd)
+
+        // reflexivity
+        assertTrue(eq(fst, fst))
+        assertTrue(eq(snd, snd))
+        assertTrue(eqv(fst, fst))
+        assertTrue(eqv(snd, snd))
+        assertTrue(equal(fst, fst))
+        assertTrue(equal(snd, snd))
+
+        // symmetry
+        TestCase.assertEquals(eq, eq(snd, fst))
+        TestCase.assertEquals(eqv, eqv(snd, fst))
+        TestCase.assertEquals(equal, equal(snd, fst))
+
+        assertTrue(!eq or eqv) // aka. eq  -> eqv
+        assertTrue(!eqv or equal) // aka. eqv -> equal
+
+        if (eq) {
+            return 3
+        } else if (eqv) {
+            return 2
+        } else if (equal) {
+            return 1
+        } else {
+            return 0
+        }
+    }
+
+    @Throws(Exception::class)
+    fun testEq() {
+        val u: Any = "u"
+        val v: Any = "v"
+
+        // eq equivalent values
+        TestCase.assertEquals(3, eqHelper(v, v))
+
+        TestCase.assertEquals(
+            3, eqHelper(
+                ValueTraits.TRUE,
+                ValueTraits.TRUE
+            )
+        )
+
+        TestCase.assertEquals(
+            3, eqHelper(
+                ValueTraits.FALSE,
+                ValueTraits.FALSE
+            )
+        )
+
+        TestCase.assertEquals(
+            3, eqHelper(
+                "a",
+                "a"
+            )
+        )
+
+        TestCase.assertEquals(
+            3, eqHelper(
+                ListFactory.create(),
+                ListFactory.create()
+            )
+        )
+
+        // eqv equivalent values
+        assertTrue(
+            eqHelper(
+                ScmNumber.Companion.create(7123645),
+                ScmNumber.Companion.create(7123645)
+            ) >= 2
+        )
+
+        assertTrue(
+            eqHelper(
+                ValueTraits.toScmChar('u'),
+                ValueTraits.toScmChar('u')
+            ) >= 2
+        )
+
+        // equal equivalent but eqv unspec. values
+        assertTrue(
+            eqHelper(
+                ScmVector.Companion.create(),
+                ScmVector.Companion.create()
+            ) >= 1
+        )
+
+        assertTrue(
+            eqHelper(
+                ScmVector.Companion.create(5, v),
+                ScmVector.Companion.create(5, v)
+            ) >= 1
+        )
+
+        assertTrue(
+            eqHelper(
+                ScmString.Companion.create(""),
+                ScmString.Companion.create("")
+            ) >= 1
+        )
+
+        assertTrue(
+            eqHelper(
+                ScmString.Companion.create("Hallo"),
+                ScmString.Companion.create("Hallo")
+            ) >= 1
+        )
+
+        // equal equivalent but eqv different values
+        TestCase.assertEquals(
+            1, eqHelper(
+                createPair(v, v),
+                createPair(v, v)
+            )
+        )
+
+        // different values
+        TestCase.assertEquals(
+            0, eqHelper(
+                ValueTraits.TRUE,
+                ValueTraits.FALSE
+            )
+        )
+
+        TestCase.assertEquals(
+            0, eqHelper(
+                "u",
+                "v"
+            )
+        )
+
+        TestCase.assertEquals(
+            0, eqHelper(
+                ScmVector.Companion.create(5, u),
+                ScmVector.Companion.create(5, v)
+            )
+        )
+
+        TestCase.assertEquals(
+            0, eqHelper(
+                ScmVector.Companion.create(7, v),
+                ScmVector.Companion.create(5, v)
+            )
+        )
+
+        TestCase.assertEquals(
+            0, eqHelper(
+                ScmString.Companion.create("Hallo 1"),
+                ScmString.Companion.create("Hallo 2")
+            )
+        )
+    }
 }

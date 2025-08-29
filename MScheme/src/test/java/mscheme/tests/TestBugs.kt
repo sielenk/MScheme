@@ -17,26 +17,19 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.tests
 
-package mscheme.tests;
+import mscheme.exceptions.CompileError
+import mscheme.exceptions.SchemeException
 
-import mscheme.exceptions.CompileError;
-import mscheme.exceptions.SchemeException;
-
-
-public class TestBugs
-    extends TestSchemeBase {
-
-  public TestBugs(String name) {
-    super(name);
-  }
-
-
-  public void test_2002_19_03()
-      throws SchemeException, InterruptedException {
-    // This failed, because set! didn't use delayed
-    // references, MHS 2002-19-03
-    check("""
+class TestBugs
+    (name: String?) : TestSchemeBase(name) {
+    @Throws(SchemeException::class, InterruptedException::class)
+    fun test_2002_19_03() {
+        // This failed, because set! didn't use delayed
+        // references, MHS 2002-19-03
+        check(
+            """
             (begin
               (define (f)
                 (define (g)
@@ -45,116 +38,123 @@ public class TestBugs
                 (define x 2)
                 (g)
                 x)
-              (f))""",
-        "1"
-    );
-  }
-
-  public void test_2002_04_09()
-      throws SchemeException, InterruptedException {
-    // It is now illegal to internally redefine a symbol.
-    try {
-      eval("(let ((x 1)) (begin (define x 2)) x)");
-      fail();
-    } catch (CompileError e) {
-    }
-  }
-
-  public void test_2002_04_15a()
-      throws SchemeException, InterruptedException {
-    // Internal definitions are not allowed after the
-    // first expression.
-
-    try {
-      eval("(let () 1 (define x 2) x)");
-      fail();
-    } catch (CompileError e) {
+              (f))
+              """.trimIndent(),
+            "1"
+        )
     }
 
-    try {
-      eval("(let () 'a (define x 2) x)");
-      fail();
-    } catch (CompileError e) {
+    @Throws(SchemeException::class, InterruptedException::class)
+    fun test_2002_04_09() {
+        // It is now illegal to internally redefine a symbol.
+        try {
+            eval("(let ((x 1)) (begin (define x 2)) x)")
+            fail()
+        } catch (e: CompileError) {
+        }
     }
 
-    try {
-      eval("(let ((a 1)) a (define x 2) x)");
-      fail();
-    } catch (CompileError e) {
+    @Throws(SchemeException::class, InterruptedException::class)
+    fun test_2002_04_15a() {
+        // Internal definitions are not allowed after the
+        // first expression.
+
+        try {
+            eval("(let () 1 (define x 2) x)")
+            fail()
+        } catch (e: CompileError) {
+        }
+
+        try {
+            eval("(let () 'a (define x 2) x)")
+            fail()
+        } catch (e: CompileError) {
+        }
+
+        try {
+            eval("(let ((a 1)) a (define x 2) x)")
+            fail()
+        } catch (e: CompileError) {
+        }
+
+        try {
+            eval("(let () (if 1 1 1) (define x 2) x)")
+            fail()
+        } catch (e: CompileError) {
+        }
     }
 
-    try {
-      eval("(let () (if 1 1 1) (define x 2) x)");
-      fail();
-    } catch (CompileError e) {
+    @Throws(SchemeException::class, InterruptedException::class)
+    fun test_2002_04_15ba() {
+        // no nested definitions
+        try {
+            eval("(define x (define y 3))")
+            fail()
+        } catch (e: CompileError) {
+        }
     }
-  }
 
-  public void test_2002_04_15ba()
-      throws SchemeException, InterruptedException {
-    // no nested definitions
-    try {
-      eval("(define x (define y 3))");
-      fail();
-    } catch (CompileError e) {
+    @Throws(SchemeException::class, InterruptedException::class)
+    fun test_2002_04_15bb() {
+        // no nested definitions
+        try {
+            eval("(lambda () (cons (define a 1) 2))")
+            fail()
+        } catch (e: CompileError) {
+        }
     }
-  }
 
-  public void test_2002_04_15bb()
-      throws SchemeException, InterruptedException {
-    // no nested definitions
-    try {
-      eval("(lambda () (cons (define a 1) 2))");
-      fail();
-    } catch (CompileError e) {
-    }
-  }
-
-  public void test_2002_04_15c()
-      throws SchemeException, InterruptedException {
-    try {
-      eval("""
+    @Throws(SchemeException::class, InterruptedException::class)
+    fun test_2002_04_15c() {
+        try {
+            eval(
+                """
           (define (f)
             (define y 2)
             (define g (+ y 1))
             g
-            y))"""
-      );
-      fail();
-    } catch (CompileError e) {
-    }
+            y))
+            """.trimIndent()
+            )
+            fail()
+        } catch (e: CompileError) {
+        }
 
-    try {
-      eval("""
+        try {
+            eval(
+                """
           (define (f)
             (define g (+ y 1))
             (define y 2)
             g
-            y))"""
-      );
-      fail();
-    } catch (CompileError e) {
-    }
+            y))
+            """.trimIndent()
+            )
+            fail()
+        } catch (e: CompileError) {
+        }
 
-    try {
-      eval("""
+        try {
+            eval(
+                """
           (define (f)
             (define y 2)
             (define g (set! y 1))
             g
-            y))"""
-      );
-      fail();
-    } catch (CompileError e) {
+            y))
+            """.trimIndent()
+            )
+            fail()
+        } catch (e: CompileError) {
+        }
     }
-  }
 
-  public void xtest_todo01()
-      throws SchemeException, InterruptedException {
-    try {
-      eval("(cons (define a 1) 2)");
-      fail();
-    } catch (CompileError e) {
+    @Throws(SchemeException::class, InterruptedException::class)
+    fun xtest_todo01() {
+        try {
+            eval("(cons (define a 1) 2)")
+            fail()
+        } catch (e: CompileError) {
+        }
     }
-  }
 }

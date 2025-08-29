@@ -17,64 +17,58 @@ You should have received a copy of the GNU General Public License
 along with MScheme; see the file COPYING. If not, write to 
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
+package mscheme.util
 
-package mscheme.util;
+import junit.framework.TestCase
+import mscheme.util.Arity
 
-import junit.framework.TestCase;
+class TestArity
+    (name: String?) : TestCase(name) {
+    fun testExactly() {
+        val arity0 = Arity.exactly(0)
+        val arity1 = Arity.exactly(1)
+        val arity2 = Arity.exactly(2)
 
-public class TestArity
-    extends TestCase {
+        assertTrue(arity0.isValid(0))
+        assertFalse(arity0.isValid(1))
+        assertFalse(arity0.isValid(2))
 
-  public TestArity(String name) {
-    super(name);
-  }
+        assertFalse(arity1.isValid(0))
+        assertTrue(arity1.isValid(1))
+        assertFalse(arity1.isValid(2))
 
+        assertFalse(arity2.isValid(0))
+        assertFalse(arity2.isValid(1))
+        assertTrue(arity2.isValid(2))
+        assertFalse(arity2.isValid(3))
+    }
 
-  public void testExactly() {
-    Arity arity0 = Arity.Companion.exactly(0);
-    Arity arity1 = Arity.Companion.exactly(1);
-    Arity arity2 = Arity.Companion.exactly(2);
+    fun testAtLeast() {
+        val arity0 = Arity.atLeast(0)
+        val arity1 = Arity.atLeast(1)
+        val arity2 = Arity.atLeast(2)
 
-    assertTrue(arity0.isValid(0));
-    assertFalse(arity0.isValid(1));
-    assertFalse(arity0.isValid(2));
+        assertTrue(arity0.isValid(0))
+        assertTrue(arity0.isValid(1))
+        assertTrue(arity0.isValid(2))
 
-    assertFalse(arity1.isValid(0));
-    assertTrue(arity1.isValid(1));
-    assertFalse(arity1.isValid(2));
+        assertFalse(arity1.isValid(0))
+        assertTrue(arity1.isValid(1))
+        assertTrue(arity1.isValid(2))
 
-    assertFalse(arity2.isValid(0));
-    assertFalse(arity2.isValid(1));
-    assertTrue(arity2.isValid(2));
-    assertFalse(arity2.isValid(3));
-  }
+        assertFalse(arity2.isValid(0))
+        assertFalse(arity2.isValid(1))
+        assertTrue(arity2.isValid(2))
+        assertTrue(arity2.isValid(3))
+    }
 
-  public void testAtLeast() {
-    Arity arity0 = Arity.Companion.atLeast(0);
-    Arity arity1 = Arity.Companion.atLeast(1);
-    Arity arity2 = Arity.Companion.atLeast(2);
+    fun testInarity() {
+        val arity = Arity.inRange(2, 3)
 
-    assertTrue(arity0.isValid(0));
-    assertTrue(arity0.isValid(1));
-    assertTrue(arity0.isValid(2));
-
-    assertFalse(arity1.isValid(0));
-    assertTrue(arity1.isValid(1));
-    assertTrue(arity1.isValid(2));
-
-    assertFalse(arity2.isValid(0));
-    assertFalse(arity2.isValid(1));
-    assertTrue(arity2.isValid(2));
-    assertTrue(arity2.isValid(3));
-  }
-
-  public void testInarity() {
-    Arity arity = Arity.Companion.inRange(2, 3);
-
-    assertFalse(arity.isValid(0));
-    assertFalse(arity.isValid(1));
-    assertTrue(arity.isValid(2));
-    assertTrue(arity.isValid(3));
-    assertFalse(arity.isValid(4));
-  }
+        assertFalse(arity.isValid(0))
+        assertFalse(arity.isValid(1))
+        assertTrue(arity.isValid(2))
+        assertTrue(arity.isValid(3))
+        assertFalse(arity.isValid(4))
+    }
 }

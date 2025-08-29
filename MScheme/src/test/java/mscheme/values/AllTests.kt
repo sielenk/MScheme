@@ -4,10 +4,11 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package mscheme.values;
+package mscheme.values
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import junit.framework.Test
+import junit.framework.TestSuite
+import mscheme.values.functions.AllTests
 
 /**
  * @author sielenk
@@ -15,19 +16,18 @@ import junit.framework.TestSuite;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class AllTests {
+object AllTests {
+    fun suite(): Test {
+        val suite = TestSuite("Test for mscheme.values")
+        //$JUnit-BEGIN$
+        suite.addTestSuite(TestInputPort::class.java)
+        suite.addTestSuite(OutputPortTest::class.java)
+        suite.addTestSuite(ValueTraitsTest::class.java)
+        suite.addTestSuite(TestList::class.java)
 
-  public static Test suite() {
-    TestSuite suite = new TestSuite("Test for mscheme.values");
-    //$JUnit-BEGIN$
-    suite.addTestSuite(TestInputPort.class);
-    suite.addTestSuite(OutputPortTest.class);
-    suite.addTestSuite(ValueTraitsTest.class);
-    suite.addTestSuite(TestList.class);
-    //$JUnit-END$
+        //$JUnit-END$
+        suite.addTest(AllTests.suite())
 
-    suite.addTest(mscheme.values.functions.AllTests.suite());
-
-    return suite;
-  }
+        return suite
+    }
 }

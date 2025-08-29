@@ -4,12 +4,12 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package mscheme.machine;
+package mscheme.machine
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-import mscheme.machine.stack.StackListTest;
-import mscheme.machine.stack.StackPlainTest;
+import junit.framework.Test
+import junit.framework.TestSuite
+import mscheme.machine.stack.StackListTest
+import mscheme.machine.stack.StackPlainTest
 
 /**
  * @author sielenk
@@ -17,14 +17,14 @@ import mscheme.machine.stack.StackPlainTest;
  * To change the template for this generated type comment go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-public class AllTests {
-
-  public static Test suite() {
-    TestSuite suite = new TestSuite("Test for mscheme.machine");
-    //$JUnit-BEGIN$
-    suite.addTestSuite(StackListTest.class);
-    suite.addTestSuite(StackPlainTest.class);
-    //$JUnit-END$
-    return suite;
-  }
+object AllTests {
+    @JvmStatic
+    fun suite(): Test {
+        val suite = TestSuite("Test for mscheme.machine")
+        //$JUnit-BEGIN$
+        suite.addTestSuite(StackListTest::class.java)
+        suite.addTestSuite(StackPlainTest::class.java)
+        //$JUnit-END$
+        return suite
+    }
 }

@@ -16,310 +16,363 @@
  * MScheme; see the file COPYING. If not, write to the Free Software Foundation,
  * Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+package mscheme.tests
 
-package mscheme.tests;
+import junit.framework.TestCase
+import mscheme.compiler.Compiler
+import mscheme.environment.Environment
+import mscheme.environment.Environment.Companion.getNullEnvironment
+import mscheme.exceptions.*
+import mscheme.machine.Machine
+import mscheme.values.*
+import mscheme.values.Function
+import mscheme.values.ListFactory.create
+import mscheme.values.ListFactory.createPair
+import mscheme.values.ListFactory.prepend
+import mscheme.values.ValueTraits.eq
+import mscheme.values.ValueTraits.equal
+import mscheme.values.functions.CallCCFunction
+import java.io.StringReader
+import java.lang.Boolean
+import kotlin.Any
+import kotlin.Exception
+import kotlin.String
+import kotlin.Throws
 
-import java.io.StringReader;
-import junit.framework.TestCase;
-import mscheme.compiler.Compiler;
-import mscheme.environment.Environment;
-import mscheme.exceptions.CantCompileException;
-import mscheme.exceptions.CompileError;
-import mscheme.exceptions.FunctionExpected;
-import mscheme.exceptions.ListExpected;
-import mscheme.exceptions.RuntimeArityError;
-import mscheme.exceptions.SchemeException;
-import mscheme.exceptions.SymbolExpected;
-import mscheme.machine.Machine;
-import mscheme.values.Function;
-import mscheme.values.IList;
-import mscheme.values.IPair;
-import mscheme.values.InputPort;
-import mscheme.values.ListFactory;
-import mscheme.values.ValueTraits;
+class TestMachine
+    (name: String?) : TestCase(name) {
+    private var machine: Machine? = null
 
-public class TestMachine
-    extends TestCase {
+    private var _sym1: String? = null
 
-  private Machine machine;
+    private var _sym2: String? = null
 
-  private String _sym1;
+    private var _val1: Any? = null
 
-  private String _sym2;
+    private var _val2: Any? = null
 
-  private Object _val1;
+    private var _unval: Any? = null
 
-  private Object _val2;
+    private var _environment: Environment? = null
 
-  private Object _unval;
+    @Throws(Exception::class)
+    override fun setUp() {
+        _sym1 = "test1"
+        _sym2 = "test2"
 
-  private Environment _environment;
+        _val1 = Boolean.TRUE
+        _val2 = Boolean.FALSE
+        _unval = ListFactory.create()
 
-  public TestMachine(String name) {
-    super(name);
-  }
+        _environment = getNullEnvironment()
 
-  protected void setUp()
-      throws Exception {
-    _sym1 = "test1";
-    _sym2 = "test2";
-
-    _val1 = Boolean.TRUE;
-    _val2 = Boolean.FALSE;
-    _unval = ListFactory.INSTANCE.create();
-
-    _environment = Environment.Companion.getNullEnvironment();
-
-    machine = new Machine(_environment);
-  }
-
-  protected void tearDown() {
-    machine = null;
-    _environment = null;
-  }
-
-  private Object evaluate(String expression)
-      throws SchemeException, InterruptedException {
-    return machine.evaluate(
-        InputPort.Companion.create(new StringReader(expression)).read()
-    );
-  }
-
-  public void testTestValues()
-      throws Exception {
-    Compiler compiler = new Compiler(_environment.getStatic());
-
-    try {
-      compiler.compile(_unval);
-      fail("expected CantCompileException");
-    } catch (CantCompileException e) {
+        machine = Machine(_environment!!)
     }
 
-    assertNotNull(compiler.compile(_val1));
-    assertNotNull(compiler.compile(_val2));
-  }
-
-  public void testEnvironment() {
-    assertSame(_environment, machine.getEnvironment());
-  }
-
-  public void testValue()
-      throws Exception {
-    assertSame(_val1, machine.evaluate(_val1));
-    assertSame(_val2, machine.evaluate(_val2));
-  }
-
-  public void testUnevaluatable()
-      throws Exception {
-    try {
-      machine.evaluate(_unval);
-      fail("evaluated Unevaluatable");
-    } catch (CantCompileException e) {
-    }
-  }
-
-  private void define(String s, Object v)
-      throws Exception {
-    _environment.define(s, v);
-  }
-
-  public void testSymbol()
-      throws Exception {
-    try {
-      machine.evaluate(_sym1);
-      fail("expected SymbolNotFoundException");
-    } catch (SchemeException e) {
+    override fun tearDown() {
+        machine = null
+        _environment = null
     }
 
-    define(_sym1, _val1);
-    define(_sym2, _unval);
-
-    assertSame("evaluation to Value failed - ", _val1, machine
-        .evaluate(_sym1));
-    assertSame("evaluation to Unevaluatable failed - ", _unval, machine
-        .evaluate(_sym2));
-  }
-
-  public void testPair1()
-      throws Exception {
-    try {
-      machine.evaluate(ListFactory.INSTANCE.createPair(_val1, _val2));
-      fail("expected ListExpected");
-    } catch (ListExpected e) {
-    }
-  }
-
-  public void testPair2()
-      throws Exception {
-    try {
-      machine.evaluate(ListFactory.INSTANCE.create(_val1));
-      fail("expected FunctionExpected");
-    } catch (FunctionExpected e) {
-    }
-  }
-
-  public void testQuote()
-      throws Exception {
-    assertSame(
-        _unval,
-        machine.evaluate(
-            ListFactory.INSTANCE.create(
-                "quote",
-                _unval)));
-  }
-
-  public void testIf()
-      throws Exception {
-    define(_sym1, _val1);
-    define(_sym2, _val2);
-
-    assertSame(_val1, machine.evaluate(ListFactory.INSTANCE.prepend("if",
-        ListFactory.INSTANCE.create(Boolean.TRUE, _sym1, _sym2))));
-
-    assertSame(_val1, machine.evaluate(ListFactory.INSTANCE.prepend("if",
-        ListFactory.INSTANCE.create(Boolean.TRUE, _sym1))));
-
-    assertSame(_val2, machine
-        .evaluate(ListFactory.INSTANCE.prepend("if", ListFactory
-            .INSTANCE.create(Boolean.FALSE, _sym1, _sym2))));
-  }
-
-  public void testBegin()
-      throws Exception {
-    define(_sym2, _val2);
-
-    try {
-      machine.evaluate(ListFactory.INSTANCE.create("begin", _sym1,
-          _sym2));
-      fail("begin failed");
-    } catch (SchemeException e) {
+    @Throws(SchemeException::class, InterruptedException::class)
+    private fun evaluate(expression: String): Any? {
+        return machine!!.evaluate(
+            InputPort.Companion.create(StringReader(expression)).read()
+        )
     }
 
-    _environment.define(_sym1, _val1);
+    @Throws(Exception::class)
+    fun testTestValues() {
+        val compiler = Compiler(_environment!!.static)
 
-    assertSame(_val2, machine.evaluate(
-        ListFactory.INSTANCE.create("begin", _sym1, _sym2)));
-  }
+        try {
+            compiler.compile(_unval)
+            fail("expected CantCompileException")
+        } catch (e: CantCompileException) {
+        }
 
-  public void testLambdaFailures()
-      throws Exception {
-    try {
-      evaluate("(lambda () #(1 2 3))");
-      fail("expected CantCompileException");
-    } catch (CantCompileException e) {
+        assertNotNull(compiler.compile(_val1))
+        assertNotNull(compiler.compile(_val2))
     }
 
-    try {
-      evaluate("(lambda (#t) #t)");
-      fail("expected SymbolExpected");
-    } catch (SymbolExpected e) {
+    fun testEnvironment() {
+        assertSame(_environment, machine!!.environment)
     }
 
-    try {
-      evaluate("(lambda (x y x) #t)");
-      fail("expected CompileError");
-    } catch (CompileError e) {
-    }
-  }
-
-  public void testLambdaNoArgs()
-      throws Exception {
-    Function func = (Function) machine.evaluate(
-        ListFactory.INSTANCE.create("lambda",
-            ListFactory.INSTANCE.create(), _val1));
-
-    assertSame(_val1, machine.evaluate(ListFactory.INSTANCE.create(func)));
-
-    try {
-      machine.evaluate(ListFactory.INSTANCE.create(func, _unval));
-      fail("expected CantEvaluateException");
-    } catch (CantCompileException e) {
+    @Throws(Exception::class)
+    fun testValue() {
+        assertSame(_val1, machine!!.evaluate(_val1))
+        assertSame(_val2, machine!!.evaluate(_val2))
     }
 
-    try {
-      machine.evaluate(ListFactory.INSTANCE.create(func, _val1));
-      fail("expected RuntimeArityError");
-    } catch (RuntimeArityError e) {
-    }
-  }
-
-  public void testLambdaWithSimpleArgs()
-      throws Exception {
-    Function func = (Function) evaluate("(lambda (x y) x)");
-
-    assertSame(_val1, machine.evaluate(ListFactory.INSTANCE.create(func, _val1,
-        _val2)));
-
-    try {
-      machine.evaluate(ListFactory.INSTANCE.create(func, _val1));
-      fail("expected RuntimeArityError");
-    } catch (RuntimeArityError e) {
-    }
-  }
-
-  public void testLambdaWithOptionalArgs()
-      throws Exception {
-    Function func = (Function) evaluate("(lambda (x . y) y)");
-
-    try {
-      machine.evaluate(ListFactory.INSTANCE.create(func));
-      fail("expected RuntimeArityError");
-    } catch (RuntimeArityError e) {
+    @Throws(Exception::class)
+    fun testUnevaluatable() {
+        try {
+            machine!!.evaluate(_unval)
+            fail("evaluated Unevaluatable")
+        } catch (e: CantCompileException) {
+        }
     }
 
-    assertSame(ListFactory.INSTANCE.create(),
-        machine.evaluate(ListFactory.INSTANCE.create(
-            func, _val1)));
+    @Throws(Exception::class)
+    private fun define(s: String, v: Any?) {
+        _environment!!.define(s, v)
+    }
 
-    assertSame(_val2, ((IList) machine.evaluate(ListFactory.INSTANCE.create(func,
-        _val1, _val2))).getHead());
-  }
+    @Throws(Exception::class)
+    fun testSymbol() {
+        try {
+            machine!!.evaluate(_sym1!!)
+            fail("expected SymbolNotFoundException")
+        } catch (e: SchemeException) {
+        }
 
-  public void testLambdaOptionalIsNewList()
-      throws Exception {
-    Function func = (Function) evaluate("(lambda x x)");
+        define(_sym1!!, _val1)
+        define(_sym2!!, _unval)
 
-    IPair pair2 = ListFactory.INSTANCE.createPair(_val2, ListFactory.INSTANCE.create());
-    IPair pair1 = ListFactory.INSTANCE.createPair(_val1, pair2);
+        assertSame(
+            "evaluation to Value failed - ", _val1, machine!!
+                .evaluate(_sym1!!)
+        )
+        assertSame(
+            "evaluation to Unevaluatable failed - ", _unval, machine!!
+                .evaluate(_sym2!!)
+        )
+    }
 
-    Object result = machine.evaluate(ListFactory.INSTANCE.createPair(func, pair1));
+    @Throws(Exception::class)
+    fun testPair1() {
+        try {
+            machine!!.evaluate(createPair(_val1, _val2))
+            fail("expected ListExpected")
+        } catch (e: ListExpected) {
+        }
+    }
 
-    assertTrue(ValueTraits.INSTANCE.equal(result, pair1));
-    assertFalse(ValueTraits.INSTANCE.eq(result, pair1));
-  }
+    @Throws(Exception::class)
+    fun testPair2() {
+        try {
+            machine!!.evaluate(create(_val1))
+            fail("expected FunctionExpected")
+        } catch (e: FunctionExpected) {
+        }
+    }
 
-  public void testDefineNormal()
-      throws Exception {
-    machine.evaluate(ListFactory.INSTANCE.create("define", "a", _val1));
+    @Throws(Exception::class)
+    fun testQuote() {
+        assertSame(
+            _unval,
+            machine!!.evaluate(
+                ListFactory.create(
+                    "quote",
+                    _unval
+                )
+            )
+        )
+    }
 
-    assertSame(_val1, machine.evaluate("a"));
-  }
+    @Throws(Exception::class)
+    fun testIf() {
+        define(_sym1!!, _val1)
+        define(_sym2!!, _val2)
 
-  public void testApplication()
-      throws Exception {
-    evaluate("(define f (lambda (x) x))");
+        assertSame(
+            _val1, machine!!.evaluate(
+                prepend(
+                    "if",
+                    create(Boolean.TRUE, _sym1, _sym2)
+                )
+            )
+        )
 
-    assertSame(_val1, machine.evaluate(ListFactory.INSTANCE.create("f", _val1)));
-  }
+        assertSame(
+            _val1, machine!!.evaluate(
+                prepend(
+                    "if",
+                    ListFactory.create(Boolean.TRUE, _sym1)
+                )
+            )
+        )
 
-  public void testDefineFunction()
-      throws Exception {
-    evaluate("(define (f x y) x)");
-    evaluate("(define (g . x) x)");
+        assertSame(
+            _val2, machine!!
+                .evaluate(prepend("if", create(Boolean.FALSE, _sym1, _sym2)))
+        )
+    }
 
-    assertTrue("function creation failed - ",
-        machine.evaluate("f") instanceof Function);
+    @Throws(Exception::class)
+    fun testBegin() {
+        define(_sym2!!, _val2)
 
-    assertSame("function application failed - ", _val1, machine
-        .evaluate(ListFactory.INSTANCE.create("f", _val1, _val2)));
-  }
+        try {
+            machine!!.evaluate(
+                create(
+                    "begin", _sym1,
+                    _sym2
+                )
+            )
+            fail("begin failed")
+        } catch (e: SchemeException) {
+        }
 
-  public void testCallCC()
-      throws Exception {
-    assertSame(_val1, machine.evaluate(ListFactory.INSTANCE.create(
-        mscheme.values.functions.CallCCFunction.INSTANCE, ListFactory
-            .INSTANCE.create("lambda",
-                ListFactory.INSTANCE.create("return"),
-                ListFactory.INSTANCE.create("return", _val1)))));
-  }
+        _environment!!.define(_sym1!!, _val1)
+
+        assertSame(
+            _val2, machine!!.evaluate(
+                create("begin", _sym1, _sym2)
+            )
+        )
+    }
+
+    @Throws(Exception::class)
+    fun testLambdaFailures() {
+        try {
+            evaluate("(lambda () #(1 2 3))")
+            fail("expected CantCompileException")
+        } catch (e: CantCompileException) {
+        }
+
+        try {
+            evaluate("(lambda (#t) #t)")
+            fail("expected SymbolExpected")
+        } catch (e: SymbolExpected) {
+        }
+
+        try {
+            evaluate("(lambda (x y x) #t)")
+            fail("expected CompileError")
+        } catch (e: CompileError) {
+        }
+    }
+
+    @Throws(Exception::class)
+    fun testLambdaNoArgs() {
+        val func = machine!!.evaluate(
+            create(
+                "lambda",
+                ListFactory.create(), _val1
+            )
+        ) as Function?
+
+        assertSame(_val1, machine!!.evaluate(create(func)))
+
+        try {
+            machine!!.evaluate(ListFactory.create(func, _unval))
+            fail("expected CantEvaluateException")
+        } catch (e: CantCompileException) {
+        }
+
+        try {
+            machine!!.evaluate(ListFactory.create(func, _val1))
+            fail("expected RuntimeArityError")
+        } catch (e: RuntimeArityError) {
+        }
+    }
+
+    @Throws(Exception::class)
+    fun testLambdaWithSimpleArgs() {
+        val func = evaluate("(lambda (x y) x)") as Function?
+
+        assertSame(
+            _val1, machine!!.evaluate(
+                create(
+                    func, _val1,
+                    _val2
+                )
+            )
+        )
+
+        try {
+            machine!!.evaluate(ListFactory.create(func, _val1))
+            fail("expected RuntimeArityError")
+        } catch (e: RuntimeArityError) {
+        }
+    }
+
+    @Throws(Exception::class)
+    fun testLambdaWithOptionalArgs() {
+        val func = evaluate("(lambda (x . y) y)") as Function?
+
+        try {
+            machine!!.evaluate(create(func))
+            fail("expected RuntimeArityError")
+        } catch (e: RuntimeArityError) {
+        }
+
+        assertSame(
+            ListFactory.create(),
+            machine!!.evaluate(
+                ListFactory.create(
+                    func, _val1
+                )
+            )
+        )
+
+        assertSame(
+            _val2, (machine!!.evaluate(
+                create(
+                    func,
+                    _val1, _val2
+                )
+            ) as IList).head
+        )
+    }
+
+    @Throws(Exception::class)
+    fun testLambdaOptionalIsNewList() {
+        val func = evaluate("(lambda x x)") as Function?
+
+        val pair2: IPair = createPair(_val2, ListFactory.create())
+        val pair1: IPair = createPair(_val1, pair2)
+
+        val result = machine!!.evaluate(createPair(func, pair1))
+
+        assertTrue(equal(result, pair1))
+        assertFalse(eq(result, pair1))
+    }
+
+    @Throws(Exception::class)
+    fun testDefineNormal() {
+        machine!!.evaluate(create("define", "a", _val1))
+
+        assertSame(_val1, machine!!.evaluate("a"))
+    }
+
+    @Throws(Exception::class)
+    fun testApplication() {
+        evaluate("(define f (lambda (x) x))")
+
+        assertSame(_val1, machine!!.evaluate(ListFactory.create("f", _val1)))
+    }
+
+    @Throws(Exception::class)
+    fun testDefineFunction() {
+        evaluate("(define (f x y) x)")
+        evaluate("(define (g . x) x)")
+
+        assertTrue(
+            "function creation failed - ",
+            machine!!.evaluate("f") is Function
+        )
+
+        assertSame(
+            "function application failed - ", _val1, machine!!
+                .evaluate(create("f", _val1, _val2))
+        )
+    }
+
+    @Throws(Exception::class)
+    fun testCallCC() {
+        assertSame(
+            _val1, machine!!.evaluate(
+                ListFactory.create(
+                    CallCCFunction, create(
+                        "lambda",
+                        ListFactory.create("return"),
+                        ListFactory.create("return", _val1)
+                    )
+                )
+            )
+        )
+    }
 }
