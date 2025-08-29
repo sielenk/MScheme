@@ -24,7 +24,6 @@ public class AllTests {
     //$JUnit-BEGIN$
     suite.addTestSuite(StackListTest.class);
     suite.addTestSuite(StackPlainTest.class);
-    suite.addTestSuite(MachineTest.class);
     //$JUnit-END$
     return suite;
   }

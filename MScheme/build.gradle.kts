@@ -33,12 +33,16 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    testImplementation("junit:junit:4.13.1")
+val kotestVersion= "6.0.1"
 
-    implementation(project(":MScheme-ksp"))
+dependencies {
     ksp(project(":MScheme-ksp"))
+
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+    testImplementation("junit:junit:4.13.1")
+    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
+    testImplementation("io.kotest:kotest-property:$kotestVersion")
 }
 
 application {
