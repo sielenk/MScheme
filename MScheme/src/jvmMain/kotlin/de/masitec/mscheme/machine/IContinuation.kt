@@ -27,8 +27,6 @@
  */
 package de.masitec.mscheme.machine
 
-import de.masitec.mscheme.exceptions.SchemeException
-
 
 fun interface IContinuation {
     fun invoke(registers: Registers, value: Any?): Any?

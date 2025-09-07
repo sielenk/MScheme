@@ -24,7 +24,6 @@ import de.masitec.mscheme.code.Application
 import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.environment.Environment.Companion.getSchemeReportEnvironment
 import de.masitec.mscheme.environment.StaticEnvironment
-import de.masitec.mscheme.exceptions.SchemeException
 import de.masitec.mscheme.machine.Machine
 import de.masitec.mscheme.util.Arity.Companion.exactly
 import de.masitec.mscheme.values.IList

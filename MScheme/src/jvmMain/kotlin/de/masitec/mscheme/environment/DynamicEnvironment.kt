@@ -20,8 +20,6 @@
  */
 package de.masitec.mscheme.environment
 
-import de.masitec.mscheme.exceptions.ListExpected
-import de.masitec.mscheme.exceptions.PairExpected
 import de.masitec.mscheme.exceptions.SchemeRuntimeError
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList

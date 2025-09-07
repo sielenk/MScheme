@@ -21,7 +21,6 @@
 package de.masitec.mscheme.tests
 
 import de.masitec.mscheme.exceptions.CompileError
-import de.masitec.mscheme.exceptions.SchemeException
 
 class TestBugs(name: String?) : TestSchemeBase(name) {
     fun test_2002_19_03() {

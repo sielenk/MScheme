@@ -21,9 +21,7 @@
 package de.masitec.mscheme.values
 
 import de.masitec.mscheme.environment.StaticEnvironment
-import de.masitec.mscheme.exceptions.ListExpected
 import de.masitec.mscheme.exceptions.PairExpected
-import de.masitec.mscheme.exceptions.SchemeException
 
 interface IList {
     val isValid: Boolean

@@ -28,7 +28,6 @@
 package de.masitec.mscheme.compiler
 
 import de.masitec.mscheme.code.IReduceable
-import de.masitec.mscheme.exceptions.CompileError
 
 /**
  * @author sielenk

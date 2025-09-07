@@ -27,7 +27,6 @@
  */
 package de.masitec.mscheme.machine.stack
 
-import de.masitec.mscheme.exceptions.SchemeRuntimeError
 import de.masitec.mscheme.machine.StackFrame
 
 /**

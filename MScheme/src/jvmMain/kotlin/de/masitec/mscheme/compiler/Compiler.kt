@@ -29,8 +29,6 @@ package de.masitec.mscheme.compiler
 
 import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.exceptions.CantCompileException
-import de.masitec.mscheme.exceptions.CompileError
-import de.masitec.mscheme.exceptions.SchemeException
 import de.masitec.mscheme.syntax.ITranslator
 import de.masitec.mscheme.syntax.ProcedureCall
 import de.masitec.mscheme.values.ICompileable

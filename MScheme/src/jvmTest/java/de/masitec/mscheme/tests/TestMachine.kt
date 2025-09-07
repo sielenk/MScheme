@@ -37,9 +37,7 @@ import de.masitec.mscheme.values.functions.CallCCFunction
 import java.io.StringReader
 import java.lang.Boolean
 import kotlin.Any
-import kotlin.Exception
 import kotlin.String
-import kotlin.Throws
 
 class TestMachine
     (name: String?) : TestCase(name) {

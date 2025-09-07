@@ -21,7 +21,6 @@
 package de.masitec.mscheme.code
 
 import de.masitec.mscheme.compiler.Compiler
-import de.masitec.mscheme.exceptions.CompileError
 
 internal object CodeArray {
     fun printTuple(tuple: Array<Any?>): String =

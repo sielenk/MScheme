@@ -22,7 +22,6 @@ package de.masitec.mscheme.syntax
 
 import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.environment.StaticEnvironment
-import de.masitec.mscheme.exceptions.SchemeException
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
 import de.masitec.mscheme.values.ListFactory.prepend

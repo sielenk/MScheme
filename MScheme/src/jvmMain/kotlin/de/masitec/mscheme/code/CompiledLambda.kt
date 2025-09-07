@@ -20,20 +20,14 @@
  */
 package de.masitec.mscheme.code
 
-import de.masitec.mscheme.code.Sequence
 import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.compiler.IForceable
 import de.masitec.mscheme.environment.DynamicEnvironment
 import de.masitec.mscheme.environment.StaticEnvironment
-import de.masitec.mscheme.exceptions.CompileError
-import de.masitec.mscheme.exceptions.ListExpected
-import de.masitec.mscheme.exceptions.PairExpected
-import de.masitec.mscheme.exceptions.SchemeException
 import de.masitec.mscheme.machine.Registers
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
 import de.masitec.mscheme.values.functions.CheckedFunction
-import java.io.IOException
 import java.io.Writer
 
 class CompiledLambda private constructor(

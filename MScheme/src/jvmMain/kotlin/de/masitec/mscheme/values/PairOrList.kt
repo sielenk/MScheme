@@ -24,7 +24,6 @@ import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.exceptions.ListExpected
 import de.masitec.mscheme.exceptions.PairExpected
-import de.masitec.mscheme.exceptions.SchemeException
 import de.masitec.mscheme.syntax.ITranslator
 import de.masitec.mscheme.syntax.ProcedureCall
 import java.io.IOException

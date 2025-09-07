@@ -22,7 +22,6 @@ package de.masitec.mscheme.environment
 
 import de.masitec.mscheme.code.IReduceable
 import de.masitec.mscheme.compiler.IForceable
-import de.masitec.mscheme.exceptions.CompileError
 import de.masitec.mscheme.machine.Registers
 
 sealed class Reference protected constructor(

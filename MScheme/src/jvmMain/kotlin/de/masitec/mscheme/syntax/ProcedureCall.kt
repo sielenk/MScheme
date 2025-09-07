@@ -23,7 +23,6 @@ package de.masitec.mscheme.syntax
 import de.masitec.mscheme.code.Application
 import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.environment.StaticEnvironment
-import de.masitec.mscheme.exceptions.SchemeException
 import de.masitec.mscheme.values.IList
 
 class ProcedureCall private constructor(private val _head: Any?) : ITranslator {

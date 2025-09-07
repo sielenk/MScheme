@@ -24,7 +24,6 @@ import de.masitec.mscheme.environment.Environment.Companion.getNullEnvironment
 import de.masitec.mscheme.environment.Environment.Companion.getSchemeReportEnvironment
 import de.masitec.mscheme.exceptions.*
 import de.masitec.mscheme.machine.Registers
-import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.*
 import de.masitec.mscheme.values.Function
 import de.masitec.mscheme.values.ListFactory.createPair

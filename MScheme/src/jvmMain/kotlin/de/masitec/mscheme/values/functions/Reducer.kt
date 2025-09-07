@@ -20,8 +20,6 @@
  */
 package de.masitec.mscheme.values.functions
 
-import de.masitec.mscheme.exceptions.SchemeRuntimeError
-import de.masitec.mscheme.exceptions.TypeError
 import de.masitec.mscheme.values.IList
 
 internal abstract class Reducer protected constructor(

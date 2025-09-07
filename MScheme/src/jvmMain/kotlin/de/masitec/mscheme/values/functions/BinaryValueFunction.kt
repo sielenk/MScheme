@@ -20,7 +20,6 @@
  */
 package de.masitec.mscheme.values.functions
 
-import de.masitec.mscheme.exceptions.SchemeException
 import de.masitec.mscheme.machine.Registers
 
 abstract class BinaryValueFunction : BinaryFunction() {

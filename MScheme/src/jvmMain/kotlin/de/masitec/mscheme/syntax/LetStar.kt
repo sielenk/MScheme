@@ -25,7 +25,6 @@ import de.masitec.mscheme.code.CompiledLambda
 import de.masitec.mscheme.code.Sequence
 import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.environment.StaticEnvironment
-import de.masitec.mscheme.exceptions.SchemeException
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
 import de.masitec.mscheme.values.ValueTraits.toList

@@ -22,8 +22,6 @@ package de.masitec.mscheme.code
 
 import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.compiler.IForceable
-import de.masitec.mscheme.exceptions.CompileError
-import de.masitec.mscheme.machine.IContinuation
 import de.masitec.mscheme.machine.Registers
 import de.masitec.mscheme.values.ValueTraits.isTrue
 

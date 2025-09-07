@@ -29,9 +29,7 @@ import de.masitec.mscheme.syntax.TranslatorFactory.beginToken
 import de.masitec.mscheme.values.ListFactory.create
 import java.lang.Boolean
 import kotlin.Any
-import kotlin.Exception
 import kotlin.String
-import kotlin.Throws
 
 
 class TestEnvironment(name: String) : TestCase(name) {

@@ -24,7 +24,6 @@ import de.masitec.mscheme.exceptions.*
 import de.masitec.mscheme.syntax.ITranslator
 import de.masitec.mscheme.values.IList
 import de.masitec.mscheme.values.ValueTraits
-import java.io.IOException
 import java.io.Writer
 import java.util.*
 

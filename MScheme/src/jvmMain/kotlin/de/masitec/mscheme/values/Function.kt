@@ -21,7 +21,6 @@
 package de.masitec.mscheme.values
 
 import de.masitec.mscheme.exceptions.RuntimeArityError
-import de.masitec.mscheme.exceptions.SchemeException
 import de.masitec.mscheme.machine.Registers
 import de.masitec.mscheme.util.Arity
 

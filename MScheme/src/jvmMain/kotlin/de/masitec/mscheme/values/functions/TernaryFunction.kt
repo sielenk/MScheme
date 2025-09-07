@@ -20,7 +20,6 @@
  */
 package de.masitec.mscheme.values.functions
 
-import de.masitec.mscheme.exceptions.SchemeException
 import de.masitec.mscheme.machine.Registers
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList

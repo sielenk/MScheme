@@ -21,8 +21,6 @@
 package de.masitec.mscheme.values.functions
 
 import de.masitec.mscheme.exceptions.RuntimeArityError
-import de.masitec.mscheme.exceptions.SchemeRuntimeError
-import de.masitec.mscheme.exceptions.TypeError
 import de.masitec.mscheme.util.Arity.Companion.atLeast
 import de.masitec.mscheme.values.IList
 import de.masitec.mscheme.values.ValueTraits.toScmNumber

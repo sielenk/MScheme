@@ -21,7 +21,6 @@
 package de.masitec.mscheme.values
 
 import de.masitec.mscheme.environment.StaticEnvironment
-import de.masitec.mscheme.exceptions.SchemeException
 
 interface ICompileable {
     // compilation functions

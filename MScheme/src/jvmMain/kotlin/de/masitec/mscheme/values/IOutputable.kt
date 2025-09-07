@@ -6,7 +6,6 @@
  */
 package de.masitec.mscheme.values
 
-import java.io.IOException
 import java.io.Writer
 
 /**

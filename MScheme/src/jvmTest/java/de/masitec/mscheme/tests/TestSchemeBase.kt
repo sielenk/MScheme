@@ -21,7 +21,6 @@
 package de.masitec.mscheme.tests
 
 import junit.framework.TestCase
-import de.masitec.mscheme.exceptions.SchemeException
 import de.masitec.mscheme.machine.Machine
 import de.masitec.mscheme.machine.Machine.Companion.parse
 import de.masitec.mscheme.values.ValueTraits.equal

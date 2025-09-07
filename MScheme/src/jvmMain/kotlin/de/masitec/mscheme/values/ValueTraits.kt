@@ -30,7 +30,6 @@ import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.exceptions.*
 import de.masitec.mscheme.machine.Registers
 import de.masitec.mscheme.util.Arity
-import java.io.IOException
 import java.io.Writer
 import java.lang.reflect.Field
 import java.lang.reflect.InvocationTargetException
@@ -38,7 +37,6 @@ import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import kotlin.reflect.KCallable
 import kotlin.reflect.KClass
-import kotlin.reflect.KFunction
 import kotlin.reflect.cast
 
 /**

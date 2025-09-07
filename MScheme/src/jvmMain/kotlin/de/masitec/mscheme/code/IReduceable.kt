@@ -27,7 +27,6 @@
  */
 package de.masitec.mscheme.code
 
-import de.masitec.mscheme.exceptions.SchemeException
 import de.masitec.mscheme.machine.Registers
 
 /**

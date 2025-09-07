@@ -21,7 +21,6 @@
 package de.masitec.mscheme.util
 
 import junit.framework.TestCase
-import de.masitec.mscheme.util.Arity
 
 class TestArity
     (name: String?) : TestCase(name) {

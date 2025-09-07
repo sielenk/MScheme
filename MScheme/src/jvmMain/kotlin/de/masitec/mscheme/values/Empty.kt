@@ -22,9 +22,7 @@ package de.masitec.mscheme.values
 
 import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.exceptions.CantCompileException
-import de.masitec.mscheme.exceptions.ListExpected
 import de.masitec.mscheme.exceptions.PairExpected
-import java.io.IOException
 import java.io.Writer
 
 object Empty : IList, IOutputable, ICompileable {

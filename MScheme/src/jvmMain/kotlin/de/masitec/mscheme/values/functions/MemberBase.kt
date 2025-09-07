@@ -20,8 +20,6 @@
  */
 package de.masitec.mscheme.values.functions
 
-import de.masitec.mscheme.exceptions.ListExpected
-import de.masitec.mscheme.exceptions.PairExpected
 import de.masitec.mscheme.values.ValueTraits
 
 abstract class MemberBase : BinaryValueFunction() {

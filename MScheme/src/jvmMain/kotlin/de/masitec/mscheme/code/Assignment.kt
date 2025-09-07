@@ -23,7 +23,6 @@ package de.masitec.mscheme.code
 import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.compiler.IForceable
 import de.masitec.mscheme.environment.Reference
-import de.masitec.mscheme.exceptions.CompileError
 import de.masitec.mscheme.machine.Registers
 
 class Assignment private constructor(

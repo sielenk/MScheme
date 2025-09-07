@@ -28,7 +28,6 @@
 package de.masitec.mscheme.machine.stack
 
 import de.masitec.mscheme.machine.StackFrame
-import java.util.Stack
 
 /**
  * @author sielenk

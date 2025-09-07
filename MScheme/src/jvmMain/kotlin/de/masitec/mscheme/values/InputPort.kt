@@ -24,7 +24,6 @@ import de.masitec.mscheme.exceptions.CloseException
 import de.masitec.mscheme.exceptions.OpenException
 import de.masitec.mscheme.exceptions.ParseException
 import de.masitec.mscheme.exceptions.ReadException
-import de.masitec.mscheme.values.ListFactory
 import java.io.*
 
 internal object EofValue : IOutputable {

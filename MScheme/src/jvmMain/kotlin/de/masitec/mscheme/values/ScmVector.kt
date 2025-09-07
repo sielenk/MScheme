@@ -22,9 +22,6 @@ package de.masitec.mscheme.values
 
 import de.masitec.mscheme.exceptions.ImmutableException
 import de.masitec.mscheme.exceptions.InvalidVectorIndexException
-import de.masitec.mscheme.exceptions.VectorException
-import de.masitec.mscheme.values.ValueTraits
-import java.io.IOException
 import java.io.Writer
 
 internal class ConstScmVector : ScmVector {

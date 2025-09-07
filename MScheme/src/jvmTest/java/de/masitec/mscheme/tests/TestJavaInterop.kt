@@ -20,7 +20,6 @@
  */
 package de.masitec.mscheme.tests
 
-import de.masitec.mscheme.exceptions.SchemeException
 import de.masitec.mscheme.values.IList
 import de.masitec.mscheme.values.PairOrList
 

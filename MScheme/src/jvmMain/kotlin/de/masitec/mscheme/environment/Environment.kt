@@ -25,7 +25,6 @@ import de.masitec.mscheme.exceptions.CompileError
 import de.masitec.mscheme.exceptions.SchemeRuntimeError
 import de.masitec.mscheme.syntax.TranslatorFactory
 import de.masitec.mscheme.values.functions.getBuiltins
-import java.io.IOException
 import java.io.Writer
 
 class Environment private constructor(
