@@ -53,7 +53,7 @@ val createInit = tasks.register("createInit") {
         include("**/*.scm")
     }
     val outputFileProvider = generatedDir.map {
-        it.file("mscheme/Init.kt")
+        it.file("de/masitec/mscheme/Init.kt")
     }
 
     inputs.files(inputFiles)
@@ -75,7 +75,7 @@ val createInit = tasks.register("createInit") {
         }
 
         val fileContent = listOf(
-            "package mscheme;",
+            "package de.masitec.mscheme",
             "",
             "object Init",
             '{'

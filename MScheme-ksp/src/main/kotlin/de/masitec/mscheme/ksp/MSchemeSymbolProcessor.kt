@@ -145,10 +145,11 @@ class MSchemeSymbolProcessor(
 
 
     companion object {
-        const val FUNCTIONS_PACKAGE_PATH = "mscheme.values.functions"
+        const val PACKAGE_NAME = "de.masitec.mscheme"
+        const val FUNCTIONS_PACKAGE_PATH = "$PACKAGE_NAME.values.functions"
         const val SCM_BUILTINS_OBJECT = "$FUNCTIONS_PACKAGE_PATH.Builtins"
-        const val SCM_FUNCTION_TYPE = "mscheme.values.Function"
-        const val SCM_LIST_TYPE = "mscheme.values.IList"
+        const val SCM_FUNCTION_TYPE = "$PACKAGE_NAME.values.Function"
+        const val SCM_LIST_TYPE = "$PACKAGE_NAME.values.IList"
 
         fun parseName(name: String): String {
             val buf = StringBuilder()
