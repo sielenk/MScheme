@@ -120,6 +120,7 @@ class TestEnvironment(name: String) : TestCase(name) {
 
     fun testExtendedStatic() {
         env!!.static.define(sym1!!)
+        env!!.static.define(sym2!!)
 
         try {
             env!!.lookup(sym1!!)
@@ -127,9 +128,9 @@ class TestEnvironment(name: String) : TestCase(name) {
         } catch (e: SchemeRuntimeError) {
         }
 
-        env!!.assign(sym1!!, val1)
+        env!!.assign(sym2!!, val1)
 
-        assertSame(env!!.lookup(sym1!!), val1)
+        assertSame(env!!.lookup(sym2!!), val1)
     }
 
     fun testDynamic() {

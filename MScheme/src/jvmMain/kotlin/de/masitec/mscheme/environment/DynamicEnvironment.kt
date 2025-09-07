@@ -23,10 +23,10 @@ package de.masitec.mscheme.environment
 import de.masitec.mscheme.exceptions.SchemeRuntimeError
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
-import java.util.*
+
 
 class DynamicEnvironment private constructor(
-    private val _globals: Vector<Any?>,
+    private val _globals: MutableList<Any?>,
     private val _frames: Array<Array<Any?>>
 ) {
     fun createChild(
@@ -45,12 +45,18 @@ class DynamicEnvironment private constructor(
         if (level > 0) {
             result = _frames[level - 1][index]
             _frames[level - 1][index] = value
-        } else if (index < _globals.size) {
-            result = _globals.elementAt(index)
-            _globals.setElementAt(value, index)
         } else {
-            _globals.setSize(index + 1)
-            _globals.setElementAt(value, index)
+            val size = _globals.size
+
+            if (index < size) {
+                result = _globals[index]
+                _globals[index] = value
+            } else {
+                while (_globals.size < index) {
+                    _globals.add(null)
+                }
+                _globals.add(index, value)
+            }
         }
 
         return result ?: value
@@ -116,7 +122,7 @@ class DynamicEnvironment private constructor(
 
         fun create(): DynamicEnvironment =
             DynamicEnvironment(
-                Vector<Any?>(),
+                mutableListOf(),
                 arrayOf()
             )
     }
