@@ -20,6 +20,6 @@ Boston, MA  02111-1307, USA. */
 package de.masitec.mscheme.exceptions
 
 
-open class SchemeRuntimeError @JvmOverloads constructor(
+open class SchemeRuntimeError(
     cause: Any?, message: String? = ""
 ) : SchemeException(cause, message)
