@@ -22,8 +22,6 @@ package de.masitec.mscheme.values
 
 import junit.framework.TestCase
 import de.masitec.mscheme.exceptions.PairExpected
-import de.masitec.mscheme.values.ListFactory.create
-import de.masitec.mscheme.values.ValueTraits.toConstPair
 
 class TestList
     (name: String?) : TestCase(name) {
@@ -45,7 +43,7 @@ class TestList
         firstElement = "x"
         secondElement = "y"
         lastElement = secondElement
-        occupiedList = create(firstElement, secondElement)
+        occupiedList = ListFactory.create(firstElement, secondElement)
         occupiedListLength = 2
     }
 
@@ -72,7 +70,7 @@ class TestList
         assertNotSame("occupied list equals (==) empty list", occupiedList, emptyList)
 
         assertSame(
-            "toPair returned somethig wrong", toConstPair(
+            "toPair returned somethig wrong", ValueTraits.toConstPair(
                 occupiedList
             ).first, occupiedList!!.head
         )

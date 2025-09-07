@@ -21,23 +21,23 @@
 package de.masitec.mscheme.values.functions
 
 import de.masitec.mscheme.exceptions.RuntimeArityError
-import de.masitec.mscheme.util.Arity.Companion.atLeast
+import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
-import de.masitec.mscheme.values.ValueTraits.toScmNumber
+import de.masitec.mscheme.values.ValueTraits
 
 enum class Order {
     LT, LE, EQ, GE, GT;
 
     companion object {
         fun check(arguments: IList, mode: Order): Boolean {
-            val arity = atLeast(2)
+            val arity = Arity.atLeast(2)
             val len = arguments.length
 
             if (!arity.isValid(len)) {
                 throw RuntimeArityError(arguments, arity)
             }
 
-            var curr = toScmNumber(arguments.head)
+            var curr = ValueTraits.toScmNumber(arguments.head)
             var tail = arguments.tail
 
             var rising = true
@@ -45,7 +45,7 @@ enum class Order {
             var falling = true
 
             do {
-                val next = toScmNumber(tail.head)
+                val next = ValueTraits.toScmNumber(tail.head)
                 tail = tail.tail
 
                 if (curr.isEqualTo(next)) {

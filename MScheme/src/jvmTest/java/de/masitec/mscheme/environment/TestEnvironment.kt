@@ -21,12 +21,12 @@
 package de.masitec.mscheme.environment
 
 import junit.framework.TestCase
-import de.masitec.mscheme.environment.Environment.Companion.getEmpty
+import de.masitec.mscheme.environment.Environment
 import de.masitec.mscheme.exceptions.SchemeRuntimeError
 import de.masitec.mscheme.exceptions.SymbolNotFoundException
 import de.masitec.mscheme.exceptions.UnexpectedSyntax
 import de.masitec.mscheme.syntax.TranslatorFactory.beginToken
-import de.masitec.mscheme.values.ListFactory.create
+import de.masitec.mscheme.values.ListFactory
 import java.lang.Boolean
 import kotlin.Any
 import kotlin.String
@@ -40,12 +40,12 @@ class TestEnvironment(name: String) : TestCase(name) {
     private var val2: Any? = null
 
     override fun setUp() {
-        env = getEmpty()
+        env = Environment.getEmpty()
 
         sym1 = "test1"
         sym2 = "test2"
 
-        val1 = create()
+        val1 = ListFactory.create()
         val2 = Boolean.TRUE
     }
 

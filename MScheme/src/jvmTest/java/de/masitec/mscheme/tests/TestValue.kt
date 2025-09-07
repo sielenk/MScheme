@@ -21,37 +21,11 @@
 package de.masitec.mscheme.tests
 
 import junit.framework.TestCase
-import de.masitec.mscheme.environment.Environment.Companion.getEmpty
+import de.masitec.mscheme.environment.Environment
 import de.masitec.mscheme.exceptions.TypeError
 import de.masitec.mscheme.values.*
-import de.masitec.mscheme.values.ListFactory.create
-import de.masitec.mscheme.values.ListFactory.createPair
-import de.masitec.mscheme.values.ValueTraits.eq
-import de.masitec.mscheme.values.ValueTraits.equal
-import de.masitec.mscheme.values.ValueTraits.eqv
-import de.masitec.mscheme.values.ValueTraits.isEmpty
-import de.masitec.mscheme.values.ValueTraits.isFunction
-import de.masitec.mscheme.values.ValueTraits.isList
-import de.masitec.mscheme.values.ValueTraits.isPair
-import de.masitec.mscheme.values.ValueTraits.isPort
-import de.masitec.mscheme.values.ValueTraits.isScmBoolean
-import de.masitec.mscheme.values.ValueTraits.isScmChar
-import de.masitec.mscheme.values.ValueTraits.isScmNumber
-import de.masitec.mscheme.values.ValueTraits.isScmString
-import de.masitec.mscheme.values.ValueTraits.isScmVector
-import de.masitec.mscheme.values.ValueTraits.isSymbol
-import de.masitec.mscheme.values.ValueTraits.isTrue
-import de.masitec.mscheme.values.ValueTraits.toConstPair
-import de.masitec.mscheme.values.ValueTraits.toEnvironment
-import de.masitec.mscheme.values.ValueTraits.toInputPort
-import de.masitec.mscheme.values.ValueTraits.toList
-import de.masitec.mscheme.values.ValueTraits.toOutputPort
-import de.masitec.mscheme.values.ValueTraits.toScmChar
-import de.masitec.mscheme.values.ValueTraits.toScmNumber
-import de.masitec.mscheme.values.ValueTraits.toScmString
-import de.masitec.mscheme.values.ValueTraits.toScmVector
-import de.masitec.mscheme.values.ValueTraits.toStaticEnvironment
-import de.masitec.mscheme.values.ValueTraits.toSymbol
+import de.masitec.mscheme.values.ListFactory
+import de.masitec.mscheme.values.ValueTraits
 import de.masitec.mscheme.values.functions.CallCCFunction
 import java.io.StringReader
 import java.io.StringWriter
@@ -68,35 +42,35 @@ class TestValue
     private fun countTypes(v: Any?): Int {
         var count = 0
 
-        if (isList(v)) {
+        if (ValueTraits.isList(v)) {
             ++count
         }
 
-        if (isScmBoolean(v)) {
+        if (ValueTraits.isScmBoolean(v)) {
             ++count
         }
-        if (isPair(v)) {
+        if (ValueTraits.isPair(v)) {
             ++count
         }
-        if (isSymbol(v)) {
+        if (ValueTraits.isSymbol(v)) {
             ++count
         }
-        if (isScmNumber(v)) {
+        if (ValueTraits.isScmNumber(v)) {
             ++count
         }
-        if (isScmChar(v)) {
+        if (ValueTraits.isScmChar(v)) {
             ++count
         }
-        if (isScmString(v)) {
+        if (ValueTraits.isScmString(v)) {
             ++count
         }
-        if (isScmVector(v)) {
+        if (ValueTraits.isScmVector(v)) {
             ++count
         }
-        if (isPort(v)) {
+        if (ValueTraits.isPort(v)) {
             ++count
         }
-        if (isFunction(v)) {
+        if (ValueTraits.isFunction(v)) {
             ++count
         }
 
@@ -107,59 +81,59 @@ class TestValue
         var count = 0
 
         try {
-            toList(v)
+            ValueTraits.toList(v)
             ++count
         } catch (e: TypeError) {
         }
 
         try {
-            toConstPair(v)
+            ValueTraits.toConstPair(v)
             ++count
         } catch (e: TypeError) {
         }
         try {
-            toSymbol(v)
+            ValueTraits.toSymbol(v)
             ++count
         } catch (e: TypeError) {
         }
         try {
-            toScmNumber(v)
+            ValueTraits.toScmNumber(v)
             ++count
         } catch (e: TypeError) {
         }
         try {
-            toScmChar(v)
+            ValueTraits.toScmChar(v)
             ++count
         } catch (e: TypeError) {
         }
         try {
-            toScmString(v)
+            ValueTraits.toScmString(v)
             ++count
         } catch (e: TypeError) {
         }
         try {
-            toScmVector(v)
+            ValueTraits.toScmVector(v)
             ++count
         } catch (e: TypeError) {
         }
         try {
-            toInputPort(v)
+            ValueTraits.toInputPort(v)
             ++count
         } catch (e: TypeError) {
         }
         try {
-            toOutputPort(v)
+            ValueTraits.toOutputPort(v)
             ++count
         } catch (e: TypeError) {
         }
 
         try {
-            toEnvironment(v)
+            ValueTraits.toEnvironment(v)
             ++count
         } catch (e: TypeError) {
         }
         try {
-            toStaticEnvironment(v)
+            ValueTraits.toStaticEnvironment(v)
             ++count
         } catch (e: TypeError) {
         }
@@ -168,7 +142,7 @@ class TestValue
     }
 
     private fun commonTests(v: Any?, castCount: Int = 1) {
-        assertTrue(isTrue(v))
+        assertTrue(ValueTraits.isTrue(v))
 
         TestCase.assertEquals(1, countTypes(v))
         TestCase.assertEquals(countCasts(v), castCount)
@@ -178,170 +152,170 @@ class TestValue
     fun testFalse() {
         val False: Any = ValueTraits.FALSE
 
-        assertFalse(isTrue(False))
+        assertFalse(ValueTraits.isTrue(False))
 
         TestCase.assertEquals(1, countTypes(False))
         TestCase.assertEquals(0, countCasts(False))
 
-        assertTrue(isScmBoolean(False))
+        assertTrue(ValueTraits.isScmBoolean(False))
     }
 
     fun testTrue() {
         val True: Any = ValueTraits.TRUE
 
-        assertTrue(isTrue(True))
+        assertTrue(ValueTraits.isTrue(True))
 
         TestCase.assertEquals(1, countTypes(True))
         TestCase.assertEquals(0, countCasts(True))
 
-        assertTrue(isScmBoolean(True))
+        assertTrue(ValueTraits.isScmBoolean(True))
     }
 
     fun testEmpty() {
         val empty: Any = ListFactory.create()
 
-        assertTrue(isTrue(empty))
+        assertTrue(ValueTraits.isTrue(empty))
 
         TestCase.assertEquals(1, countTypes(empty)) // List
         TestCase.assertEquals(1, countCasts(empty))
 
-        assertTrue(isEmpty(empty))
+        assertTrue(ValueTraits.isEmpty(empty))
 
-        assertTrue(isList(empty))
-        assertSame(toList(empty), empty)
+        assertTrue(ValueTraits.isList(empty))
+        assertSame(ValueTraits.toList(empty), empty)
     }
 
     fun testPair() {
-        val pair: Any = createPair(
+        val pair: Any = ListFactory.createPair(
             ValueTraits.TRUE,
             ValueTraits.TRUE
         )
 
         commonTests(pair)
-        assertTrue(isPair(pair))
-        assertSame(toConstPair(pair), pair)
+        assertTrue(ValueTraits.isPair(pair))
+        assertSame(ValueTraits.toConstPair(pair), pair)
     }
 
     fun testList() {
-        val list: Any = create(
+        val list: Any = ListFactory.create(
             ValueTraits.TRUE
         )
 
-        assertTrue(isTrue(list))
+        assertTrue(ValueTraits.isTrue(list))
 
         TestCase.assertEquals(2, countTypes(list)) // List and Pair
         TestCase.assertEquals(2, countCasts(list))
 
-        assertTrue(isPair(list))
-        assertSame(toConstPair(list), list)
+        assertTrue(ValueTraits.isPair(list))
+        assertSame(ValueTraits.toConstPair(list), list)
 
-        assertTrue(isList(list))
-        assertSame(toList(list), list)
+        assertTrue(ValueTraits.isList(list))
+        assertSame(ValueTraits.toList(list), list)
     }
 
     fun testSymbol() {
         val symbol: Any = "test"
 
         commonTests(symbol)
-        assertTrue(isSymbol(symbol))
-        assertSame(toSymbol(symbol), symbol)
+        assertTrue(ValueTraits.isSymbol(symbol))
+        assertSame(ValueTraits.toSymbol(symbol), symbol)
     }
 
     fun testFunction() {
         val function: Any = CallCCFunction
 
         commonTests(function, 0)
-        assertTrue(isFunction(function))
+        assertTrue(ValueTraits.isFunction(function))
     }
 
     fun testNumber() {
-        val number: Any = ScmNumber.Companion.create(49875)
+        val number: Any = ScmNumber.create(49875)
 
         commonTests(number)
-        assertTrue(isScmNumber(number))
-        assertSame(toScmNumber(number), number)
+        assertTrue(ValueTraits.isScmNumber(number))
+        assertSame(ValueTraits.toScmNumber(number), number)
     }
 
     fun testChar() {
         val character: Any = ValueTraits.toScmChar('a')
 
         commonTests(character)
-        assertTrue(isScmChar(character))
-        assertSame(toScmChar(character), character)
+        assertTrue(ValueTraits.isScmChar(character))
+        assertSame(ValueTraits.toScmChar(character), character)
     }
 
     fun testString() {
-        val string: Any = ScmString.Companion.create("Hallo !")
+        val string: Any = ScmString.create("Hallo !")
 
         commonTests(string)
-        assertTrue(isScmString(string))
-        assertSame(toScmString(string), string)
+        assertTrue(ValueTraits.isScmString(string))
+        assertSame(ValueTraits.toScmString(string), string)
     }
 
     fun testVector() {
-        val vector: Any = ScmVector.Companion.create()
+        val vector: Any = ScmVector.create()
 
         commonTests(vector)
-        assertTrue(isScmVector(vector))
-        assertSame(toScmVector(vector), vector)
+        assertTrue(ValueTraits.isScmVector(vector))
+        assertSame(ValueTraits.toScmVector(vector), vector)
     }
 
     fun testOutputPort() {
-        val port: Any = OutputPort.Companion.create(StringWriter())
+        val port: Any = OutputPort.create(StringWriter())
 
         commonTests(port)
-        assertTrue(isPort(port))
-        assertSame(toOutputPort(port), port)
+        assertTrue(ValueTraits.isPort(port))
+        assertSame(ValueTraits.toOutputPort(port), port)
     }
 
     fun testInputPort() {
-        val port: Any = InputPort.Companion.create(StringReader(""))
+        val port: Any = InputPort.create(StringReader(""))
 
         commonTests(port)
-        assertTrue(isPort(port))
-        assertSame(toInputPort(port), port)
+        assertTrue(ValueTraits.isPort(port))
+        assertSame(ValueTraits.toInputPort(port), port)
     }
 
     fun testEnvironment() {
-        val environment: Any = getEmpty()
+        val environment: Any = Environment.getEmpty()
 
-        assertTrue(isTrue(environment))
+        assertTrue(ValueTraits.isTrue(environment))
 
         TestCase.assertEquals(0, countTypes(environment))
         TestCase.assertEquals(1, countCasts(environment))
 
-        assertSame(toEnvironment(environment), environment)
+        assertSame(ValueTraits.toEnvironment(environment), environment)
     }
 
     fun testStaticEnvironment() {
-        val environment: Any = getEmpty().static
+        val environment: Any = Environment.getEmpty().static
 
-        assertTrue(isTrue(environment))
+        assertTrue(ValueTraits.isTrue(environment))
 
         TestCase.assertEquals(0, countTypes(environment))
         TestCase.assertEquals(1, countCasts(environment))
 
-        assertSame(toStaticEnvironment(environment), environment)
+        assertSame(ValueTraits.toStaticEnvironment(environment), environment)
     }
 
 
     private fun eqHelper(fst: Any?, snd: Any?): Int {
-        val eq = eq(fst, snd)
-        val eqv = eqv(fst, snd)
-        val equal = equal(fst, snd)
+        val eq = ValueTraits.eq(fst, snd)
+        val eqv = ValueTraits.eqv(fst, snd)
+        val equal = ValueTraits.equal(fst, snd)
 
         // reflexivity
-        assertTrue(eq(fst, fst))
-        assertTrue(eq(snd, snd))
-        assertTrue(eqv(fst, fst))
-        assertTrue(eqv(snd, snd))
-        assertTrue(equal(fst, fst))
-        assertTrue(equal(snd, snd))
+        assertTrue(ValueTraits.eq(fst, fst))
+        assertTrue(ValueTraits.eq(snd, snd))
+        assertTrue(ValueTraits.eqv(fst, fst))
+        assertTrue(ValueTraits.eqv(snd, snd))
+        assertTrue(ValueTraits.equal(fst, fst))
+        assertTrue(ValueTraits.equal(snd, snd))
 
         // symmetry
-        TestCase.assertEquals(eq, eq(snd, fst))
-        TestCase.assertEquals(eqv, eqv(snd, fst))
-        TestCase.assertEquals(equal, equal(snd, fst))
+        TestCase.assertEquals(eq, ValueTraits.eq(snd, fst))
+        TestCase.assertEquals(eqv, ValueTraits.eqv(snd, fst))
+        TestCase.assertEquals(equal, ValueTraits.equal(snd, fst))
 
         assertTrue(!eq or eqv) // aka. eq  -> eqv
         assertTrue(!eqv or equal) // aka. eqv -> equal
@@ -395,8 +369,8 @@ class TestValue
         // eqv equivalent values
         assertTrue(
             eqHelper(
-                ScmNumber.Companion.create(7123645),
-                ScmNumber.Companion.create(7123645)
+                ScmNumber.create(7123645),
+                ScmNumber.create(7123645)
             ) >= 2
         )
 
@@ -410,37 +384,37 @@ class TestValue
         // equal equivalent but eqv unspec. values
         assertTrue(
             eqHelper(
-                ScmVector.Companion.create(),
-                ScmVector.Companion.create()
+                ScmVector.create(),
+                ScmVector.create()
             ) >= 1
         )
 
         assertTrue(
             eqHelper(
-                ScmVector.Companion.create(5, v),
-                ScmVector.Companion.create(5, v)
+                ScmVector.create(5, v),
+                ScmVector.create(5, v)
             ) >= 1
         )
 
         assertTrue(
             eqHelper(
-                ScmString.Companion.create(""),
-                ScmString.Companion.create("")
+                ScmString.create(""),
+                ScmString.create("")
             ) >= 1
         )
 
         assertTrue(
             eqHelper(
-                ScmString.Companion.create("Hallo"),
-                ScmString.Companion.create("Hallo")
+                ScmString.create("Hallo"),
+                ScmString.create("Hallo")
             ) >= 1
         )
 
         // equal equivalent but eqv different values
         TestCase.assertEquals(
             1, eqHelper(
-                createPair(v, v),
-                createPair(v, v)
+                ListFactory.createPair(v, v),
+                ListFactory.createPair(v, v)
             )
         )
 
@@ -461,22 +435,22 @@ class TestValue
 
         TestCase.assertEquals(
             0, eqHelper(
-                ScmVector.Companion.create(5, u),
-                ScmVector.Companion.create(5, v)
+                ScmVector.create(5, u),
+                ScmVector.create(5, v)
             )
         )
 
         TestCase.assertEquals(
             0, eqHelper(
-                ScmVector.Companion.create(7, v),
-                ScmVector.Companion.create(5, v)
+                ScmVector.create(7, v),
+                ScmVector.create(5, v)
             )
         )
 
         TestCase.assertEquals(
             0, eqHelper(
-                ScmString.Companion.create("Hallo 1"),
-                ScmString.Companion.create("Hallo 2")
+                ScmString.create("Hallo 1"),
+                ScmString.create("Hallo 2")
             )
         )
     }

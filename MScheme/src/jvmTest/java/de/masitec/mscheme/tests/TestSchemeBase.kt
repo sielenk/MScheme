@@ -22,8 +22,7 @@ package de.masitec.mscheme.tests
 
 import junit.framework.TestCase
 import de.masitec.mscheme.machine.Machine
-import de.masitec.mscheme.machine.Machine.Companion.parse
-import de.masitec.mscheme.values.ValueTraits.equal
+import de.masitec.mscheme.values.ValueTraits
 
 abstract class TestSchemeBase(name: String?) : TestCase(name) {
     var machine: Machine? = null
@@ -39,7 +38,7 @@ abstract class TestSchemeBase(name: String?) : TestCase(name) {
     }
 
     fun quote(expression: String): Any? {
-        return parse(expression)
+        return Machine.parse(expression)
     }
 
     fun eval(expression: String): Any? {
@@ -49,7 +48,7 @@ abstract class TestSchemeBase(name: String?) : TestCase(name) {
     fun check(`in`: String, out: String) {
         val value = eval(`in`)
         val expected = quote(out)
-        val success = equal(value, expected)
+        val success = ValueTraits.equal(value, expected)
 
         if (!success) {
             println(

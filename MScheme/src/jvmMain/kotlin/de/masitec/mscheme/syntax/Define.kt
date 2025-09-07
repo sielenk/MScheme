@@ -24,10 +24,8 @@ import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
-import de.masitec.mscheme.values.ListFactory.prepend
-import de.masitec.mscheme.values.ValueTraits.isPair
-import de.masitec.mscheme.values.ValueTraits.toConstPair
-import de.masitec.mscheme.values.ValueTraits.toSymbol
+import de.masitec.mscheme.values.ListFactory
+import de.masitec.mscheme.values.ValueTraits
 
 internal object Define : CheckedTranslator(Arity.atLeast(2)) {
     override fun preTranslate(compilationEnv: StaticEnvironment) {
@@ -36,15 +34,15 @@ internal object Define : CheckedTranslator(Arity.atLeast(2)) {
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment, arguments: IList
     ): Any {
-        if (isPair(arguments.head)) {
+        if (ValueTraits.isPair(arguments.head)) {
             //    (define (f x y) (+ x y))
             // -> (define f (lambda (x y) (+ x y)))
-            val symbol = toSymbol(
-                toConstPair(
+            val symbol = ValueTraits.toSymbol(
+                ValueTraits.toConstPair(
                     arguments.head
                 ).first
             )
-            val formals = toConstPair(arguments.head).second
+            val formals = ValueTraits.toConstPair(arguments.head).second
             val body = arguments.tail
 
             val ref = compilationEnv.define(symbol)
@@ -52,7 +50,7 @@ internal object Define : CheckedTranslator(Arity.atLeast(2)) {
             try {
                 return Set.translate(
                     ref, Lambda.translate(
-                        compilationEnv, prepend(formals, body)
+                        compilationEnv, ListFactory.prepend(formals, body)
                     )
                 )
             } finally {
@@ -63,7 +61,7 @@ internal object Define : CheckedTranslator(Arity.atLeast(2)) {
                 arityError(arguments, Arity.exactly(2))
             }
 
-            val symbol = toSymbol(arguments.head)
+            val symbol = ValueTraits.toSymbol(arguments.head)
             val value = arguments.tail.head
 
             val ref = compilationEnv.define(symbol)

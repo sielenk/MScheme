@@ -27,7 +27,7 @@ import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
-import de.masitec.mscheme.values.ValueTraits.toSymbol
+import de.masitec.mscheme.values.ValueTraits
 
 
 // *** letrec ***
@@ -56,7 +56,7 @@ internal object Letrec : LetBase(Arity.atLeast(2)) {
         // prepend the initialisations to the body
         var index = 0
         while (!formals.isEmpty) {
-            val formal = toSymbol(formals.head)
+            val formal = ValueTraits.toSymbol(formals.head)
             val init = inits.head
 
             compiledLetrec[index++] = Set.translate(

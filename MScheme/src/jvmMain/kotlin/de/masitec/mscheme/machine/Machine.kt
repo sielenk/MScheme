@@ -235,8 +235,8 @@ class Machine : Runnable {
                 _errorHandler = null
 
                 return ValueTraits.apply(
-                    _state, handler, ListFactory
-                        .create(errorValue)
+                    _state, handler,
+                    ListFactory.create(errorValue)
                 )
             } else {
                 throw error

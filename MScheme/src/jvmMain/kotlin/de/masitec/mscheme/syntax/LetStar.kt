@@ -27,8 +27,7 @@ import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
-import de.masitec.mscheme.values.ValueTraits.toList
-import de.masitec.mscheme.values.ValueTraits.toSymbol
+import de.masitec.mscheme.values.ValueTraits
 
 // *** let* ***
 internal object LetStar : LetBase(Arity.atLeast(2)) {
@@ -38,7 +37,7 @@ internal object LetStar : LetBase(Arity.atLeast(2)) {
     ): Any? {
         // (let* ((<var> <init>) ...) <body>)
 
-        val bindings = toList(arguments.head)
+        val bindings = ValueTraits.toList(arguments.head)
         val body = arguments.tail
 
         return if (bindings.isEmpty) {
@@ -64,9 +63,9 @@ internal class LetStarHelper(private val _body: IList) {
         if (bindings.isEmpty) {
             return Sequence.create(_body.getCompiledArray(outerEnvironment))
         } else {
-            val binding = toList(bindings.head)
+            val binding = ValueTraits.toList(bindings.head)
 
-            val formal = toSymbol(binding.head)
+            val formal = ValueTraits.toSymbol(binding.head)
             val init = binding.tail.head
 
             val innerEnvironment = outerEnvironment

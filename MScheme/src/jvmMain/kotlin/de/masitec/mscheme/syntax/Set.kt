@@ -26,14 +26,14 @@ import de.masitec.mscheme.environment.Reference
 import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
-import de.masitec.mscheme.values.ValueTraits.toSymbol
+import de.masitec.mscheme.values.ValueTraits
 
 internal object Set : CheckedTranslator(Arity.exactly(2)) {
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment,
         arguments: IList
     ): Any {
-        val symbol = toSymbol(arguments.head)
+        val symbol = ValueTraits.toSymbol(arguments.head)
         val value = arguments.tail.head
 
         return translate(

@@ -22,30 +22,29 @@ package de.masitec.mscheme.syntax
 
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
-import de.masitec.mscheme.values.ListFactory.create
-import de.masitec.mscheme.values.ListFactory.prepend
-import de.masitec.mscheme.values.ValueTraits.toList
+import de.masitec.mscheme.values.ListFactory
+import de.masitec.mscheme.values.ValueTraits
 
 internal abstract class LetBase protected constructor(
     arity: Arity
 ) : CheckedTranslator(arity) {
     companion object {
         fun splitArguments(arguments: IList): Array<IList> {
-            var bindings = toList(arguments.head)
+            var bindings = ValueTraits.toList(arguments.head)
             val body = arguments.tail
 
-            var formals = create()
-            var inits = create()
+            var formals = ListFactory.create()
+            var inits = ListFactory.create()
 
             // parse the initializer list
             while (!bindings.isEmpty) {
-                val binding = toList(bindings.head)
+                val binding = ValueTraits.toList(bindings.head)
 
                 val formal = binding.head
                 val init = binding.tail.head
 
-                formals = prepend(formal, formals)
-                inits = prepend(init, inits)
+                formals = ListFactory.prepend(formal, formals)
+                inits = ListFactory.prepend(init, inits)
 
                 bindings = bindings.tail
             }

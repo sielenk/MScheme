@@ -28,7 +28,7 @@
 package de.masitec.mscheme.values
 
 import junit.framework.TestCase
-import de.masitec.mscheme.values.ValueTraits.isTrue
+import de.masitec.mscheme.values.ValueTraits
 import java.lang.Boolean
 import kotlin.Any
 import kotlin.String
@@ -45,12 +45,12 @@ class ValueTraitsTest
  */
     (name: String?) : TestCase(name) {
     fun testIsTrue() {
-        assertTrue(isTrue(Boolean.TRUE))
-        assertFalse(isTrue(Boolean.FALSE))
+        assertTrue(ValueTraits.isTrue(Boolean.TRUE))
+        assertFalse(ValueTraits.isTrue(Boolean.FALSE))
 
-        assertTrue(isTrue(ValueTraits.TRUE))
-        assertFalse(isTrue(ValueTraits.FALSE))
+        assertTrue(ValueTraits.isTrue(ValueTraits.TRUE))
+        assertFalse(ValueTraits.isTrue(ValueTraits.FALSE))
 
-        assertTrue(isTrue(Any()))
+        assertTrue(ValueTraits.isTrue(Any()))
     }
 }

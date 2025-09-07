@@ -22,15 +22,14 @@ package de.masitec.mscheme.syntax
 
 import de.masitec.mscheme.code.Application
 import de.masitec.mscheme.compiler.Compiler
-import de.masitec.mscheme.environment.Environment.Companion.getSchemeReportEnvironment
+import de.masitec.mscheme.environment.Environment
 import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.machine.Machine
-import de.masitec.mscheme.util.Arity.Companion.exactly
+import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
 import de.masitec.mscheme.values.IPair
-import de.masitec.mscheme.values.ListFactory.create
-import de.masitec.mscheme.values.ValueTraits.toStaticEnvironment
-import de.masitec.mscheme.values.ValueTraits.toSymbol
+import de.masitec.mscheme.values.ListFactory
+import de.masitec.mscheme.values.ValueTraits
 import de.masitec.mscheme.values.functions.ApplyFunction
 
 internal class Macro(
@@ -56,7 +55,7 @@ internal class Macro(
         ) as IPair?
 
         return Compiler(
-            toStaticEnvironment(result!!.first)
+            ValueTraits.toStaticEnvironment(result!!.first)
         ).getForceable(
             result.second
         )
@@ -64,19 +63,19 @@ internal class Macro(
 
     companion object {
         val MACHINE: Machine =
-            Machine(getSchemeReportEnvironment())
+            Machine(Environment.getSchemeReportEnvironment())
 
         private val APPLY: Any =
             ApplyFunction
     }
 }
 
-internal object DefineSyntax : CheckedTranslator(exactly(2)) {
+internal object DefineSyntax : CheckedTranslator(Arity.exactly(2)) {
     override fun checkedTranslate(
         compilationEnv: StaticEnvironment,
         arguments: IList
     ): Any {
-        val symbol = toSymbol(arguments.head)
+        val symbol = ValueTraits.toSymbol(arguments.head)
         val value = arguments.tail.head
 
         val macro = Macro(
@@ -90,6 +89,6 @@ internal object DefineSyntax : CheckedTranslator(exactly(2)) {
             .static
             .defineSyntax(symbol, macro)
 
-        return create()
+        return ListFactory.create()
     }
 }

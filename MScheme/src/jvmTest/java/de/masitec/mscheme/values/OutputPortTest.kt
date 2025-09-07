@@ -28,7 +28,7 @@
 package de.masitec.mscheme.values
 
 import junit.framework.TestCase
-import de.masitec.mscheme.values.ValueTraits.equal
+import de.masitec.mscheme.values.ValueTraits
 import java.io.PipedReader
 import java.io.PipedWriter
 
@@ -98,7 +98,7 @@ class OutputPortTest(name: String?) : TestCase(name) {
 
             val actual = InputPort.create(inPipe).read()
 
-            assertTrue(equal(expected, actual))
+            assertTrue(ValueTraits.equal(expected, actual))
         }
     }
 }

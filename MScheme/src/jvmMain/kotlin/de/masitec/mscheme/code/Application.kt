@@ -20,37 +20,34 @@
  */
 package de.masitec.mscheme.code
 
-import de.masitec.mscheme.code.CodeArray.force
-import de.masitec.mscheme.code.CodeArray.printTuple
 import de.masitec.mscheme.compiler.IForceable
 import de.masitec.mscheme.machine.IContinuation
 import de.masitec.mscheme.machine.Registers
 import de.masitec.mscheme.values.IList
-import de.masitec.mscheme.values.ListFactory.create
-import de.masitec.mscheme.values.ListFactory.prepend
-import de.masitec.mscheme.values.ValueTraits.apply
+import de.masitec.mscheme.values.ListFactory
+import de.masitec.mscheme.values.ValueTraits
 
 class Application private constructor(
     private val _application: Array<Any?>
 ) : IForceable, IReduceable {
     override fun force(): Application {
-        force(_application)
+        CodeArray.force(_application)
         return this
     }
 
     override fun toString(): String =
-        "app:${printTuple(_application)}"
+        "app:${CodeArray.printTuple(_application)}"
 
     override fun reduce(state: Registers): Any? =
         prepareNext(
-            state, create(),
+            state, ListFactory.create(),
             _application.size - 1
         )
 
     private fun createPush(done: IList, index: Int): IContinuation =
         IContinuation { registers: Registers, value: Any? ->
             prepareNext(
-                registers, prepend(value, done),
+                registers, ListFactory.prepend(value, done),
                 index - 1
             )
         }
@@ -75,7 +72,7 @@ class Application private constructor(
 
         fun createCall(done: IList): IContinuation =
             IContinuation { registers: Registers, value: Any? ->
-                apply(registers, value, done)
+                ValueTraits.apply(registers, value, done)
             }
     }
 }

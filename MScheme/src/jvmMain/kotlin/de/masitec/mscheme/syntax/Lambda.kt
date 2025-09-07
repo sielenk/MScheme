@@ -24,12 +24,8 @@ import de.masitec.mscheme.code.CompiledLambda
 import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
-import de.masitec.mscheme.values.ListFactory.create
-import de.masitec.mscheme.values.ListFactory.prepend
-import de.masitec.mscheme.values.ValueTraits.isList
-import de.masitec.mscheme.values.ValueTraits.isPair
-import de.masitec.mscheme.values.ValueTraits.toConstPair
-import de.masitec.mscheme.values.ValueTraits.toList
+import de.masitec.mscheme.values.ListFactory
+import de.masitec.mscheme.values.ValueTraits
 
 internal object Lambda : CheckedTranslator(Arity.atLeast(2)) {
     override fun checkedTranslate(
@@ -42,8 +38,8 @@ internal object Lambda : CheckedTranslator(Arity.atLeast(2)) {
         val formals: IList
         val arity: Arity
 
-        if (isList(rawFormals)) {
-            formals = toList(rawFormals)
+        if (ValueTraits.isList(rawFormals)) {
+            formals = ValueTraits.toList(rawFormals)
             arity = Arity.exactly(formals.length)
         } else {
             // rawFormals is an improper list.
@@ -59,17 +55,17 @@ internal object Lambda : CheckedTranslator(Arity.atLeast(2)) {
 
             var current = rawFormals
             var minArity = 0
-            var result = create()
+            var result = ListFactory.create()
 
-            while (isPair(current)) {
-                val currentPair = toConstPair(current)
+            while (ValueTraits.isPair(current)) {
+                val currentPair = ValueTraits.toConstPair(current)
 
                 ++minArity
-                result = prepend(currentPair.first, result)
+                result = ListFactory.prepend(currentPair.first, result)
                 current = currentPair.second
             }
 
-            result = prepend(current, result)
+            result = ListFactory.prepend(current, result)
 
             formals = result.getReversed()
             arity = Arity.atLeast(minArity)

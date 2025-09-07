@@ -27,7 +27,7 @@ import de.masitec.mscheme.exceptions.SyntaxArityError
 import de.masitec.mscheme.values.Function
 import de.masitec.mscheme.values.ScmString
 import de.masitec.mscheme.values.ScmVector
-import de.masitec.mscheme.values.ValueTraits.toMutablePair
+import de.masitec.mscheme.values.ValueTraits
 
 class TestR5RS
     (name: String?) : TestSchemeBase(name) {
@@ -60,7 +60,7 @@ class TestR5RS
         check("#t", "#t")
 
         try {
-            toMutablePair(eval("'(1 . 2)")).first = quote("a")
+            ValueTraits.toMutablePair(eval("'(1 . 2)")).first = quote("a")
             fail()
         } catch (e: ImmutableException) {
         }

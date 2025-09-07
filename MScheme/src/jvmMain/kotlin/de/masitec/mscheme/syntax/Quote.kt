@@ -23,7 +23,7 @@ package de.masitec.mscheme.syntax
 import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
-import de.masitec.mscheme.values.ValueTraits.getConst
+import de.masitec.mscheme.values.ValueTraits
 
 
 // *** quote ***
@@ -32,5 +32,5 @@ internal object Quote : CheckedTranslator(Arity.exactly(1)) {
         compilationEnv: StaticEnvironment,
         arguments: IList
     ): Any? =
-        getConst(arguments.head)
+        ValueTraits.getConst(arguments.head)
 }

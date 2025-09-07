@@ -23,7 +23,7 @@ package de.masitec.mscheme.code
 import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.compiler.IForceable
 import de.masitec.mscheme.machine.Registers
-import de.masitec.mscheme.values.ValueTraits.isTrue
+import de.masitec.mscheme.values.ValueTraits
 
 class Selection internal constructor(
     private val _test: Any?,
@@ -38,7 +38,7 @@ class Selection internal constructor(
    */
     override fun reduce(state: Registers): Any? {
         state.push { _: Registers?, value: Any? ->
-            if (isTrue(value))
+            if (ValueTraits.isTrue(value))
                 _onTrue
             else
                 _onFalse

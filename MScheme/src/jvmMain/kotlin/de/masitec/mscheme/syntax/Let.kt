@@ -24,9 +24,8 @@ import de.masitec.mscheme.code.Application
 import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
-import de.masitec.mscheme.values.ListFactory.prepend
-import de.masitec.mscheme.values.ValueTraits.isSymbol
-import de.masitec.mscheme.values.ValueTraits.toSymbol
+import de.masitec.mscheme.values.ListFactory
+import de.masitec.mscheme.values.ValueTraits
 import de.masitec.mscheme.values.functions.YCombinator
 
 
@@ -39,13 +38,13 @@ internal object Let : LetBase(Arity.atLeast(2)) {
         var arguments = arguments
         val name: String?
 
-        if (isSymbol(arguments.head)) {
+        if (ValueTraits.isSymbol(arguments.head)) {
             if (arguments.length < 3) {
                 arityError(arguments)
             }
             // named let
             // (let <var> ((<var> <init>) ...) <body>)
-            name = toSymbol(arguments.head)
+            name = ValueTraits.toSymbol(arguments.head)
             arguments = arguments.tail
         } else {
             // (let ((<var> <init>) ...) <body>)
@@ -62,13 +61,13 @@ internal object Let : LetBase(Arity.atLeast(2)) {
             // closure gets a name to be recursively callable.
             // to ensure this names uniqueness, it is prepended to
             // the formals list.
-            formals = prepend(name, formals)
+            formals = ListFactory.prepend(name, formals)
         }
 
         var compiledProc =
             Lambda.translate(
                 compilationEnv,
-                prepend(formals, body)
+                ListFactory.prepend(formals, body)
             )
 
         if (name != null) {

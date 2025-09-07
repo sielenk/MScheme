@@ -23,16 +23,12 @@ package de.masitec.mscheme.tests
 import junit.framework.TestCase
 import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.environment.Environment
-import de.masitec.mscheme.environment.Environment.Companion.getNullEnvironment
 import de.masitec.mscheme.exceptions.*
 import de.masitec.mscheme.machine.Machine
 import de.masitec.mscheme.values.*
 import de.masitec.mscheme.values.Function
-import de.masitec.mscheme.values.ListFactory.create
-import de.masitec.mscheme.values.ListFactory.createPair
-import de.masitec.mscheme.values.ListFactory.prepend
-import de.masitec.mscheme.values.ValueTraits.eq
-import de.masitec.mscheme.values.ValueTraits.equal
+import de.masitec.mscheme.values.ListFactory
+import de.masitec.mscheme.values.ValueTraits
 import de.masitec.mscheme.values.functions.CallCCFunction
 import java.io.StringReader
 import java.lang.Boolean
@@ -63,7 +59,7 @@ class TestMachine
         _val2 = Boolean.FALSE
         _unval = ListFactory.create()
 
-        _environment = getNullEnvironment()
+        _environment = Environment.getNullEnvironment()
 
         machine = Machine(_environment!!)
     }
@@ -135,7 +131,7 @@ class TestMachine
 
     fun testPair1() {
         try {
-            machine!!.evaluate(createPair(_val1, _val2))
+            machine!!.evaluate(ListFactory.createPair(_val1, _val2))
             fail("expected ListExpected")
         } catch (e: ListExpected) {
         }
@@ -143,7 +139,7 @@ class TestMachine
 
     fun testPair2() {
         try {
-            machine!!.evaluate(create(_val1))
+            machine!!.evaluate(ListFactory.create(_val1))
             fail("expected FunctionExpected")
         } catch (e: FunctionExpected) {
         }
@@ -167,16 +163,16 @@ class TestMachine
 
         assertSame(
             _val1, machine!!.evaluate(
-                prepend(
+                ListFactory.prepend(
                     "if",
-                    create(Boolean.TRUE, _sym1, _sym2)
+                    ListFactory.create(Boolean.TRUE, _sym1, _sym2)
                 )
             )
         )
 
         assertSame(
             _val1, machine!!.evaluate(
-                prepend(
+                ListFactory.prepend(
                     "if",
                     ListFactory.create(Boolean.TRUE, _sym1)
                 )
@@ -185,7 +181,12 @@ class TestMachine
 
         assertSame(
             _val2, machine!!
-                .evaluate(prepend("if", create(Boolean.FALSE, _sym1, _sym2)))
+                .evaluate(
+                    ListFactory.prepend(
+                        "if",
+                        ListFactory.create(Boolean.FALSE, _sym1, _sym2)
+                    )
+                )
         )
     }
 
@@ -194,7 +195,7 @@ class TestMachine
 
         try {
             machine!!.evaluate(
-                create(
+                ListFactory.create(
                     "begin", _sym1,
                     _sym2
                 )
@@ -207,7 +208,7 @@ class TestMachine
 
         assertSame(
             _val2, machine!!.evaluate(
-                create("begin", _sym1, _sym2)
+                ListFactory.create("begin", _sym1, _sym2)
             )
         )
     }
@@ -234,13 +235,13 @@ class TestMachine
 
     fun testLambdaNoArgs() {
         val func = machine!!.evaluate(
-            create(
+            ListFactory.create(
                 "lambda",
                 ListFactory.create(), _val1
             )
         ) as Function?
 
-        assertSame(_val1, machine!!.evaluate(create(func)))
+        assertSame(_val1, machine!!.evaluate(ListFactory.create(func)))
 
         try {
             machine!!.evaluate(ListFactory.create(func, _unval))
@@ -260,7 +261,7 @@ class TestMachine
 
         assertSame(
             _val1, machine!!.evaluate(
-                create(
+                ListFactory.create(
                     func, _val1,
                     _val2
                 )
@@ -278,7 +279,7 @@ class TestMachine
         val func = evaluate("(lambda (x . y) y)") as Function?
 
         try {
-            machine!!.evaluate(create(func))
+            machine!!.evaluate(ListFactory.create(func))
             fail("expected RuntimeArityError")
         } catch (e: RuntimeArityError) {
         }
@@ -294,7 +295,7 @@ class TestMachine
 
         assertSame(
             _val2, (machine!!.evaluate(
-                create(
+                ListFactory.create(
                     func,
                     _val1, _val2
                 )
@@ -305,17 +306,17 @@ class TestMachine
     fun testLambdaOptionalIsNewList() {
         val func = evaluate("(lambda x x)") as Function?
 
-        val pair2: IPair = createPair(_val2, ListFactory.create())
-        val pair1: IPair = createPair(_val1, pair2)
+        val pair2: IPair = ListFactory.createPair(_val2, ListFactory.create())
+        val pair1: IPair = ListFactory.createPair(_val1, pair2)
 
-        val result = machine!!.evaluate(createPair(func, pair1))
+        val result = machine!!.evaluate(ListFactory.createPair(func, pair1))
 
-        assertTrue(equal(result, pair1))
-        assertFalse(eq(result, pair1))
+        assertTrue(ValueTraits.equal(result, pair1))
+        assertFalse(ValueTraits.eq(result, pair1))
     }
 
     fun testDefineNormal() {
-        machine!!.evaluate(create("define", "a", _val1))
+        machine!!.evaluate(ListFactory.create("define", "a", _val1))
 
         assertSame(_val1, machine!!.evaluate("a"))
     }
@@ -337,7 +338,7 @@ class TestMachine
 
         assertSame(
             "function application failed - ", _val1, machine!!
-                .evaluate(create("f", _val1, _val2))
+                .evaluate(ListFactory.create("f", _val1, _val2))
         )
     }
 
@@ -345,7 +346,7 @@ class TestMachine
         assertSame(
             _val1, machine!!.evaluate(
                 ListFactory.create(
-                    CallCCFunction, create(
+                    CallCCFunction, ListFactory.create(
                         "lambda",
                         ListFactory.create("return"),
                         ListFactory.create("return", _val1)

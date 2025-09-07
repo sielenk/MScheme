@@ -20,41 +20,15 @@
  */
 package de.masitec.mscheme.values.functions
 
-import de.masitec.mscheme.environment.Environment.Companion.getNullEnvironment
-import de.masitec.mscheme.environment.Environment.Companion.getSchemeReportEnvironment
+import de.masitec.mscheme.environment.Environment
 import de.masitec.mscheme.exceptions.*
 import de.masitec.mscheme.machine.Registers
 import de.masitec.mscheme.values.*
 import de.masitec.mscheme.values.Function
-import de.masitec.mscheme.values.ListFactory.createPair
-import de.masitec.mscheme.values.ListFactory.prepend
-import de.masitec.mscheme.values.ScmString.Companion.createConst
-import de.masitec.mscheme.values.ValueTraits.createUniqueSymbol
-import de.masitec.mscheme.values.ValueTraits.eq
-import de.masitec.mscheme.values.ValueTraits.equal
-import de.masitec.mscheme.values.ValueTraits.eqv
-import de.masitec.mscheme.values.ValueTraits.isFunction
-import de.masitec.mscheme.values.ValueTraits.isList
-import de.masitec.mscheme.values.ValueTraits.isPair
-import de.masitec.mscheme.values.ValueTraits.isPort
-import de.masitec.mscheme.values.ValueTraits.isScmBoolean
-import de.masitec.mscheme.values.ValueTraits.isScmChar
-import de.masitec.mscheme.values.ValueTraits.isScmNumber
-import de.masitec.mscheme.values.ValueTraits.isScmString
-import de.masitec.mscheme.values.ValueTraits.isScmVector
-import de.masitec.mscheme.values.ValueTraits.isSymbol
-import de.masitec.mscheme.values.ValueTraits.isTrue
-import de.masitec.mscheme.values.ValueTraits.toConstPair
-import de.masitec.mscheme.values.ValueTraits.toInputPort
-import de.masitec.mscheme.values.ValueTraits.toList
-import de.masitec.mscheme.values.ValueTraits.toMutablePair
-import de.masitec.mscheme.values.ValueTraits.toOutputPort
-import de.masitec.mscheme.values.ValueTraits.toScmChar
-import de.masitec.mscheme.values.ValueTraits.toScmNumber
-import de.masitec.mscheme.values.ValueTraits.toScmString
-import de.masitec.mscheme.values.ValueTraits.toScmVector
-import de.masitec.mscheme.values.ValueTraits.toSymbol
-import de.masitec.mscheme.values.functions.Order.Companion.check
+import de.masitec.mscheme.values.ListFactory
+import de.masitec.mscheme.values.ScmString
+import de.masitec.mscheme.values.ValueTraits
+import de.masitec.mscheme.values.functions.Order
 import java.io.StringReader
 
 
@@ -62,55 +36,55 @@ object Builtins {
     // 6. Standard procedures
     // 6.1 Equivalence predicates
     fun eq_3F(fst: Any?, snd: Any?): Any =
-        ValueTraits.toScmBoolean(eq(fst, snd))
+        ValueTraits.toScmBoolean(ValueTraits.eq(fst, snd))
 
     fun eqv_3F(fst: Any?, snd: Any?): Any =
-        ValueTraits.toScmBoolean(eqv(fst, snd))
+        ValueTraits.toScmBoolean(ValueTraits.eqv(fst, snd))
 
     fun equal_3F(fst: Any?, snd: Any?): Any =
-        ValueTraits.toScmBoolean(equal(fst, snd))
+        ValueTraits.toScmBoolean(ValueTraits.equal(fst, snd))
 
     // 6.2 Numbers
     // 6.2.5 Numerical operations
     fun number_3F(argument: Any?): Any =
-        ValueTraits.toScmBoolean(isScmNumber(argument))
+        ValueTraits.toScmBoolean(ValueTraits.isScmNumber(argument))
 
     fun complex_3F(argument: Any?): Any =
-        ValueTraits.toScmBoolean(isScmNumber(argument))
+        ValueTraits.toScmBoolean(ValueTraits.isScmNumber(argument))
 
     fun real_3F(argument: Any?): Any =
-        ValueTraits.toScmBoolean(isScmNumber(argument))
+        ValueTraits.toScmBoolean(ValueTraits.isScmNumber(argument))
 
     fun rational_3F(argument: Any?): Any =
-        ValueTraits.toScmBoolean(isScmNumber(argument))
+        ValueTraits.toScmBoolean(ValueTraits.isScmNumber(argument))
 
     fun integer_3F(argument: Any?): Any =
-        ValueTraits.toScmBoolean(isScmNumber(argument))
+        ValueTraits.toScmBoolean(ValueTraits.isScmNumber(argument))
 
     fun exact_3F(argument: Any?): Any =
-        ValueTraits.toScmBoolean(isScmNumber(argument))
+        ValueTraits.toScmBoolean(ValueTraits.isScmNumber(argument))
 
     fun inexact_3F(argument: Any?): Any =
         ValueTraits.FALSE
 
     fun _3C(arguments: IList): Any =
-        ValueTraits.toScmBoolean(check(arguments, Order.LT))
+        ValueTraits.toScmBoolean(Order.check(arguments, Order.LT))
 
     fun _3C_3D(arguments: IList): Any =
-        ValueTraits.toScmBoolean(check(arguments, Order.LE))
+        ValueTraits.toScmBoolean(Order.check(arguments, Order.LE))
 
     fun _3D(arguments: IList): Any =
-        ValueTraits.toScmBoolean(check(arguments, Order.EQ))
+        ValueTraits.toScmBoolean(Order.check(arguments, Order.EQ))
 
     fun _3E_3D(arguments: IList): Any =
-        ValueTraits.toScmBoolean(check(arguments, Order.GE))
+        ValueTraits.toScmBoolean(Order.check(arguments, Order.GE))
 
     fun _3E(arguments: IList): Any =
-        ValueTraits.toScmBoolean(check(arguments, Order.GT))
+        ValueTraits.toScmBoolean(Order.check(arguments, Order.GT))
 
     fun zero_3F(argument: Any?): Any =
         ValueTraits.toScmBoolean(
-            toScmNumber(argument).integer == 0
+            ValueTraits.toScmNumber(argument).integer == 0
         )
 
     fun _2B(arguments: IList): Any {
@@ -118,7 +92,7 @@ object Builtins {
         var tail = arguments
 
         while (!tail.isEmpty) {
-            val term = toScmNumber(tail.head)
+            val term = ValueTraits.toScmNumber(tail.head)
             val nextTail = tail.tail
 
             sum = sum.plus(term)
@@ -129,12 +103,12 @@ object Builtins {
     }
 
     fun _2D(arguments: IList): Any {
-        var result = toScmNumber(arguments.head)
+        var result = ValueTraits.toScmNumber(arguments.head)
         var rest = arguments.tail
 
         if (!rest.isEmpty) {
             do {
-                val head = toScmNumber(rest.head)
+                val head = ValueTraits.toScmNumber(rest.head)
                 val tail = rest.tail
 
                 result = result.minus(head)
@@ -152,7 +126,7 @@ object Builtins {
         var tail = arguments
 
         while (!tail.isEmpty) {
-            val factor = toScmNumber(tail.head)
+            val factor = ValueTraits.toScmNumber(tail.head)
             val nextTail = tail.tail
 
             product = product.times(factor)
@@ -163,12 +137,12 @@ object Builtins {
     }
 
     fun _2F(arguments: IList): Any {
-        var result = toScmNumber(arguments.head)
+        var result = ValueTraits.toScmNumber(arguments.head)
         var rest = arguments.tail
 
         if (!rest.isEmpty) {
             do {
-                val head = toScmNumber(rest.head)
+                val head = ValueTraits.toScmNumber(rest.head)
                 val tail = rest.tail
 
                 result = result.divide(head)
@@ -184,31 +158,31 @@ object Builtins {
     // 6.3 Other data types
     // 6.3.1 Booleans
     fun not(argument: Any?): Any =
-        ValueTraits.toScmBoolean(!isTrue(argument))
+        ValueTraits.toScmBoolean(!ValueTraits.isTrue(argument))
 
     fun boolean_3F(argument: Any?): Any =
-        ValueTraits.toScmBoolean(isScmBoolean(argument))
+        ValueTraits.toScmBoolean(ValueTraits.isScmBoolean(argument))
 
     // 6.3.2 Pairs and lists
     fun pair_3F(argument: Any?): Any =
-        ValueTraits.toScmBoolean(isPair(argument))
+        ValueTraits.toScmBoolean(ValueTraits.isPair(argument))
 
     fun cons(fst: Any?, snd: Any?): Any =
-        createPair(fst, snd)
+        ListFactory.createPair(fst, snd)
 
     fun car(argument: Any?): Any? =
-        toConstPair(argument).first
+        ValueTraits.toConstPair(argument).first
 
     fun cdr(argument: Any?): Any? =
-        toConstPair(argument).second
+        ValueTraits.toConstPair(argument).second
 
     fun set_2Dcar_21(fst: Any?, snd: Any?): Any? {
-        toMutablePair(fst).first = snd
+        ValueTraits.toMutablePair(fst).first = snd
         return snd
     }
 
     fun set_2Dcdr_21(fst: Any?, snd: Any?): Any? {
-        toMutablePair(fst).second = snd
+        ValueTraits.toMutablePair(fst).second = snd
         return snd
     }
 
@@ -216,7 +190,7 @@ object Builtins {
         ValueTraits.toScmBoolean(argument is Empty)
 
     fun list_3F(argument: Any?): Any = // list?
-        ValueTraits.toScmBoolean(isList(argument))
+        ValueTraits.toScmBoolean(ValueTraits.isList(argument))
 
     fun list(argument: IList): Any {
         // Without first-class continuations, it would be safe to
@@ -226,13 +200,13 @@ object Builtins {
     }
 
     fun length(argument: Any?): Any =
-        ScmNumber.create(toList(argument).length)
+        ScmNumber.create(ValueTraits.toList(argument).length)
 
     val append: Function =
         AppendFunction
 
     fun reverse(argument: Any?): Any =
-        toList(argument).getReversed()
+        ValueTraits.toList(argument).getReversed()
 
     val memq: Function =
         MemqFunction
@@ -254,80 +228,84 @@ object Builtins {
 
     // 6.3.3 Symbols
     fun symbol_3F(argument: Any?): Any = // symbol?
-        ValueTraits.toScmBoolean(isSymbol(argument))
+        ValueTraits.toScmBoolean(ValueTraits.isSymbol(argument))
 
     fun symbol_2D_3Estring(argument: Any?): Any =
-        createConst(toSymbol(argument))
+        ScmString.createConst(ValueTraits.toSymbol(argument))
 
     fun string_2D_3Esymbol(argument: Any?): Any =
-        toScmString(argument).javaString
+        ValueTraits.toScmString(argument).javaString
 
     // 6.3.4 Characters
     fun char_3F(argument: Any?) = // char?
-        ValueTraits.toScmBoolean(isScmChar(argument))
+        ValueTraits.toScmBoolean(ValueTraits.isScmChar(argument))
 
     fun char_3C_3F(fst: Any?, snd: Any?): Any =
-        ValueTraits.toScmBoolean(toScmChar(fst) < toScmChar(snd))
+        ValueTraits.toScmBoolean(
+            ValueTraits.toScmChar(fst) < ValueTraits.toScmChar(
+                snd
+            )
+        )
 
     fun char_3C_3D_3F(fst: Any?, snd: Any?): Any {
         return ValueTraits.toScmBoolean(
-            toScmChar(fst) <= toScmChar(snd)
+            ValueTraits.toScmChar(fst) <= ValueTraits.toScmChar(snd)
         )
     }
 
     fun char_3D_3F(fst: Any?, snd: Any?): Any =
         ValueTraits.toScmBoolean(
-            toScmChar(fst) == toScmChar(snd)
+            ValueTraits.toScmChar(fst) == ValueTraits.toScmChar(snd)
         )
 
     fun char_3E_3D_3F(fst: Any?, snd: Any?): Any =
         ValueTraits.toScmBoolean(
-            toScmChar(fst) >= toScmChar(snd)
+            ValueTraits.toScmChar(fst) >= ValueTraits.toScmChar(snd)
         )
 
     fun char_3E_3F(fst: Any?, snd: Any?): Any =
         ValueTraits.toScmBoolean(
-            toScmChar(fst) > toScmChar(snd)
+            ValueTraits.toScmChar(fst) > ValueTraits.toScmChar(snd)
         )
 
     fun char_2D_3Einteger(argument: Any?): Any =
-        ScmNumber.create(toScmChar(argument).code)
+        ScmNumber.create(ValueTraits.toScmChar(argument).code)
 
     fun integer_2D_3Echar(argument: Any?): Any =
         ValueTraits.toScmChar(
-            toScmNumber(argument).integer.toChar()
+            ValueTraits.toScmNumber(argument).integer.toChar()
         )
 
     fun char_2Dupcase(argument: Any?): Any =
-        ValueTraits.toScmChar(toScmChar(argument).uppercaseChar())
+        ValueTraits.toScmChar(ValueTraits.toScmChar(argument).uppercaseChar())
 
     fun char_2Ddowncase(argument: Any?): Any =
-        ValueTraits.toScmChar(toScmChar(argument).lowercaseChar())
+        ValueTraits.toScmChar(ValueTraits.toScmChar(argument).lowercaseChar())
 
     // 6.3.5 Strings
     fun string_3F(argument: Any?): Any = // string?
-        ValueTraits.toScmBoolean(isScmString(argument))
+        ValueTraits.toScmBoolean(ValueTraits.isScmString(argument))
 
     fun make_2Dstring(k: Any?, c: Any?): Any =
         ScmString.create(
-            toScmNumber(k).integer,
-            toScmChar(c)
+            ValueTraits.toScmNumber(k).integer,
+            ValueTraits.toScmChar(c)
         )
 
     fun string_2Dlength(str: Any?): Any =
-        ScmNumber.create(toScmString(str).length)
+        ScmNumber.create(ValueTraits.toScmString(str).length)
 
     fun string_2Dref(str: Any?, k: Any?): Any =
         ValueTraits.toScmChar(
-            toScmString(str).get(
-                toScmNumber(k).integer
+            ValueTraits.toScmString(str).get(
+                ValueTraits.toScmNumber(k).integer
             )
         )
 
     fun string_2Dset_21(str: Any?, k: Any?, c: Any?): Any? {
-        toScmString(str).set(
-            toScmNumber(k).integer,
-            toScmChar(c)
+        ValueTraits.toScmString(str).set(
+            ValueTraits.toScmNumber(k).integer,
+            ValueTraits.toScmChar(c)
         )
 
         return c
@@ -339,7 +317,7 @@ object Builtins {
         var rest = arguments
         while (!rest.isEmpty) {
             accu.append(
-                toScmString(rest.head).javaString
+                ValueTraits.toScmString(rest.head).javaString
             )
             rest = rest.tail
         }
@@ -348,14 +326,14 @@ object Builtins {
     }
 
     fun string_2Dcopy(string: Any?): Any =
-        ScmString.create(toScmString(string).javaString)
+        ScmString.create(ValueTraits.toScmString(string).javaString)
 
     fun string_2D_3Elist(scmString: Any?): Any {
-        val javaString = toScmString(scmString).javaString
+        val javaString = ValueTraits.toScmString(scmString).javaString
         var result = ListFactory.create()
 
         for (i in javaString.length - 1 downTo 0) {
-            result = prepend(
+            result = ListFactory.prepend(
                 ValueTraits.toScmChar(javaString[i]),
                 result
             )
@@ -367,9 +345,9 @@ object Builtins {
     fun list_2D_3Estring(list: Any?): Any {
         val accu = StringBuilder()
 
-        var rest = toList(list)
+        var rest = ValueTraits.toList(list)
         while (!rest.isEmpty) {
-            accu.append(toScmChar(rest.head))
+            accu.append(ValueTraits.toScmChar(rest.head))
             rest = rest.tail
         }
 
@@ -378,22 +356,22 @@ object Builtins {
 
     // 6.3.6 Vectors
     fun vector_3F(argument: Any?) = // vector?
-        ValueTraits.toScmBoolean(isScmVector(argument))
+        ValueTraits.toScmBoolean(ValueTraits.isScmVector(argument))
 
     fun make_2Dvector(k: Any?, obj: Any?): Any =
-        ScmVector.create(toScmNumber(k).integer, obj)
+        ScmVector.create(ValueTraits.toScmNumber(k).integer, obj)
 
     fun vector_2Dlength(str: Any?): Any =
-        ScmNumber.create(toScmVector(str).length)
+        ScmNumber.create(ValueTraits.toScmVector(str).length)
 
     fun vector_2Dref(vector: Any?, k: Any?): Any? =
-        toScmVector(vector).get(
-            toScmNumber(k).integer
+        ValueTraits.toScmVector(vector).get(
+            ValueTraits.toScmNumber(k).integer
         )
 
     fun vector_2Dset_21(vector: Any?, k: Any?, obj: Any?): Any? {
-        toScmVector(vector).set(
-            toScmNumber(k).integer, obj
+        ValueTraits.toScmVector(vector).set(
+            ValueTraits.toScmNumber(k).integer, obj
         )
 
         return obj
@@ -403,14 +381,14 @@ object Builtins {
         ScmVector.create(arguments)
 
     fun vector_2D_3Elist(argument: Any?): Any =
-        toScmVector(argument).list
+        ValueTraits.toScmVector(argument).list
 
     fun list_2D_3Evector(argument: Any?): Any =
-        ScmVector.create(toList(argument))
+        ScmVector.create(ValueTraits.toList(argument))
 
     // 6.4 Control features
     fun procedure_3F(argument: Any?): Any = // procedure?
-        ValueTraits.toScmBoolean(isFunction(argument))
+        ValueTraits.toScmBoolean(ValueTraits.isFunction(argument))
 
     val apply: Function =
         ApplyFunction
@@ -425,25 +403,25 @@ object Builtins {
         EvalFunction
 
     fun scheme_2Dreport_2Denvironment(fst: Any?): Any {
-        if (toScmNumber(fst).integer != 5) {
+        if (ValueTraits.toScmNumber(fst).integer != 5) {
             throw SchemeRuntimeError(fst)
         }
 
-        return getSchemeReportEnvironment()
+        return Environment.getSchemeReportEnvironment()
     }
 
     fun null_2Denvironment(fst: Any?): Any {
-        if (toScmNumber(fst).integer != 5) {
+        if (ValueTraits.toScmNumber(fst).integer != 5) {
             throw SchemeRuntimeError(fst)
         }
 
-        return getNullEnvironment()
+        return Environment.getNullEnvironment()
     }
 
     // 6.6 Input and output
     // 6.6.1 Ports
     fun port_3F(argument: Any?): Any = // port?
-        ValueTraits.toScmBoolean(isPort(argument))
+        ValueTraits.toScmBoolean(ValueTraits.isPort(argument))
 
     fun input_2Dport_3F(argument: Any?): Any =
         ValueTraits.toScmBoolean(argument is InputPort)
@@ -452,60 +430,60 @@ object Builtins {
         ValueTraits.toScmBoolean(argument is OutputPort)
 
     fun open_2Dinput_2Dfile(argument: Any?): Any =
-        InputPort.create(toScmString(argument))
+        InputPort.create(ValueTraits.toScmString(argument))
 
     fun open_2Doutput_2Dfile(argument: Any?): Any =
-        OutputPort.create(toScmString(argument))
+        OutputPort.create(ValueTraits.toScmString(argument))
 
     fun close_2Dinput_2Dport(argument: Any?): Any? {
-        toInputPort(argument).close()
+        ValueTraits.toInputPort(argument).close()
         return argument
     }
 
     fun close_2Doutput_2Dport(argument: Any?): Any? {
-        toOutputPort(argument).close()
+        ValueTraits.toOutputPort(argument).close()
         return argument
     }
 
     // 6.6.2 Input
     fun read(fst: Any?): Any? =
         try {
-            toInputPort(fst).read()
+            ValueTraits.toInputPort(fst).read()
         } catch (e: InterruptedException) {
             throw SchemeRuntimeError(fst, e.toString())
         }
 
     fun read_2Dchar(fst: Any?): Any? =
-        toInputPort(fst).readScmChar()
+        ValueTraits.toInputPort(fst).readScmChar()
 
     fun peek_2Dchar(fst: Any?): Any? =
-        toInputPort(fst).peekScmChar()
+        ValueTraits.toInputPort(fst).peekScmChar()
 
     fun eof_2Dobject_3F(fst: Any?): Any =
-        ValueTraits.toScmBoolean(eq(fst, InputPort.EOF_VALUE))
+        ValueTraits.toScmBoolean(ValueTraits.eq(fst, InputPort.EOF_VALUE))
 
     fun char_2Dready_3F(fst: Any?): Any =
-        ValueTraits.toScmBoolean(toInputPort(fst).isReady)
+        ValueTraits.toScmBoolean(ValueTraits.toInputPort(fst).isReady)
 
     // 6.6.3 Output
     fun write(fst: Any?, snd: Any?): Any? {
-        toOutputPort(snd).write(fst)
+        ValueTraits.toOutputPort(snd).write(fst)
         return snd
     }
 
     fun display(fst: Any?, snd: Any?): Any? {
-        toOutputPort(snd).display(fst)
+        ValueTraits.toOutputPort(snd).display(fst)
         return snd
     }
 
     fun write_2Dchar(fst: Any?, snd: Any?): Any? {
-        toOutputPort(snd).writeScmChar(toScmChar(fst))
+        ValueTraits.toOutputPort(snd).writeScmChar(ValueTraits.toScmChar(fst))
         return snd
     }
 
     // additional functions
     fun __unique_2Did(): Any =
-        createUniqueSymbol()
+        ValueTraits.createUniqueSymbol()
 
     val __spawn: Function =
         SpawnFunction
@@ -514,7 +492,7 @@ object Builtins {
         YCombinator
 
     fun __open_2Dinput_2Dstring(argument: Any?): Any =
-        InputPort.create(StringReader(toScmString(argument).javaString))
+        InputPort.create(StringReader(ValueTraits.toScmString(argument).javaString))
 
     //  not very usefull yet ... needs GET-OUTPUT-STRING
     //  public final static Object __open_2Doutput_2Dstring()
