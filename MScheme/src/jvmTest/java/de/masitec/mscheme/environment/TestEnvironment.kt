@@ -20,16 +20,13 @@
  */
 package de.masitec.mscheme.environment
 
-import junit.framework.TestCase
-import de.masitec.mscheme.environment.Environment
 import de.masitec.mscheme.exceptions.SchemeRuntimeError
 import de.masitec.mscheme.exceptions.SymbolNotFoundException
 import de.masitec.mscheme.exceptions.UnexpectedSyntax
 import de.masitec.mscheme.syntax.TranslatorFactory.beginToken
 import de.masitec.mscheme.values.ListFactory
-import java.lang.Boolean
-import kotlin.Any
-import kotlin.String
+import de.masitec.mscheme.values.ValueTraits
+import junit.framework.TestCase
 
 
 class TestEnvironment(name: String) : TestCase(name) {
@@ -46,7 +43,7 @@ class TestEnvironment(name: String) : TestCase(name) {
         sym2 = "test2"
 
         val1 = ListFactory.create()
-        val2 = Boolean.TRUE
+        val2 = ValueTraits.TRUE
     }
 
     override fun tearDown() {

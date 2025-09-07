@@ -25,7 +25,7 @@ import de.masitec.mscheme.syntax.ITranslator
 import de.masitec.mscheme.values.IList
 import de.masitec.mscheme.values.ValueTraits
 import java.io.Writer
-import java.util.*
+
 
 class StaticEnvironment internal constructor(
     val parent: StaticEnvironment? = null
@@ -39,7 +39,7 @@ class StaticEnvironment internal constructor(
     }
 
     private val _bindings: MutableMap<String, Any> =
-        Hashtable()
+        mutableMapOf()
 
     // *** instance access ***************************************************
 

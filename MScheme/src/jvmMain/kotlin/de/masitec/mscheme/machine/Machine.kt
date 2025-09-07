@@ -32,13 +32,17 @@ import de.masitec.mscheme.values.Function
 import de.masitec.mscheme.values.functions.Subcontinuation
 import de.masitec.mscheme.values.functions.UnaryValueFunction
 import de.masitec.mscheme.values.functions.ValueThunk
-import java.io.*
-import java.lang.Boolean
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
+import java.io.Reader
+import java.io.StringReader
+import java.io.Writer
 import kotlin.Any
 import kotlin.RuntimeException
 import kotlin.String
 import kotlin.Throwable
 import kotlin.toString
+
 
 class Machine : Runnable {
     private var _stdin: InputPort?
@@ -114,7 +118,7 @@ class Machine : Runnable {
                 "current-error-handler",
                 object : ValueThunk() {
                     override fun checkedCall(): Any =
-                        _errorHandler ?: Boolean.FALSE
+                        _errorHandler ?: ValueTraits.FALSE
                 }
             )
 
@@ -129,7 +133,7 @@ class Machine : Runnable {
                         else
                             null
 
-                        return oldErrorHandler ?: Boolean.FALSE
+                        return oldErrorHandler ?: ValueTraits.FALSE
                     }
                 }
             )

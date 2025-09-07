@@ -25,7 +25,7 @@ import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
-import java.lang.Boolean
+import de.masitec.mscheme.values.ValueTraits
 import kotlin.Any
 
 
@@ -37,7 +37,7 @@ internal object If : CheckedTranslator(Arity.inRange(2, 3)) {
         val onTrue = arguments.tail.head
         val onFalse =
             if (arguments.tail.tail.isEmpty)
-                Boolean.FALSE
+                ValueTraits.FALSE
             else
                 arguments.tail.tail.head
 

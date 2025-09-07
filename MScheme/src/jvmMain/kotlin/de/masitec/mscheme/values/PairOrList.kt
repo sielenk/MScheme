@@ -29,7 +29,6 @@ import de.masitec.mscheme.syntax.ProcedureCall
 import java.io.IOException
 import java.io.StringWriter
 import java.io.Writer
-import java.util.*
 
 
 internal class ConstPairOrList(
@@ -50,14 +49,15 @@ internal class MutablePairOrList(
         ConstPairOrList(this.first, this.second)
 }
 
-internal class ListEnumerator(private var _tortoise: Any?) : Enumeration<Any?> {
+internal class ListIterator(private var _tortoise: Any?) : Iterator<Any?> {
     private var _hare: Any?
 
     init {
-        _hare = if (_tortoise is IPair) (_tortoise as IPair).second else _tortoise
+        _hare =
+            if (_tortoise is IPair) (_tortoise as IPair).second else _tortoise
     }
 
-    override fun hasMoreElements(): Boolean =
+    override fun hasNext(): Boolean =
         _hare !== _tortoise
 
     val isCyclic: Boolean
@@ -66,7 +66,7 @@ internal class ListEnumerator(private var _tortoise: Any?) : Enumeration<Any?> {
     val isValid: Boolean
         get() = _tortoise is Empty
 
-    override fun nextElement(): Any? {
+    override fun next(): Any? {
         val tortoise = _tortoise
 
         if (tortoise is IPair) {
@@ -92,14 +92,14 @@ abstract class PairOrList protected constructor(
     override fun outputOn(destination: Writer, doWrite: Boolean) {
         destination.write('('.code)
 
-        val enumerator = ListEnumerator(this)
+        val enumerator = ListIterator(this)
         var first = true
-        while (enumerator.hasMoreElements()) {
+        while (enumerator.hasNext()) {
             if (!first) {
                 destination.write(' '.code)
             }
 
-            ValueTraits.output(destination, doWrite, enumerator.nextElement())
+            ValueTraits.output(destination, doWrite, enumerator.next())
             first = false
         }
 
@@ -109,8 +109,7 @@ abstract class PairOrList protected constructor(
             } else {
                 destination.write(" . ")
                 ValueTraits.output(
-                    destination, doWrite, enumerator
-                        .nextElement()
+                    destination, doWrite, enumerator.next()
                 )
             }
         }
@@ -181,16 +180,14 @@ abstract class PairOrList protected constructor(
     override fun getCopy(): IList {
         val empty: Any = ListFactory.create()
 
-        val enumerator = ListEnumerator(this)
+        val enumerator = ListIterator(this)
         val result = MutablePairOrList(
-            enumerator
-                .nextElement(), empty
+            enumerator.next(), empty
         )
         var current = result
-        while (enumerator.hasMoreElements()) {
+        while (enumerator.hasNext()) {
             val next = MutablePairOrList(
-                enumerator
-                    .nextElement(), empty
+                enumerator.next(), empty
             )
             current.second = next
             current = next
@@ -241,7 +238,10 @@ abstract class PairOrList protected constructor(
     override fun getCompiledArray(compilationEnv: StaticEnvironment): Array<Any?> =
         getCompiledArray(compilationEnv, 0)
 
-    override fun getCompiledArray(compilationEnv: StaticEnvironment, index: Int): Array<Any?> {
+    override fun getCompiledArray(
+        compilationEnv: StaticEnvironment,
+        index: Int
+    ): Array<Any?> {
         val compiledHead = Compiler(compilationEnv)
             .getForceable(head)
         val result = tail.getCompiledArray(compilationEnv, index + 1)

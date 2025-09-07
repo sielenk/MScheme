@@ -31,7 +31,6 @@ import de.masitec.mscheme.values.ListFactory
 import de.masitec.mscheme.values.ValueTraits
 import de.masitec.mscheme.values.functions.CallCCFunction
 import java.io.StringReader
-import java.lang.Boolean
 import kotlin.Any
 import kotlin.String
 
@@ -55,8 +54,8 @@ class TestMachine
         _sym1 = "test1"
         _sym2 = "test2"
 
-        _val1 = Boolean.TRUE
-        _val2 = Boolean.FALSE
+        _val1 = ValueTraits.TRUE
+        _val2 = ValueTraits.FALSE
         _unval = ListFactory.create()
 
         _environment = Environment.getNullEnvironment()
@@ -165,7 +164,7 @@ class TestMachine
             _val1, machine!!.evaluate(
                 ListFactory.prepend(
                     "if",
-                    ListFactory.create(Boolean.TRUE, _sym1, _sym2)
+                    ListFactory.create(ValueTraits.TRUE, _sym1, _sym2)
                 )
             )
         )
@@ -174,7 +173,7 @@ class TestMachine
             _val1, machine!!.evaluate(
                 ListFactory.prepend(
                     "if",
-                    ListFactory.create(Boolean.TRUE, _sym1)
+                    ListFactory.create(ValueTraits.TRUE, _sym1)
                 )
             )
         )
@@ -184,7 +183,7 @@ class TestMachine
                 .evaluate(
                     ListFactory.prepend(
                         "if",
-                        ListFactory.create(Boolean.FALSE, _sym1, _sym2)
+                        ListFactory.create(ValueTraits.FALSE, _sym1, _sym2)
                     )
                 )
         )

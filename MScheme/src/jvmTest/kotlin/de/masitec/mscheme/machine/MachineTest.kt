@@ -40,7 +40,6 @@ import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNot
 import io.kotest.matchers.types.beTheSameInstanceAs
-import java.lang.Boolean
 import kotlin.Any
 import kotlin.arrayOf
 
@@ -90,8 +89,8 @@ class MachineTest : FunSpec() {
             machine.evaluate(Selection.create(test, onTrue, onFalse))
 
         test("Selection") {
-            execSelection(Boolean.TRUE, O1, O2) should beTheSameInstanceAs(O1)
-            execSelection(Boolean.FALSE, O1, O2) should beTheSameInstanceAs(O2)
+            execSelection(ValueTraits.TRUE, O1, O2) should beTheSameInstanceAs(O1)
+            execSelection(ValueTraits.FALSE, O1, O2) should beTheSameInstanceAs(O2)
             execSelection(O1, O1, O2) should beTheSameInstanceAs(O1)
             execSelection(O2, O1, O2) should beTheSameInstanceAs(O1)
             execSelection(O3, O1, O2) should beTheSameInstanceAs(O1)
@@ -123,8 +122,8 @@ class MachineTest : FunSpec() {
 
         test("Conj") {
             val assignment: Any = Assignment.create(key, O2)
-            val sequence1 = arrayOf<Any?>(Boolean.FALSE, assignment)
-            val sequence2 = arrayOf<Any?>(Boolean.TRUE, assignment)
+            val sequence1 = arrayOf<Any?>(ValueTraits.FALSE, assignment)
+            val sequence2 = arrayOf<Any?>(ValueTraits.TRUE, assignment)
 
             environment.lookup(key) should beTheSameInstanceAs(O1)
             machine.execute(Sequence.createConj(sequence1))
@@ -135,8 +134,8 @@ class MachineTest : FunSpec() {
 
         test("Disj") {
             val assignment: Any = Assignment.create(key, O2)
-            val sequence1 = arrayOf<Any?>(Boolean.TRUE, assignment)
-            val sequence2 = arrayOf<Any?>(Boolean.FALSE, assignment)
+            val sequence1 = arrayOf<Any?>(ValueTraits.TRUE, assignment)
+            val sequence2 = arrayOf<Any?>(ValueTraits.FALSE, assignment)
 
             environment.lookup(key) should beTheSameInstanceAs(O1)
             machine.execute(Sequence.createDisj(sequence1))
