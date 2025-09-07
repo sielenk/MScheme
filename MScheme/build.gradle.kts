@@ -20,41 +20,74 @@
  */
 
 plugins {
-    kotlin("jvm").version("2.2.0")
+    kotlin("multiplatform").version("2.2.0")
     id("com.google.devtools.ksp").version("2.2.0-2.0.2")
-    id("application")
 }
 
 val generatedDir: Provider<Directory> =
     layout.buildDirectory.dir("generated/mscheme/main/kotlin")
 
+val kotestVersion = "6.0.1"
+
 repositories {
     mavenCentral()
 }
 
-val kotestVersion = "6.0.1"
+kotlin {
+    jvm()
+    js(IR) {
+        browser()
+        nodejs()
+        binaries.executable()
+    }
 
-dependencies {
-    ksp(project(":MScheme-ksp"))
-
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-
-    testImplementation("junit:junit:4.13.1")
-    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
-    testImplementation("io.kotest:kotest-property:$kotestVersion")
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation("org.jetbrains.kotlin:kotlin-reflect")
+                kotlin.srcDir(generatedDir)
+            }
+        }
+        commonTest {
+        }
+        jvmMain {
+        }
+        jvmTest {
+            dependencies {
+                implementation("junit:junit:4.13.1")
+                implementation("io.kotest:kotest-assertions-core:$kotestVersion")
+                implementation("io.kotest:kotest-property:$kotestVersion")
+            }
+        }
+        jsMain {
+        }
+        jsTest {
+        }
+    }
 }
 
-application {
-    mainClass = "mscheme.Main"
+kotlin.sourceSets.all {
+    languageSettings.apply {
+        progressiveMode = true
+    }
+}
+
+dependencies {
+    add("kspJvm", project(":MScheme-ksp"))
+
+    // Optional: if your processor supports common metadata processing
+    // This runs KSP against commonMain metadata so generated code can be used in common source sets.
+    // add("kspCommonMainMetadata", project(":MScheme-ksp"))
 }
 
 val createInit = tasks.register("createInit") {
-    val inputFiles = fileTree("src/main/scheme") {
+    val inputFiles = fileTree("src/commonMain/scheme") {
         include("**/*.scm")
     }
-    val outputFileProvider = generatedDir.map {
-        it.file("de/masitec/mscheme/Init.kt")
-    }
+    val outputFileProvider: Provider<RegularFile> =
+        generatedDir.map {
+            it.file("de/masitec/mscheme/Init.kt")
+        }
 
     inputs.files(inputFiles)
     outputs.files(outputFileProvider)
@@ -66,7 +99,7 @@ val createInit = tasks.register("createInit") {
             val valueIn = inputFile.readText()
             val valueOut = valueIn
                 .replace(Regex(";.*"), "")
-                .replace(Regex("""(["\\])""")) { "\\${ it.groupValues[1]}" } // quote quotes and backslashes
+                .replace(Regex("""(["\\])""")) { "\\${it.groupValues[1]}" } // quote quotes and backslashes
                 .replace("\n", " ") // convert to one line
                 .replace(Regex("""\s+"""), " ") // squeeze whitespace
                 .replace(Regex(""" *([()\[\]]) *""")) { it.groupValues[1] } // remove whitespace around parenthesis
@@ -89,23 +122,13 @@ val createInit = tasks.register("createInit") {
     }
 }
 
-
-sourceSets {
-    main {
-        kotlin {
-            srcDir(generatedDir)
-            srcDir("build/generated/ksp/main/kotlin")
-        }
-    }
-    test {
-        kotlin {
-            srcDir("build/generated/ksp/test/kotlin")
-        }
-    }
-}
-
 tasks.matching {
-    it.name in setOf("kspKotlin", "compileKotlin")
+    it.name in setOf(
+        "compileCommonMainKotlinMetadata",
+        "compileKotlinJvm",
+        "kspKotlinJvm",
+        "compileKotlinJs"
+    )
 }.configureEach {
     dependsOn(createInit)
 }

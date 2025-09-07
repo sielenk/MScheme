@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="MScheme-js">
+    <output-path>$PROJECT_DIR$/MScheme/build/libs</output-path>
+    <root id="archive" name="MScheme-js.jar">
+      <element id="module-output" name="MScheme.MScheme.jsMain" />
+    </root>
+  </artifact>
+</component>
