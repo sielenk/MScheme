@@ -12,7 +12,7 @@ test, and extend MScheme safely and efficiently. It intentionally omits generic 
     - Tests: JUnit 4.13.1
 - Generated sources pipeline (project-specific)
     - A custom Gradle task createInit consumes Scheme sources from src\main\scheme and generates
-      build\generated-src\mscheme\IInit.java.
+      build\generated\mscheme\main\kotlin\mscheme\Init.kt.
     - The generated directory is added to the main source set. compileKotlin dependsOn(createInit),
       so generation happens automatically as part of the build.
     - The generator performs textual normalization:
@@ -22,7 +22,7 @@ test, and extend MScheme safely and efficiently. It intentionally omits generic 
         - Strips spaces around parentheses
     - Practical implications:
         - If a .scm file contains unusual quoting or very large forms, validate that the generated
-          IInit.java compiles. Misbalanced delimiters or exotic characters may cause generation or
+          Init.kt compiles. Misbalanced delimiters or exotic characters may cause generation or
           compile failures.
         - To regenerate after modifying .scm files: run gradlew clean build.
 - Verified build commands
@@ -79,8 +79,8 @@ test, and extend MScheme safely and efficiently. It intentionally omits generic 
       identifiers. Keep this in mind when adding new builtin functions or properties; encode
       non-identifier characters as _xx hex.
 - Scheme bootstrap
-    - The content of src\main\scheme\*.scm is normalized into a single-line Java string in
-      IInit.java. If you rely on original formatting (e.g., for pretty-print tests), keep a copy in
+    - The content of src\main\scheme\*.scm is normalized into a single-line Kotlin string in
+      Init.kt. If you rely on original formatting (e.g., for pretty-print tests), keep a copy in
       test resources and avoid coupling to the generated string formatting.
 - Code style & conventions (pragmatic guidance)
     - Java: Conventional Google/Oracle style is used informally; keep methods small and prefer
@@ -100,7 +100,7 @@ test, and extend MScheme safely and efficiently. It intentionally omits generic 
       to force execution.
     - Generation failures in createInit often stem from unmatched parentheses or quoting in .scm;
       reproduce by running: .\gradlew createInit --stacktrace and inspect
-      build\generated-src\mscheme\IInit.java.
+      build\generated\mscheme\main\kotlin\mscheme\Init.kt.
 
 4. Common Tasks Cheat Sheet
 

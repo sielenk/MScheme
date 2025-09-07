@@ -18,14 +18,13 @@
  */
 package mscheme.machine
 
-import mscheme.IInit
+import mscheme.Init
 import mscheme.code.IReduceable
 import mscheme.compiler.Compiler
 import mscheme.environment.DynamicEnvironment
 import mscheme.environment.Environment
 import mscheme.exceptions.SchemeRuntimeError
 import mscheme.exceptions.SchemeException
-import mscheme.exceptions.TypeError
 import mscheme.values.*
 import mscheme.values.Function
 import mscheme.values.functions.Subcontinuation
@@ -37,7 +36,6 @@ import kotlin.Any
 import kotlin.RuntimeException
 import kotlin.String
 import kotlin.Throwable
-import kotlin.Throws
 import kotlin.toString
 
 class Machine : Runnable {
@@ -156,7 +154,7 @@ class Machine : Runnable {
                 }
             )
 
-            evaluate(InputPort.create(StringReader(IInit.BOOTSTRAP)).read())
+            evaluate(InputPort.create(StringReader(Init.BOOTSTRAP)).read())
         } catch (e: SchemeException) {
             throw RuntimeException(e.toString())
         } catch (e: InterruptedException) {
@@ -165,7 +163,7 @@ class Machine : Runnable {
     }
 
     fun unprotectedRun(): Any? =
-        evaluate(InputPort.create(StringReader(IInit.REP)).read())
+        evaluate(InputPort.create(StringReader(Init.REP)).read())
 
     override fun run() {
         try {

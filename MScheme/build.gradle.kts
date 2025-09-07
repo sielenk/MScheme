@@ -25,15 +25,14 @@ plugins {
     id("application")
 }
 
-val generatedDir = layout.buildDirectory.map {
-    it.dir("generated-src")
-}
+val generatedDir: Provider<Directory> =
+    layout.buildDirectory.dir("generated/mscheme/main/kotlin")
 
 repositories {
     mavenCentral()
 }
 
-val kotestVersion= "6.0.1"
+val kotestVersion = "6.0.1"
 
 dependencies {
     ksp(project(":MScheme-ksp"))
@@ -54,7 +53,7 @@ val createInit = tasks.register("createInit") {
         include("**/*.scm")
     }
     val outputFileProvider = generatedDir.map {
-        it.dir("mscheme").file("IInit.java")
+        it.file("mscheme/Init.kt")
     }
 
     inputs.files(inputFiles)
@@ -62,39 +61,39 @@ val createInit = tasks.register("createInit") {
 
     doLast {
         val outputFile = outputFileProvider.get().asFile
-        val body = inputFiles.map {
-            val name = it.name.removeSuffix(".scm").uppercase()
-            val valueIn = it.readText()
+        val body = inputFiles.map { inputFile ->
+            val name = inputFile.name.removeSuffix(".scm").uppercase()
+            val valueIn = inputFile.readText()
             val valueOut = valueIn
                 .replace(Regex(";.*"), "")
-                .replace(Regex("""(["\\])""")) { "\\${it.groupValues[1]}" } // quote quotes and backslashes
+                .replace(Regex("""(["\\])""")) { "\\${ it.groupValues[1]}" } // quote quotes and backslashes
                 .replace("\n", " ") // convert to one line
                 .replace(Regex("""\s+"""), " ") // squeeze whitespace
                 .replace(Regex(""" *([()\[\]]) *""")) { it.groupValues[1] } // remove whitespace around parenthesis
 
-            "    String $name = \"$valueOut\";"
+            "    const val $name = \"$valueOut\""
         }
 
         val fileContent = listOf(
             "package mscheme;",
             "",
-            "public interface IInit",
+            "object Init",
             '{'
         ) + body + listOf("}")
 
         mkdir(outputFile.parent)
 
-        outputFile.writeText(fileContent.joinToString("\n"))
+        outputFile.writeText(
+            fileContent.joinToString(separator = "\n", postfix = "\n")
+        )
     }
 }
 
 
 sourceSets {
     main {
-        java {
-            srcDir(generatedDir)
-        }
         kotlin {
+            srcDir(generatedDir)
             srcDir("build/generated/ksp/main/kotlin")
         }
     }

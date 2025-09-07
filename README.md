@@ -42,7 +42,7 @@ If Gradle shows tests up-to-date but you need to rerun, use `--rerun-tasks` or d
 MScheme includes a custom generation step that normalizes Scheme sources into a single Java string used during bootstrap.
 
 - Source input: `MScheme/src/main/scheme/*.scm`
-- Generated output: `build/generated-src/mscheme/IInit.java`
+- Generated output: `build/generated/mscheme/main/kotlin/mscheme/Init.kt`
 - The `createInit` Gradle task performs textual normalization:
   - Removes line comments beginning with `;`
   - Escapes quotes and backslashes
@@ -52,8 +52,8 @@ MScheme includes a custom generation step that normalizes Scheme sources into a 
 - To regenerate after modifying `.scm` files: run `./gradlew[.bat] clean build`.
 
 Practical tips:
-- If a `.scm` file contains unusual quoting or very large forms, validate that the generated `IInit.java` compiles (mismatched delimiters or exotic characters can cause failures).
-- To debug generation specifically: `./gradlew[.bat] createInit --stacktrace` and inspect `build/generated-src/mscheme/IInit.java`.
+- If a `.scm` file contains unusual quoting or very large forms, validate that the generated `Init.kt` compiles (mismatched delimiters or exotic characters can cause failures).
+- To debug generation specifically: `./gradlew[.bat] createInit --stacktrace` and inspect `build/generated/mscheme/main/kotlin/mscheme/Init.kt`.
 
 ## Project Layout
 - `MScheme/` — Main interpreter and runtime (Kotlin-first; some Java remains)
