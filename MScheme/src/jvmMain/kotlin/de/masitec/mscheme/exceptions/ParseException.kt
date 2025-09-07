@@ -20,8 +20,10 @@
  */
 package de.masitec.mscheme.exceptions
 
+import de.masitec.mscheme.values.InputPort
+
 
 class ParseException(
-    port: Any?,
-    message: String?
+    port: InputPort,
+    message: String
 ) : SchemeRuntimeError(port, message)

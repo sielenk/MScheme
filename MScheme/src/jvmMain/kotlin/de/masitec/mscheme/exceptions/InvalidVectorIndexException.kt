@@ -23,6 +23,6 @@ package de.masitec.mscheme.exceptions
 import de.masitec.mscheme.values.ScmVector
 
 class InvalidVectorIndexException(
-    vector: ScmVector?,
+    vector: ScmVector,
     index: Int
 ) : VectorException(vector, index)
