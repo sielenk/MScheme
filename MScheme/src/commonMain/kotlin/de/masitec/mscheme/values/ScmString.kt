@@ -67,7 +67,7 @@ internal class MutableScmString : ScmString, IMutable {
         ConstScmString(javaString)
 
     override val javaString: String
-        get() = String(_string)
+        get() = _string.concatToString()
 }
 
 

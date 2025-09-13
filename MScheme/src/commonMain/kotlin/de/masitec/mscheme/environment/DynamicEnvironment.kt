@@ -93,7 +93,7 @@ class DynamicEnvironment private constructor(
         ): DynamicEnvironment =
             DynamicEnvironment(
                 parent._globals,
-                parent._frames + arrayOfNulls(size)
+                parent._frames + Array<Array<Any?>>(size) { arrayOf() }
             )
 
         private fun create(

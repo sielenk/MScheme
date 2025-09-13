@@ -18,35 +18,9 @@
  * the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA  02111-1307, USA.
  */
+
 package de.masitec.mscheme.values
 
-import de.masitec.mscheme.environment.StaticEnvironment
-import de.masitec.mscheme.exceptions.PairExpected
 
-interface IList {
-    val isValid: Boolean
-
-    fun validate(): IList
-
-    val isEmpty: Boolean
-
-    val length: Int
-
-    fun getReversed(): IList
-
-    fun getCopy(): IList
-
-    @get:Throws(PairExpected::class)
-    val head: Any?
-
-    @get:Throws(PairExpected::class)
-    val tail: IList
-
-    fun getCompiledArray(compilationEnv: StaticEnvironment): Array<Any?>
-
-    fun getCompiledArray(compilationEnv: StaticEnvironment, index: Int): Array<Any?>
-
-    fun getArray(): Array<Any?>
-
-    fun getArray(index: Int): Array<Any?>
+expect class InputPort : Port {
 }

@@ -28,7 +28,7 @@ import java.io.FileWriter
 import java.io.IOException
 
 
-class OutputPort private constructor(
+actual class OutputPort private constructor(
     private val _writer: Writer
 ) : IOutputable, Port() {
     // specialisation of Port

@@ -39,7 +39,7 @@ internal object EofValue : IOutputable {
 }
 
 
-class InputPort private constructor(
+actual class InputPort private constructor(
     private val _reader: PushbackReader
 ) : IOutputable, Port() {
     // specialisation of Port
