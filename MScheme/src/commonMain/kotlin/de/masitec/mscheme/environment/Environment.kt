@@ -37,10 +37,6 @@ class Environment private constructor(
         destination.write("#[environment]")
     }
 
-    fun toEnvironment(): Environment {
-        return this
-    }
-
     // *** Environment access ************************************************
 
     // *** code access (compiletime) ***

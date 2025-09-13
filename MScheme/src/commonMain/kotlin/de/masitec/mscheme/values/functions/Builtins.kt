@@ -445,7 +445,7 @@ object Builtins {
     fun read(fst: Any?): Any? =
         try {
             ValueTraits.toInputPort(fst).read()
-        } catch (e: InterruptedException) {
+        } catch (e: Exception) {
             throw SchemeRuntimeError(fst, e.toString())
         }
 

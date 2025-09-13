@@ -36,10 +36,8 @@ interface IList {
 
     fun getCopy(): IList
 
-    @get:Throws(PairExpected::class)
     val head: Any?
 
-    @get:Throws(PairExpected::class)
     val tail: IList
 
     fun getCompiledArray(compilationEnv: StaticEnvironment): Array<Any?>

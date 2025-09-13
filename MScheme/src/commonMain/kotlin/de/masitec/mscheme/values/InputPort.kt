@@ -26,6 +26,7 @@ import de.masitec.mscheme.exceptions.ReadException
 import de.masitec.mscheme.util.Reader
 import de.masitec.mscheme.util.Writer
 import de.masitec.mscheme.util.createReader
+import mpIntern
 
 
 internal object EofValue : IOutputable {
@@ -306,7 +307,7 @@ class InputPort private constructor(
             }
         }
 
-        return str.intern()
+        return str.mpIntern()
     }
 
     private fun parseDatum(): Any? {

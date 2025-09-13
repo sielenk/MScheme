@@ -35,7 +35,7 @@ import de.masitec.mscheme.values.functions.UnaryValueFunction
 import de.masitec.mscheme.values.functions.ValueThunk
 
 
-class Machine : Runnable {
+class Machine {
     private var _stdin: InputPort?
     private var _stdout: OutputPort?
     private var _errorHandler: Function? = null
@@ -154,9 +154,7 @@ class Machine : Runnable {
             createStringReader(Init.BOOTSTRAP).use { reader ->
                 evaluate(InputPort.create(reader).read())
             }
-        } catch (e: SchemeException) {
-            throw RuntimeException(e.toString())
-        } catch (e: InterruptedException) {
+        } catch (e: Exception) {
             throw RuntimeException(e.toString())
         }
     }
@@ -165,14 +163,6 @@ class Machine : Runnable {
         createStringReader(Init.REP).use { reader ->
             evaluate(InputPort.create(reader).read())
         }
-
-    override fun run() {
-        try {
-            unprotectedRun()
-        } catch (t: Throwable) {
-            System.err.println(t)
-        }
-    }
 
     internal inner class Executor(environment: DynamicEnvironment) {
         private var _done = false

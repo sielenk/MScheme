@@ -43,6 +43,8 @@ kotlin {
 
     sourceSets {
         commonMain {
+            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
+
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-reflect")
                 implementation("com.ionspin.kotlin:bignum:0.3.10")
@@ -74,11 +76,11 @@ kotlin.sourceSets.all {
 }
 
 dependencies {
-    add("kspJvm", project(":MScheme-ksp"))
+    //add("kspJvm", project(":MScheme-ksp"))
 
     // Optional: if your processor supports common metadata processing
     // This runs KSP against commonMain metadata so generated code can be used in common source sets.
-    // add("kspCommonMainMetadata", project(":MScheme-ksp"))
+    add("kspCommonMainMetadata", project(":MScheme-ksp"))
 }
 
 val createInit = tasks.register("createInit") {
@@ -125,9 +127,9 @@ val createInit = tasks.register("createInit") {
 
 tasks.matching {
     it.name in setOf(
+        "kspCommonMainKotlinMetadata",
         "compileCommonMainKotlinMetadata",
         "compileKotlinJvm",
-        "kspKotlinJvm",
         "compileKotlinJs"
     )
 }.configureEach {

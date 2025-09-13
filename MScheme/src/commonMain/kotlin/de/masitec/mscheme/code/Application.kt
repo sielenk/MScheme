@@ -27,6 +27,7 @@ import de.masitec.mscheme.values.IList
 import de.masitec.mscheme.values.ListFactory
 import de.masitec.mscheme.values.ValueTraits
 
+
 class Application private constructor(
     private val _application: Array<Any?>
 ) : IForceable, IReduceable {

@@ -29,15 +29,7 @@ import de.masitec.mscheme.environment.Environment
 import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.exceptions.*
 import de.masitec.mscheme.machine.Registers
-import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.util.Writer
-import java.lang.reflect.Field
-import java.lang.reflect.InvocationTargetException
-import java.lang.reflect.Method
-import java.lang.reflect.Modifier
-import kotlin.reflect.KCallable
-import kotlin.reflect.KClass
-import kotlin.reflect.cast
 
 /**
  * @author sielenk
@@ -53,111 +45,8 @@ object ValueTraits {
     fun isEmpty(obj: Any?): Boolean =
         obj === Empty
 
-    fun apply(state: Registers, function: Any?, arguments: IList): Any? {
-        when (function) {
-            is KCallable<*> -> {
-                val types = function.parameters
-                    .map { it.type.classifier as KClass<*> }
-                val hasTailParam = types.lastOrNull() == IList::class
-                val fixCount = types.size - if (hasTailParam) 1 else 0
-                var restOpt: IList? = arguments
-                val argumentArray = types.map { type ->
-                    val rest = restOpt ?: throw RuntimeArityError(
-                        arguments,
-                        if (hasTailParam)
-                            Arity.atLeast(fixCount)
-                        else
-                            Arity.exactly(fixCount)
-                    )
-
-                    if (type == IList::class) {
-                        restOpt = null
-                        rest
-                    } else {
-                        restOpt = rest.tail
-                        type.cast(rest.head)
-                    }
-                }.toTypedArray()
-
-                try {
-                    return function.call(*argumentArray)
-                } catch (e1: IllegalArgumentException) {
-                    throw SchemeRuntimeError(function, e1.toString())
-                } catch (e1: IllegalAccessException) {
-                    throw SchemeRuntimeError(function, e1.toString())
-                } catch (e1: InvocationTargetException) {
-                    throw SchemeRuntimeError(function, e1.toString())
-                }
-            }
-
-            is Method -> {
-                val parameterTypes = function.parameterTypes
-                val methodExpectsIList = ((parameterTypes.size == 1) &&
-                        (parameterTypes[0] == IList::class.java))
-
-                return try {
-                    if (arguments.isEmpty) {
-                        if (methodExpectsIList) {
-                            function.invoke(null, arguments)
-                        } else {
-                            function.invoke(null)
-                        }
-                    } else if (Modifier.isStatic(function.modifiers)) {
-                        if (methodExpectsIList) {
-                            function.invoke(null, arguments)
-                        } else {
-                            function.invoke(null, *arguments.getArray())
-                        }
-                    } else {
-                        if (methodExpectsIList) {
-                            function.invoke(arguments.head, arguments.tail)
-                        } else {
-                            function.invoke(
-                                arguments.head,
-                                *arguments.tail.getArray()
-                            )
-                        }
-                    }
-                } catch (e1: IllegalArgumentException) {
-                    throw SchemeRuntimeError(function, e1.toString())
-                } catch (e1: IllegalAccessException) {
-                    throw SchemeRuntimeError(function, e1.toString())
-                } catch (e1: InvocationTargetException) {
-                    throw SchemeRuntimeError(function, e1.toString())
-                }
-            }
-
-            is Field -> {
-                try {
-                    if (Modifier.isStatic(function.modifiers)) {
-                        if (!arguments.isEmpty) {
-                            throw RuntimeArityError(arguments, Arity.exactly(0))
-                        }
-
-                        return function.get(null)
-                    } else {
-                        if (!arguments.tail.isEmpty) {
-                            throw RuntimeArityError(arguments, Arity.exactly(1))
-                        }
-
-                        return function.get(arguments.head)
-                    }
-                } catch (e: IllegalArgumentException) {
-                    throw SchemeRuntimeError(function, e.toString())
-                } catch (e: IllegalAccessException) {
-                    throw SchemeRuntimeError(function, e.toString())
-                }
-            }
-
-            is Function -> {
-                return function.call(state, arguments)
-            }
-
-            else -> {
-                throw FunctionExpected(function)
-            }
-        }
-    }
+    fun apply(state: Registers, function: Any?, arguments: IList): Any? =
+        mpApply(state, function, arguments)
 
     fun eq(fst: Any?, snd: Any?): Boolean =
         if (fst is IComparable)
@@ -277,7 +166,7 @@ object ValueTraits {
         o is Port
 
     fun isFunction(o: Any?): Boolean =
-        o is Function || o is KCallable<*> || o is Method || o is Field
+        mpIsFunction(o)
 
     fun output(destination: Writer, doWrite: Boolean, o: Any?) {
         if (o is Char) {
@@ -319,3 +208,11 @@ object ValueTraits {
         else
             o
 }
+
+expect fun mpIsFunction(o: Any?): Boolean
+
+expect fun mpApply(
+    state: Registers,
+    function: Any?,
+    arguments: IList
+): Any?

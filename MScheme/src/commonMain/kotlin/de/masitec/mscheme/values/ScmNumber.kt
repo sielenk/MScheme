@@ -23,6 +23,7 @@ import com.ionspin.kotlin.bignum.integer.BigInteger
 import de.masitec.mscheme.util.Writer
 
 
+
 class ScmNumber private constructor(
     private val _value: BigInteger
 ) : IComparable, IOutputable {
