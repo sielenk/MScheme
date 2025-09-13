@@ -45,6 +45,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-reflect")
+                implementation("com.ionspin.kotlin:bignum:0.3.10")
                 kotlin.srcDir(generatedDir)
             }
         }

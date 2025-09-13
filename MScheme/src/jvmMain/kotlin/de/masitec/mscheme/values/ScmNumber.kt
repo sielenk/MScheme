@@ -19,8 +19,9 @@ the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA  02111-1307, USA. */
 package de.masitec.mscheme.values
 
+import com.ionspin.kotlin.bignum.integer.BigInteger
 import java.io.Writer
-import java.math.BigInteger
+
 
 class ScmNumber private constructor(
     private val _value: BigInteger
@@ -31,14 +32,17 @@ class ScmNumber private constructor(
         this === other
 
     override fun eqv(other: Any?): Boolean =
-        other is ScmNumber && isEqualTo(other)
+        other is ScmNumber && _value == other._value
 
     override fun equals(other: Any?): Boolean =
         eqv(other)
 
+    override fun hashCode(): Int =
+        _value.hashCode()
+
     val integer: Int
         // number specific
-        get() = _value.toInt()
+        get() = _value.intValue(true)
 
 
     fun isLessThan(other: ScmNumber): Boolean =
@@ -58,7 +62,7 @@ class ScmNumber private constructor(
         ScmNumber(_value.subtract(other._value))
 
     fun reciprocal(): ScmNumber =
-        ScmNumber(BigInteger.valueOf(1).divide(_value))
+        ScmNumber(BigInteger.ONE.divide(_value))
 
     fun times(other: ScmNumber): ScmNumber =
         ScmNumber(_value.multiply(other._value))
@@ -72,9 +76,9 @@ class ScmNumber private constructor(
 
     companion object {
         fun create(v: Int): ScmNumber =
-            ScmNumber(BigInteger.valueOf(v.toLong()))
+            ScmNumber(BigInteger(v.toLong()))
 
         fun create(v: String): ScmNumber =
-            ScmNumber(BigInteger(v))
+            ScmNumber(BigInteger.parseString(v))
     }
 }
