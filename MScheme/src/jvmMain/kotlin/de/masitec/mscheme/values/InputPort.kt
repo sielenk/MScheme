@@ -24,7 +24,13 @@ import de.masitec.mscheme.exceptions.CloseException
 import de.masitec.mscheme.exceptions.OpenException
 import de.masitec.mscheme.exceptions.ParseException
 import de.masitec.mscheme.exceptions.ReadException
-import java.io.*
+import de.masitec.mscheme.util.Writer
+import java.io.FileReader
+import java.io.IOException
+import java.io.InterruptedIOException
+import java.io.PushbackReader
+import java.io.Reader
+
 
 internal object EofValue : IOutputable {
     override fun outputOn(destination: Writer, doWrite: Boolean) {
@@ -35,10 +41,10 @@ internal object EofValue : IOutputable {
 
 class InputPort private constructor(
     private val _reader: PushbackReader
-) : Port() {
+) : IOutputable, Port() {
     // specialisation of Port
 
-    fun writeOn(destination: Writer) {
+    override fun outputOn(destination: Writer, doWrite: Boolean) {
         destination.write("#[input port]")
     }
 

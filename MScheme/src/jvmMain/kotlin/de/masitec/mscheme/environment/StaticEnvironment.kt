@@ -22,15 +22,16 @@ package de.masitec.mscheme.environment
 
 import de.masitec.mscheme.exceptions.*
 import de.masitec.mscheme.syntax.ITranslator
+import de.masitec.mscheme.util.Writer
 import de.masitec.mscheme.values.IList
+import de.masitec.mscheme.values.IOutputable
 import de.masitec.mscheme.values.ValueTraits
-import java.io.Writer
 
 
 class StaticEnvironment internal constructor(
     val parent: StaticEnvironment? = null
-) {
-    fun writeOn(destination: Writer) {
+): IOutputable {
+    override fun outputOn(destination: Writer, doWrite: Boolean) {
         destination.write("#[static environment]")
     }
 

@@ -27,6 +27,7 @@
  */
 package de.masitec.mscheme.values
 
+import de.masitec.mscheme.util.Writer
 import junit.framework.TestCase
 import de.masitec.mscheme.values.ValueTraits
 import java.io.PipedReader
@@ -90,7 +91,7 @@ class OutputPortTest(name: String?) : TestCase(name) {
 
             run {
                 val outPipe = PipedWriter(inPipe)
-                val out = OutputPort.create(outPipe)
+                val out = OutputPort.create(Writer(outPipe))
                 out.write(expected)
                 out.close()
                 outPipe.close()

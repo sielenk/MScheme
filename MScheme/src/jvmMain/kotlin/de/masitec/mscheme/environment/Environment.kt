@@ -24,14 +24,16 @@ import de.masitec.mscheme.exceptions.AlreadyBound
 import de.masitec.mscheme.exceptions.CompileError
 import de.masitec.mscheme.exceptions.SchemeRuntimeError
 import de.masitec.mscheme.syntax.TranslatorFactory
+import de.masitec.mscheme.util.Writer
+import de.masitec.mscheme.values.IOutputable
 import de.masitec.mscheme.values.functions.getBuiltins
-import java.io.Writer
+
 
 class Environment private constructor(
     val static: StaticEnvironment,
     val dynamic: DynamicEnvironment
-) {
-    fun writeOn(destination: Writer) {
+) : IOutputable {
+    override fun outputOn(destination: Writer, doWrite: Boolean) {
         destination.write("#[environment]")
     }
 

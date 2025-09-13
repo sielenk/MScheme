@@ -30,7 +30,7 @@ import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.exceptions.*
 import de.masitec.mscheme.machine.Registers
 import de.masitec.mscheme.util.Arity
-import java.io.Writer
+import de.masitec.mscheme.util.Writer
 import java.lang.reflect.Field
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method

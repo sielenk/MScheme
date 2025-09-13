@@ -23,6 +23,7 @@ package de.masitec.mscheme.tests
 import junit.framework.TestCase
 import de.masitec.mscheme.environment.Environment
 import de.masitec.mscheme.exceptions.TypeError
+import de.masitec.mscheme.util.Writer
 import de.masitec.mscheme.values.*
 import de.masitec.mscheme.values.ListFactory
 import de.masitec.mscheme.values.ValueTraits
@@ -261,7 +262,7 @@ class TestValue
     }
 
     fun testOutputPort() {
-        val port: Any = OutputPort.create(StringWriter())
+        val port: Any = OutputPort.create(Writer(StringWriter()))
 
         commonTests(port)
         assertTrue(ValueTraits.isPort(port))

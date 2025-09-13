@@ -20,7 +20,7 @@ Boston, MA  02111-1307, USA. */
 package de.masitec.mscheme.values
 
 import com.ionspin.kotlin.bignum.integer.BigInteger
-import java.io.Writer
+import de.masitec.mscheme.util.Writer
 
 
 class ScmNumber private constructor(

@@ -22,7 +22,8 @@ package de.masitec.mscheme.values
 
 import de.masitec.mscheme.exceptions.ImmutableException
 import de.masitec.mscheme.exceptions.InvalidStringIndexException
-import java.io.Writer
+import de.masitec.mscheme.util.Writer
+
 
 internal class ConstScmString(
     private val _string: String

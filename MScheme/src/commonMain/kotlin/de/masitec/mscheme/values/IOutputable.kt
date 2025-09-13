@@ -6,7 +6,8 @@
  */
 package de.masitec.mscheme.values
 
-import java.io.Writer
+import de.masitec.mscheme.util.Writer
+
 
 /**
  * @author sielenk

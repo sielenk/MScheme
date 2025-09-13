@@ -23,14 +23,17 @@ package de.masitec.mscheme.values
 import de.masitec.mscheme.exceptions.CloseException
 import de.masitec.mscheme.exceptions.OpenException
 import de.masitec.mscheme.exceptions.WriteException
+import de.masitec.mscheme.util.Writer
 import java.io.FileWriter
 import java.io.IOException
-import java.io.Writer
 
-class OutputPort private constructor(private val _writer: Writer) : Port() {
+
+class OutputPort private constructor(
+    private val _writer: Writer
+) : IOutputable, Port() {
     // specialisation of Port
 
-    fun writeOn(destination: Writer) {
+    override fun outputOn(destination: Writer, doWrite: Boolean) {
         destination.write("#[output port]")
     }
 
@@ -87,7 +90,7 @@ class OutputPort private constructor(private val _writer: Writer) : Port() {
 
         fun create(filename: String): OutputPort =
             try {
-                create(FileWriter(filename))
+                create(Writer(FileWriter(filename)))
             } catch (e: IOException) {
                 throw OpenException(
                     ScmString.create(filename)

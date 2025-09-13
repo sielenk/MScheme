@@ -26,9 +26,9 @@ import de.masitec.mscheme.exceptions.ListExpected
 import de.masitec.mscheme.exceptions.PairExpected
 import de.masitec.mscheme.syntax.ITranslator
 import de.masitec.mscheme.syntax.ProcedureCall
+import de.masitec.mscheme.util.Writer
 import java.io.IOException
 import java.io.StringWriter
-import java.io.Writer
 
 
 internal class ConstPairOrList(
@@ -265,7 +265,7 @@ abstract class PairOrList protected constructor(
     override fun toString(): String {
         val out = StringWriter()
         try {
-            outputOn(out, true)
+            outputOn(Writer(out), true)
         } catch (e: IOException) {
             e.printStackTrace()
         }

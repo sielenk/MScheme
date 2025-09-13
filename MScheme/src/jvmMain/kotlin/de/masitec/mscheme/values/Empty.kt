@@ -23,7 +23,8 @@ package de.masitec.mscheme.values
 import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.exceptions.CantCompileException
 import de.masitec.mscheme.exceptions.PairExpected
-import java.io.Writer
+import de.masitec.mscheme.util.Writer
+
 
 object Empty : IList, IOutputable, ICompileable {
     override val isValid: Boolean
