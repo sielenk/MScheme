@@ -72,9 +72,9 @@ internal class PlainStack(
     private fun enlarge() {
         val length = _stack.size
         val oldStack = _stack
-        val newStack = arrayOfNulls<StackFrame>(length * 2 + 1)
-
-        System.arraycopy(oldStack, 0, newStack, 0, length)
+        val newStack = Array(length * 2 + 1) { i ->
+            oldStack.getOrNull(i)
+        }
 
         _stack = newStack
     }

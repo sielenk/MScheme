@@ -68,13 +68,9 @@ internal object Letrec : LetBase(Arity.atLeast(2)) {
             inits = inits.tail
         }
 
-        System.arraycopy(
-            compiledBody,
-            0,
-            compiledLetrec,
-            index,
-            compiledBody.size
-        )
+        for (i in compiledBody.indices) {
+            compiledLetrec[index + i] = compiledBody[i]
+        }
 
         return Application.create(
             arrayOf<Any?>(

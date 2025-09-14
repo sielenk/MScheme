@@ -78,10 +78,12 @@ internal class StdioReader : Reader(Any()) {
 
     override fun read(data: CharArray, offs: Int, len: Int): Int {
         val result = _getChars(len)
-        val resultLen = result.size
 
-        System.arraycopy(result, 0, data, offs, resultLen)
-        return resultLen
+        for (i in result.indices) {
+            data[offs + i] = result[i]
+        }
+
+        return result.size
     }
 
     override fun close() {
