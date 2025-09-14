@@ -27,6 +27,7 @@
  */
 package de.masitec.mscheme.machine.stack
 
+import de.masitec.mscheme.exceptions.StackEmptyException
 import de.masitec.mscheme.machine.StackFrame
 
 /**
@@ -65,7 +66,7 @@ internal class PlainStack(
 
     private fun assertFull() {
         if (isEmpty) {
-            throw ArrayIndexOutOfBoundsException()
+            throw StackEmptyException()
         }
     }
 
