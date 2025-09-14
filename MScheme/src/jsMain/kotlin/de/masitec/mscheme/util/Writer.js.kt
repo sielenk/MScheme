@@ -22,20 +22,14 @@
 package de.masitec.mscheme.util
 
 
-class JvmWriter(val it: java.io.Writer) : Writer {
-    override fun write(i: Int) {
-        it.write(i)
-    }
+actual fun createStdOutWriter(): Writer {
+    TODO("Not yet implemented")
+}
 
-    override fun write(s: String) {
-        it.write(s)
-    }
+actual fun createWriter(fileName: String): Writer {
+    TODO("Not yet implemented")
+}
 
-    override fun close() {
-        it.close()
-    }
-
-    override fun flush() {
-        it.flush()
-    }
+actual fun writeToString(f: (Writer) -> Unit): String {
+    TODO("Not yet implemented")
 }

@@ -26,9 +26,11 @@ import de.masitec.mscheme.environment.DynamicEnvironment
 import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.machine.Registers
 import de.masitec.mscheme.util.Arity
+import de.masitec.mscheme.util.Writer
 import de.masitec.mscheme.values.IList
+import de.masitec.mscheme.values.IOutputable
 import de.masitec.mscheme.values.functions.CheckedFunction
-import java.io.Writer
+
 
 class CompiledLambda private constructor(
     private val _arity: Arity,
@@ -37,8 +39,8 @@ class CompiledLambda private constructor(
 ) : IForceable, IReduceable {
     internal inner class Closure(
         private val _enclosingEnvironment: DynamicEnvironment
-    ) : CheckedFunction() {
-        fun write(destination: Writer) {
+    ) : CheckedFunction(), IOutputable {
+        override fun outputOn(destination: Writer, doWrite: Boolean) {
             destination.write("#[closure]")
         }
 

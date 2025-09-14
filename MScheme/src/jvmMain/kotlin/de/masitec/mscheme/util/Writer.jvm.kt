@@ -21,16 +21,20 @@
 
 package de.masitec.mscheme.util
 
-actual class Writer {
-    actual fun write(i: Int) {
-    }
+import java.io.FileWriter
+import java.io.OutputStreamWriter
+import java.io.StringWriter
 
-    actual fun write(s: String) {
-    }
 
-    actual fun close() {
-    }
+actual fun createStdOutWriter(): Writer =
+    JvmWriter(OutputStreamWriter(System.out))
 
-    actual fun flush() {
+actual fun createWriter(fileName: String): Writer =
+    JvmWriter(FileWriter(fileName))
+
+actual fun writeToString(f: (Writer) -> Unit): String =
+    JvmWriter(StringWriter()).use { writer ->
+        f(writer)
+
+        writer.it.toString()
     }
-}

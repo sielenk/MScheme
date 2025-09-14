@@ -25,23 +25,18 @@ import de.masitec.mscheme.code.IReduceable
 import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.environment.DynamicEnvironment
 import de.masitec.mscheme.environment.Environment
-import de.masitec.mscheme.exceptions.SchemeRuntimeError
 import de.masitec.mscheme.exceptions.SchemeException
+import de.masitec.mscheme.exceptions.SchemeRuntimeError
 import de.masitec.mscheme.util.Writer
+import de.masitec.mscheme.util.createStdOutWriter
 import de.masitec.mscheme.values.*
 import de.masitec.mscheme.values.Function
 import de.masitec.mscheme.values.functions.Subcontinuation
 import de.masitec.mscheme.values.functions.UnaryValueFunction
 import de.masitec.mscheme.values.functions.ValueThunk
 import java.io.InputStreamReader
-import java.io.OutputStreamWriter
 import java.io.Reader
 import java.io.StringReader
-import kotlin.Any
-import kotlin.RuntimeException
-import kotlin.String
-import kotlin.Throwable
-import kotlin.toString
 
 
 class Machine : Runnable {
@@ -56,7 +51,7 @@ class Machine : Runnable {
     constructor() {
         this.environment = Environment.getSchemeReportEnvironment()
         _stdin = InputPort.create(InputStreamReader(System.`in`))
-        _stdout = OutputPort.create(Writer(OutputStreamWriter(System.out)))
+        _stdout = OutputPort.create(createStdOutWriter())
         init()
 
         // I would call this(...) but it kills gcj 3.0.2 ...
@@ -72,7 +67,7 @@ class Machine : Runnable {
     constructor(environment: Environment) {
         this.environment = environment
         _stdin = InputPort.create(InputStreamReader(System.`in`))
-        _stdout = OutputPort.create(Writer(OutputStreamWriter(System.out)))
+        _stdout = OutputPort.create(createStdOutWriter())
     }
 
     private fun init() {

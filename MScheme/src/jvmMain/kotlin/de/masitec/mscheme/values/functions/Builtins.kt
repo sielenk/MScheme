@@ -21,14 +21,10 @@
 package de.masitec.mscheme.values.functions
 
 import de.masitec.mscheme.environment.Environment
-import de.masitec.mscheme.exceptions.*
+import de.masitec.mscheme.exceptions.SchemeRuntimeError
 import de.masitec.mscheme.machine.Registers
 import de.masitec.mscheme.values.*
 import de.masitec.mscheme.values.Function
-import de.masitec.mscheme.values.ListFactory
-import de.masitec.mscheme.values.ScmString
-import de.masitec.mscheme.values.ValueTraits
-import de.masitec.mscheme.values.functions.Order
 import java.io.StringReader
 
 

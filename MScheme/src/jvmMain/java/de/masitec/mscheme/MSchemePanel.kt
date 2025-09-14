@@ -23,6 +23,7 @@ package de.masitec.mscheme
 
 import de.masitec.mscheme.exceptions.SchemeException
 import de.masitec.mscheme.machine.Machine
+import de.masitec.mscheme.util.JvmWriter
 import de.masitec.mscheme.util.Writer
 import java.awt.BorderLayout
 import java.awt.Button
@@ -152,7 +153,7 @@ class MSchemePanel : Panel() {
                 get_startStopButton()!!.setLabel("Stop")
                 Machine(
                     get_stdio()!!.stdin(),
-                    Writer(get_stdio()!!.stdout())
+                    JvmWriter(get_stdio()!!.stdout())
                 ).unprotectedRun()
             } catch (e: SchemeException) {
                 try {

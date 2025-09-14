@@ -22,9 +22,12 @@
 package de.masitec.mscheme.util
 
 
-expect class Writer {
+interface Writer : AutoCloseable {
     fun write(i: Int)
     fun write(s: String)
-    fun close()
     fun flush()
 }
+
+expect fun createStdOutWriter(): Writer
+expect fun createWriter(fileName: String): Writer
+expect fun writeToString(f: (Writer) -> Unit): String

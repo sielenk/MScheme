@@ -24,8 +24,7 @@ import de.masitec.mscheme.exceptions.CloseException
 import de.masitec.mscheme.exceptions.OpenException
 import de.masitec.mscheme.exceptions.WriteException
 import de.masitec.mscheme.util.Writer
-import java.io.FileWriter
-import java.io.IOException
+import de.masitec.mscheme.util.createWriter
 
 
 class OutputPort private constructor(
@@ -44,7 +43,7 @@ class OutputPort private constructor(
     fun close() {
         try {
             _writer.close()
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             throw CloseException(this)
         }
     }
@@ -54,7 +53,7 @@ class OutputPort private constructor(
         try {
             _writer.write(c.code)
             _writer.flush()
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             throw WriteException(this)
         }
     }
@@ -67,7 +66,7 @@ class OutputPort private constructor(
         try {
             ValueTraits.write(_writer, datum)
             _writer.flush()
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             throw WriteException(this)
         }
     }
@@ -76,7 +75,7 @@ class OutputPort private constructor(
         try {
             ValueTraits.display(_writer, datum)
             _writer.flush()
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             throw WriteException(this)
         }
     }
@@ -90,8 +89,8 @@ class OutputPort private constructor(
 
         fun create(filename: String): OutputPort =
             try {
-                create(Writer(FileWriter(filename)))
-            } catch (e: IOException) {
+                create(createWriter(filename))
+            } catch (e: Exception) {
                 throw OpenException(
                     ScmString.create(filename)
                 )
