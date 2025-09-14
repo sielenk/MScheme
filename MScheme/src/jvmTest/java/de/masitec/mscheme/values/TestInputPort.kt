@@ -20,13 +20,14 @@
  */
 package de.masitec.mscheme.values
 
+import de.masitec.mscheme.util.JvmReader
 import junit.framework.TestCase
 import java.io.StringReader
 
 class TestInputPort(name: String?) : TestCase(name) {
     fun testCharIO() {
         val source = StringReader("test")
-        val `in` = InputPort.create(source)
+        val `in` = InputPort.create(JvmReader(source))
 
         assertTrue(`in`.isReady)
         TestCase.assertEquals('t'.code, `in`.peekChar())
@@ -49,14 +50,14 @@ class TestInputPort(name: String?) : TestCase(name) {
         val source = StringReader(
             " \t \n ; test# 1 2 \"\"\" ;;; 3 \n  \n ;  fkdjhgd "
         )
-        val `in` = InputPort.create(source)
+        val `in` = InputPort.create(JvmReader(source))
 
         assertTrue(ValueTraits.eq(`in`.read(), InputPort.EOF_VALUE))
     }
 
     fun testBool() {
         val source = StringReader(" #t #f #t#f ")
-        val `in` = InputPort.create(source)
+        val `in` = InputPort.create(JvmReader(source))
 
         assertTrue(ValueTraits.eq(`in`.read(), ValueTraits.TRUE))
         assertTrue(ValueTraits.eq(`in`.read(), ValueTraits.FALSE))
@@ -70,7 +71,7 @@ class TestInputPort(name: String?) : TestCase(name) {
         val source = StringReader(
             "-2 -1 0 1 2"
         )
-        val `in` = InputPort.create(source)
+        val `in` = InputPort.create(JvmReader(source))
 
         assertTrue(ValueTraits.eqv(`in`.read(), ScmNumber.create(-2)))
         assertTrue(ValueTraits.eqv(`in`.read(), ScmNumber.create(-1)))
@@ -84,7 +85,7 @@ class TestInputPort(name: String?) : TestCase(name) {
         val source = StringReader(
             "#\\# #\\\\ #\\\" #\\  #\\newline #\\space #\\a"
         )
-        val `in` = InputPort.create(source)
+        val `in` = InputPort.create(JvmReader(source))
 
         assertTrue(ValueTraits.eqv(`in`.read(), ValueTraits.toScmChar('#')))
         assertTrue(ValueTraits.eqv(`in`.read(), ValueTraits.toScmChar('\\')))
@@ -107,7 +108,7 @@ class TestInputPort(name: String?) : TestCase(name) {
                     + '"' + str2 + '"' + ' '
                     + '"' + str3a + '"')
         )
-        val `in` = InputPort.create(source)
+        val `in` = InputPort.create(JvmReader(source))
 
         assertTrue(ValueTraits.equal(`in`.read(), ScmString.create(str1)))
         assertTrue(ValueTraits.equal(`in`.read(), ScmString.create(str2)))
@@ -122,7 +123,7 @@ class TestInputPort(name: String?) : TestCase(name) {
         val source = StringReader(
             "()(1 .2)(1 2 3)(1 .(2 .(3 .())))"
         )
-        val `in` = InputPort.create(source)
+        val `in` = InputPort.create(JvmReader(source))
 
         assertTrue(ValueTraits.equal(`in`.read(), ListFactory.create()))
         assertTrue(
@@ -147,7 +148,7 @@ class TestInputPort(name: String?) : TestCase(name) {
         val source = StringReader(
             "#() #(1 1) #(1 1 2)"
         )
-        val `in` = InputPort.create(source)
+        val `in` = InputPort.create(JvmReader(source))
 
         assertTrue(ValueTraits.equal(`in`.read(), ScmVector.create()))
         assertTrue(ValueTraits.equal(`in`.read(), ScmVector.create(2, one)))
@@ -159,7 +160,7 @@ class TestInputPort(name: String?) : TestCase(name) {
         val source = StringReader(
             "Hallo hallo HALLO HaLlO hAlLo + - ... ?12"
         )
-        val `in` = InputPort.create(source)
+        val `in` = InputPort.create(JvmReader(source))
 
         assertTrue(ValueTraits.eq(`in`.read(), test))
         assertTrue(ValueTraits.eq(`in`.read(), test))
@@ -176,7 +177,7 @@ class TestInputPort(name: String?) : TestCase(name) {
         val source = StringReader(
             "'a ' a `a ,a ,@a"
         )
-        val `in` = InputPort.create(source)
+        val `in` = InputPort.create(JvmReader(source))
 
         val a = "a"
         val q = "quote"

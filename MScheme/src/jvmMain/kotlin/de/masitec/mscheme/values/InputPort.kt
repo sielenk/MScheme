@@ -21,15 +21,11 @@
 package de.masitec.mscheme.values
 
 import de.masitec.mscheme.exceptions.CloseException
-import de.masitec.mscheme.exceptions.OpenException
 import de.masitec.mscheme.exceptions.ParseException
 import de.masitec.mscheme.exceptions.ReadException
+import de.masitec.mscheme.util.Reader
 import de.masitec.mscheme.util.Writer
-import java.io.FileReader
-import java.io.IOException
-import java.io.InterruptedIOException
-import java.io.PushbackReader
-import java.io.Reader
+import de.masitec.mscheme.util.createReader
 
 
 internal object EofValue : IOutputable {
@@ -40,7 +36,7 @@ internal object EofValue : IOutputable {
 
 
 class InputPort private constructor(
-    private val _reader: PushbackReader
+    private val _reader: Reader
 ) : IOutputable, Port() {
     // specialisation of Port
 
@@ -52,7 +48,7 @@ class InputPort private constructor(
     fun close() {
         try {
             _reader.close()
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             throw CloseException(this)
         }
     }
@@ -61,9 +57,7 @@ class InputPort private constructor(
     fun read(): Any? =
         try {
             parseDatum()
-        } catch (e: InterruptedIOException) {
-            throw InterruptedException(e.message)
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             throw ReadException(this)
         }
 
@@ -372,7 +366,7 @@ class InputPort private constructor(
     fun readChar(): Int {
         try {
             return _reader.read()
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             throw ReadException(this)
         }
     }
@@ -389,11 +383,13 @@ class InputPort private constructor(
     fun peekChar(): Int {
         try {
             val result = _reader.read()
+
             if (result != EOF) {
                 _reader.unread(result)
             }
+
             return result
-        } catch (e: IOException) {
+        } catch (e: Exception) {
             throw ReadException(this)
         }
     }
@@ -408,14 +404,8 @@ class InputPort private constructor(
     }
 
     val isReady: Boolean
-        get() {
-            try {
-                return _reader.ready()
-            } catch (e: IOException) {
-            }
+        get() = _reader.ready()
 
-            return false
-        }
 
     companion object {
         const val EOF: Int = -1
@@ -427,19 +417,12 @@ class InputPort private constructor(
         private val _ellipsis: Any = "..."
 
         fun create(reader: Reader): InputPort =
-            InputPort(reader as? PushbackReader ?: PushbackReader(reader))
+            InputPort(reader)
 
         fun create(filename: ScmString): InputPort =
             create(filename.javaString)
 
-        fun create(filename: String): InputPort {
-            try {
-                return create(FileReader(filename))
-            } catch (e: IOException) {
-                throw OpenException(
-                    ScmString.create(filename)
-                )
-            }
-        }
+        fun create(filename: String): InputPort =
+            create(createReader(filename))
     }
 }

@@ -25,6 +25,7 @@ import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.environment.Environment
 import de.masitec.mscheme.exceptions.*
 import de.masitec.mscheme.machine.Machine
+import de.masitec.mscheme.util.JvmReader
 import de.masitec.mscheme.values.*
 import de.masitec.mscheme.values.Function
 import de.masitec.mscheme.values.ListFactory
@@ -70,7 +71,7 @@ class TestMachine
 
     private fun evaluate(expression: String): Any? {
         return machine!!.evaluate(
-            InputPort.create(StringReader(expression)).read()
+            InputPort.create(JvmReader(StringReader(expression))).read()
         )
     }
 

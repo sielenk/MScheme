@@ -23,6 +23,7 @@ package de.masitec.mscheme.tests
 import junit.framework.TestCase
 import de.masitec.mscheme.environment.Environment
 import de.masitec.mscheme.exceptions.TypeError
+import de.masitec.mscheme.util.JvmReader
 import de.masitec.mscheme.util.JvmWriter
 import de.masitec.mscheme.util.Writer
 import de.masitec.mscheme.values.*
@@ -271,7 +272,7 @@ class TestValue
     }
 
     fun testInputPort() {
-        val port: Any = InputPort.create(StringReader(""))
+        val port: Any = InputPort.create(JvmReader(StringReader("")))
 
         commonTests(port)
         assertTrue(ValueTraits.isPort(port))

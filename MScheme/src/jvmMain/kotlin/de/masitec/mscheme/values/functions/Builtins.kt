@@ -23,9 +23,9 @@ package de.masitec.mscheme.values.functions
 import de.masitec.mscheme.environment.Environment
 import de.masitec.mscheme.exceptions.SchemeRuntimeError
 import de.masitec.mscheme.machine.Registers
+import de.masitec.mscheme.util.createStringReader
 import de.masitec.mscheme.values.*
 import de.masitec.mscheme.values.Function
-import java.io.StringReader
 
 
 object Builtins {
@@ -488,7 +488,7 @@ object Builtins {
         YCombinator
 
     fun __open_2Dinput_2Dstring(argument: Any?): Any =
-        InputPort.create(StringReader(ValueTraits.toScmString(argument).javaString))
+        InputPort.create(createStringReader(ValueTraits.toScmString(argument).javaString))
 
     //  not very usefull yet ... needs GET-OUTPUT-STRING
     //  public final static Object __open_2Doutput_2Dstring()

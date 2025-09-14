@@ -27,6 +27,7 @@
  */
 package de.masitec.mscheme.values
 
+import de.masitec.mscheme.util.JvmReader
 import de.masitec.mscheme.util.JvmWriter
 import de.masitec.mscheme.util.Writer
 import junit.framework.TestCase
@@ -98,7 +99,7 @@ class OutputPortTest(name: String?) : TestCase(name) {
                 outPipe.close()
             }
 
-            val actual = InputPort.create(inPipe).read()
+            val actual = InputPort.create(JvmReader(inPipe)).read()
 
             assertTrue(ValueTraits.equal(expected, actual))
         }

@@ -27,16 +27,12 @@ import de.masitec.mscheme.environment.DynamicEnvironment
 import de.masitec.mscheme.environment.Environment
 import de.masitec.mscheme.exceptions.SchemeException
 import de.masitec.mscheme.exceptions.SchemeRuntimeError
-import de.masitec.mscheme.util.Writer
-import de.masitec.mscheme.util.createStdOutWriter
+import de.masitec.mscheme.util.*
 import de.masitec.mscheme.values.*
 import de.masitec.mscheme.values.Function
 import de.masitec.mscheme.values.functions.Subcontinuation
 import de.masitec.mscheme.values.functions.UnaryValueFunction
 import de.masitec.mscheme.values.functions.ValueThunk
-import java.io.InputStreamReader
-import java.io.Reader
-import java.io.StringReader
 
 
 class Machine : Runnable {
@@ -50,7 +46,7 @@ class Machine : Runnable {
 
     constructor() {
         this.environment = Environment.getSchemeReportEnvironment()
-        _stdin = InputPort.create(InputStreamReader(System.`in`))
+        _stdin = InputPort.create(createStdInReader())
         _stdout = OutputPort.create(createStdOutWriter())
         init()
 
@@ -66,7 +62,7 @@ class Machine : Runnable {
 
     constructor(environment: Environment) {
         this.environment = environment
-        _stdin = InputPort.create(InputStreamReader(System.`in`))
+        _stdin = InputPort.create(createStdInReader())
         _stdout = OutputPort.create(createStdOutWriter())
     }
 
@@ -155,7 +151,9 @@ class Machine : Runnable {
                 }
             )
 
-            evaluate(InputPort.create(StringReader(Init.BOOTSTRAP)).read())
+            createStringReader(Init.BOOTSTRAP).use { reader ->
+                evaluate(InputPort.create(reader).read())
+            }
         } catch (e: SchemeException) {
             throw RuntimeException(e.toString())
         } catch (e: InterruptedException) {
@@ -164,7 +162,9 @@ class Machine : Runnable {
     }
 
     fun unprotectedRun(): Any? =
-        evaluate(InputPort.create(StringReader(Init.REP)).read())
+        createStringReader(Init.REP).use { reader ->
+            evaluate(InputPort.create(reader).read())
+        }
 
     override fun run() {
         try {
@@ -257,6 +257,8 @@ class Machine : Runnable {
 
     companion object {
         fun parse(expression: String): Any? =
-            InputPort.create(StringReader(expression)).read()
+            createStringReader(expression).use { reader ->
+                InputPort.create(reader).read()
+            }
     }
 }
