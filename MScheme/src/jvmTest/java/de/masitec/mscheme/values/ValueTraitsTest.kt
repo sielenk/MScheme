@@ -21,9 +21,6 @@
 
 /*
  * Created on 02.01.2004
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 package de.masitec.mscheme.values
 
@@ -33,15 +30,8 @@ import kotlin.String
 
 /**
  * @author sielenk
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-class ValueTraitsTest
-/**
- * Constructor for ValueTraitsTest.
- */
-    (name: String?) : TestCase(name) {
+class ValueTraitsTest(name: String?) : TestCase(name) {
     fun testIsTrue() {
         assertTrue(ValueTraits.isTrue(true))
         assertFalse(ValueTraits.isTrue(false))

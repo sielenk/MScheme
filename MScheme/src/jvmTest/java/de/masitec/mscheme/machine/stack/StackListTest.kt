@@ -21,9 +21,6 @@
 
 /*
  * Created on 02.01.2004
- *
- * To change the template for this generated file go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 package de.masitec.mscheme.machine.stack
 
@@ -31,9 +28,6 @@ import de.masitec.mscheme.machine.StackFrame
 
 /**
  * @author sielenk
- *
- * To change the template for this generated type comment go to
- * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 internal class StackListTest(name: String?) : StackTest(name) {
     private var _stack: Stack? = null

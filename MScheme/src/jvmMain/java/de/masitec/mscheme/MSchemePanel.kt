@@ -36,9 +36,6 @@ import java.io.IOException
 
 /**
  * @author sielenk
- *
- * TODO To change the template for this generated type comment go to Window -
- * Preferences - Java - Code Style - Code Templates
  */
 class MSchemePanel : Panel() {
     private var _stdio: StdioArea? = null
