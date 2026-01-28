@@ -69,7 +69,9 @@ class Environment private constructor(
         )
 
     fun lookup(key: String): Any =
-        lookup(static.getReferenceFor(key)) // ***********************************************************************
+        lookup(static.getReferenceFor(key))
+
+    // ***********************************************************************
 
     companion object {
         private fun create(): Environment =

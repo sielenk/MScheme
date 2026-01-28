@@ -23,8 +23,6 @@ package de.masitec.mscheme.values
 import de.masitec.mscheme.exceptions.ImmutableException
 
 interface IMutablePair : IPair, IMutable {
-    @set:Throws(ImmutableException::class)
     override var first: Any?
-
     override var second: Any?
 }

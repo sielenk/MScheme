@@ -38,7 +38,7 @@ class Registers internal constructor(var environment: DynamicEnvironment) {
     val stack: Stack = Stack()
 
     fun push(k: IContinuation) {
-        stack.push(StackFrame(this.environment, k))
+        stack.push(StackFrame(environment, k))
     }
 
     fun assign(key: Reference, value: Any?): Any? =
