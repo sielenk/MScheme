@@ -1,8 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="MScheme-jvm">
     <output-path>$PROJECT_DIR$/MScheme/build/libs</output-path>
-    <root id="archive" name="MScheme-jvm.jar">
-      <element id="module-output" name="MScheme.MScheme.jvmMain" />
-    </root>
+    <root id="archive" name="MScheme-jvm.jar" />
   </artifact>
 </component>
