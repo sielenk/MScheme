@@ -68,26 +68,27 @@ class Stack : IStack {
             return false
         }
 
-    override fun pop(): StackFrame {
-        while (_top._stack.isEmpty) {
-            _top = _top._next ?: break
-        }
+    override fun tryPop(): StackFrame? {
+        while (true) {
+            val frame = _top._stack.tryPop()
 
-        return _top._stack.pop()
+            if (frame != null)
+                return frame
+
+            _top = _top._next ?: return null
+        }
     }
 
     override fun push(frame: StackFrame) {
         _top._stack.push(frame)
     }
 
-    val continuation: Slice
-        // continuation support
-        get() {
-            val top = _top
-            _top = Slice()
-            reinstate(top)
-            return top
-        }
+    fun getContinuation(): Slice {
+        val top = _top
+        _top = Slice()
+        reinstate(top)
+        return top
+    }
 
     // subcontinuation support
     fun createMark(): Mark =

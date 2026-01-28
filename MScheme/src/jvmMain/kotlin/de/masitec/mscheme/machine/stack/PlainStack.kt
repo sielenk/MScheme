@@ -26,6 +26,7 @@ package de.masitec.mscheme.machine.stack
 
 import de.masitec.mscheme.exceptions.StackEmptyException
 import de.masitec.mscheme.machine.StackFrame
+import java.util.Stack
 
 /**
  * @author sielenk
@@ -46,8 +47,8 @@ internal class PlainStack private constructor(
     override val isEmpty: Boolean
         get() = _sp <= 0
 
-    override fun pop(): StackFrame {
-        assertFull()
+    override fun tryPop(): StackFrame? {
+        if (_sp == 0) return null
 
         val sp = --_sp
         val value = _stack[sp]

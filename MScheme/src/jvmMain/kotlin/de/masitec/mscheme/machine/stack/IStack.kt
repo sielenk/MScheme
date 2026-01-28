@@ -26,6 +26,6 @@ import de.masitec.mscheme.machine.StackFrame
 internal interface IStack {
     val isEmpty: Boolean
 
-    fun pop(): StackFrame
+    fun tryPop(): StackFrame?
     fun push(frame: StackFrame)
 }

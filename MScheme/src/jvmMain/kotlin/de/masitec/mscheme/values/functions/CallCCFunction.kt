@@ -31,7 +31,7 @@ object CallCCFunction : UnaryFunction() {
             fst,
             ListFactory.create(
                 Subcontinuation(
-                    state.stack.continuation
+                    state.stack.getContinuation()
                 )
             )
         )

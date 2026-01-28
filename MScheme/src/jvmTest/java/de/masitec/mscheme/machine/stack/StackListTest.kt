@@ -69,39 +69,39 @@ internal class StackListTest(name: String?) : StackTest(name) {
         } catch (t: Throwable) {
         }
 
-        assertSame(buffer[SIZE1 - 1], _stack!!.pop())
+        assertSame(buffer[SIZE1 - 1], _stack!!.tryPop()!!)
 
         // a b c d
         _stack!!.reinstate(slice)
 
         // a b c d | f g h
-        assertSame(buffer[SIZE - 1], _stack!!.pop())
+        assertSame(buffer[SIZE - 1], _stack!!.tryPop()!!)
 
         // a b c d | f g
         _stack!!.reinstate(slice)
 
         // a b c d | f g | f g h
-        assertSame(buffer[SIZE - 1], _stack!!.pop())
+        assertSame(buffer[SIZE - 1], _stack!!.tryPop()!!)
 
         // a b c d | f g | f g
         for (i in 1..<SIZE2) {
-            _stack!!.pop()
+            _stack!!.tryPop()!!
         }
 
         // a b c d | f g
-        assertSame(buffer[SIZE - 2], _stack!!.pop())
+        assertSame(buffer[SIZE - 2], _stack!!.tryPop()!!)
 
         // a b c d | f
         for (i in 2..<SIZE2) {
-            _stack!!.pop()
+            _stack!!.tryPop()!!
         }
 
         // a b c d
-        assertSame(buffer[SIZE1 - 2], _stack!!.pop())
+        assertSame(buffer[SIZE1 - 2], _stack!!.tryPop()!!)
 
         // a b c
         for (i in 2..<SIZE1) {
-            _stack!!.pop()
+            _stack!!.tryPop()!!
         }
 
         // -

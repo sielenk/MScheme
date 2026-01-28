@@ -201,20 +201,18 @@ class Machine : Runnable {
         }
 
         private fun invoke(current: Any?): Any? {
-            var current = current
             val stack = _state.stack
+            val frame = stack.tryPop()
 
-            if (!stack.isEmpty) {
-                val frame = stack.pop()
-
+            return if (frame != null) {
                 _state.environment = frame.environment
 
-                current = frame.continuation.invoke(_state, current)
+                frame.continuation.invoke(_state, current)
             } else {
                 _done = true
-            }
 
-            return current
+                current
+            }
         }
 
         private fun handleError(error: SchemeException): Any? {
@@ -223,7 +221,7 @@ class Machine : Runnable {
                     error.causeValue,
                     error.message,
                     Subcontinuation(
-                        _state.stack.continuation
+                        _state.stack.getContinuation()
                     ),
                     error is SchemeRuntimeError
                 )
@@ -244,10 +242,10 @@ class Machine : Runnable {
     }
 
     fun execute(expression: Any?): Any? =
-        Executor(this.environment.dynamic).execute(expression)
+        Executor(environment.dynamic).execute(expression)
 
     fun compile(compilee: Any?): Any? =
-        Compiler(this.environment.static).compile(compilee)
+        Compiler(environment.static).compile(compilee)
 
     fun evaluate(evaluatee: Any?): Any? =
         execute(compile(evaluatee))

@@ -68,36 +68,27 @@ internal abstract class StackTest(name: String?) : TestCase(name) {
     }
 
     fun testPop1() {
-        var actual: Throwable? = null
-
-        try {
-            _stack!!.pop()
-        } catch (t: Throwable) {
-            actual = t
-        }
-
-        assertNotNull(actual)
+        assertNull(_stack!!.tryPop())
     }
 
     fun testPop2() {
+        val stack = _stack!!
         val frame1: StackFrame = createFrame()
         val frame2: StackFrame = createFrame()
         val frame3: StackFrame = createFrame()
 
-        _stack!!.push(frame1)
-        _stack!!.push(frame2)
-        _stack!!.push(frame3)
+        stack.push(frame1)
+        stack.push(frame2)
+        stack.push(frame3)
 
-        assertFalse(_stack!!.isEmpty)
-        assertSame(frame3, _stack!!.pop())
-
-        assertFalse(_stack!!.isEmpty)
-        assertSame(frame2, _stack!!.pop())
-
-        assertFalse(_stack!!.isEmpty)
-        assertSame(frame1, _stack!!.pop())
-
-        assertTrue(_stack!!.isEmpty)
+        assertFalse(stack.isEmpty)
+        assertSame(frame3, stack.tryPop())
+        assertFalse(stack.isEmpty)
+        assertSame(frame2, stack.tryPop())
+        assertFalse(stack.isEmpty)
+        assertSame(frame1, stack.tryPop())
+        assertTrue(stack.isEmpty)
+        assertNull(stack.tryPop())
     }
 
     companion object {

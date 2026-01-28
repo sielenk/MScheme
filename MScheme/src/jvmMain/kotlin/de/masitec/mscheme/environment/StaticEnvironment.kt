@@ -30,7 +30,7 @@ import de.masitec.mscheme.values.ValueTraits
 
 class StaticEnvironment internal constructor(
     val parent: StaticEnvironment? = null
-): IOutputable {
+) : IOutputable {
     override fun outputOn(destination: Writer, doWrite: Boolean) {
         destination.write("#[static environment]")
     }
@@ -111,7 +111,7 @@ class StaticEnvironment internal constructor(
     }
 
     fun setStateClosed() {
-        if ((_state == State.OPEN) && (this.level > 0)) {
+        if ((_state == State.OPEN) && (level > 0)) {
             _state = State.CLOSED
         }
     }
@@ -125,26 +125,24 @@ class StaticEnvironment internal constructor(
         }
 
         try {
-            val key = symbol
-            var ref = _bindings[key] as Reference?
+            val existingReference = _bindings[symbol] as Reference?
 
             // if ref is != null
             // the symbol is already bound in the
             // current frame. This define is in fact
             // a lookup.
-            if (ref == null) {
-                ref = Reference.create(
-                    symbol,
-                    this.level,
-                    this.size
-                )
+            if (existingReference != null) {
+                if (level == 0) {
+                    return existingReference
+                }
+            } else {
+                val newReference =
+                    Reference.create(symbol, level, size)
 
-                _bindings[key] = ref
-                this.size++
+                _bindings[symbol] = newReference
+                size++
 
-                return ref
-            } else if (this.level == 0) {
-                return ref
+                return newReference
             }
         } catch (e: ClassCastException) {
         }
@@ -154,24 +152,21 @@ class StaticEnvironment internal constructor(
 
 
     fun defineSyntax(symbol: String, value: ITranslator) {
-        val key = symbol
+        val binding = _bindings[symbol]
 
-        run {
-            val o = _bindings[key]
-            if ((o != null) && o !is ITranslator) {
-                throw AlreadyBound(symbol)
-            }
+        if (binding != null && binding !is ITranslator) {
+            throw AlreadyBound(symbol)
         }
 
-        _bindings[key] = value
+        _bindings[symbol] = value
     }
 
 
-    private fun lookupNoThrow(key: String): Any? {
+    private fun lookupNoThrow(symbol: String): Any? {
         var current: StaticEnvironment? = this
 
         while (current != null) {
-            val result = current._bindings[key]
+            val result = current._bindings[symbol]
 
             if (result != null) {
                 return result
@@ -183,53 +178,53 @@ class StaticEnvironment internal constructor(
         return null
     }
 
-    private fun delayedLookup(key: String): Any {
-        val result = lookupNoThrow(key)
+    private fun delayedLookup(symbol: String): Any {
+        val result = lookupNoThrow(symbol)
 
         return if ((result == null) || (result is Reference))
-            Reference.create(key, this, _state == State.DEF_BODY)
+            Reference.create(symbol, this, _state == State.DEF_BODY)
         else
             result
     }
 
-    private fun lookup(key: String): Any =
-        lookupNoThrow(key) ?: throw SymbolNotFoundException(key)
+    private fun lookup(symbol: String): Any =
+        lookupNoThrow(symbol) ?: throw SymbolNotFoundException(symbol)
 
-    fun getSyntaxFor(key: String): ITranslator? =
-        lookup(key) as? ITranslator
+    fun getSyntaxFor(symbol: String): ITranslator? =
+        lookup(symbol) as? ITranslator
 
-    fun getDelayedReferenceFor(key: String): Reference {
-        val o = delayedLookup(key)
+    fun getDelayedReferenceFor(symbol: String): Reference {
+        val o = delayedLookup(symbol)
 
         if (o is Reference) {
             return o
         } else {
-            throw UnexpectedSyntax(key)
+            throw UnexpectedSyntax(symbol)
         }
     }
 
-    fun getReferenceFor(key: String, restricted: Boolean): Reference {
-        val o = lookup(key)
+    fun getReferenceFor(symbol: String, restricted: Boolean): Reference {
+        val o = lookup(symbol)
 
         if (o is Reference) {
             if (restricted
                 && (o.level == this.level)
                 && (this.level > 0) // and again: global is special
             ) {
-                throw CompileError(key, "may not be used here")
+                throw CompileError(symbol, "may not be used here")
             }
 
             return o
         } else {
-            throw UnexpectedSyntax(key)
+            throw UnexpectedSyntax(symbol)
         }
     }
 
-    fun getReferenceFor(key: String): Reference =
-        getReferenceFor(key, false)
+    fun getReferenceFor(symbol: String): Reference =
+        getReferenceFor(symbol, false)
 
-    fun isBound(key: String): Boolean =
-        lookupNoThrow(key) != null
+    fun isBound(symbol: String): Boolean =
+        lookupNoThrow(symbol) != null
 
     // ***********************************************************************
 

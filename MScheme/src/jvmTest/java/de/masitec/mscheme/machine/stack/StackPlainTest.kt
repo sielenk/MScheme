@@ -28,10 +28,12 @@ internal class StackPlainTest(name: String?) : StackTest(name) {
             assertFalse(_stack!!.isEmpty)
             assertFalse(otherStack.isEmpty)
 
-            assertSame(_stack!!.pop(), otherStack.pop())
+            assertSame(_stack!!.tryPop()!!, otherStack.tryPop()!!)
         }
 
         assertTrue(_stack!!.isEmpty)
         assertTrue(otherStack.isEmpty)
+        assertNull(_stack!!.tryPop())
+        assertNull(otherStack.tryPop())
     }
 }
