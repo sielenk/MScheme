@@ -29,43 +29,48 @@ import de.masitec.mscheme.machine.StackFrame
 class Stack : IStack {
     class Mark
 
-    class Slice {
-        val _mark: Mark?
-        internal val _stack: PlainStack
+    class Slice internal constructor(
+        val _mark: Mark?,
+        internal val _stack: PlainStack,
         var _next: Slice?
-
-        internal constructor(mark: Mark?, next: Slice?) {
-            _mark = mark
-            _stack = PlainStack()
-            _next = next
-        }
-
-        internal constructor(slice: Slice) {
-            _mark = slice._mark
-            _stack = slice._stack.getCopy()
+    ) {
+        internal constructor() : this(
+            _mark = null,
+            _stack = PlainStack(),
             _next = null
-        }
+        )
+
+        internal constructor(mark: Mark, next: Slice) : this(
+            _mark = mark,
+            _stack = PlainStack(),
+            _next = next
+        )
+
+        internal constructor(slice: Slice) : this(
+            _mark = slice._mark,
+            _stack = slice._stack.getCopy(),
+            _next = null
+        )
     }
 
-    private var _top: Slice
+    private var _top: Slice =
+        Slice()
 
-    init {
-        _top = Slice(null, null)
-    }
 
     override val isEmpty: Boolean
         get() {
             var slice = _top
-            while (slice._next != null && slice._stack.isEmpty) {
-                slice = slice._next!!
+
+            while (slice._stack.isEmpty) {
+                slice = slice._next ?: return true
             }
 
-            return slice._stack.isEmpty
+            return false
         }
 
     override fun pop(): StackFrame {
-        while (_top._next != null && _top._stack.isEmpty) {
-            _top = _top._next!!
+        while (_top._stack.isEmpty) {
+            _top = _top._next ?: break
         }
 
         return _top._stack.pop()
@@ -79,46 +84,49 @@ class Stack : IStack {
         // continuation support
         get() {
             val top = _top
-            _top = Slice(null, null)
+            _top = Slice()
             reinstate(top)
             return top
         }
 
     // subcontinuation support
-    fun createMark(): Mark {
-        val mark = Mark()
-        _top = Slice(mark, _top)
-        return mark
-    }
+    fun createMark(): Mark =
+        Mark().also { _top = Slice(it, _top) }
 
     fun cutSlice(mark: Mark): Slice {
         val top = _top
-
         var slice = top
-        while (slice._next != null) {
+
+        while (true) {
+            val sliceNext = slice._next
+                ?: throw SchemeRuntimeError(mark, "stack mark not found")
+
             if (slice._mark === mark) {
-                _top = slice._next!!
+                _top = sliceNext
                 slice._next = null
 
                 return top
+            } else {
+                slice = sliceNext
             }
-
-            slice = slice._next!!
         }
-
-        throw SchemeRuntimeError(mark, "stack mark not found")
     }
 
     fun reinstate(slice: Slice) {
         val oldTop = _top
-
         var srcSlice = slice
-        _top = Slice(srcSlice)
-        var dstSlice = _top
-        while (srcSlice._next != null) {
-            srcSlice = srcSlice._next!!
-            dstSlice._next = Slice(srcSlice)
-            dstSlice = dstSlice._next!!
+        var dstSlice = Slice(slice)
+
+        _top = dstSlice
+
+        while (true) {
+            val srcNext = srcSlice._next ?: break
+            val dstNext = Slice(srcNext)
+
+            dstSlice._next = dstNext
+
+            srcSlice = srcNext
+            dstSlice = dstNext
         }
 
         if (dstSlice._mark != null) {
