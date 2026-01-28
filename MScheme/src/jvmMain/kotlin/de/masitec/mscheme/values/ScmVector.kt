@@ -54,16 +54,16 @@ internal class MutableScmVector : ScmVector, IMutable {
 }
 
 
-abstract class ScmVector : IComparable, IOutputable {
+sealed class ScmVector : IComparable, IOutputable {
     private val _data: Array<Any?>
 
-    protected constructor(data: Array<Any?>) {
+    constructor(data: Array<Any?>) {
         _data = Array(data.size) { i ->
             elementInit(data[i])
         }
     }
 
-    protected constructor(size: Int, fill: Any?) {
+    constructor(size: Int, fill: Any?) {
         val element = elementInit(fill)
 
         _data = Array(size) { element }
@@ -132,16 +132,15 @@ abstract class ScmVector : IComparable, IOutputable {
         destination.write(')'.code)
     }
 
-    val list: IList
-        get() {
-            var result = ListFactory.create()
+    fun toList(): IList {
+        var result = ListFactory.create()
 
-            for (i in this.length - 1 downTo 0) {
-                result = ListFactory.prepend(_data[i], result)
-            }
-
-            return result
+        for (i in this.length - 1 downTo 0) {
+            result = ListFactory.prepend(_data[i], result)
         }
+
+        return result
+    }
 
     companion object {
         private val EMPTY: ScmVector =

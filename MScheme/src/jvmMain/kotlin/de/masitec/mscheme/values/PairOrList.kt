@@ -85,8 +85,7 @@ internal class ListIterator(private var _tortoise: Any?) : Iterator<Any?> {
     }
 }
 
-abstract class PairOrList protected constructor(
-) : IPair, IList, ICompileable, IComparable, IOutputable {
+sealed class PairOrList : IPair, IList, ICompileable, IComparable, IOutputable {
     // implementation of Outputable
     override fun outputOn(destination: Writer, doWrite: Boolean) {
         destination.write('('.code)
@@ -267,20 +266,16 @@ abstract class PairOrList protected constructor(
         }
 
     companion object {
-        fun prepend(head: Any?, tail: IList): IList {
-            return MutablePairOrList(head, tail)
-        }
+        fun prepend(head: Any?, tail: IList): IList =
+            MutablePairOrList(head, tail)
 
-        fun prependConst(head: Any?, tail: IList): IList {
-            return ConstPairOrList(head, tail)
-        }
+        fun prependConst(head: Any?, tail: IList): IList =
+            ConstPairOrList(head, tail)
 
-        fun create(first: Any?, second: Any?): IMutablePair {
-            return MutablePairOrList(first, second)
-        }
+        fun create(first: Any?, second: Any?): IMutablePair =
+            MutablePairOrList(first, second)
 
-        fun createConst(first: Any?, second: Any?): IPair {
-            return ConstPairOrList(first, second)
-        }
+        fun createConst(first: Any?, second: Any?): IPair =
+            ConstPairOrList(first, second)
     }
 }

@@ -48,7 +48,7 @@ object ValueTraits {
     const val FALSE: Boolean = false
 
     fun isTrue(o: Any?): Boolean =
-        o != false
+        o != FALSE
 
     fun isEmpty(obj: Any?): Boolean =
         obj === Empty
@@ -166,12 +166,11 @@ object ValueTraits {
             fst === snd
 
     fun eqv(fst: Any?, snd: Any?): Boolean =
-        if (fst is Char)
-            fst == snd
-        else if (fst is IComparable)
-            fst.eqv(snd)
-        else
-            fst === snd
+        when (fst) {
+            is Char -> fst == snd
+            is IComparable -> fst.eqv(snd)
+            else -> fst === snd
+        }
 
 
     fun equal(fst: Any?, snd: Any?): Boolean =
@@ -218,9 +217,8 @@ object ValueTraits {
 
     private var _index = 0
 
-    fun createUniqueSymbol(): String {
-        return "#[" + _index++ + "]"
-    }
+    fun createUniqueSymbol(): String =
+        "#[${_index++}]"
 
     fun toScmBoolean(b: Boolean): Boolean =
         b

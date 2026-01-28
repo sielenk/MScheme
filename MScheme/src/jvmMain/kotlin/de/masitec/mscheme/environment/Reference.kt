@@ -24,7 +24,7 @@ import de.masitec.mscheme.code.IReduceable
 import de.masitec.mscheme.compiler.IForceable
 import de.masitec.mscheme.machine.Registers
 
-sealed class Reference protected constructor(
+sealed class Reference(
     val symbol: String
 ) : IForceable, IReduceable {
     override fun reduce(state: Registers): Any =

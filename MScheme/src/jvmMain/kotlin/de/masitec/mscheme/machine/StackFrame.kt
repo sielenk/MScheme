@@ -36,6 +36,6 @@ import de.masitec.mscheme.environment.DynamicEnvironment
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
 data class StackFrame(
-    val environment: DynamicEnvironment?,
-    val continuation: IContinuation?
+    val environment: DynamicEnvironment,
+    val continuation: IContinuation
 )

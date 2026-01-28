@@ -45,7 +45,7 @@ class Application private constructor(
         )
 
     private fun createPush(done: IList, index: Int): IContinuation =
-        IContinuation { registers: Registers, value: Any? ->
+        IContinuation { registers, value ->
             prepareNext(
                 registers, ListFactory.prepend(value, done),
                 index - 1
@@ -71,7 +71,7 @@ class Application private constructor(
             Application(application)
 
         fun createCall(done: IList): IContinuation =
-            IContinuation { registers: Registers, value: Any? ->
+            IContinuation { registers, value ->
                 ValueTraits.apply(registers, value, done)
             }
     }

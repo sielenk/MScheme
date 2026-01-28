@@ -27,8 +27,9 @@
  */
 package de.masitec.mscheme.machine.stack
 
-import junit.framework.TestCase
+import de.masitec.mscheme.environment.DynamicEnvironment
 import de.masitec.mscheme.machine.StackFrame
+import junit.framework.TestCase
 
 /**
  * @author sielenk
@@ -106,9 +107,9 @@ internal abstract class StackTest(name: String?) : TestCase(name) {
     }
 
     companion object {
-        @JvmStatic
-        protected fun createFrame(): StackFrame {
-            return StackFrame(null, null)
-        }
+        fun createFrame(): StackFrame =
+            StackFrame(
+                DynamicEnvironment.create(),
+            ) { _, _ -> }
     }
 }

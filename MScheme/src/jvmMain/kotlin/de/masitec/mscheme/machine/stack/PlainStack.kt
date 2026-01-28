@@ -33,11 +33,10 @@ import de.masitec.mscheme.machine.StackFrame
 /**
  * @author sielenk
  */
-internal class PlainStack(
+internal class PlainStack private constructor(
     private var _stack: Array<StackFrame?>,
     private var _sp: Int
 ) : IStack {
-
     constructor() : this(INITIAL_STACK, 0)
 
     constructor(other: PlainStack) : this(
@@ -52,7 +51,13 @@ internal class PlainStack(
 
     override fun pop(): StackFrame {
         assertFull()
-        return _stack[--_sp]!!
+
+        val sp = --_sp
+        val value = _stack[sp]
+
+        _stack[sp] = null
+
+        return value!!
     }
 
     override fun push(frame: StackFrame) {

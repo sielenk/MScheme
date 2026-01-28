@@ -37,7 +37,7 @@ class Selection internal constructor(
    * @see mscheme.code.Reduceable#reduce(mscheme.machine.Stack, mscheme.environment.DynamicEnvironment)
    */
     override fun reduce(state: Registers): Any? {
-        state.push { _: Registers?, value: Any? ->
+        state.push { _, value ->
             if (ValueTraits.isTrue(value))
                 _onTrue
             else

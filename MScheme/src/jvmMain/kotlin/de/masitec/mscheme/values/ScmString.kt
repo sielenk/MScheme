@@ -71,7 +71,7 @@ internal class MutableScmString : ScmString, IMutable {
 }
 
 
-abstract class ScmString protected constructor() : IComparable, IOutputable {
+sealed class ScmString : IComparable, IOutputable {
     abstract val javaString: String
 
     // accessors

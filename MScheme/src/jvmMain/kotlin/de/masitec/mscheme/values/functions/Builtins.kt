@@ -377,7 +377,7 @@ object Builtins {
         ScmVector.create(arguments)
 
     fun vector_2D_3Elist(argument: Any?): Any =
-        ValueTraits.toScmVector(argument).list
+        ValueTraits.toScmVector(argument).toList()
 
     fun list_2D_3Evector(argument: Any?): Any =
         ScmVector.create(ValueTraits.toList(argument))

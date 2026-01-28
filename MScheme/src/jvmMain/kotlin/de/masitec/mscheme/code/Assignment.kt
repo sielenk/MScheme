@@ -42,11 +42,8 @@ class Assignment private constructor(
    * @see mscheme.code.Reduceable#reduce(mscheme.machine.Stack, mscheme.environment.DynamicEnvironment)
    */
     override fun reduce(state: Registers): Any? {
-        state.push { state1: Registers, value: Any? ->
-            state1.assign(
-                _binding,
-                value
-            )
+        state.push { state1, value ->
+            state1.assign(_binding, value)
         }
 
         return _expression
