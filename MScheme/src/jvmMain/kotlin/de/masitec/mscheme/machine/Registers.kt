@@ -32,7 +32,8 @@ import de.masitec.mscheme.machine.stack.Stack
  * @author sielenk
  */
 class Registers internal constructor(var environment: DynamicEnvironment) {
-    val stack: Stack = Stack()
+    val stack: Stack =
+        Stack()
 
     fun push(k: IContinuation) {
         stack.push(StackFrame(environment, k))

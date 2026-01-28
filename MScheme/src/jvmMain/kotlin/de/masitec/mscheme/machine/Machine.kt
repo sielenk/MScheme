@@ -45,7 +45,7 @@ class Machine : Runnable {
     val environment: Environment
 
     constructor() {
-        this.environment = Environment.getSchemeReportEnvironment()
+        environment = Environment.getSchemeReportEnvironment()
         _stdin = InputPort.create(createStdInReader())
         _stdout = OutputPort.create(createStdOutWriter())
         init()

@@ -41,9 +41,9 @@ class Assignment private constructor(
     /* (non-Javadoc)
    * @see mscheme.code.Reduceable#reduce(mscheme.machine.Stack, mscheme.environment.DynamicEnvironment)
    */
-    override fun reduce(state: Registers): Any? {
-        state.push { state1, value ->
-            state1.assign(_binding, value)
+    override fun reduce(state1: Registers): Any? {
+        state1.push { state2, value ->
+            state2.assign(_binding, value)
         }
 
         return _expression

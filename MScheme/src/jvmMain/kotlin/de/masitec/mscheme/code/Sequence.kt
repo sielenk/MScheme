@@ -47,18 +47,18 @@ class Sequence private constructor(
         prepareNext(state, 0)
 
     private fun prepareNext(
-        registers: Registers,
+        state1: Registers,
         index: Int
     ): Any? {
         if (index + 1 < _sequence.size) {
-            registers.push { registers, value ->
+            state1.push { state2, value ->
                 if (((_tag == SequenceTags.AND) && !ValueTraits.isTrue(value))
                     ||
                     ((_tag == SequenceTags.OR) && ValueTraits.isTrue(value))
                 ) {
                     value
                 } else {
-                    prepareNext(registers, index + 1)
+                    prepareNext(state2, index + 1)
                 }
             }
         }

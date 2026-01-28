@@ -45,18 +45,18 @@ class Application private constructor(
         )
 
     private fun createPush(done: IList, index: Int): IContinuation =
-        IContinuation { registers, value ->
+        IContinuation { state, value ->
             prepareNext(
-                registers, ListFactory.prepend(value, done),
+                state, ListFactory.prepend(value, done),
                 index - 1
             )
         }
 
 
     private fun prepareNext(
-        registers: Registers, done: IList, index: Int
+        state: Registers, done: IList, index: Int
     ): Any? {
-        registers.push(
+        state.push(
             if (index == 0)
                 createCall(done)
             else
@@ -71,8 +71,8 @@ class Application private constructor(
             Application(application)
 
         fun createCall(done: IList): IContinuation =
-            IContinuation { registers, value ->
-                ValueTraits.apply(registers, value, done)
+            IContinuation { state, value ->
+                ValueTraits.apply(state, value, done)
             }
     }
 }

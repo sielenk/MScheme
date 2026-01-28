@@ -26,5 +26,5 @@ package de.masitec.mscheme.machine
 
 
 fun interface IContinuation {
-    fun invoke(registers: Registers, value: Any?): Any?
+    fun invoke(state: Registers, value: Any?): Any?
 }
