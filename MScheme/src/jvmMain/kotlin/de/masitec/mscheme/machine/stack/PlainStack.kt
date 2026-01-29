@@ -24,9 +24,7 @@
  */
 package de.masitec.mscheme.machine.stack
 
-import de.masitec.mscheme.exceptions.StackEmptyException
 import de.masitec.mscheme.machine.StackFrame
-import java.util.Stack
 
 /**
  * @author sielenk
@@ -38,14 +36,14 @@ internal class PlainStack private constructor(
     constructor() : this(INITIAL_STACK, 0)
 
     constructor(other: PlainStack) : this(
-        other._stack.copyOf(), other._sp
+        other._stack.copyOf(other._sp), other._sp
     )
 
     fun getCopy(): PlainStack =
         PlainStack(this)
 
     override val isEmpty: Boolean
-        get() = _sp <= 0
+        get() = _sp == 0
 
     override fun tryPop(): StackFrame? {
         if (_sp == 0) return null
@@ -59,29 +57,15 @@ internal class PlainStack private constructor(
     }
 
     override fun push(frame: StackFrame) {
-        if (_sp >= _stack.size) {
-            enlarge()
+        val size = _stack.size
+
+        if (_sp >= size) {
+            _stack = _stack.copyInto(arrayOfNulls(size * 2 + 1))
         }
 
         _stack[_sp++] = frame
     }
 
-
-    private fun assertFull() {
-        if (isEmpty) {
-            throw StackEmptyException()
-        }
-    }
-
-    private fun enlarge() {
-        val length = _stack.size
-        val oldStack = _stack
-        val newStack = Array(length * 2 + 1) { i ->
-            oldStack.getOrNull(i)
-        }
-
-        _stack = newStack
-    }
 
     companion object {
         private val INITIAL_STACK = arrayOf<StackFrame?>()

@@ -101,8 +101,7 @@ sealed class ScmString : IComparable, IOutputable {
         if (doWrite) {
             destination.write('"'.code) // "
             for (i in 0..<this.length) {
-                val c = get_(i)
-                when (c) {
+                when (val c = get_(i)) {
                     '\n' -> destination.write("\\n")
                     '"' -> destination.write("\\\"")
                     '\\' -> destination.write("\\\\")

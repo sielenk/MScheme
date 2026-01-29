@@ -123,9 +123,7 @@ class InputPort private constructor(
                 _reader.unread(c)
             }
 
-            val name = charName.toString()
-
-            return when (name) {
+            return when (val name = charName.toString()) {
                 "s" -> ValueTraits.toScmChar('s')
                 "n" -> ValueTraits.toScmChar('n')
                 "space" -> ValueTraits.toScmChar(' ')
@@ -207,9 +205,7 @@ class InputPort private constructor(
         val buf = StringBuilder()
 
         while (true) {
-            val c = readNoEof()
-
-            when (c) {
+            when (val c = readNoEof()) {
                 '"' -> return ScmString.createConst(buf.toString())
                 '\\' -> {
                     val esc = readNoEof()
@@ -244,7 +240,7 @@ class InputPort private constructor(
         isInitial(c) || isDigit(c) || ("+-.@".indexOf(c) != -1)
 
 
-    private fun parseNumOrSym(initial: Char): Any? {
+    private fun parseNumOrSym(initial: Char): Any {
         var initial = initial
         val buf = StringBuilder()
 
@@ -310,13 +306,9 @@ class InputPort private constructor(
     }
 
     private fun parseDatum(): Any? {
-        val la1 = skipWSread()
-
-        when (la1) {
+        when (val la1 = skipWSread()) {
             '#'.code -> {
-                val la2 = _reader.read()
-
-                return when (la2) {
+                return when (val la2 = _reader.read()) {
                     't'.code -> ValueTraits.TRUE
                     'f'.code -> ValueTraits.FALSE
                     '\\'.code -> parseChar()
@@ -371,7 +363,7 @@ class InputPort private constructor(
         }
     }
 
-    fun readScmChar(): Any? {
+    fun readScmChar(): Any {
         val c = readChar()
 
         return if (c == EOF)
@@ -394,7 +386,7 @@ class InputPort private constructor(
         }
     }
 
-    fun peekScmChar(): Any? {
+    fun peekScmChar(): Any {
         val c = peekChar()
 
         return if (c == EOF)

@@ -22,9 +22,6 @@ package de.masitec.mscheme
 
 import de.masitec.mscheme.machine.Machine
 
-object Main {
-    @JvmStatic
-    fun main(argv: Array<String>) {
-        Machine().unprotectedRun()
-    }
+fun main(argv: Array<String>) {
+    Machine().unprotectedRun()
 }

@@ -125,9 +125,9 @@ class MSchemePanel : Panel() {
         if (_stdio == null) {
             _stdio = StdioArea()
             _stdio!!.addActionListener(ActionListener { e: ActionEvent? ->
-                get_pasteButton()!!.setEnabled(get_stdio()!!.canPaste())
-                get_copyButton()!!.setEnabled(get_stdio()!!.canCopy())
-                get_cutButton()!!.setEnabled(get_stdio()!!.canCut())
+                get_pasteButton()!!.isEnabled = get_stdio()!!.canPaste()
+                get_copyButton()!!.isEnabled = get_stdio()!!.canCopy()
+                get_cutButton()!!.isEnabled = get_stdio()!!.canCut()
                 get_stdio()!!.requestFocus()
             })
         }
@@ -162,7 +162,7 @@ class MSchemePanel : Panel() {
             } finally {
                 _runner = null
                 get_startStopButton()!!.setLabel("Start")
-                get_startStopButton()!!.setEnabled(true)
+                get_startStopButton()!!.isEnabled = true
             }
         })
         _runner!!.start()
@@ -171,11 +171,11 @@ class MSchemePanel : Panel() {
     fun stop() {
         val _localRunner = _runner
 
-        if (_localRunner == null || _localRunner.isInterrupted()) {
+        if (_localRunner == null || _localRunner.isInterrupted) {
             return
         }
 
-        get_startStopButton()!!.setEnabled(false)
+        get_startStopButton()!!.isEnabled = false
         _localRunner.interrupt()
     }
 
