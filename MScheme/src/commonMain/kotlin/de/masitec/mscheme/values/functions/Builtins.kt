@@ -443,11 +443,7 @@ object Builtins {
 
     // 6.6.2 Input
     fun read(fst: Any?): Any? =
-        try {
-            ValueTraits.toInputPort(fst).read()
-        } catch (e: InterruptedException) {
-            throw SchemeRuntimeError(fst, e.toString())
-        }
+        ValueTraits.toInputPort(fst).read()
 
     fun read_2Dchar(fst: Any?): Any? =
         ValueTraits.toInputPort(fst).readScmChar()

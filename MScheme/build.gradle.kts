@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmRun
+
 /*
  * Copyright (C) 2025  Marvin H. Sielenkemper
  *
@@ -133,3 +135,11 @@ tasks.matching {
 }.configureEach {
     dependsOn(createInit)
 }
+
+//tasks.register<JavaExec>("jvmRun") {
+//    group = "run"
+//    dependsOn("jvmJar")
+//
+//    mainModule.set("de.masitec.mscheme")
+//    mainClass.set("de.masitec.mscheme.MainKt")
+//}

@@ -27,6 +27,8 @@ import de.masitec.mscheme.util.Reader
 import de.masitec.mscheme.util.Writer
 import de.masitec.mscheme.util.createReader
 
+// Platform-specific string interning for symbol identity
+internal expect fun internString(str: String): String
 
 internal object EofValue : IOutputable {
     override fun outputOn(destination: Writer, doWrite: Boolean) {
@@ -302,7 +304,7 @@ class InputPort private constructor(
             }
         }
 
-        return str.intern()
+        return internString(str)
     }
 
     private fun parseDatum(): Any? {

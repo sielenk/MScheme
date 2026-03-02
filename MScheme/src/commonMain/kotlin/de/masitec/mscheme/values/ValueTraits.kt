@@ -31,9 +31,6 @@ import de.masitec.mscheme.exceptions.*
 import de.masitec.mscheme.machine.Registers
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.util.Writer
-import kotlin.reflect.KCallable
-import kotlin.reflect.KClass
-import kotlin.reflect.cast
 
 /**
  * @author sielenk
@@ -51,51 +48,8 @@ object ValueTraits {
 
     fun apply(state: Registers, function: Any?, arguments: IList): Any? =
         when (function) {
-            is KCallable<*> -> {
-                val types = function.parameters
-                    .map { it.type.classifier as KClass<*> }
-                val hasTailParam = types.lastOrNull() == IList::class
-                val fixCount = types.size - if (hasTailParam) 1 else 0
-                var restOpt: IList? = arguments
-                val argumentArray = types.map { type ->
-                    val rest = restOpt ?: throw RuntimeArityError(
-                        arguments,
-                        if (hasTailParam)
-                            Arity.atLeast(fixCount)
-                        else
-                            Arity.exactly(fixCount)
-                    )
-
-                    if (type == IList::class) {
-                        restOpt = null
-                        rest
-                    } else {
-                        restOpt = rest.tail
-                        type.cast(rest.head)
-                    }
-                }.toTypedArray()
-
-                try {
-                    function.call(*argumentArray)
-                } catch (e1: IllegalArgumentException) {
-                    throw SchemeRuntimeError(function, e1.toString())
-                } catch (e1: IllegalAccessException) {
-                    throw SchemeRuntimeError(function, e1.toString())
-                }
-            }
-
-            is Function ->
-                function.call(state, arguments)
-
-            else ->
-                if (PlatformInterop.isPlatformCallable(function))
-                    PlatformInterop.applyPlatformCallable(
-                        state,
-                        function,
-                        arguments
-                    )
-                else
-                    throw FunctionExpected(function)
+            is Function -> function.call(state, arguments)
+            else -> applyPlatformSpecific(state, function, arguments)
         }
 
     fun eq(fst: Any?, snd: Any?): Boolean =
@@ -214,9 +168,7 @@ object ValueTraits {
         o is Port
 
     fun isFunction(o: Any?): Boolean =
-        o is Function
-                || o is KCallable<*>
-                || PlatformInterop.isPlatformCallable(o)
+        o is Function || isPlatformCallable(o)
 
     fun output(destination: Writer, doWrite: Boolean, o: Any?) {
         if (o is Char) {
@@ -258,3 +210,9 @@ object ValueTraits {
         else
             o
 }
+
+// Platform-specific function application (KCallable on JVM, JS function interop on JS, etc.)
+internal expect fun applyPlatformSpecific(state: Registers, function: Any?, arguments: IList): Any?
+
+// Platform-specific callable check (KCallable/Method/Field on JVM, JS functions on JS, etc.)
+internal expect fun isPlatformCallable(o: Any?): Boolean
