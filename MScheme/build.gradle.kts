@@ -22,8 +22,8 @@ import org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmRun
  */
 
 plugins {
-    kotlin("multiplatform").version("2.2.0")
-    id("com.google.devtools.ksp").version("2.2.0-2.0.2")
+    kotlin("multiplatform").version("2.3.10")
+    id("com.google.devtools.ksp").version("2.3.6")
 }
 
 val generatedDir: Provider<Directory> =

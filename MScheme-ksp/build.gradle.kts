@@ -25,7 +25,7 @@ plugins {
 
 buildscript {
     dependencies {
-        classpath(kotlin("gradle-plugin", version = "2.2.0"))
+        classpath(kotlin("gradle-plugin", version = "2.3.10"))
     }
 }
 
