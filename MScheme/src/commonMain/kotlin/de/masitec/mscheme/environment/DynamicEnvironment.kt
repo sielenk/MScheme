@@ -90,11 +90,20 @@ class DynamicEnvironment private constructor(
         private fun create(
             parent: DynamicEnvironment,
             size: Int
-        ): DynamicEnvironment =
-            DynamicEnvironment(
+        ): DynamicEnvironment {
+            val frames = parent._frames
+            val frameCount = frames.size
+
+            return DynamicEnvironment(
                 parent._globals,
-                parent._frames + arrayOfNulls(size)
+                Array(frameCount + 1) { i ->
+                    if (i < frameCount)
+                        frames[i]
+                    else
+                        arrayOfNulls(size)
+                }
             )
+        }
 
         private fun create(
             parent: DynamicEnvironment,
