@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025  Marvin H. Sielenkemper
+ * Copyright (C) 2026  Marvin H. Sielenkemper
  *
  * This file is part of MScheme.
  *
@@ -18,7 +18,9 @@
  * the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA  02111-1307, USA.
  */
+
 package de.masitec.mscheme.values
 
-internal actual fun internString(str: String): String =
-    str.intern()
+internal actual fun Symbol(str: String): Symbol {
+    TODO("Not yet implemented")
+}

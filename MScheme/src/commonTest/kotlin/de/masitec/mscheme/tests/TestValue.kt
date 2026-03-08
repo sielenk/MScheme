@@ -207,7 +207,7 @@ class TestValue : FunSpec({
     }
 
     test("symbol") {
-        val symbol: Any = "test"
+        val symbol: Any = Symbol("test")
 
         commonTests(symbol)
         ValueTraits.isSymbol(symbol) shouldBe true

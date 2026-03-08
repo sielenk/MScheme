@@ -25,6 +25,7 @@ import de.masitec.mscheme.exceptions.SymbolNotFoundException
 import de.masitec.mscheme.exceptions.UnexpectedSyntax
 import de.masitec.mscheme.syntax.TranslatorFactory.beginToken
 import de.masitec.mscheme.values.ListFactory
+import de.masitec.mscheme.values.Symbol
 import de.masitec.mscheme.values.ValueTraits
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
@@ -35,16 +36,16 @@ import io.kotest.matchers.types.shouldNotBeSameInstanceAs
 
 class TestEnvironment : FunSpec({
     var env: Environment? = null
-    var sym1: String? = null
-    var sym2: String? = null
+    var sym1: Symbol? = null
+    var sym2: Symbol? = null
     var val1: Any? = null
     var val2: Any? = null
 
     beforeEach {
         env = Environment.getEmpty()
 
-        sym1 = "test1"
-        sym2 = "test2"
+        sym1 = Symbol("test1")
+        sym2 = Symbol("test2")
 
         val1 = ListFactory.create()
         val2 = ValueTraits.TRUE

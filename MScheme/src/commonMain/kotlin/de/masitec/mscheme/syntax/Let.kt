@@ -25,6 +25,7 @@ import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
 import de.masitec.mscheme.values.ListFactory
+import de.masitec.mscheme.values.Symbol
 import de.masitec.mscheme.values.ValueTraits
 import de.masitec.mscheme.values.functions.YCombinator
 
@@ -36,7 +37,7 @@ internal object Let : LetBase(Arity.atLeast(2)) {
         arguments: IList
     ): Any {
         var arguments = arguments
-        val name: String?
+        val name: Symbol?
 
         if (ValueTraits.isSymbol(arguments.head)) {
             if (arguments.length < 3) {

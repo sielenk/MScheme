@@ -27,9 +27,6 @@ import de.masitec.mscheme.util.Reader
 import de.masitec.mscheme.util.Writer
 import de.masitec.mscheme.util.createReader
 
-// Platform-specific string interning for symbol identity
-internal expect fun internString(str: String): String
-
 internal object EofValue : IOutputable {
     override fun outputOn(destination: Writer, doWrite: Boolean) {
         destination.write("#[eof]")
@@ -304,7 +301,7 @@ class InputPort private constructor(
             }
         }
 
-        return internString(str)
+        return Symbol(str)
     }
 
     private fun parseDatum(): Any? {
@@ -325,24 +322,24 @@ class InputPort private constructor(
             '['.code -> return parseList(']')
             '"'.code -> return parseString()
             '\''.code -> return ListFactory.createConst(
-                "quote",
+                _quote,
                 parseDatum()
             )
 
             '`'.code -> return ListFactory.createConst(
-                "quasiquote",
+                _quasiquote,
                 parseDatum()
             )
 
             ','.code -> {
                 val la2 = _reader.read()
-                val sym: String?
+                val sym: Symbol?
 
                 if (la2 == '@'.code) {
-                    sym = "unquote-splicing"
+                    sym = _unquoteSplicing
                 } else {
                     _reader.unread(la2)
-                    sym = "unquote"
+                    sym = _unquote
                 }
 
                 return ListFactory.createConst(
@@ -406,9 +403,14 @@ class InputPort private constructor(
 
         val EOF_VALUE: Any = EofValue
 
-        private val _plus: Any = "+"
-        private val _minus: Any = "-"
-        private val _ellipsis: Any = "..."
+        private val _quote = Symbol("quote")
+        private val _quasiquote = Symbol("quasiquote")
+        private val _unquote = Symbol("unquote")
+        private val _unquoteSplicing = Symbol("unquote-splicing")
+
+        private val _plus: Any = Symbol("+")
+        private val _minus: Any = Symbol("-")
+        private val _ellipsis: Any = Symbol("...")
 
         fun create(reader: Reader): InputPort =
             InputPort(reader)

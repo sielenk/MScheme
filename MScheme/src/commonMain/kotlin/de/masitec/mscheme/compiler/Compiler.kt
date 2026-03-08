@@ -38,7 +38,7 @@ class Compiler(private val _env: StaticEnvironment) {
             throw CantCompileException(obj)
         } else if (ValueTraits.isSymbol(obj)) {
             _env.setStateClosed()
-            _env.getDelayedReferenceFor(obj as String)
+            _env.getDelayedReferenceFor(ValueTraits.toSymbol(obj))
         } else if (obj is ICompileable) {
             obj.getForceable(_env)
         } else {
@@ -47,8 +47,8 @@ class Compiler(private val _env: StaticEnvironment) {
         }
 
     fun getTranslator(obj: Any?): ITranslator {
-        if (obj is String) {
-            val result = _env.getSyntaxFor(obj)
+        if (ValueTraits.isSymbol(obj)) {
+            val result = _env.getSyntaxFor(ValueTraits.toSymbol(obj))
 
             if (result != null) {
                 return result

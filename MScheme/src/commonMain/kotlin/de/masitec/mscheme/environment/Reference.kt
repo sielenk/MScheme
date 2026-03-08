@@ -23,9 +23,10 @@ package de.masitec.mscheme.environment
 import de.masitec.mscheme.code.IReduceable
 import de.masitec.mscheme.compiler.IForceable
 import de.masitec.mscheme.machine.Registers
+import de.masitec.mscheme.values.Symbol
 
 sealed class Reference(
-    val symbol: String
+    val symbol: Symbol
 ) : IForceable, IReduceable {
     override fun reduce(state: Registers): Any =
         state.environment.lookup(this)
@@ -44,19 +45,19 @@ sealed class Reference(
 
     companion object {
         fun create(
-            key: String,
+            key: Symbol,
             env: StaticEnvironment,
             restricted: Boolean
         ): Reference =
             DelayedReference(key, env, restricted)
 
-        fun create(key: String, level: Int, index: Int): Reference =
+        fun create(key: Symbol, level: Int, index: Int): Reference =
             ForcedReference(key, level, index)
     }
 }
 
 internal class DelayedReference(
-    key: String,
+    key: Symbol,
     private val _env: StaticEnvironment,
     private val _restricted: Boolean
 ) : Reference(key) {
@@ -75,7 +76,7 @@ internal class DelayedReference(
 }
 
 internal class ForcedReference(
-    symbol: String,
+    symbol: Symbol,
     override val level: Int,
     override val index: Int
 ) : Reference(symbol) {

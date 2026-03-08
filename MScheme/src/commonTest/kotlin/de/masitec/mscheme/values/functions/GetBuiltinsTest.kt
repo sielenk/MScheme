@@ -28,7 +28,7 @@ import io.kotest.matchers.shouldBe
 class GetBuiltinsTest : FunSpec({
     test("testBuiltins") {
         val builtinsList = getBuiltins().toList()
-        val builtinsMap = builtinsList.toMap().toSortedMap()
+        val builtinsMap = builtinsList.toMap()
 
         builtinsList.size shouldBe 95
         builtinsMap.size shouldBe 95

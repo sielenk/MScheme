@@ -132,10 +132,10 @@ class MSchemeSymbolProcessor(
             out.appendLine("package $FUNCTIONS_PACKAGE_PATH")
             out.appendLine()
             out.appendLine("import $SCM_FUNCTION_TYPE")
-            out.appendLine("import kotlin.reflect.KFunction")
+            out.appendLine("import $SCM_SYMBOL_TYPE")
             out.appendLine()
             out.appendLine()
-            out.appendLine("fun getBuiltins(): Sequence<Pair<String, Function>> = sequence {")
+            out.appendLine("fun getBuiltins(): Sequence<Pair<Symbol, Function>> = sequence {")
             for (member in members) {
                 out.appendLine("    yield($member)")
             }
@@ -149,6 +149,7 @@ class MSchemeSymbolProcessor(
         const val FUNCTIONS_PACKAGE_PATH = "$PACKAGE_NAME.values.functions"
         const val SCM_BUILTINS_OBJECT = "$FUNCTIONS_PACKAGE_PATH.Builtins"
         const val SCM_FUNCTION_TYPE = "$PACKAGE_NAME.values.Function"
+        const val SCM_SYMBOL_TYPE = "$PACKAGE_NAME.values.Symbol"
         const val SCM_LIST_TYPE = "$PACKAGE_NAME.values.IList"
 
         fun parseName(name: String): String {
@@ -184,6 +185,6 @@ class MSchemeSymbolProcessor(
             Member(name, "prop", ".")
 
         override fun toString(): String =
-            "\"${parseName(name)}\" to $check(Builtins$delimiter$name)"
+            "Symbol(\"${parseName(name)}\") to $check(Builtins$delimiter$name)"
     }
 }

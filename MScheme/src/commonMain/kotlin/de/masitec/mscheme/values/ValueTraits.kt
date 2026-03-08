@@ -29,7 +29,6 @@ import de.masitec.mscheme.environment.Environment
 import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.exceptions.*
 import de.masitec.mscheme.machine.Registers
-import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.util.Writer
 
 /**
@@ -53,21 +52,26 @@ object ValueTraits {
         }
 
     fun eq(fst: Any?, snd: Any?): Boolean =
-        if (fst is IComparable)
-            fst.eq(snd)
-        else
-            fst === snd
+        when (fst) {
+            is String -> Symbol(fst).eq(snd)
+            is IComparable -> fst.eq(snd)
+            else -> fst === snd
+        }
 
     fun eqv(fst: Any?, snd: Any?): Boolean =
         when (fst) {
             is Char -> fst == snd
+            is String -> Symbol(fst).eqv(snd)
             is IComparable -> fst.eqv(snd)
             else -> fst === snd
         }
 
 
     fun equal(fst: Any?, snd: Any?): Boolean =
-        fst == snd
+        when (fst) {
+            is String -> Symbol(fst) == snd
+            else -> fst == snd
+        }
 
     fun isList(o: Any?): Boolean =
         o is IList && o.isValid
@@ -105,8 +109,12 @@ object ValueTraits {
     fun toInputPort(o: Any?): InputPort =
         o as? InputPort ?: throw InputPortExpected(o)
 
-    fun toSymbol(o: Any?): String =
-        o as? String ?: throw SymbolExpected(o)
+    fun toSymbol(o: Any?): Symbol =
+        when (o) {
+            is Symbol -> o
+            is String -> Symbol(o)
+            else -> throw SymbolExpected(o)
+        }
 
     private var _index = 0
 
@@ -150,7 +158,7 @@ object ValueTraits {
         o is Boolean
 
     fun isSymbol(o: Any?): Boolean =
-        o is String
+        o is Symbol || o is String
 
     fun isScmNumber(o: Any?): Boolean =
         o is ScmNumber

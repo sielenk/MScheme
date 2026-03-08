@@ -227,10 +227,10 @@ object Builtins {
         ValueTraits.toScmBoolean(ValueTraits.isSymbol(argument))
 
     fun symbol_2D_3Estring(argument: Any?): Any =
-        ScmString.createConst(ValueTraits.toSymbol(argument))
+        ScmString.createConst(ValueTraits.toSymbol(argument).toString())
 
     fun string_2D_3Esymbol(argument: Any?): Any =
-        ValueTraits.toScmString(argument).javaString
+        Symbol(ValueTraits.toScmString(argument).javaString)
 
     // 6.3.4 Characters
     fun char_3F(argument: Any?) = // char?

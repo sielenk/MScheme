@@ -23,9 +23,11 @@ package de.masitec.mscheme.environment
 import de.masitec.mscheme.exceptions.AlreadyBound
 import de.masitec.mscheme.exceptions.CompileError
 import de.masitec.mscheme.exceptions.SchemeRuntimeError
+import de.masitec.mscheme.syntax.ITranslator
 import de.masitec.mscheme.syntax.TranslatorFactory
 import de.masitec.mscheme.util.Writer
 import de.masitec.mscheme.values.IOutputable
+import de.masitec.mscheme.values.Symbol
 import de.masitec.mscheme.values.functions.getBuiltins
 
 
@@ -45,7 +47,10 @@ class Environment private constructor(
 
     // *** code access (compiletime) ***
 
-    fun define(key: String, value: Any?): Reference {
+    fun define(key: String, value: Any?): Reference =
+        define(Symbol(key), value)
+
+    fun define(key: Symbol, value: Any?): Reference {
         val newReference = static.define(key)
         assign(newReference, value)
         return newReference
@@ -55,7 +60,7 @@ class Environment private constructor(
     fun assign(key: Reference, value: Any?): Any? =
         dynamic.assign(key, value)
 
-    fun assign(key: String, value: Any?): Any? =
+    fun assign(key: Symbol, value: Any?): Any? =
         assign(static.getReferenceFor(key), value)
 
 
@@ -68,7 +73,7 @@ class Environment private constructor(
             "uninitialized variable"
         )
 
-    fun lookup(key: String): Any =
+    fun lookup(key: Symbol): Any =
         lookup(static.getReferenceFor(key))
 
     // ***********************************************************************
@@ -88,53 +93,55 @@ class Environment private constructor(
                 getEmpty()
 
             try {
-                val staticBindings = result.static
+                fun define(symbol: String, value: ITranslator) {
+                    result.static.defineSyntax(Symbol(symbol), value)
+                }
 
-                staticBindings.defineSyntax(
+                define(
                     "quote",
                     TranslatorFactory.quoteToken
                 )
-                staticBindings.defineSyntax(
+                define(
                     "if",
                     TranslatorFactory.ifToken
                 )
-                staticBindings.defineSyntax(
+                define(
                     "begin",
                     TranslatorFactory.beginToken
                 )
-                staticBindings.defineSyntax(
+                define(
                     "and",
                     TranslatorFactory.andToken
                 )
-                staticBindings.defineSyntax(
+                define(
                     "or",
                     TranslatorFactory.orToken
                 )
-                staticBindings.defineSyntax(
+                define(
                     "lambda",
                     TranslatorFactory.lambdaToken
                 )
-                staticBindings.defineSyntax(
+                define(
                     "let",
                     TranslatorFactory.letToken
                 )
-                staticBindings.defineSyntax(
+                define(
                     "let*",
                     TranslatorFactory.letStarToken
                 )
-                staticBindings.defineSyntax(
+                define(
                     "letrec",
                     TranslatorFactory.letrecToken
                 )
-                staticBindings.defineSyntax(
+                define(
                     "define",
                     TranslatorFactory.defineToken
                 )
-                staticBindings.defineSyntax(
+                define(
                     "set!",
                     TranslatorFactory.setToken
                 )
-                staticBindings.defineSyntax(
+                define(
                     "define-syntax",
                     TranslatorFactory.defineSyntaxToken
                 )

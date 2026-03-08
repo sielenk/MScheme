@@ -25,6 +25,7 @@ import de.masitec.mscheme.syntax.ITranslator
 import de.masitec.mscheme.util.Writer
 import de.masitec.mscheme.values.IList
 import de.masitec.mscheme.values.IOutputable
+import de.masitec.mscheme.values.Symbol
 import de.masitec.mscheme.values.ValueTraits
 
 
@@ -39,7 +40,7 @@ class StaticEnvironment internal constructor(
         return this
     }
 
-    private val _bindings: MutableMap<String, Any> =
+    private val _bindings: MutableMap<Symbol, Any> =
         mutableMapOf()
 
     // *** instance access ***************************************************
@@ -65,7 +66,7 @@ class StaticEnvironment internal constructor(
     }
 
     internal constructor(
-        parent: StaticEnvironment?, symbol: String
+        parent: StaticEnvironment?, symbol: Symbol
     ) : this(parent) {
         define(symbol)
     }
@@ -76,7 +77,7 @@ class StaticEnvironment internal constructor(
     fun createChild(symbols: IList): StaticEnvironment =
         StaticEnvironment(this, symbols)
 
-    fun createChild(symbol: String): StaticEnvironment =
+    fun createChild(symbol: Symbol): StaticEnvironment =
         StaticEnvironment(this, symbol)
 
     // *** instance access ***************************************************
@@ -116,7 +117,7 @@ class StaticEnvironment internal constructor(
         }
     }
 
-    fun define(symbol: String): Reference {
+    fun define(symbol: Symbol): Reference {
         if (_state != State.OPEN) {
             throw CompileError(
                 symbol,
@@ -151,7 +152,7 @@ class StaticEnvironment internal constructor(
     }
 
 
-    fun defineSyntax(symbol: String, value: ITranslator) {
+    fun defineSyntax(symbol: Symbol, value: ITranslator) {
         val binding = _bindings[symbol]
 
         if (binding != null && binding !is ITranslator) {
@@ -162,7 +163,7 @@ class StaticEnvironment internal constructor(
     }
 
 
-    private fun lookupNoThrow(symbol: String): Any? {
+    private fun lookupNoThrow(symbol: Symbol): Any? {
         var current: StaticEnvironment? = this
 
         while (current != null) {
@@ -178,7 +179,7 @@ class StaticEnvironment internal constructor(
         return null
     }
 
-    private fun delayedLookup(symbol: String): Any {
+    private fun delayedLookup(symbol: Symbol): Any {
         val result = lookupNoThrow(symbol)
 
         return if ((result == null) || (result is Reference))
@@ -187,13 +188,13 @@ class StaticEnvironment internal constructor(
             result
     }
 
-    private fun lookup(symbol: String): Any =
+    private fun lookup(symbol: Symbol): Any =
         lookupNoThrow(symbol) ?: throw SymbolNotFoundException(symbol)
 
-    fun getSyntaxFor(symbol: String): ITranslator? =
+    fun getSyntaxFor(symbol: Symbol): ITranslator? =
         lookup(symbol) as? ITranslator
 
-    fun getDelayedReferenceFor(symbol: String): Reference {
+    fun getDelayedReferenceFor(symbol: Symbol): Reference {
         val o = delayedLookup(symbol)
 
         if (o is Reference) {
@@ -203,7 +204,7 @@ class StaticEnvironment internal constructor(
         }
     }
 
-    fun getReferenceFor(symbol: String, restricted: Boolean): Reference {
+    fun getReferenceFor(symbol: Symbol, restricted: Boolean): Reference {
         val o = lookup(symbol)
 
         if (o is Reference) {
@@ -220,10 +221,10 @@ class StaticEnvironment internal constructor(
         }
     }
 
-    fun getReferenceFor(symbol: String): Reference =
+    fun getReferenceFor(symbol: Symbol): Reference =
         getReferenceFor(symbol, false)
 
-    fun isBound(symbol: String): Boolean =
+    fun isBound(symbol: Symbol): Boolean =
         lookupNoThrow(symbol) != null
 
     // ***********************************************************************

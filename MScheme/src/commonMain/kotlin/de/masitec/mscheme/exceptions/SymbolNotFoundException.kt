@@ -20,7 +20,9 @@
  */
 package de.masitec.mscheme.exceptions
 
+import de.masitec.mscheme.values.Symbol
+
 
 class SymbolNotFoundException(
-    cause: String?
+    cause: Symbol
 ) : CompileError(cause, "symbol not found")
