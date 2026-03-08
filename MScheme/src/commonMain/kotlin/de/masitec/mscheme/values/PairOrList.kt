@@ -126,9 +126,6 @@ sealed class PairOrList : IPair, IList, ICompileable, IComparable, IOutputable {
                 && ValueTraits.equal(first, other.first)
                 && ValueTraits.equal(second, other.second)
 
-    fun getTranslator(compilationEnv: StaticEnvironment?): ITranslator =
-        ProcedureCall.create(this)
-
     override fun getForceable(compilationEnv: StaticEnvironment): Any? {
         val list = validate()
 

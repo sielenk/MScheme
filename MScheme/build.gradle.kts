@@ -83,10 +83,6 @@ kotlin.sourceSets.all {
 
 dependencies {
     add("kspCommonMainMetadata", project(":MScheme-ksp"))
-
-    // Optional: if your processor supports common metadata processing
-    // This runs KSP against commonMain metadata so generated code can be used in common source sets.
-    // add("kspCommonMainMetadata", project(":MScheme-ksp"))
 }
 
 val createInit = tasks.register("createInit") {
