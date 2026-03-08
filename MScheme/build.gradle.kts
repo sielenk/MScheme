@@ -83,7 +83,10 @@ kotlin.sourceSets.all {
 
 dependencies {
     add("kspCommonMainMetadata", project(":MScheme-ksp"))
-    add("kspJsTest", "io.kotest:kotest-framework-symbol-processor-jvm:$kotestVersion")
+    add(
+        "kspJsTest",
+        "io.kotest:kotest-framework-symbol-processor-jvm:$kotestVersion"
+    )
 }
 
 val createInit = tasks.register("createInit") {
@@ -149,3 +152,15 @@ tasks.matching {
 //    mainModule.set("de.masitec.mscheme")
 //    mainClass.set("de.masitec.mscheme.MainKt")
 //}
+
+tasks.register<Copy>("deployToDoc") {
+    group = "distribution"
+    dependsOn("jsBrowserProductionWebpack")
+    from(layout.buildDirectory.dir("kotlin-webpack/js/productionExecutable")) {
+        include("MScheme.js")
+    }
+    from(layout.buildDirectory.dir("processedResources/js/main")) {
+        include("MScheme.html")
+    }
+    into(rootProject.layout.projectDirectory.dir("docs"))
+}
