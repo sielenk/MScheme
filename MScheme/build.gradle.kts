@@ -27,7 +27,7 @@ plugins {
 }
 
 val generatedDir: Provider<Directory> =
-    layout.buildDirectory.dir("generated/mscheme/main/kotlin")
+    layout.buildDirectory.dir("generated/ksp/metadata/commonMain/kotlin")
 
 val kotestVersion = "6.1.4"
 
@@ -82,7 +82,7 @@ kotlin.sourceSets.all {
 }
 
 dependencies {
-    add("kspJvm", project(":MScheme-ksp"))
+    add("kspCommonMainMetadata", project(":MScheme-ksp"))
 
     // Optional: if your processor supports common metadata processing
     // This runs KSP against commonMain metadata so generated code can be used in common source sets.
@@ -134,8 +134,8 @@ val createInit = tasks.register("createInit") {
 tasks.matching {
     it.name in setOf(
         "compileCommonMainKotlinMetadata",
+        "kspCommonMainKotlinMetadata",
         "compileKotlinJvm",
-        "kspKotlinJvm",
         "compileKotlinJs"
     )
 }.configureEach {
