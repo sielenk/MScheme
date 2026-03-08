@@ -4,36 +4,38 @@
  */
 package de.masitec.mscheme.machine.stack
 
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.types.shouldBeSameInstanceAs
 
 /**
  * @author sielenk
  */
-internal class StackPlainTest(name: String?) : StackTest(name) {
-    private var _stack: PlainStack? = null
+internal class StackPlainTest : StackTest<PlainStack>() {
+    override fun createStack(): PlainStack =
+        PlainStack()
 
-    override fun createStack(): IStack {
-        return PlainStack().also { _stack = it }
-    }
+    init {
+        test("getCopy") {
+            val SIZE = 50
 
-    fun testCopy() {
-        val SIZE = 50
+            repeat(SIZE) {
+                stack.push(createFrame())
+            }
 
-        for (i in 0..<SIZE) {
-            _stack!!.push(createFrame())
+            val otherStack: IStack = stack.getCopy()
+
+            repeat(SIZE) {
+                stack.isEmpty shouldBe false
+                otherStack.isEmpty shouldBe false
+
+                stack.tryPop() shouldBeSameInstanceAs otherStack.tryPop()
+            }
+
+            stack.isEmpty shouldBe true
+            otherStack.isEmpty shouldBe true
+            stack.tryPop().shouldBeNull()
+            otherStack.tryPop().shouldBeNull()
         }
-
-        val otherStack: IStack = _stack!!.getCopy()
-
-        for (j in 0..<SIZE) {
-            assertFalse(_stack!!.isEmpty)
-            assertFalse(otherStack.isEmpty)
-
-            assertSame(_stack!!.tryPop()!!, otherStack.tryPop()!!)
-        }
-
-        assertTrue(_stack!!.isEmpty)
-        assertTrue(otherStack.isEmpty)
-        assertNull(_stack!!.tryPop())
-        assertNull(otherStack.tryPop())
     }
 }

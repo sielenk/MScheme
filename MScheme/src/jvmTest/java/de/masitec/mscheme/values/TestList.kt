@@ -20,11 +20,15 @@
  */
 package de.masitec.mscheme.values
 
-import junit.framework.TestCase
 import de.masitec.mscheme.exceptions.PairExpected
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.ints.shouldBeGreaterThanOrEqual
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeSameInstanceAs
+import io.kotest.matchers.types.shouldNotBeSameInstanceAs
 
-class TestList
-    (name: String?) : TestCase(name) {
+class TestList : FunSpec({
     var firstElement: Any? = null
 
     var secondElement: Any? = null
@@ -37,7 +41,7 @@ class TestList
 
     var occupiedListLength: Int = 0
 
-    override fun setUp() {
+    beforeEach {
         emptyList = ListFactory.create()
 
         firstElement = "x"
@@ -47,83 +51,68 @@ class TestList
         occupiedListLength = 2
     }
 
-    override fun tearDown() {
+    afterEach {
         firstElement = null
         secondElement = null
         emptyList = null
         occupiedList = null
     }
 
-    fun testTestValues() {
-        assertTrue(occupiedListLength >= 2)
+    test("testTestValues") {
+        occupiedListLength shouldBeGreaterThanOrEqual 2
 
-        assertNotSame(firstElement, secondElement)
+        firstElement shouldNotBeSameInstanceAs secondElement
 
-        assertNotSame(firstElement, lastElement)
+        firstElement shouldNotBeSameInstanceAs lastElement
     }
 
-    fun testEmptyIsUnique() {
-        assertSame("empty isn't unique", emptyList, ListFactory.create())
+    test("testEmptyIsUnique") {
+        emptyList shouldBeSameInstanceAs ListFactory.create()
     }
 
-    fun testOccupiedList() {
-        assertNotSame("occupied list equals (==) empty list", occupiedList, emptyList)
+    test("testOccupiedList") {
+        occupiedList shouldNotBeSameInstanceAs emptyList
 
-        assertSame(
-            "toPair returned somethig wrong", ValueTraits.toConstPair(
-                occupiedList
-            ).first, occupiedList!!.head
-        )
+        ValueTraits.toConstPair(occupiedList).first shouldBeSameInstanceAs occupiedList!!.head
     }
 
-    fun testIsEmpty() {
-        assertTrue(emptyList!!.isEmpty)
+    test("testIsEmpty") {
+        emptyList!!.isEmpty shouldBe true
 
-        assertFalse(occupiedList!!.isEmpty)
+        occupiedList!!.isEmpty shouldBe false
     }
 
-    fun testGetLength() {
-        TestCase.assertEquals(0, emptyList!!.length)
+    test("testGetLength") {
+        emptyList!!.length shouldBe 0
 
-        TestCase.assertEquals(occupiedList!!.length, occupiedListLength)
+        occupiedList!!.length shouldBe occupiedListLength
     }
 
-    fun testGetHead() {
-        try {
+    test("testGetHead") {
+        shouldThrow<PairExpected> {
             emptyList!!.head
-            fail("PairExpected expected")
-        } catch (e: PairExpected) {
         }
 
-        assertSame("getHead failed", occupiedList!!.head, firstElement)
+        occupiedList!!.head shouldBeSameInstanceAs firstElement
     }
 
-    fun testGetTail() {
-        try {
-            assertNotNull(emptyList!!.tail)
-            fail("PairExpected expected")
-        } catch (e: PairExpected) {
+    test("testGetTail") {
+        shouldThrow<PairExpected> {
+            emptyList!!.tail
         }
 
-        assertSame("getTail failed", occupiedList!!.tail.head, secondElement)
+        occupiedList!!.tail.head shouldBeSameInstanceAs secondElement
     }
 
-    fun testGetReversed() {
-        assertSame("failed on emptyList", emptyList!!.getReversed(), emptyList)
+    test("testGetReversed") {
+        emptyList!!.getReversed() shouldBeSameInstanceAs emptyList
 
-        TestCase.assertEquals(
-            "length mismatch ",
-            occupiedList!!.getReversed().length,
-            occupiedListLength
-        )
+        occupiedList!!.getReversed().length shouldBe occupiedListLength
 
-        assertSame(
-            "previous last isn't first now", occupiedList!!.getReversed()
-                .head, lastElement
-        )
+        occupiedList!!.getReversed().head shouldBeSameInstanceAs lastElement
     }
 
-    fun testGetCodeList() {
+    test("testGetCodeList") {
         // ...
     }
-}
+})

@@ -21,15 +21,16 @@
 
 package de.masitec.mscheme.values.functions
 
-import junit.framework.TestCase
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 
 
-class GetBuiltinsTest(testName: String) : TestCase(testName) {
-    fun testBuiltins() {
+class GetBuiltinsTest : FunSpec({
+    test("testBuiltins") {
         val builtinsList = getBuiltins().toList()
         val builtinsMap = builtinsList.toMap().toSortedMap()
 
-        assertEquals(95, builtinsList.size)
-        assertEquals(95, builtinsMap.size)
+        builtinsList.size shouldBe 95
+        builtinsMap.size shouldBe 95
     }
-}
+})

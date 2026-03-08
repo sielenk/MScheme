@@ -24,21 +24,18 @@
  */
 package de.masitec.mscheme.values
 
-import junit.framework.TestCase
-import kotlin.Any
-import kotlin.String
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 
 /**
  * @author sielenk
  */
-class ValueTraitsTest(name: String?) : TestCase(name) {
-    fun testIsTrue() {
-        assertTrue(ValueTraits.isTrue(true))
-        assertFalse(ValueTraits.isTrue(false))
-
-        assertTrue(ValueTraits.isTrue(ValueTraits.TRUE))
-        assertFalse(ValueTraits.isTrue(ValueTraits.FALSE))
-
-        assertTrue(ValueTraits.isTrue(Any()))
+class ValueTraitsTest : FunSpec({
+    test("testIsTrue") {
+        ValueTraits.isTrue(true) shouldBe true
+        ValueTraits.isTrue(false) shouldBe false
+        ValueTraits.isTrue(ValueTraits.TRUE) shouldBe true
+        ValueTraits.isTrue(ValueTraits.FALSE) shouldBe false
+        ValueTraits.isTrue(Any()) shouldBe true
     }
-}
+})

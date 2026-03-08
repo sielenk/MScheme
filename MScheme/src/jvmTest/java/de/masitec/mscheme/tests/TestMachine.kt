@@ -20,7 +20,6 @@
  */
 package de.masitec.mscheme.tests
 
-import junit.framework.TestCase
 import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.environment.Environment
 import de.masitec.mscheme.exceptions.*
@@ -31,27 +30,30 @@ import de.masitec.mscheme.values.Function
 import de.masitec.mscheme.values.ListFactory
 import de.masitec.mscheme.values.ValueTraits
 import de.masitec.mscheme.values.functions.CallCCFunction
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import io.kotest.matchers.types.shouldBeInstanceOf
+import io.kotest.matchers.types.shouldBeSameInstanceAs
 import java.io.StringReader
-import kotlin.Any
-import kotlin.String
 
-class TestMachine
-    (name: String?) : TestCase(name) {
-    private var machine: Machine? = null
+class TestMachine : FunSpec({
+    var machine: Machine? = null
 
-    private var _sym1: String? = null
+    var _sym1: String? = null
 
-    private var _sym2: String? = null
+    var _sym2: String? = null
 
-    private var _val1: Any? = null
+    var _val1: Any? = null
 
-    private var _val2: Any? = null
+    var _val2: Any? = null
 
-    private var _unval: Any? = null
+    var _unval: Any? = null
 
-    private var _environment: Environment? = null
+    var _environment: Environment? = null
 
-    override fun setUp() {
+    beforeEach {
         _sym1 = "test1"
         _sym2 = "test2"
 
@@ -64,176 +66,140 @@ class TestMachine
         machine = Machine(_environment!!)
     }
 
-    override fun tearDown() {
+    afterEach {
         machine = null
         _environment = null
     }
 
-    private fun evaluate(expression: String): Any? {
+    fun evaluate(expression: String): Any? {
         return machine!!.evaluate(
             InputPort.create(JvmReader(StringReader(expression))).read()
         )
     }
 
-    fun testTestValues() {
+    test("testTestValues") {
         val compiler = Compiler(_environment!!.static)
 
-        try {
+        shouldThrow<CantCompileException> {
             compiler.compile(_unval)
-            fail("expected CantCompileException")
-        } catch (e: CantCompileException) {
         }
 
-        assertNotNull(compiler.compile(_val1))
-        assertNotNull(compiler.compile(_val2))
+        compiler.compile(_val1) shouldNotBe null
+        compiler.compile(_val2) shouldNotBe null
     }
 
-    fun testEnvironment() {
-        assertSame(_environment, machine!!.environment)
+    test("testEnvironment") {
+        machine!!.environment shouldBeSameInstanceAs _environment
     }
 
-    fun testValue() {
-        assertSame(_val1, machine!!.evaluate(_val1))
-        assertSame(_val2, machine!!.evaluate(_val2))
+    test("testValue") {
+        machine!!.evaluate(_val1) shouldBeSameInstanceAs _val1
+        machine!!.evaluate(_val2) shouldBeSameInstanceAs _val2
     }
 
-    fun testUnevaluatable() {
-        try {
+    test("testUnevaluatable") {
+        shouldThrow<CantCompileException> {
             machine!!.evaluate(_unval)
-            fail("evaluated Unevaluatable")
-        } catch (e: CantCompileException) {
         }
     }
 
-    private fun define(s: String, v: Any?) {
+    fun define(s: String, v: Any?) {
         _environment!!.define(s, v)
     }
 
-    fun testSymbol() {
-        try {
-            machine!!.evaluate(_sym1!!)
-            fail("expected SymbolNotFoundException")
-        } catch (e: SchemeException) {
+    test("testSymbol") {
+        shouldThrow<SchemeException> {
+            machine!!.evaluate(_sym1)
         }
 
         define(_sym1!!, _val1)
         define(_sym2!!, _unval)
 
-        assertSame(
-            "evaluation to Value failed - ", _val1, machine!!
-                .evaluate(_sym1!!)
-        )
-        assertSame(
-            "evaluation to Unevaluatable failed - ", _unval, machine!!
-                .evaluate(_sym2!!)
-        )
+        machine!!.evaluate(_sym1) shouldBeSameInstanceAs _val1
+        machine!!.evaluate(_sym2) shouldBeSameInstanceAs _unval
     }
 
-    fun testPair1() {
-        try {
+    test("testPair1") {
+        shouldThrow<ListExpected> {
             machine!!.evaluate(ListFactory.createPair(_val1, _val2))
-            fail("expected ListExpected")
-        } catch (e: ListExpected) {
         }
     }
 
-    fun testPair2() {
-        try {
+    test("testPair2") {
+        shouldThrow<FunctionExpected> {
             machine!!.evaluate(ListFactory.create(_val1))
-            fail("expected FunctionExpected")
-        } catch (e: FunctionExpected) {
         }
     }
 
-    fun testQuote() {
-        assertSame(
-            _unval,
-            machine!!.evaluate(
-                ListFactory.create(
-                    "quote",
-                    _unval
-                )
+    test("testQuote") {
+        machine!!.evaluate(
+            ListFactory.create(
+                "quote",
+                _unval
             )
-        )
+        ) shouldBeSameInstanceAs _unval
     }
 
-    fun testIf() {
+    test("testIf") {
         define(_sym1!!, _val1)
         define(_sym2!!, _val2)
 
-        assertSame(
-            _val1, machine!!.evaluate(
-                ListFactory.prepend(
-                    "if",
-                    ListFactory.create(ValueTraits.TRUE, _sym1, _sym2)
-                )
+        machine!!.evaluate(
+            ListFactory.prepend(
+                "if",
+                ListFactory.create(ValueTraits.TRUE, _sym1, _sym2)
             )
-        )
+        ) shouldBeSameInstanceAs _val1
 
-        assertSame(
-            _val1, machine!!.evaluate(
-                ListFactory.prepend(
-                    "if",
-                    ListFactory.create(ValueTraits.TRUE, _sym1)
-                )
+        machine!!.evaluate(
+            ListFactory.prepend(
+                "if",
+                ListFactory.create(ValueTraits.TRUE, _sym1)
             )
-        )
+        ) shouldBeSameInstanceAs _val1
 
-        assertSame(
-            _val2, machine!!
-                .evaluate(
-                    ListFactory.prepend(
-                        "if",
-                        ListFactory.create(ValueTraits.FALSE, _sym1, _sym2)
-                    )
-                )
-        )
+        machine!!.evaluate(
+            ListFactory.prepend(
+                "if",
+                ListFactory.create(ValueTraits.FALSE, _sym1, _sym2)
+            )
+        ) shouldBeSameInstanceAs _val2
     }
 
-    fun testBegin() {
+    test("testBegin") {
         define(_sym2!!, _val2)
 
-        try {
+        shouldThrow<SchemeException> {
             machine!!.evaluate(
                 ListFactory.create(
                     "begin", _sym1,
                     _sym2
                 )
             )
-            fail("begin failed")
-        } catch (e: SchemeException) {
         }
 
         _environment!!.define(_sym1!!, _val1)
 
-        assertSame(
-            _val2, machine!!.evaluate(
-                ListFactory.create("begin", _sym1, _sym2)
-            )
-        )
+        machine!!.evaluate(
+            ListFactory.create("begin", _sym1, _sym2)
+        ) shouldBeSameInstanceAs _val2
     }
 
-    fun testLambdaFailures() {
-        try {
+    test("testLambdaFailures") {
+        shouldThrow<CantCompileException> {
             evaluate("(lambda () #(1 2 3))")
-            fail("expected CantCompileException")
-        } catch (e: CantCompileException) {
         }
 
-        try {
+        shouldThrow<SymbolExpected> {
             evaluate("(lambda (#t) #t)")
-            fail("expected SymbolExpected")
-        } catch (e: SymbolExpected) {
         }
 
-        try {
+        shouldThrow<CompileError> {
             evaluate("(lambda (x y x) #t)")
-            fail("expected CompileError")
-        } catch (e: CompileError) {
         }
     }
 
-    fun testLambdaNoArgs() {
+    test("testLambdaNoArgs") {
         val func = machine!!.evaluate(
             ListFactory.create(
                 "lambda",
@@ -241,118 +207,100 @@ class TestMachine
             )
         ) as Function?
 
-        assertSame(_val1, machine!!.evaluate(ListFactory.create(func)))
+        machine!!.evaluate(ListFactory.create(func)) shouldBeSameInstanceAs _val1
 
-        try {
+        shouldThrow<CantCompileException> {
             machine!!.evaluate(ListFactory.create(func, _unval))
-            fail("expected CantEvaluateException")
-        } catch (e: CantCompileException) {
         }
 
-        try {
+        shouldThrow<RuntimeArityError> {
             machine!!.evaluate(ListFactory.create(func, _val1))
-            fail("expected RuntimeArityError")
-        } catch (e: RuntimeArityError) {
         }
     }
 
-    fun testLambdaWithSimpleArgs() {
+    test("testLambdaWithSimpleArgs") {
         val func = evaluate("(lambda (x y) x)") as Function?
 
-        assertSame(
-            _val1, machine!!.evaluate(
-                ListFactory.create(
-                    func, _val1,
-                    _val2
-                )
+        machine!!.evaluate(
+            ListFactory.create(
+                func, _val1,
+                _val2
             )
-        )
+        ) shouldBeSameInstanceAs _val1
 
-        try {
+        shouldThrow<RuntimeArityError> {
             machine!!.evaluate(ListFactory.create(func, _val1))
-            fail("expected RuntimeArityError")
-        } catch (e: RuntimeArityError) {
         }
     }
 
-    fun testLambdaWithOptionalArgs() {
+    test("testLambdaWithOptionalArgs") {
         val func = evaluate("(lambda (x . y) y)") as Function?
 
-        try {
+        shouldThrow<RuntimeArityError> {
             machine!!.evaluate(ListFactory.create(func))
-            fail("expected RuntimeArityError")
-        } catch (e: RuntimeArityError) {
         }
 
-        assertSame(
-            ListFactory.create(),
-            machine!!.evaluate(
-                ListFactory.create(
-                    func, _val1
-                )
+        machine!!.evaluate(
+            ListFactory.create(
+                func, _val1
             )
-        )
+        ) shouldBeSameInstanceAs ListFactory.create()
 
-        assertSame(
-            _val2, (machine!!.evaluate(
-                ListFactory.create(
-                    func,
-                    _val1, _val2
-                )
-            ) as IList).head
-        )
+        (machine!!.evaluate(
+            ListFactory.create(
+                func,
+                _val1, _val2
+            )
+        ) as IList).head shouldBeSameInstanceAs _val2
     }
 
-    fun testLambdaOptionalIsNewList() {
+    test("testLambdaOptionalIsNewList") {
         val func = evaluate("(lambda x x)") as Function?
 
-        val pair2: IPair = ListFactory.createPair(_val2, ListFactory.create())
+        val pair2: IPair =
+            ListFactory.createPair(_val2, ListFactory.create())
         val pair1: IPair = ListFactory.createPair(_val1, pair2)
 
         val result = machine!!.evaluate(ListFactory.createPair(func, pair1))
 
-        assertTrue(ValueTraits.equal(result, pair1))
-        assertFalse(ValueTraits.eq(result, pair1))
+        ValueTraits.equal(result, pair1) shouldBe true
+        ValueTraits.eq(result, pair1) shouldBe false
     }
 
-    fun testDefineNormal() {
+    test("testDefineNormal") {
         machine!!.evaluate(ListFactory.create("define", "a", _val1))
 
-        assertSame(_val1, machine!!.evaluate("a"))
+        machine!!.evaluate("a") shouldBeSameInstanceAs _val1
     }
 
-    fun testApplication() {
+    test("testApplication") {
         evaluate("(define f (lambda (x) x))")
 
-        assertSame(_val1, machine!!.evaluate(ListFactory.create("f", _val1)))
+        machine!!.evaluate(
+            ListFactory.create("f", _val1)
+        ) shouldBeSameInstanceAs _val1
     }
 
-    fun testDefineFunction() {
+    test("testDefineFunction") {
         evaluate("(define (f x y) x)")
         evaluate("(define (g . x) x)")
 
-        assertTrue(
-            "function creation failed - ",
-            machine!!.evaluate("f") is Function
-        )
+        machine!!.evaluate("f").shouldBeInstanceOf<Function>()
 
-        assertSame(
-            "function application failed - ", _val1, machine!!
-                .evaluate(ListFactory.create("f", _val1, _val2))
-        )
+        machine!!.evaluate(
+            ListFactory.create("f", _val1, _val2)
+        ) shouldBeSameInstanceAs _val1
     }
 
-    fun testCallCC() {
-        assertSame(
-            _val1, machine!!.evaluate(
-                ListFactory.create(
-                    CallCCFunction, ListFactory.create(
-                        "lambda",
-                        ListFactory.create("return"),
-                        ListFactory.create("return", _val1)
-                    )
+    test("testCallCC") {
+        machine!!.evaluate(
+            ListFactory.create(
+                CallCCFunction, ListFactory.create(
+                    "lambda",
+                    ListFactory.create("return"),
+                    ListFactory.create("return", _val1)
                 )
             )
-        )
+        ) shouldBeSameInstanceAs _val1
     }
-}
+})

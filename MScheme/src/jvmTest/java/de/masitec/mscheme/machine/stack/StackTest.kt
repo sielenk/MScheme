@@ -26,69 +26,76 @@ package de.masitec.mscheme.machine.stack
 
 import de.masitec.mscheme.environment.DynamicEnvironment
 import de.masitec.mscheme.machine.StackFrame
-import junit.framework.TestCase
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.nulls.shouldBeNull
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeSameInstanceAs
+import io.kotest.matchers.types.shouldNotBeSameInstanceAs
 
 /**
  * @author sielenk
  */
-internal abstract class StackTest(name: String?) : TestCase(name) {
-    private var _stack: IStack? = null
+internal abstract class StackTest<T : IStack> : FunSpec() {
+    private var _stack: T? = null
 
-    protected abstract fun createStack(): IStack
+    val stack: T
+        get() = _stack.shouldNotBeNull()
 
-
-    override fun setUp() {
-        super.setUp()
-        _stack = createStack()
-    }
-
-    override fun tearDown() {
-        super.tearDown()
-        _stack = null
-    }
+    abstract fun createStack(): T
 
 
-    fun testCreateSomething() {
-        assertNotSame(createFrame(), createFrame())
-        assertNotSame(createFrame(), createFrame())
-    }
+    init {
+        beforeEach {
+            _stack = createStack()
+        }
 
-    fun testStack() {
-        assertNotSame(null, _stack)
-    }
+        afterEach {
+            _stack = null
+        }
 
-    fun testIsEmpty() {
-        assertTrue(_stack!!.isEmpty)
-    }
 
-    fun testPush() {
-        _stack!!.push(createFrame())
+        test("testCreateSomething") {
+            createFrame() shouldNotBeSameInstanceAs createFrame()
+            createFrame() shouldNotBeSameInstanceAs createFrame()
+        }
 
-        assertFalse(_stack!!.isEmpty)
-    }
+        test("testStack") {
+            stack.shouldNotBeNull()
+        }
 
-    fun testPop1() {
-        assertNull(_stack!!.tryPop())
-    }
+        test("testIsEmpty") {
+            stack.isEmpty shouldBe true
+        }
 
-    fun testPop2() {
-        val stack = _stack!!
-        val frame1: StackFrame = createFrame()
-        val frame2: StackFrame = createFrame()
-        val frame3: StackFrame = createFrame()
+        test("testPush") {
+            stack.push(createFrame())
+            stack.isEmpty shouldBe false
+        }
 
-        stack.push(frame1)
-        stack.push(frame2)
-        stack.push(frame3)
+        test("testPop1") {
+            stack.tryPop().shouldBeNull()
+        }
 
-        assertFalse(stack.isEmpty)
-        assertSame(frame3, stack.tryPop())
-        assertFalse(stack.isEmpty)
-        assertSame(frame2, stack.tryPop())
-        assertFalse(stack.isEmpty)
-        assertSame(frame1, stack.tryPop())
-        assertTrue(stack.isEmpty)
-        assertNull(stack.tryPop())
+        test("testPop2") {
+            val stack = stack
+            val frame1: StackFrame = createFrame()
+            val frame2: StackFrame = createFrame()
+            val frame3: StackFrame = createFrame()
+
+            stack.push(frame1)
+            stack.push(frame2)
+            stack.push(frame3)
+
+            stack.isEmpty shouldBe false
+            stack.tryPop() shouldBeSameInstanceAs frame3
+            stack.isEmpty shouldBe false
+            stack.tryPop() shouldBeSameInstanceAs frame2
+            stack.isEmpty shouldBe false
+            stack.tryPop() shouldBeSameInstanceAs frame1
+            stack.isEmpty shouldBe true
+            stack.tryPop().shouldBeNull()
+        }
     }
 
     companion object {

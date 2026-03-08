@@ -20,21 +20,26 @@
  */
 package de.masitec.mscheme.tests
 
-import junit.framework.TestCase
 import de.masitec.mscheme.machine.Machine
+import de.masitec.mscheme.util.writeToString
+import de.masitec.mscheme.values.OutputPort
 import de.masitec.mscheme.values.ValueTraits
+import io.kotest.assertions.withClue
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 
-abstract class TestSchemeBase(name: String?) : TestCase(name) {
+abstract class TestSchemeBase : FunSpec() {
     var machine: Machine? = null
         private set
 
+    init {
+        beforeEach {
+            machine = Machine()
+        }
 
-    override fun setUp() {
-        machine = Machine()
-    }
-
-    override fun tearDown() {
-        machine = null
+        afterEach {
+            machine = null
+        }
     }
 
     fun quote(expression: String): Any? {
@@ -45,23 +50,29 @@ abstract class TestSchemeBase(name: String?) : TestCase(name) {
         return machine!!.evaluate(expression)
     }
 
-    fun check(`in`: String, out: String) {
-        val value = eval(`in`)
-        val expected = quote(out)
+    fun check(input: String, output: String) {
+        val value = eval(input)
+        val expected = quote(output)
         val success = ValueTraits.equal(value, expected)
 
-        if (!success) {
-            println(
-                "*** evaluation of ***\n" +
-                        `in` + '\n' +
-                        "*** returned ***\n" +
-                        value + '\n' +
-                        "*** expected was ***\n" +
-                        out + '\n' +
-                        "*** end ***"
-            )
+        val clue = {
+            """
+            *** evaluation of ***
+              $input
+            *** returned ***
+              ${
+                writeToString {
+                    OutputPort.create(it).display(value)
+                }
+            }
+            *** expected was ***
+              $output
+            *** end ***
+""".trimIndent()
         }
 
-        assertTrue(success)
+        withClue(clue) {
+            success shouldBe true
+        }
     }
 }

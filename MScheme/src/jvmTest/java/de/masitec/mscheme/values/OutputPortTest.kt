@@ -26,34 +26,49 @@ package de.masitec.mscheme.values
 
 import de.masitec.mscheme.util.JvmReader
 import de.masitec.mscheme.util.JvmWriter
-import de.masitec.mscheme.util.Writer
-import junit.framework.TestCase
-import de.masitec.mscheme.values.ValueTraits
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 import java.io.PipedReader
 import java.io.PipedWriter
 
 /**
  * @author sielenk
  */
-class OutputPortTest(name: String?) : TestCase(name) {
-    fun testReadWriteBoolean() {
+class OutputPortTest : FunSpec({
+    fun checkReadWrite(expected: Any?) {
+        val inPipe = PipedReader()
+
+        run {
+            val outPipe = PipedWriter(inPipe)
+            val out = OutputPort.create(JvmWriter(outPipe))
+            out.write(expected)
+            out.close()
+            outPipe.close()
+        }
+
+        val actual = InputPort.create(JvmReader(inPipe)).read()
+
+        ValueTraits.equal(expected, actual) shouldBe true
+    }
+
+    test("testReadWriteBoolean") {
         checkReadWrite(ValueTraits.TRUE)
         checkReadWrite(ValueTraits.FALSE)
     }
 
-    fun testReadWriteChar() {
+    test("testReadWriteChar") {
         checkReadWrite(ValueTraits.toScmChar('a'))
         checkReadWrite(ValueTraits.toScmChar('\n'))
         checkReadWrite(ValueTraits.toScmChar(' '))
     }
 
-    fun testReadWriteNumber() {
+    test("testReadWriteNumber") {
         checkReadWrite(ValueTraits.toScmNumber(-1))
         checkReadWrite(ValueTraits.toScmNumber(0))
         checkReadWrite(ValueTraits.toScmNumber(12))
     }
 
-    fun testReadWriteList() {
+    test("testReadWriteList") {
         checkReadWrite(ListFactory.create())
         checkReadWrite(ListFactory.create(ValueTraits.TRUE))
         checkReadWrite(
@@ -64,7 +79,7 @@ class OutputPortTest(name: String?) : TestCase(name) {
         )
     }
 
-    fun testReadWriteVector() {
+    test("testReadWriteVector") {
         checkReadWrite(ScmVector.create())
         checkReadWrite(
             ScmVector.create(
@@ -76,26 +91,8 @@ class OutputPortTest(name: String?) : TestCase(name) {
         )
     }
 
-    fun testReadWriteString() {
+    test("testReadWriteString") {
         checkReadWrite(ScmString.create("Hallo World"))
         checkReadWrite(ScmString.create("And now the bad bits: \n \" \\ öäü"))
     }
-
-    companion object {
-        private fun checkReadWrite(expected: Any?) {
-            val inPipe = PipedReader()
-
-            run {
-                val outPipe = PipedWriter(inPipe)
-                val out = OutputPort.create(JvmWriter(outPipe))
-                out.write(expected)
-                out.close()
-                outPipe.close()
-            }
-
-            val actual = InputPort.create(JvmReader(inPipe)).read()
-
-            assertTrue(ValueTraits.equal(expected, actual))
-        }
-    }
-}
+})

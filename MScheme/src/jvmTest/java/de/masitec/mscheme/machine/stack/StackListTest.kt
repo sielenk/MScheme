@@ -25,86 +25,80 @@
 package de.masitec.mscheme.machine.stack
 
 import de.masitec.mscheme.machine.StackFrame
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.ints.shouldBeGreaterThanOrEqual
+import io.kotest.matchers.nulls.shouldNotBeNull
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeSameInstanceAs
 
 /**
  * @author sielenk
  */
-internal class StackListTest(name: String?) : StackTest(name) {
-    private var _stack: Stack? = null
+internal class StackListTest : StackTest<Stack>() {
+    override fun createStack(): Stack =
+        Stack()
 
-    override fun createStack(): IStack {
-        return Stack().also { _stack = it }
-    }
+    init {
+        test("mark and reinstate") {
+            val SIZE1 = 5
+            val SIZE2 = 3
+            val SIZE = SIZE1 + SIZE2
 
+            SIZE1 shouldBeGreaterThanOrEqual 2
+            SIZE2 shouldBeGreaterThanOrEqual 2
 
-    fun testMark() {
-        val SIZE1 = 5
-        val SIZE2 = 3
-        val SIZE = SIZE1 + SIZE2
+            val buffer = arrayOfNulls<StackFrame>(SIZE)
 
-        assertTrue(SIZE1 >= 2)
-        assertTrue(SIZE2 >= 2)
+            var mark: Stack.Mark? = null
 
-        val buffer = arrayOfNulls<StackFrame>(SIZE)
+            for (i in 0..<SIZE) {
+                if (i == SIZE1) {
+                    mark = stack.createMark().shouldNotBeNull()
+                }
 
-        var mark: Stack.Mark? = null
-
-        for (i in 0..<SIZE) {
-            if (i == SIZE1) {
-                mark = _stack!!.createMark()
-                assertNotNull(mark)
+                stack.push(createFrame().also { buffer[i] = it })
             }
 
-            _stack!!.push(createFrame().also { buffer[i] = it })
+            // a b c d e | f g h
+            val slice = stack.cutSlice(mark!!).shouldNotBeNull()
+
+            // a b c d e
+            shouldThrow<Throwable> {
+                stack.cutSlice(mark)
+            }
+
+            stack.tryPop() shouldBeSameInstanceAs buffer[SIZE1 - 1]!!
+
+            // a b c d
+            stack.reinstate(slice)
+            // a b c d | f g h
+            stack.tryPop() shouldBeSameInstanceAs buffer[SIZE - 1]!!
+
+            // a b c d | f g
+            stack.reinstate(slice)
+            // a b c d | f g | f g h
+            stack.tryPop() shouldBeSameInstanceAs buffer[SIZE - 1]!!
+
+            // a b c d | f g | f g
+            for (i in 1..<SIZE2) {
+                stack.tryPop()
+            }
+            // a b c d | f g
+            stack.tryPop() shouldBeSameInstanceAs buffer[SIZE - 2]!!
+
+            // a b c d | f
+            for (i in 2..<SIZE2) {
+                stack.tryPop()
+            }
+            // a b c d
+            stack.tryPop() shouldBeSameInstanceAs buffer[SIZE1 - 2]!!
+
+            // a b c
+            for (i in 2..<SIZE1) {
+                stack.tryPop()
+            }
+            // -
+            stack.isEmpty shouldBe true
         }
-
-        // a b c d e | f g h
-        val slice = _stack!!.cutSlice(mark!!)
-        assertNotNull(slice)
-
-        // a b c d e
-        try {
-            _stack!!.cutSlice(mark)
-            fail()
-        } catch (t: Throwable) {
-        }
-
-        assertSame(buffer[SIZE1 - 1], _stack!!.tryPop()!!)
-
-        // a b c d
-        _stack!!.reinstate(slice)
-
-        // a b c d | f g h
-        assertSame(buffer[SIZE - 1], _stack!!.tryPop()!!)
-
-        // a b c d | f g
-        _stack!!.reinstate(slice)
-
-        // a b c d | f g | f g h
-        assertSame(buffer[SIZE - 1], _stack!!.tryPop()!!)
-
-        // a b c d | f g | f g
-        for (i in 1..<SIZE2) {
-            _stack!!.tryPop()!!
-        }
-
-        // a b c d | f g
-        assertSame(buffer[SIZE - 2], _stack!!.tryPop()!!)
-
-        // a b c d | f
-        for (i in 2..<SIZE2) {
-            _stack!!.tryPop()!!
-        }
-
-        // a b c d
-        assertSame(buffer[SIZE1 - 2], _stack!!.tryPop()!!)
-
-        // a b c
-        for (i in 2..<SIZE1) {
-            _stack!!.tryPop()!!
-        }
-
-        // -
-        assertTrue(_stack!!.isEmpty)
     }
 }

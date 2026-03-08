@@ -20,114 +20,125 @@
  */
 package de.masitec.mscheme.tests
 
+import de.masitec.mscheme.machine.Machine
 import de.masitec.mscheme.values.IList
 import de.masitec.mscheme.values.PairOrList
+import de.masitec.mscheme.values.ValueTraits
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 
-class TestJavaInterop(name: String?) : TestSchemeBase(name) {
-    fun test_staticField() {
-        val machine = machine!!
-        val field = javaClass.getField("testFieldStatic")
+class TestJavaInterop : TestSchemeBase() {
+    init {
+        test("test_staticField") {
+            val machine = machine!!
+            val field = TestJavaInterop::class.java.getField("testFieldStatic")
 
-        machine.environment.define("foo", field)
+            machine.environment.define("foo", field)
 
-        testFieldStatic = "something"
-        check("(foo)", "something")
+            testFieldStatic = "something"
+            check("(foo)", "something")
 
-        testFieldStatic = "something_else"
-        check("(foo)", "something_else")
-    }
+            testFieldStatic = "something_else"
+            check("(foo)", "something_else")
+        }
 
-    fun test_field() {
-        val machine = machine!!
-        val field = javaClass.getField("testField")
-        val environment = machine.environment
+        test("test_field") {
+            val machine = machine!!
+            val field = TestJavaInterop::class.java.getField("testField")
+            val environment = machine.environment
 
-        environment.define("bar", this)
-        environment.define("foo", field)
+            environment.define("bar", this@TestJavaInterop)
+            environment.define("foo", field)
 
-        testField = "something"
-        check("(foo bar)", "something")
+            testField = "something"
+            check("(foo bar)", "something")
 
-        testField = "something_else"
-        check("(foo bar)", "something_else")
-    }
+            testField = "something_else"
+            check("(foo bar)", "something_else")
+        }
 
-    fun test_staticMethod() {
-        val machine = machine!!
-        val method = javaClass.getMethod("staticMethod")
-        val environment = machine.environment
+        test("test_staticMethod") {
+            val machine = machine!!
+            val method = TestJavaInterop::class.java.getMethod("staticMethod")
+            val environment = machine.environment
 
-        environment.define("foo", method)
+            environment.define("foo", method)
 
-        testFieldStatic = "something"
-        check("(foo)", "something")
+            testFieldStatic = "something"
+            check("(foo)", "something")
 
-        testFieldStatic = "something_else"
-        check("(foo)", "something_else")
-    }
+            testFieldStatic = "something_else"
+            check("(foo)", "something_else")
+        }
 
-    fun test_method() {
-        val machine = machine!!
-        val method = javaClass.getMethod("method")
-        val environment = machine.environment
+        test("test_method") {
+            val machine = machine!!
+            val method = TestJavaInterop::class.java.getMethod("method")
+            val environment = machine.environment
 
-        environment.define("bar", this)
-        environment.define("foo", method)
+            environment.define("bar", this@TestJavaInterop)
+            environment.define("foo", method)
 
-        testField = "something"
-        check("(foo bar)", "something")
+            testField = "something"
+            check("(foo bar)", "something")
 
-        testField = "something_else"
-        check("(foo bar)", "something_else")
-    }
+            testField = "something_else"
+            check("(foo bar)", "something_else")
+        }
 
-    fun test_staticMethodList() {
-        val machine = machine!!
-        val method = javaClass.getMethod("staticMethodList", IList::class.java)
-        val environment = machine.environment
+        test("test_staticMethodList") {
+            val machine = machine!!
+            val method = TestJavaInterop::class.java.getMethod(
+                "staticMethodList", IList::class.java
+            )
+            val environment = machine.environment
 
-        environment.define("foo", method)
+            environment.define("foo", method)
 
-        check("(foo)", "()")
-        check("(foo 1 2 3)", "(1 2 3)")
-    }
+            check("(foo)", "()")
+            check("(foo 1 2 3)", "(1 2 3)")
+        }
 
-    fun test_methodList() {
-        val machine = machine!!
-        val method = javaClass.getMethod("methodList", IList::class.java)
-        val environment = machine.environment
+        test("test_methodList") {
+            val machine = machine!!
+            val method = TestJavaInterop::class.java.getMethod(
+                "methodList", IList::class.java
+            )
+            val environment = machine.environment
 
-        environment.define("bar", this)
-        environment.define("foo", method)
+            environment.define("bar", this@TestJavaInterop)
+            environment.define("foo", method)
 
-        check("(foo bar)", "()")
-        check("(foo bar 1 2 3)", "(1 2 3)")
-    }
+            check("(foo bar)", "()")
+            check("(foo bar 1 2 3)", "(1 2 3)")
+        }
 
-    fun test_staticMethodArgs() {
-        val machine = machine!!
-        val method = javaClass.getMethod(
-            "staticMethodArgs", Any::class.java,
-            Any::class.java
-        )
-        val environment = machine.environment
+        test("test_staticMethodArgs") {
+            val machine = machine!!
+            val method = TestJavaInterop::class.java.getMethod(
+                "staticMethodArgs", Any::class.java, Any::class.java
+            )
+            val environment = machine.environment
 
-        environment.define("foo", method)
+            environment.define("foo", method)
 
-        check("(foo 2 #f)", "(2 . #f)")
-        check("(foo '(#t #f) '(1 2 3))", "((#t #f) . (1 2 3))")
-    }
+            check("(foo 2 #f)", "(2 . #f)")
+            check("(foo '(#t #f) '(1 2 3))", "((#t #f) . (1 2 3))")
+        }
 
-    fun test_methodArgs() {
-        val machine = machine!!
-        val method = javaClass.getMethod("methodArgs", Any::class.java, Any::class.java)
-        val environment = machine.environment
+        test("test_methodArgs") {
+            val machine = machine!!
+            val method = TestJavaInterop::class.java.getMethod(
+                "methodArgs", Any::class.java, Any::class.java
+            )
+            val environment = machine.environment
 
-        environment.define("bar", this)
-        environment.define("foo", method)
+            environment.define("bar", this@TestJavaInterop)
+            environment.define("foo", method)
 
-        check("(foo bar 1 #t)", "(1 . #t)")
-        check("(foo bar '() '())", "(() . ()))")
+            check("(foo bar 1 #t)", "(1 . #t)")
+            check("(foo bar '() '())", "(() . ())")
+        }
     }
 
     @JvmField

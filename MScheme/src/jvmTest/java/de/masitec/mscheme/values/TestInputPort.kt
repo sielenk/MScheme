@@ -21,163 +21,151 @@
 package de.masitec.mscheme.values
 
 import de.masitec.mscheme.util.JvmReader
-import junit.framework.TestCase
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 import java.io.StringReader
 
-class TestInputPort(name: String?) : TestCase(name) {
-    fun testCharIO() {
-        val source = StringReader("test")
-        val `in` = InputPort.create(JvmReader(source))
+class TestInputPort : FunSpec({
+    fun portFrom(s: String) =
+        InputPort.create(JvmReader(StringReader(s)))
 
-        assertTrue(`in`.isReady)
-        TestCase.assertEquals('t'.code, `in`.peekChar())
-        TestCase.assertEquals('t'.code, `in`.readChar())
-        assertTrue(`in`.isReady)
-        TestCase.assertEquals('e'.code, `in`.peekChar())
-        TestCase.assertEquals('e'.code, `in`.readChar())
-        assertTrue(`in`.isReady)
-        TestCase.assertEquals('s'.code, `in`.readChar())
-        TestCase.assertEquals('t'.code, `in`.peekChar())
-        assertTrue(`in`.isReady)
-        TestCase.assertEquals('t'.code, `in`.readChar())
-        assertTrue(`in`.isReady)
-        TestCase.assertEquals(`in`.peekChar(), InputPort.EOF)
-        TestCase.assertEquals(`in`.readChar(), InputPort.EOF)
-        assertTrue(`in`.isReady)
+    test("testCharIO") {
+        val port = portFrom("test")
+
+        port.isReady shouldBe true
+        port.peekChar() shouldBe 't'.code
+        port.readChar() shouldBe 't'.code
+        port.isReady shouldBe true
+        port.peekChar() shouldBe 'e'.code
+        port.readChar() shouldBe 'e'.code
+        port.isReady shouldBe true
+        port.readChar() shouldBe 's'.code
+        port.peekChar() shouldBe 't'.code
+        port.isReady shouldBe true
+        port.readChar() shouldBe 't'.code
+        port.isReady shouldBe true
+        port.peekChar() shouldBe InputPort.EOF
+        port.readChar() shouldBe InputPort.EOF
+        port.isReady shouldBe true
     }
 
-    fun testWS() {
-        val source = StringReader(
+    test("testWS") {
+        val port = portFrom(
             " \t \n ; test# 1 2 \"\"\" ;;; 3 \n  \n ;  fkdjhgd "
         )
-        val `in` = InputPort.create(JvmReader(source))
 
-        assertTrue(ValueTraits.eq(`in`.read(), InputPort.EOF_VALUE))
+        ValueTraits.eq(port.read(), InputPort.EOF_VALUE) shouldBe true
     }
 
-    fun testBool() {
-        val source = StringReader(" #t #f #t#f ")
-        val `in` = InputPort.create(JvmReader(source))
+    test("testBool") {
+        val port = portFrom(" #t #f #t#f ")
 
-        assertTrue(ValueTraits.eq(`in`.read(), ValueTraits.TRUE))
-        assertTrue(ValueTraits.eq(`in`.read(), ValueTraits.FALSE))
-        assertTrue(ValueTraits.eq(`in`.read(), ValueTraits.TRUE))
-        assertTrue(ValueTraits.eq(`in`.read(), ValueTraits.FALSE))
-        TestCase.assertEquals(' '.code, `in`.readChar())
-        TestCase.assertEquals(`in`.readChar(), InputPort.EOF)
+        ValueTraits.eq(port.read(), ValueTraits.TRUE) shouldBe true
+        ValueTraits.eq(port.read(), ValueTraits.FALSE) shouldBe true
+        ValueTraits.eq(port.read(), ValueTraits.TRUE) shouldBe true
+        ValueTraits.eq(port.read(), ValueTraits.FALSE) shouldBe true
+        port.readChar() shouldBe ' '.code
+        port.readChar() shouldBe InputPort.EOF
     }
 
-    fun testNumber() {
-        val source = StringReader(
+    test("testNumber") {
+        val port = portFrom(
             "-2 -1 0 1 2"
         )
-        val `in` = InputPort.create(JvmReader(source))
 
-        assertTrue(ValueTraits.eqv(`in`.read(), ScmNumber.create(-2)))
-        assertTrue(ValueTraits.eqv(`in`.read(), ScmNumber.create(-1)))
-        assertTrue(ValueTraits.eqv(`in`.read(), ScmNumber.create(0)))
-        assertTrue(ValueTraits.eqv(`in`.read(), ScmNumber.create(1)))
-        assertTrue(ValueTraits.eqv(`in`.read(), ScmNumber.create(2)))
-        TestCase.assertEquals(`in`.readChar(), InputPort.EOF)
+        ValueTraits.eqv(port.read(), ScmNumber.create(-2)) shouldBe true
+        ValueTraits.eqv(port.read(), ScmNumber.create(-1)) shouldBe true
+        ValueTraits.eqv(port.read(), ScmNumber.create(0)) shouldBe true
+        ValueTraits.eqv(port.read(), ScmNumber.create(1)) shouldBe true
+        ValueTraits.eqv(port.read(), ScmNumber.create(2)) shouldBe true
+        port.readChar() shouldBe InputPort.EOF
     }
 
-    fun testChar() {
-        val source = StringReader(
+    test("testChar") {
+        val port = portFrom(
             "#\\# #\\\\ #\\\" #\\  #\\newline #\\space #\\a"
         )
-        val `in` = InputPort.create(JvmReader(source))
 
-        assertTrue(ValueTraits.eqv(`in`.read(), ValueTraits.toScmChar('#')))
-        assertTrue(ValueTraits.eqv(`in`.read(), ValueTraits.toScmChar('\\')))
-        assertTrue(ValueTraits.eqv(`in`.read(), ValueTraits.toScmChar('"')))
-        assertTrue(ValueTraits.eqv(`in`.read(), ValueTraits.toScmChar(' ')))
-        assertTrue(ValueTraits.eqv(`in`.read(), ValueTraits.toScmChar('\n')))
-        assertTrue(ValueTraits.eqv(`in`.read(), ValueTraits.toScmChar(' ')))
-        assertTrue(ValueTraits.eqv(`in`.read(), ValueTraits.toScmChar('a')))
-        TestCase.assertEquals(`in`.readChar(), InputPort.EOF)
+        ValueTraits.eqv(port.read(), ValueTraits.toScmChar('#')) shouldBe true
+        ValueTraits.eqv(port.read(), ValueTraits.toScmChar('\\')) shouldBe true
+        ValueTraits.eqv(port.read(), ValueTraits.toScmChar('"')) shouldBe true
+        ValueTraits.eqv(port.read(), ValueTraits.toScmChar(' ')) shouldBe true
+        ValueTraits.eqv(port.read(), ValueTraits.toScmChar('\n')) shouldBe true
+        ValueTraits.eqv(port.read(), ValueTraits.toScmChar(' ')) shouldBe true
+        ValueTraits.eqv(port.read(), ValueTraits.toScmChar('a')) shouldBe true
+        port.readChar() shouldBe InputPort.EOF
     }
 
-    fun testString() {
+    test("testString") {
         val str1 = ""
         val str2 = " Hallo ! "
         val str3a = " \\\\ \\\" \n "
         val str3b = " \\ \" \n "
 
-        val source = StringReader(
-            ('"'.toString() + str1 + '"' + ' '
-                    + '"' + str2 + '"' + ' '
-                    + '"' + str3a + '"')
-        )
-        val `in` = InputPort.create(JvmReader(source))
+        val port = portFrom(""""$str1" "$str2" "$str3a"""")
 
-        assertTrue(ValueTraits.equal(`in`.read(), ScmString.create(str1)))
-        assertTrue(ValueTraits.equal(`in`.read(), ScmString.create(str2)))
-        assertTrue(ValueTraits.equal(`in`.read(), ScmString.create(str3b)))
+        ValueTraits.equal(port.read(), ScmString.create(str1)) shouldBe true
+        ValueTraits.equal(port.read(), ScmString.create(str2)) shouldBe true
+        ValueTraits.equal(port.read(), ScmString.create(str3b)) shouldBe true
     }
 
-    fun testList() {
+    test("testList") {
         val one: Any = ScmNumber.create(1)
         val two: Any = ScmNumber.create(2)
         val three: Any = ScmNumber.create(3)
 
-        val source = StringReader(
+        val port = portFrom(
             "()(1 .2)(1 2 3)(1 .(2 .(3 .())))"
         )
-        val `in` = InputPort.create(JvmReader(source))
 
-        assertTrue(ValueTraits.equal(`in`.read(), ListFactory.create()))
-        assertTrue(
-            ValueTraits.equal(
-                `in`.read(),
-                ListFactory.createPair(one, two)
-            )
-        )
-        assertTrue(
-            ValueTraits.equal(`in`.read(), ListFactory.create(one, two, three))
-        )
-        assertTrue(
-            ValueTraits.equal(`in`.read(), ListFactory.create(one, two, three))
-        )
+        ValueTraits.equal(port.read(), ListFactory.create()) shouldBe true
+        ValueTraits.equal(
+            port.read(),
+            ListFactory.createPair(one, two)
+        ) shouldBe true
+        ValueTraits.equal(
+            port.read(), ListFactory.create(one, two, three)
+        ) shouldBe true
+        ValueTraits.equal(
+            port.read(), ListFactory.create(one, two, three)
+        ) shouldBe true
     }
 
-    fun testVector() {
+    test("testVector") {
         val one: Any = ScmNumber.create(1)
         val two: Any = ScmNumber.create(2)
         val v = ScmVector.create(3, one)
         v.set(2, two)
-        val source = StringReader(
+        val port = portFrom(
             "#() #(1 1) #(1 1 2)"
         )
-        val `in` = InputPort.create(JvmReader(source))
 
-        assertTrue(ValueTraits.equal(`in`.read(), ScmVector.create()))
-        assertTrue(ValueTraits.equal(`in`.read(), ScmVector.create(2, one)))
-        assertTrue(ValueTraits.equal(`in`.read(), v))
+        ValueTraits.equal(port.read(), ScmVector.create()) shouldBe true
+        ValueTraits.equal(port.read(), ScmVector.create(2, one)) shouldBe true
+        ValueTraits.equal(port.read(), v) shouldBe true
     }
 
-    fun testSymbol() {
+    test("testSymbol") {
         val test: Any = "hallo"
-        val source = StringReader(
+        val port = portFrom(
             "Hallo hallo HALLO HaLlO hAlLo + - ... ?12"
         )
-        val `in` = InputPort.create(JvmReader(source))
 
-        assertTrue(ValueTraits.eq(`in`.read(), test))
-        assertTrue(ValueTraits.eq(`in`.read(), test))
-        assertTrue(ValueTraits.eq(`in`.read(), test))
-        assertTrue(ValueTraits.eq(`in`.read(), test))
-        assertTrue(ValueTraits.eq(`in`.read(), test))
-        assertTrue(ValueTraits.eq(`in`.read(), "+"))
-        assertTrue(ValueTraits.eq(`in`.read(), "-"))
-        assertTrue(ValueTraits.eq(`in`.read(), "..."))
-        assertTrue(ValueTraits.eq(`in`.read(), "?12"))
+        ValueTraits.eq(port.read(), test) shouldBe true
+        ValueTraits.eq(port.read(), test) shouldBe true
+        ValueTraits.eq(port.read(), test) shouldBe true
+        ValueTraits.eq(port.read(), test) shouldBe true
+        ValueTraits.eq(port.read(), test) shouldBe true
+        ValueTraits.eq(port.read(), "+") shouldBe true
+        ValueTraits.eq(port.read(), "-") shouldBe true
+        ValueTraits.eq(port.read(), "...") shouldBe true
+        ValueTraits.eq(port.read(), "?12") shouldBe true
     }
 
-    fun testAbbrev() {
-        val source = StringReader(
+    test("testAbbrev") {
+        val port = portFrom(
             "'a ' a `a ,a ,@a"
         )
-        val `in` = InputPort.create(JvmReader(source))
 
         val a = "a"
         val q = "quote"
@@ -185,10 +173,10 @@ class TestInputPort(name: String?) : TestCase(name) {
         val uq = "unquote"
         val uqs = "unquote-splicing"
 
-        assertTrue(ValueTraits.equal(`in`.read(), ListFactory.create(q, a)))
-        assertTrue(ValueTraits.equal(`in`.read(), ListFactory.create(q, a)))
-        assertTrue(ValueTraits.equal(`in`.read(), ListFactory.create(qq, a)))
-        assertTrue(ValueTraits.equal(`in`.read(), ListFactory.create(uq, a)))
-        assertTrue(ValueTraits.equal(`in`.read(), ListFactory.create(uqs, a)))
+        ValueTraits.equal(port.read(), ListFactory.create(q, a)) shouldBe true
+        ValueTraits.equal(port.read(), ListFactory.create(q, a)) shouldBe true
+        ValueTraits.equal(port.read(), ListFactory.create(qq, a)) shouldBe true
+        ValueTraits.equal(port.read(), ListFactory.create(uq, a)) shouldBe true
+        ValueTraits.equal(port.read(), ListFactory.create(uqs, a)) shouldBe true
     }
-}
+})

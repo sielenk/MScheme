@@ -26,17 +26,21 @@ import de.masitec.mscheme.exceptions.UnexpectedSyntax
 import de.masitec.mscheme.syntax.TranslatorFactory.beginToken
 import de.masitec.mscheme.values.ListFactory
 import de.masitec.mscheme.values.ValueTraits
-import junit.framework.TestCase
+import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeSameInstanceAs
+import io.kotest.matchers.types.shouldNotBeSameInstanceAs
 
 
-class TestEnvironment(name: String) : TestCase(name) {
-    private var env: Environment? = null
-    private var sym1: String? = null
-    private var sym2: String? = null
-    private var val1: Any? = null
-    private var val2: Any? = null
+class TestEnvironment : FunSpec({
+    var env: Environment? = null
+    var sym1: String? = null
+    var sym2: String? = null
+    var val1: Any? = null
+    var val2: Any? = null
 
-    override fun setUp() {
+    beforeEach {
         env = Environment.getEmpty()
 
         sym1 = "test1"
@@ -46,7 +50,7 @@ class TestEnvironment(name: String) : TestCase(name) {
         val2 = ValueTraits.TRUE
     }
 
-    override fun tearDown() {
+    afterEach {
         env = null
         sym2 = null
         sym1 = null
@@ -55,81 +59,69 @@ class TestEnvironment(name: String) : TestCase(name) {
     }
 
 
-    fun testTestPattern() {
-        assertNotSame("different symbols are equal (==)", sym1, sym2)
-        assertFalse("different symbols are equal (equals)", sym1 == sym2)
-        assertNotSame("different entities are equal (==)", val1, val2)
-        assertFalse("different entities are equals (equals)", val1 == val2)
+    test("testPattern") {
+        sym1 shouldNotBeSameInstanceAs sym2
+        (sym1 == sym2) shouldBe false
+        val1 shouldNotBeSameInstanceAs val2
+        (val1 == val2) shouldBe false
     }
 
-    fun testNormal() {
-        try {
+    test("normal") {
+        shouldThrow<SymbolNotFoundException> {
             env!!.lookup(sym1!!)
-            fail("env not empty")
-        } catch (e: SymbolNotFoundException) {
         }
 
-        try {
+        shouldThrow<SymbolNotFoundException> {
             env!!.assign(sym1!!, val1)
-            fail("expected SymbolNotFound exception")
-        } catch (e: SymbolNotFoundException) {
         }
 
         env!!.define(sym1!!, val1)
 
-        assertSame("lookup failed", env!!.lookup(sym1!!), val1)
+        env!!.lookup(sym1!!) shouldBeSameInstanceAs val1
 
         env!!.assign(sym1!!, val2)
 
-        assertSame("assign failed", env!!.lookup(sym1!!), val2)
+        env!!.lookup(sym1!!) shouldBeSameInstanceAs val2
     }
 
-    fun testSyntax() {
+    test("syntax") {
         val env = StaticEnvironment(null)
 
-        try {
+        shouldThrow<SymbolNotFoundException> {
             env.getSyntaxFor(sym1!!)
-            fail("expected SymbolNotFoundException")
-        } catch (e: SymbolNotFoundException) {
         }
 
-        try {
+        shouldThrow<SymbolNotFoundException> {
             env.getSyntaxFor(sym1!!)
-            fail("expected SymbolNotFoundException")
-        } catch (e: SymbolNotFoundException) {
         }
 
         val token = beginToken
         env.defineSyntax(sym1!!, token)
 
-        assertSame(env.getSyntaxFor(sym1!!), token)
+        env.getSyntaxFor(sym1!!) shouldBeSameInstanceAs token
 
-        try {
+        shouldThrow<UnexpectedSyntax> {
             env.getReferenceFor(sym1!!)
-            fail("expected UnexpectedSyntax")
-        } catch (e: UnexpectedSyntax) {
         }
 
         val reference = env.define(sym2!!)
 
-        assertSame(env.getReferenceFor(sym2!!), reference)
+        env.getReferenceFor(sym2!!) shouldBeSameInstanceAs reference
     }
 
-    fun testExtendedStatic() {
+    test("extendedStatic") {
         env!!.static.define(sym1!!)
         env!!.static.define(sym2!!)
 
-        try {
+        shouldThrow<SchemeRuntimeError> {
             env!!.lookup(sym1!!)
-            fail("expected UninitializedSymbolException")
-        } catch (e: SchemeRuntimeError) {
         }
 
         env!!.assign(sym2!!, val1)
 
-        assertSame(env!!.lookup(sym2!!), val1)
+        env!!.lookup(sym2!!) shouldBeSameInstanceAs val1
     }
 
-    fun testDynamic() {
+    test("dynamic") {
     }
-}
+})

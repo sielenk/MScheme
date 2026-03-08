@@ -29,7 +29,7 @@ plugins {
 val generatedDir: Provider<Directory> =
     layout.buildDirectory.dir("generated/mscheme/main/kotlin")
 
-val kotestVersion = "6.0.1"
+val kotestVersion = "6.1.4"
 
 repositories {
     mavenCentral()
@@ -57,9 +57,9 @@ kotlin {
         }
         jvmTest {
             dependencies {
-                implementation("junit:junit:4.13.1")
+                implementation("io.kotest:kotest-framework-engine:$kotestVersion")
                 implementation("io.kotest:kotest-assertions-core:$kotestVersion")
-                implementation("io.kotest:kotest-property:$kotestVersion")
+                implementation("io.kotest:kotest-runner-junit5:$kotestVersion")
             }
         }
         jsMain {
@@ -67,6 +67,10 @@ kotlin {
         jsTest {
         }
     }
+}
+
+tasks.named<Test>("jvmTest") {
+    useJUnitPlatform()
 }
 
 kotlin.sourceSets.all {

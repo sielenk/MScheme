@@ -20,55 +20,55 @@
  */
 package de.masitec.mscheme.util
 
-import junit.framework.TestCase
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.shouldBe
 
-class TestArity
-    (name: String?) : TestCase(name) {
-    fun testExactly() {
+class TestArity : FunSpec({
+    test("testExactly") {
         val arity0 = Arity.exactly(0)
         val arity1 = Arity.exactly(1)
         val arity2 = Arity.exactly(2)
 
-        assertTrue(arity0.isValid(0))
-        assertFalse(arity0.isValid(1))
-        assertFalse(arity0.isValid(2))
+        arity0.isValid(0) shouldBe true
+        arity0.isValid(1) shouldBe false
+        arity0.isValid(2) shouldBe false
 
-        assertFalse(arity1.isValid(0))
-        assertTrue(arity1.isValid(1))
-        assertFalse(arity1.isValid(2))
+        arity1.isValid(0) shouldBe false
+        arity1.isValid(1) shouldBe true
+        arity1.isValid(2) shouldBe false
 
-        assertFalse(arity2.isValid(0))
-        assertFalse(arity2.isValid(1))
-        assertTrue(arity2.isValid(2))
-        assertFalse(arity2.isValid(3))
+        arity2.isValid(0) shouldBe false
+        arity2.isValid(1) shouldBe false
+        arity2.isValid(2) shouldBe true
+        arity2.isValid(3) shouldBe false
     }
 
-    fun testAtLeast() {
+    test("testAtLeast") {
         val arity0 = Arity.atLeast(0)
         val arity1 = Arity.atLeast(1)
         val arity2 = Arity.atLeast(2)
 
-        assertTrue(arity0.isValid(0))
-        assertTrue(arity0.isValid(1))
-        assertTrue(arity0.isValid(2))
+        arity0.isValid(0) shouldBe true
+        arity0.isValid(1) shouldBe true
+        arity0.isValid(2) shouldBe true
 
-        assertFalse(arity1.isValid(0))
-        assertTrue(arity1.isValid(1))
-        assertTrue(arity1.isValid(2))
+        arity1.isValid(0) shouldBe false
+        arity1.isValid(1) shouldBe true
+        arity1.isValid(2) shouldBe true
 
-        assertFalse(arity2.isValid(0))
-        assertFalse(arity2.isValid(1))
-        assertTrue(arity2.isValid(2))
-        assertTrue(arity2.isValid(3))
+        arity2.isValid(0) shouldBe false
+        arity2.isValid(1) shouldBe false
+        arity2.isValid(2) shouldBe true
+        arity2.isValid(3) shouldBe true
     }
 
-    fun testInarity() {
+    test("testInarity") {
         val arity = Arity.inRange(2, 3)
 
-        assertFalse(arity.isValid(0))
-        assertFalse(arity.isValid(1))
-        assertTrue(arity.isValid(2))
-        assertTrue(arity.isValid(3))
-        assertFalse(arity.isValid(4))
+        arity.isValid(0) shouldBe false
+        arity.isValid(1) shouldBe false
+        arity.isValid(2) shouldBe true
+        arity.isValid(3) shouldBe true
+        arity.isValid(4) shouldBe false
     }
-}
+})

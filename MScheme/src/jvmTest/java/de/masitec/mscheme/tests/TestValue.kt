@@ -20,29 +20,23 @@
  */
 package de.masitec.mscheme.tests
 
-import junit.framework.TestCase
 import de.masitec.mscheme.environment.Environment
 import de.masitec.mscheme.exceptions.TypeError
 import de.masitec.mscheme.util.JvmReader
 import de.masitec.mscheme.util.JvmWriter
-import de.masitec.mscheme.util.Writer
 import de.masitec.mscheme.values.*
 import de.masitec.mscheme.values.ListFactory
 import de.masitec.mscheme.values.ValueTraits
 import de.masitec.mscheme.values.functions.CallCCFunction
+import io.kotest.core.spec.style.FunSpec
+import io.kotest.matchers.comparables.shouldBeGreaterThanOrEqualTo
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.types.shouldBeSameInstanceAs
 import java.io.StringReader
 import java.io.StringWriter
 
-class TestValue
-    (name: String?) : TestCase(name) {
-    override fun setUp() {
-    }
-
-    override fun tearDown() {
-    }
-
-
-    private fun countTypes(v: Any?): Int {
+class TestValue : FunSpec({
+    fun countTypes(v: Any?): Int {
         var count = 0
 
         if (ValueTraits.isList(v)) {
@@ -80,7 +74,7 @@ class TestValue
         return count
     }
 
-    private fun countCasts(v: Any?): Int {
+    fun countCasts(v: Any?): Int {
         var count = 0
 
         try {
@@ -144,317 +138,282 @@ class TestValue
         return count
     }
 
-    private fun commonTests(v: Any?, castCount: Int = 1) {
-        assertTrue(ValueTraits.isTrue(v))
+    fun commonTests(v: Any?, castCount: Int = 1) {
+        ValueTraits.isTrue(v) shouldBe true
 
-        TestCase.assertEquals(1, countTypes(v))
-        TestCase.assertEquals(countCasts(v), castCount)
+        countTypes(v) shouldBe 1
+        countCasts(v) shouldBe castCount
     }
 
 
-    fun testFalse() {
+    test("false") {
         val False: Any = ValueTraits.FALSE
 
-        assertFalse(ValueTraits.isTrue(False))
+        ValueTraits.isTrue(False) shouldBe false
 
-        TestCase.assertEquals(1, countTypes(False))
-        TestCase.assertEquals(0, countCasts(False))
+        countTypes(False) shouldBe 1
+        countCasts(False) shouldBe 0
 
-        assertTrue(ValueTraits.isScmBoolean(False))
+        ValueTraits.isScmBoolean(False) shouldBe true
     }
 
-    fun testTrue() {
+    test("true") {
         val True: Any = ValueTraits.TRUE
 
-        assertTrue(ValueTraits.isTrue(True))
+        ValueTraits.isTrue(True) shouldBe true
 
-        TestCase.assertEquals(1, countTypes(True))
-        TestCase.assertEquals(0, countCasts(True))
+        countTypes(True) shouldBe 1
+        countCasts(True) shouldBe 0
 
-        assertTrue(ValueTraits.isScmBoolean(True))
+        ValueTraits.isScmBoolean(True) shouldBe true
     }
 
-    fun testEmpty() {
+    test("empty list") {
         val empty: Any = ListFactory.create()
 
-        assertTrue(ValueTraits.isTrue(empty))
+        ValueTraits.isTrue(empty) shouldBe true
 
-        TestCase.assertEquals(1, countTypes(empty)) // List
-        TestCase.assertEquals(1, countCasts(empty))
+        countTypes(empty) shouldBe 1
+        countCasts(empty) shouldBe 1
 
-        assertTrue(ValueTraits.isEmpty(empty))
+        ValueTraits.isEmpty(empty) shouldBe true
 
-        assertTrue(ValueTraits.isList(empty))
-        assertSame(ValueTraits.toList(empty), empty)
+        ValueTraits.isList(empty) shouldBe true
+        ValueTraits.toList(empty) shouldBeSameInstanceAs empty
     }
 
-    fun testPair() {
+    test("pair") {
         val pair: Any = ListFactory.createPair(
             ValueTraits.TRUE,
             ValueTraits.TRUE
         )
 
         commonTests(pair)
-        assertTrue(ValueTraits.isPair(pair))
-        assertSame(ValueTraits.toConstPair(pair), pair)
+        ValueTraits.isPair(pair) shouldBe true
+        ValueTraits.toConstPair(pair) shouldBeSameInstanceAs pair
     }
 
-    fun testList() {
+    test("list") {
         val list: Any = ListFactory.create(
             ValueTraits.TRUE
         )
 
-        assertTrue(ValueTraits.isTrue(list))
+        ValueTraits.isTrue(list) shouldBe true
 
-        TestCase.assertEquals(2, countTypes(list)) // List and Pair
-        TestCase.assertEquals(2, countCasts(list))
+        countTypes(list) shouldBe 2
+        countCasts(list) shouldBe 2
 
-        assertTrue(ValueTraits.isPair(list))
-        assertSame(ValueTraits.toConstPair(list), list)
+        ValueTraits.isPair(list) shouldBe true
+        ValueTraits.toConstPair(list) shouldBeSameInstanceAs list
 
-        assertTrue(ValueTraits.isList(list))
-        assertSame(ValueTraits.toList(list), list)
+        ValueTraits.isList(list) shouldBe true
+        ValueTraits.toList(list) shouldBeSameInstanceAs list
     }
 
-    fun testSymbol() {
+    test("symbol") {
         val symbol: Any = "test"
 
         commonTests(symbol)
-        assertTrue(ValueTraits.isSymbol(symbol))
-        assertSame(ValueTraits.toSymbol(symbol), symbol)
+        ValueTraits.isSymbol(symbol) shouldBe true
+        ValueTraits.toSymbol(symbol) shouldBeSameInstanceAs symbol
     }
 
-    fun testFunction() {
+    test("function") {
         val function: Any = CallCCFunction
 
         commonTests(function, 0)
-        assertTrue(ValueTraits.isFunction(function))
+        ValueTraits.isFunction(function) shouldBe true
     }
 
-    fun testNumber() {
+    test("number") {
         val number: Any = ScmNumber.create(49875)
 
         commonTests(number)
-        assertTrue(ValueTraits.isScmNumber(number))
-        assertSame(ValueTraits.toScmNumber(number), number)
+        ValueTraits.isScmNumber(number) shouldBe true
+        ValueTraits.toScmNumber(number) shouldBeSameInstanceAs number
     }
 
-    fun testChar() {
+    test("char") {
         val character: Any = ValueTraits.toScmChar('a')
 
         commonTests(character)
-        assertTrue(ValueTraits.isScmChar(character))
-        assertSame(ValueTraits.toScmChar(character), character)
+        ValueTraits.isScmChar(character) shouldBe true
+        ValueTraits.toScmChar(character) shouldBe character
     }
 
-    fun testString() {
+    test("string") {
         val string: Any = ScmString.create("Hallo !")
 
         commonTests(string)
-        assertTrue(ValueTraits.isScmString(string))
-        assertSame(ValueTraits.toScmString(string), string)
+        ValueTraits.isScmString(string) shouldBe true
+        ValueTraits.toScmString(string) shouldBeSameInstanceAs string
     }
 
-    fun testVector() {
+    test("vector") {
         val vector: Any = ScmVector.create()
 
         commonTests(vector)
-        assertTrue(ValueTraits.isScmVector(vector))
-        assertSame(ValueTraits.toScmVector(vector), vector)
+        ValueTraits.isScmVector(vector) shouldBe true
+        ValueTraits.toScmVector(vector) shouldBeSameInstanceAs vector
     }
 
-    fun testOutputPort() {
+    test("output port") {
         val port: Any = OutputPort.create(JvmWriter(StringWriter()))
 
         commonTests(port)
-        assertTrue(ValueTraits.isPort(port))
-        assertSame(ValueTraits.toOutputPort(port), port)
+        ValueTraits.isPort(port) shouldBe true
+        ValueTraits.toOutputPort(port) shouldBeSameInstanceAs port
     }
 
-    fun testInputPort() {
+    test("input port") {
         val port: Any = InputPort.create(JvmReader(StringReader("")))
 
         commonTests(port)
-        assertTrue(ValueTraits.isPort(port))
-        assertSame(ValueTraits.toInputPort(port), port)
+        ValueTraits.isPort(port) shouldBe true
+        ValueTraits.toInputPort(port) shouldBeSameInstanceAs port
     }
 
-    fun testEnvironment() {
+    test("environment") {
         val environment: Any = Environment.getEmpty()
 
-        assertTrue(ValueTraits.isTrue(environment))
+        ValueTraits.isTrue(environment) shouldBe true
 
-        TestCase.assertEquals(0, countTypes(environment))
-        TestCase.assertEquals(1, countCasts(environment))
+        countTypes(environment) shouldBe 0
+        countCasts(environment) shouldBe 1
 
-        assertSame(ValueTraits.toEnvironment(environment), environment)
+        ValueTraits.toEnvironment(environment) shouldBeSameInstanceAs environment
     }
 
-    fun testStaticEnvironment() {
+    test("static environment") {
         val environment: Any = Environment.getEmpty().static
 
-        assertTrue(ValueTraits.isTrue(environment))
+        ValueTraits.isTrue(environment) shouldBe true
 
-        TestCase.assertEquals(0, countTypes(environment))
-        TestCase.assertEquals(1, countCasts(environment))
+        countTypes(environment) shouldBe 0
+        countCasts(environment) shouldBe 1
 
-        assertSame(ValueTraits.toStaticEnvironment(environment), environment)
+        ValueTraits.toStaticEnvironment(environment) shouldBeSameInstanceAs environment
     }
 
 
-    private fun eqHelper(fst: Any?, snd: Any?): Int {
+    fun eqHelper(fst: Any?, snd: Any?): Int {
         val eq = ValueTraits.eq(fst, snd)
         val eqv = ValueTraits.eqv(fst, snd)
         val equal = ValueTraits.equal(fst, snd)
 
         // reflexivity
-        assertTrue(ValueTraits.eq(fst, fst))
-        assertTrue(ValueTraits.eq(snd, snd))
-        assertTrue(ValueTraits.eqv(fst, fst))
-        assertTrue(ValueTraits.eqv(snd, snd))
-        assertTrue(ValueTraits.equal(fst, fst))
-        assertTrue(ValueTraits.equal(snd, snd))
+        ValueTraits.eq(fst, fst) shouldBe true
+        ValueTraits.eq(snd, snd) shouldBe true
+        ValueTraits.eqv(fst, fst) shouldBe true
+        ValueTraits.eqv(snd, snd) shouldBe true
+        ValueTraits.equal(fst, fst) shouldBe true
+        ValueTraits.equal(snd, snd) shouldBe true
 
         // symmetry
-        TestCase.assertEquals(eq, ValueTraits.eq(snd, fst))
-        TestCase.assertEquals(eqv, ValueTraits.eqv(snd, fst))
-        TestCase.assertEquals(equal, ValueTraits.equal(snd, fst))
+        ValueTraits.eq(snd, fst) shouldBe eq
+        ValueTraits.eqv(snd, fst) shouldBe eqv
+        ValueTraits.equal(snd, fst) shouldBe equal
 
-        assertTrue(!eq or eqv) // aka. eq  -> eqv
-        assertTrue(!eqv or equal) // aka. eqv -> equal
+        (!eq or eqv) shouldBe true // aka. eq  -> eqv
+        (!eqv or equal) shouldBe true // aka. eqv -> equal
 
-        if (eq) {
-            return 3
-        } else if (eqv) {
-            return 2
-        } else if (equal) {
-            return 1
-        } else {
-            return 0
+        return when {
+            eq -> 3
+            eqv -> 2
+            equal -> 1
+            else -> 0
         }
     }
 
-    fun testEq() {
+    test("eq/eqv/equal") {
         val u: Any = "u"
         val v: Any = "v"
 
         // eq equivalent values
-        TestCase.assertEquals(3, eqHelper(v, v))
+        eqHelper(v, v) shouldBe 3
 
-        TestCase.assertEquals(
-            3, eqHelper(
-                ValueTraits.TRUE,
-                ValueTraits.TRUE
-            )
-        )
+        eqHelper(
+            ValueTraits.TRUE,
+            ValueTraits.TRUE
+        ) shouldBe 3
 
-        TestCase.assertEquals(
-            3, eqHelper(
-                ValueTraits.FALSE,
-                ValueTraits.FALSE
-            )
-        )
+        eqHelper(
+            ValueTraits.FALSE,
+            ValueTraits.FALSE
+        ) shouldBe 3
 
-        TestCase.assertEquals(
-            3, eqHelper(
-                "a",
-                "a"
-            )
-        )
+        eqHelper(
+            "a",
+            "a"
+        ) shouldBe 3
 
-        TestCase.assertEquals(
-            3, eqHelper(
-                ListFactory.create(),
-                ListFactory.create()
-            )
-        )
+        eqHelper(
+            ListFactory.create(),
+            ListFactory.create()
+        ) shouldBe 3
 
         // eqv equivalent values
-        assertTrue(
-            eqHelper(
-                ScmNumber.create(7123645),
-                ScmNumber.create(7123645)
-            ) >= 2
-        )
+        eqHelper(
+            ScmNumber.create(7123645),
+            ScmNumber.create(7123645)
+        ) shouldBeGreaterThanOrEqualTo 2
 
-        assertTrue(
-            eqHelper(
-                ValueTraits.toScmChar('u'),
-                ValueTraits.toScmChar('u')
-            ) >= 2
-        )
+        eqHelper(
+            ValueTraits.toScmChar('u'),
+            ValueTraits.toScmChar('u')
+        ) shouldBeGreaterThanOrEqualTo 2
 
         // equal equivalent but eqv unspec. values
-        assertTrue(
-            eqHelper(
-                ScmVector.create(),
-                ScmVector.create()
-            ) >= 1
-        )
+        eqHelper(
+            ScmVector.create(),
+            ScmVector.create()
+        ) shouldBeGreaterThanOrEqualTo 1
 
-        assertTrue(
-            eqHelper(
-                ScmVector.create(5, v),
-                ScmVector.create(5, v)
-            ) >= 1
-        )
+        eqHelper(
+            ScmVector.create(5, v),
+            ScmVector.create(5, v)
+        ) shouldBeGreaterThanOrEqualTo 1
 
-        assertTrue(
-            eqHelper(
-                ScmString.create(""),
-                ScmString.create("")
-            ) >= 1
-        )
+        eqHelper(
+            ScmString.create(""),
+            ScmString.create("")
+        ) shouldBeGreaterThanOrEqualTo 1
 
-        assertTrue(
-            eqHelper(
-                ScmString.create("Hallo"),
-                ScmString.create("Hallo")
-            ) >= 1
-        )
+        eqHelper(
+            ScmString.create("Hallo"),
+            ScmString.create("Hallo")
+        ) shouldBeGreaterThanOrEqualTo 1
 
         // equal equivalent but eqv different values
-        TestCase.assertEquals(
-            1, eqHelper(
-                ListFactory.createPair(v, v),
-                ListFactory.createPair(v, v)
-            )
-        )
+        eqHelper(
+            ListFactory.createPair(v, v),
+            ListFactory.createPair(v, v)
+        ) shouldBe 1
 
         // different values
-        TestCase.assertEquals(
-            0, eqHelper(
-                ValueTraits.TRUE,
-                ValueTraits.FALSE
-            )
-        )
+        eqHelper(
+            ValueTraits.TRUE,
+            ValueTraits.FALSE
+        ) shouldBe 0
 
-        TestCase.assertEquals(
-            0, eqHelper(
-                "u",
-                "v"
-            )
-        )
+        eqHelper(
+            "u",
+            "v"
+        ) shouldBe 0
 
-        TestCase.assertEquals(
-            0, eqHelper(
-                ScmVector.create(5, u),
-                ScmVector.create(5, v)
-            )
-        )
+        eqHelper(
+            ScmVector.create(5, u),
+            ScmVector.create(5, v)
+        ) shouldBe 0
 
-        TestCase.assertEquals(
-            0, eqHelper(
-                ScmVector.create(7, v),
-                ScmVector.create(5, v)
-            )
-        )
+        eqHelper(
+            ScmVector.create(7, v),
+            ScmVector.create(5, v)
+        ) shouldBe 0
 
-        TestCase.assertEquals(
-            0, eqHelper(
-                ScmString.create("Hallo 1"),
-                ScmString.create("Hallo 2")
-            )
-        )
+        eqHelper(
+            ScmString.create("Hallo 1"),
+            ScmString.create("Hallo 2")
+        ) shouldBe 0
     }
-}
+})
