@@ -127,10 +127,13 @@ val createInit = tasks.register("createInit") {
     }
 }
 
+createInit.configure {
+    dependsOn("kspCommonMainKotlinMetadata")
+}
+
 tasks.matching {
     it.name in setOf(
         "compileCommonMainKotlinMetadata",
-        "kspCommonMainKotlinMetadata",
         "compileKotlinJvm",
         "compileKotlinJs"
     )
