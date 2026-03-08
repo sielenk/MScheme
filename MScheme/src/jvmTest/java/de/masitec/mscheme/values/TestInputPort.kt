@@ -20,14 +20,13 @@
  */
 package de.masitec.mscheme.values
 
-import de.masitec.mscheme.util.JvmReader
+import de.masitec.mscheme.util.createStringReader
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import java.io.StringReader
 
 class TestInputPort : FunSpec({
     fun portFrom(s: String) =
-        InputPort.create(JvmReader(StringReader(s)))
+        InputPort.create(createStringReader(s))
 
     test("testCharIO") {
         val port = portFrom("test")

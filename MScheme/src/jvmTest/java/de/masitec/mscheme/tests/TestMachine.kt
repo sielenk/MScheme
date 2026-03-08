@@ -24,7 +24,7 @@ import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.environment.Environment
 import de.masitec.mscheme.exceptions.*
 import de.masitec.mscheme.machine.Machine
-import de.masitec.mscheme.util.JvmReader
+import de.masitec.mscheme.util.createStringReader
 import de.masitec.mscheme.values.*
 import de.masitec.mscheme.values.Function
 import de.masitec.mscheme.values.ListFactory
@@ -36,7 +36,6 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import io.kotest.matchers.types.shouldBeSameInstanceAs
-import java.io.StringReader
 
 class TestMachine : FunSpec({
     var machine: Machine? = null
@@ -73,7 +72,7 @@ class TestMachine : FunSpec({
 
     fun evaluate(expression: String): Any? {
         return machine!!.evaluate(
-            InputPort.create(JvmReader(StringReader(expression))).read()
+            InputPort.create(createStringReader(expression)).read()
         )
     }
 
