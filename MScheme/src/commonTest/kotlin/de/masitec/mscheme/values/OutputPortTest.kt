@@ -24,29 +24,32 @@
  */
 package de.masitec.mscheme.values
 
-import de.masitec.mscheme.util.JvmReader
-import de.masitec.mscheme.util.JvmWriter
+import de.masitec.mscheme.util.createReaderWriterPipe
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import java.io.PipedReader
-import java.io.PipedWriter
 
 /**
  * @author sielenk
  */
 class OutputPortTest : FunSpec({
     fun checkReadWrite(expected: Any?) {
-        val inPipe = PipedReader()
+        val (reader, writer) = createReaderWriterPipe()
 
-        run {
-            val outPipe = PipedWriter(inPipe)
-            val out = OutputPort.create(JvmWriter(outPipe))
-            out.write(expected)
-            out.close()
-            outPipe.close()
+        writer.use {
+            val outputPort = OutputPort.create(it)
+
+            outputPort.write(expected)
+            outputPort.close()
         }
 
-        val actual = InputPort.create(JvmReader(inPipe)).read()
+        val actual: Any?
+
+        reader.use {
+            val inputPort = InputPort.create(reader)
+
+            actual = inputPort.read()
+            inputPort.close()
+        }
 
         ValueTraits.equal(expected, actual) shouldBe true
     }

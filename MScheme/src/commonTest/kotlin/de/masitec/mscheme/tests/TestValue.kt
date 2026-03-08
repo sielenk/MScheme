@@ -22,18 +22,14 @@ package de.masitec.mscheme.tests
 
 import de.masitec.mscheme.environment.Environment
 import de.masitec.mscheme.exceptions.TypeError
-import de.masitec.mscheme.util.JvmReader
-import de.masitec.mscheme.util.JvmWriter
+import de.masitec.mscheme.util.createStdOutWriter
 import de.masitec.mscheme.util.createStringReader
 import de.masitec.mscheme.values.*
-import de.masitec.mscheme.values.ListFactory
-import de.masitec.mscheme.values.ValueTraits
 import de.masitec.mscheme.values.functions.CallCCFunction
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.comparables.shouldBeGreaterThanOrEqualTo
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeSameInstanceAs
-import java.io.StringWriter
 
 class TestValue : FunSpec({
     fun countTypes(v: Any?): Int {
@@ -258,7 +254,7 @@ class TestValue : FunSpec({
     }
 
     test("output port") {
-        val port: Any = OutputPort.create(JvmWriter(StringWriter()))
+        val port: Any = OutputPort.create(createStdOutWriter())
 
         commonTests(port)
         ValueTraits.isPort(port) shouldBe true
