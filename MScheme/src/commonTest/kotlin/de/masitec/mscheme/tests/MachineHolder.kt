@@ -25,20 +25,22 @@ import de.masitec.mscheme.util.writeToString
 import de.masitec.mscheme.values.OutputPort
 import de.masitec.mscheme.values.ValueTraits
 import io.kotest.assertions.withClue
-import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.Spec
 import io.kotest.matchers.shouldBe
 
-abstract class TestSchemeBase : FunSpec() {
+class MachineHolder(spec: Spec) {
     var machine: Machine? = null
         private set
 
     init {
-        beforeEach {
-            machine = Machine()
-        }
+        with(spec) {
+            beforeEach {
+                machine = Machine()
+            }
 
-        afterEach {
-            machine = null
+            afterEach {
+                machine = null
+            }
         }
     }
 

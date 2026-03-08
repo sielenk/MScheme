@@ -27,10 +27,16 @@ import de.masitec.mscheme.values.ValueTraits
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
 
-class TestJavaInterop : TestSchemeBase() {
+class TestJavaInterop : FunSpec() {
     init {
+        val mh = MachineHolder(this)
+
+        fun check(input: String, output: String) = mh.check(input, output)
+        fun eval(s: String) = mh.eval(s)
+        fun quote(expression: String) = mh.quote(expression)
+
         test("test_staticField") {
-            val machine = machine!!
+            val machine = mh.machine!!
             val field = TestJavaInterop::class.java.getField("testFieldStatic")
 
             machine.environment.define("foo", field)
@@ -43,7 +49,7 @@ class TestJavaInterop : TestSchemeBase() {
         }
 
         test("test_field") {
-            val machine = machine!!
+            val machine = mh.machine!!
             val field = TestJavaInterop::class.java.getField("testField")
             val environment = machine.environment
 
@@ -58,7 +64,7 @@ class TestJavaInterop : TestSchemeBase() {
         }
 
         test("test_staticMethod") {
-            val machine = machine!!
+            val machine = mh.machine!!
             val method = TestJavaInterop::class.java.getMethod("staticMethod")
             val environment = machine.environment
 
@@ -72,7 +78,7 @@ class TestJavaInterop : TestSchemeBase() {
         }
 
         test("test_method") {
-            val machine = machine!!
+            val machine = mh.machine!!
             val method = TestJavaInterop::class.java.getMethod("method")
             val environment = machine.environment
 
@@ -87,7 +93,7 @@ class TestJavaInterop : TestSchemeBase() {
         }
 
         test("test_staticMethodList") {
-            val machine = machine!!
+            val machine = mh.machine!!
             val method = TestJavaInterop::class.java.getMethod(
                 "staticMethodList", IList::class.java
             )
@@ -100,7 +106,7 @@ class TestJavaInterop : TestSchemeBase() {
         }
 
         test("test_methodList") {
-            val machine = machine!!
+            val machine = mh.machine!!
             val method = TestJavaInterop::class.java.getMethod(
                 "methodList", IList::class.java
             )
@@ -114,7 +120,7 @@ class TestJavaInterop : TestSchemeBase() {
         }
 
         test("test_staticMethodArgs") {
-            val machine = machine!!
+            val machine = mh.machine!!
             val method = TestJavaInterop::class.java.getMethod(
                 "staticMethodArgs", Any::class.java, Any::class.java
             )
@@ -127,7 +133,7 @@ class TestJavaInterop : TestSchemeBase() {
         }
 
         test("test_methodArgs") {
-            val machine = machine!!
+            val machine = mh.machine!!
             val method = TestJavaInterop::class.java.getMethod(
                 "methodArgs", Any::class.java, Any::class.java
             )

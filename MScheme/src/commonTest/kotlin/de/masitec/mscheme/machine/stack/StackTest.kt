@@ -26,7 +26,9 @@ package de.masitec.mscheme.machine.stack
 
 import de.masitec.mscheme.environment.DynamicEnvironment
 import de.masitec.mscheme.machine.StackFrame
+import io.kotest.core.spec.Spec
 import io.kotest.core.spec.style.FunSpec
+import io.kotest.core.spec.style.scopes.FunSpecRootScope
 import io.kotest.matchers.nulls.shouldBeNull
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -36,65 +38,67 @@ import io.kotest.matchers.types.shouldNotBeSameInstanceAs
 /**
  * @author sielenk
  */
-internal abstract class StackTest<T : IStack> : FunSpec() {
+internal class StackHolder<T : IStack>(
+    spec: FunSpec,
+    val createStack: () -> T
+) {
     private var _stack: T? = null
 
     val stack: T
         get() = _stack.shouldNotBeNull()
 
-    abstract fun createStack(): T
-
-
     init {
-        beforeEach {
-            _stack = createStack()
-        }
+        with(spec) {
+            beforeEach {
+                _stack = createStack()
+            }
 
-        afterEach {
-            _stack = null
-        }
+            afterEach {
+                _stack = null
+            }
 
 
-        test("testCreateSomething") {
-            createFrame() shouldNotBeSameInstanceAs createFrame()
-            createFrame() shouldNotBeSameInstanceAs createFrame()
-        }
+            test("testCreateSomething") {
+                createFrame() shouldNotBeSameInstanceAs createFrame()
+                createFrame() shouldNotBeSameInstanceAs createFrame()
+            }
 
-        test("testStack") {
-            stack.shouldNotBeNull()
-        }
+            test("testStack") {
+                stack.shouldNotBeNull()
+            }
 
-        test("testIsEmpty") {
-            stack.isEmpty shouldBe true
-        }
+            test("testIsEmpty") {
+                stack.isEmpty shouldBe true
+            }
 
-        test("testPush") {
-            stack.push(createFrame())
-            stack.isEmpty shouldBe false
-        }
+            test("testPush") {
+                stack.push(createFrame())
+                stack.isEmpty shouldBe false
+            }
 
-        test("testPop1") {
-            stack.tryPop().shouldBeNull()
-        }
+            test("testPop1") {
+                stack.tryPop().shouldBeNull()
+            }
 
-        test("testPop2") {
-            val stack = stack
-            val frame1: StackFrame = createFrame()
-            val frame2: StackFrame = createFrame()
-            val frame3: StackFrame = createFrame()
+            test("testPop2") {
+                val stack = stack
+                val frame1: StackFrame = createFrame()
+                val frame2: StackFrame = createFrame()
+                val frame3: StackFrame = createFrame()
 
-            stack.push(frame1)
-            stack.push(frame2)
-            stack.push(frame3)
+                stack.push(frame1)
+                stack.push(frame2)
+                stack.push(frame3)
 
-            stack.isEmpty shouldBe false
-            stack.tryPop() shouldBeSameInstanceAs frame3
-            stack.isEmpty shouldBe false
-            stack.tryPop() shouldBeSameInstanceAs frame2
-            stack.isEmpty shouldBe false
-            stack.tryPop() shouldBeSameInstanceAs frame1
-            stack.isEmpty shouldBe true
-            stack.tryPop().shouldBeNull()
+                stack.isEmpty shouldBe false
+                stack.tryPop() shouldBeSameInstanceAs frame3
+                stack.isEmpty shouldBe false
+                stack.tryPop() shouldBeSameInstanceAs frame2
+                stack.isEmpty shouldBe false
+                stack.tryPop() shouldBeSameInstanceAs frame1
+                stack.isEmpty shouldBe true
+                stack.tryPop().shouldBeNull()
+            }
         }
     }
 

@@ -22,14 +22,16 @@ package de.masitec.mscheme.tests
 
 import de.masitec.mscheme.exceptions.CompileError
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.core.spec.style.FunSpec
 
-class TestBugs : TestSchemeBase() {
-    init {
-        test("test_2002_19_03") {
-            // This failed, because set! didn't use delayed
-            // references, MHS 2002-19-03
-            check(
-                """
+class TestBugs : FunSpec({
+    val mh = MachineHolder(this)
+
+    test("test_2002_19_03") {
+        // This failed, because set! didn't use delayed
+        // references, MHS 2002-19-03
+        mh.check(
+            """
                 (begin
                   (define (f)
                     (define (g)
@@ -40,94 +42,93 @@ class TestBugs : TestSchemeBase() {
                     x)
                   (f))
                 """.trimIndent(),
-                "1"
+            "1"
+        )
+    }
+
+    test("test_2002_04_09") {
+        // It is now illegal to internally redefine a symbol.
+        shouldThrow<CompileError> {
+            mh.eval("(let ((x 1)) (begin (define x 2)) x)")
+        }
+    }
+
+    test("test_2002_04_15a") {
+        // Internal definitions are not allowed after the
+        // first expression.
+
+        shouldThrow<CompileError> {
+            mh.eval("(let () 1 (define x 2) x)")
+        }
+
+        shouldThrow<CompileError> {
+            mh.eval("(let () 'a (define x 2) x)")
+        }
+
+        shouldThrow<CompileError> {
+            mh.eval("(let ((a 1)) a (define x 2) x)")
+        }
+
+        shouldThrow<CompileError> {
+            mh.eval("(let () (if 1 1 1) (define x 2) x)")
+        }
+    }
+
+    test("test_2002_04_15ba") {
+        // no nested definitions
+        shouldThrow<CompileError> {
+            mh.eval("(define x (define y 3))")
+        }
+    }
+
+    test("test_2002_04_15bb") {
+        // no nested definitions
+        shouldThrow<CompileError> {
+            mh.eval("(lambda () (cons (define a 1) 2))")
+        }
+    }
+
+    test("test_2002_04_15c") {
+        shouldThrow<CompileError> {
+            mh.eval(
+                """
+                    (define (f)
+                      (define y 2)
+                      (define g (+ y 1))
+                      g
+                      y))
+                """.trimIndent()
             )
         }
 
-        test("test_2002_04_09") {
-            // It is now illegal to internally redefine a symbol.
-            shouldThrow<CompileError> {
-                eval("(let ((x 1)) (begin (define x 2)) x)")
-            }
-        }
-
-        test("test_2002_04_15a") {
-            // Internal definitions are not allowed after the
-            // first expression.
-
-            shouldThrow<CompileError> {
-                eval("(let () 1 (define x 2) x)")
-            }
-
-            shouldThrow<CompileError> {
-                eval("(let () 'a (define x 2) x)")
-            }
-
-            shouldThrow<CompileError> {
-                eval("(let ((a 1)) a (define x 2) x)")
-            }
-
-            shouldThrow<CompileError> {
-                eval("(let () (if 1 1 1) (define x 2) x)")
-            }
-        }
-
-        test("test_2002_04_15ba") {
-            // no nested definitions
-            shouldThrow<CompileError> {
-                eval("(define x (define y 3))")
-            }
-        }
-
-        test("test_2002_04_15bb") {
-            // no nested definitions
-            shouldThrow<CompileError> {
-                eval("(lambda () (cons (define a 1) 2))")
-            }
-        }
-
-        test("test_2002_04_15c") {
-            shouldThrow<CompileError> {
-                eval(
-                    """
-                    (define (f)
-                      (define y 2)
-                      (define g (+ y 1))
-                      g
-                      y))
-                """.trimIndent()
-                )
-            }
-
-            shouldThrow<CompileError> {
-                eval(
-                    """
+        shouldThrow<CompileError> {
+            mh.eval(
+                """
                     (define (f)
                       (define g (+ y 1))
                       (define y 2)
                       g
                       y))
                 """.trimIndent()
-                )
-            }
+            )
+        }
 
-            shouldThrow<CompileError> {
-                eval(
-                    """
+        shouldThrow<CompileError> {
+            mh.eval(
+                """
                     (define (f)
                       (define y 2)
                       (define g (set! y 1))
                       g
                       y))
                 """.trimIndent()
-                )
-            }
-        }
-
-        xtest("todo01") {
-            shouldThrow<CompileError> {
-                eval("(cons (define a 1) 2)")
-            }
+            )
         }
     }
-}
+
+    xtest("todo01") {
+        shouldThrow<CompileError> {
+            mh.eval("(cons (define a 1) 2)")
+        }
+    }
+})

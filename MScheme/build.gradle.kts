@@ -83,6 +83,7 @@ kotlin.sourceSets.all {
 
 dependencies {
     add("kspCommonMainMetadata", project(":MScheme-ksp"))
+    add("kspJsTest", "io.kotest:kotest-framework-symbol-processor-jvm:$kotestVersion")
 }
 
 val createInit = tasks.register("createInit") {
