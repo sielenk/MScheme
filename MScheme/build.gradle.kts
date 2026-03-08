@@ -52,13 +52,15 @@ kotlin {
             }
         }
         commonTest {
+            dependencies {
+                implementation("io.kotest:kotest-framework-engine:$kotestVersion")
+                implementation("io.kotest:kotest-assertions-core:$kotestVersion")
+            }
         }
         jvmMain {
         }
         jvmTest {
             dependencies {
-                implementation("io.kotest:kotest-framework-engine:$kotestVersion")
-                implementation("io.kotest:kotest-assertions-core:$kotestVersion")
                 implementation("io.kotest:kotest-runner-junit5:$kotestVersion")
             }
         }
