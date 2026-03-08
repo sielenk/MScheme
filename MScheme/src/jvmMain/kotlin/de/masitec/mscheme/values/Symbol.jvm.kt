@@ -20,7 +20,7 @@
  */
 package de.masitec.mscheme.values
 
-class SymbolJvm(str: String) : Symbol {
+private class SymbolJvm(str: String) : Symbol {
     val symbol = str.intern()
 
     override fun hashCode(): Int =

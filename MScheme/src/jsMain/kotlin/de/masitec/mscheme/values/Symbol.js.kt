@@ -21,6 +21,32 @@
 
 package de.masitec.mscheme.values
 
-internal actual fun Symbol(str: String): Symbol {
-    TODO("Not yet implemented")
+private val symbolTable =
+    mutableMapOf<String, Symbol>()
+
+private class JsSymbol(private val str: String) : Symbol {
+    override fun hashCode(): Int =
+        str.hashCode()
+
+    override fun eq(other: Any?): Boolean =
+        when (other) {
+            is JsSymbol -> this === other
+            is String -> str == other
+            else -> false
+        }
+
+    override fun eqv(other: Any?): Boolean =
+        eq(other)
+
+    override fun equals(other: Any?): Boolean =
+        eq(other)
+
+    override fun toString(): String =
+        str
+
+    override fun compareTo(other: Symbol): Int =
+        str.compareTo(other.toString())
 }
+
+internal actual fun Symbol(str: String): Symbol =
+    symbolTable.getOrPut(str) { JsSymbol(str) }

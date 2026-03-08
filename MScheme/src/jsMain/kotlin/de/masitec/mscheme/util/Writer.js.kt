@@ -22,14 +22,51 @@
 package de.masitec.mscheme.util
 
 
-actual fun createStdOutWriter(): Writer {
-    TODO("Not yet implemented")
+private class JsStringWriter : Writer {
+    private val sb = StringBuilder()
+
+    override fun write(i: Int) {
+        sb.append(i.toChar())
+    }
+
+    override fun write(s: String) {
+        sb.append(s)
+    }
+
+    override fun flush() {}
+    override fun close() {}
+    override fun toString(): String =
+        sb.toString()
 }
 
-actual fun createWriter(fileName: String): Writer {
-    TODO("Not yet implemented")
+private class JsStdOutWriter : Writer {
+    private val sb = StringBuilder()
+
+    override fun write(i: Int) {
+        sb.append(i.toChar())
+    }
+
+    override fun write(s: String) {
+        sb.append(s)
+    }
+
+    override fun flush() {
+        print(sb)
+        sb.clear()
+    }
+
+    override fun close() {
+        flush()
+    }
 }
 
-actual fun writeToString(f: (Writer) -> Unit): String {
-    TODO("Not yet implemented")
-}
+actual fun createStdOutWriter(): Writer =
+    JsStdOutWriter()
+
+actual fun createWriter(fileName: String): Writer =
+    error("file IO not supported on JS")
+
+actual fun writeToString(f: (Writer) -> Unit): String =
+    JsStringWriter().also {
+        f(it)
+    }.toString()

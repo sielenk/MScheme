@@ -22,14 +22,39 @@
 package de.masitec.mscheme.util
 
 
-actual fun createStdInReader(): Reader {
-    TODO("Not yet implemented")
+private class JsStringReader(private val str: String) : Reader {
+    private var pos = 0
+    private var pushback = -1
+
+    override fun ready(): Boolean = true
+
+    override fun read(): Int {
+        if (pushback != -1) {
+            val ch = pushback
+            pushback = -1
+            return ch
+        }
+        return if (pos < str.length) str[pos++].code else -1
+    }
+
+    override fun unread(ch: Int) {
+        pushback = ch
+    }
+
+    override fun close() {}
 }
 
-actual fun createReader(fileName: String): Reader {
-    TODO("Not yet implemented")
+private object JsEofReader : Reader {
+    override fun ready(): Boolean = false
+    override fun read(): Int = -1
+    override fun unread(ch: Int) {}
+    override fun close() {}
 }
 
-actual fun createStringReader(string: String): Reader {
-    TODO("Not yet implemented")
-}
+actual fun createStdInReader(): Reader = JsEofReader
+
+actual fun createReader(fileName: String): Reader =
+    error("file IO not supported on JS")
+
+actual fun createStringReader(string: String): Reader =
+    JsStringReader(string)
