@@ -24,10 +24,14 @@ import de.masitec.mscheme.exceptions.CompileError
 import de.masitec.mscheme.exceptions.ImmutableException
 import de.masitec.mscheme.exceptions.SchemeException
 import de.masitec.mscheme.exceptions.SyntaxArityError
+import de.masitec.mscheme.machine.Registers
+import de.masitec.mscheme.machine.stack.Stack
 import de.masitec.mscheme.values.Function
+import de.masitec.mscheme.values.ScmNumber
 import de.masitec.mscheme.values.ScmString
 import de.masitec.mscheme.values.ScmVector
 import de.masitec.mscheme.values.ValueTraits
+import de.masitec.mscheme.values.functions.Thunk
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
@@ -140,7 +144,7 @@ class TestR5RS : FunSpec({
 
     // 4.2 Derived expression types
     /** 4.2.1 Conditionals */
-    xtest("no_test4_2_1_cond") {
+    test("test4_2_1_cond") {
         check(
             "(cond ((> 3 2) 'greater)\n" +
                     "      ((< 3 2) 'less))",
@@ -148,7 +152,7 @@ class TestR5RS : FunSpec({
         )
         check(
             "(cond ((> 3 3) 'greater)\n" +
-                    "      ((< 3 3) 'less))\n" +
+                    "      ((< 3 3) 'less)\n" +
                     "      (else 'equal))",
             "equal"
         )
@@ -156,6 +160,97 @@ class TestR5RS : FunSpec({
             "(cond ((assv 'b '((a 1) (b 2))) => cadr)\n" +
                     "      (else #f))",
             "2"
+        )
+    }
+
+    test("test4_2_1_cond_test_only") {
+        check("(cond ((assv 'b '((a 1) (b 2)))) (else 'no))", "(b 2)")
+        check("(cond (#f) (else 'no))", "no")
+        check("(cond (#f) (2))", "2")
+    }
+
+    test("test4_2_1_cond_errors") {
+        shouldThrow<SyntaxArityError> {
+            eval("(cond)")
+        }
+        shouldThrow<CompileError> {
+            eval("(cond (else 1) (#t 2))")
+        }
+        shouldThrow<CompileError> {
+            eval("(cond (else))")
+        }
+        shouldThrow<CompileError> {
+            eval("(cond (1 =>))")
+        }
+        shouldThrow<CompileError> {
+            eval("(cond (1 => car cdr))")
+        }
+    }
+
+    test("test4_2_1_cond_tail_calls") {
+        // stack-depth counts the frames on the machine's stack;
+        // the loops compare the depth of the first and the last
+        // iteration, which differ if cond's clauses are not
+        // evaluated in tail position.
+        mh.machine!!.environment.define(
+            "stack-depth",
+            object : Thunk() {
+                override fun checkedCall(state: Registers): Any? {
+                    var depth = 0
+                    var slice: Stack.Slice? = state.stack.getContinuation()
+
+                    while (slice != null) {
+                        val frames = slice._stack.getCopy()
+
+                        while (frames.tryPop() != null) {
+                            ++depth
+                        }
+
+                        slice = slice._next
+                    }
+
+                    return ScmNumber.create(depth)
+                }
+            }
+        )
+
+        check(
+            """
+                (begin
+                  (define (loop n first last)
+                    (cond ((= n 0) (= first last))
+                          ((= n 1000) (loop (- n 1) (stack-depth) last))
+                          ((= n 1) (loop (- n 1) first (stack-depth)))
+                          (else (loop (- n 1) first last))))
+                  (loop 1000 #f #f))
+            """.trimIndent(),
+            "#t"
+        )
+        check(
+            """
+                (begin
+                  (define (loop n first last)
+                    (cond ((= n 0) (= first last))
+                          ((= n 1000) (loop (- n 1) (stack-depth) last))
+                          ((= n 1) (loop (- n 1) first (stack-depth)))
+                          ((- n 1) => (lambda (m) (loop m first last)))))
+                  (loop 1000 #f #f))
+            """.trimIndent(),
+            "#t"
+        )
+        // counter check: a loop that is not tail recursive
+        // has to be detected
+        check(
+            """
+                (begin
+                  (define (loop n first last)
+                    (cond ((= n 0) (= first last))
+                          ((= n 1000) (loop (- n 1) (stack-depth) last))
+                          ((= n 1) (loop (- n 1) first (stack-depth)))
+                          (else (not (not (loop (- n 1) first last))))))
+                  (loop 1000 #f #f))
+            """.trimIndent(),
+            "#f"
         )
     }
 

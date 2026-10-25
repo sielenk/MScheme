@@ -54,6 +54,9 @@ object TranslatorFactory {
     val ifToken: ITranslator
         get() = If
 
+    val condToken: ITranslator
+        get() = Cond
+
     val quoteToken: ITranslator
         get() = Quote
 }

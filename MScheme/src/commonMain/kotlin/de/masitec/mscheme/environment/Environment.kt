@@ -106,6 +106,10 @@ class Environment private constructor(
                     TranslatorFactory.ifToken
                 )
                 define(
+                    "cond",
+                    TranslatorFactory.condToken
+                )
+                define(
                     "begin",
                     TranslatorFactory.beginToken
                 )
