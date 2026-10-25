@@ -37,7 +37,7 @@ internal class Macro(
     private val _definitionEnv: StaticEnvironment
 ) : ITranslator {
     override fun translate(
-        usageEnv: StaticEnvironment,
+        @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE") usageEnv: StaticEnvironment,
         arguments: IList
     ): Any? {
         // (apply tranformer def_env use_env args)

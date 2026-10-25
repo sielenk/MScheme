@@ -38,6 +38,7 @@ internal class StdioReader : Reader(Any()) {
             }
             while (_buffer.length < len) {
                 try {
+                    @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
                     (lock as Object).wait()
                 } catch (e: InterruptedException) {
                     throw InterruptedIOException(e.message)
@@ -96,7 +97,8 @@ internal class StdioReader : Reader(Any()) {
     fun fillBuffer(s: String) {
         synchronized(lock) {
             if (!_closed) {
-                _buffer = _buffer + s
+                _buffer += s
+                @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
                 (lock as Object).notify()
             }
         }

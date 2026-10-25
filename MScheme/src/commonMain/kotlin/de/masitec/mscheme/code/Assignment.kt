@@ -41,7 +41,7 @@ class Assignment private constructor(
     /* (non-Javadoc)
    * @see mscheme.code.Reduceable#reduce(mscheme.machine.Stack, mscheme.environment.DynamicEnvironment)
    */
-    override fun reduce(state1: Registers): Any? {
+    override fun reduce(@Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE") state1: Registers): Any? {
         state1.push { state2, value ->
             state2.assign(_binding, value)
         }
