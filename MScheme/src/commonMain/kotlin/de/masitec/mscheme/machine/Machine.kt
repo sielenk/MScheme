@@ -22,9 +22,9 @@ package de.masitec.mscheme.machine
 
 import de.masitec.mscheme.Init
 import de.masitec.mscheme.code.IReduceable
-import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.environment.DynamicEnvironment
 import de.masitec.mscheme.environment.Environment
+import de.masitec.mscheme.compiler.compile
 import de.masitec.mscheme.exceptions.SchemeException
 import de.masitec.mscheme.exceptions.SchemeRuntimeError
 import de.masitec.mscheme.util.*
@@ -239,7 +239,7 @@ class Machine {
         Executor(environment.dynamic).execute(expression)
 
     fun compile(compilee: Any?): Any? =
-        Compiler(environment.static).compile(compilee)
+        environment.static.compile(compilee)
 
     fun evaluate(evaluatee: Any?): Any? =
         execute(compile(evaluatee))

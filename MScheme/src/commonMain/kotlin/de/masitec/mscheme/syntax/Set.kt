@@ -21,27 +21,26 @@
 package de.masitec.mscheme.syntax
 
 import de.masitec.mscheme.code.Assignment
-import de.masitec.mscheme.compiler.Compiler
+import de.masitec.mscheme.compiler.CompilationContext
 import de.masitec.mscheme.environment.Reference
-import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
 import de.masitec.mscheme.values.ValueTraits
 
 internal object Set : CheckedTranslator(Arity.exactly(2)) {
     override fun checkedTranslate(
-        compilationEnv: StaticEnvironment,
+        context: CompilationContext,
         arguments: IList
     ): Any {
         val symbol = ValueTraits.toSymbol(arguments.head)
         val value = arguments.tail.head
 
         return translate(
-            compilationEnv.getDelayedReferenceFor(symbol),
-            Compiler(compilationEnv).getForceable(value)
+            context.env.getDelayedReferenceFor(symbol, context.restricted),
+            context.expression().getForceable(value)
         )
     }
 
-    fun translate(reference: Reference, code: Any?): Any =
+    fun translate(reference: Reference, code: Any?): Assignment =
         Assignment.create(reference, code)
 }

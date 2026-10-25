@@ -21,8 +21,7 @@
 package de.masitec.mscheme.syntax
 
 import de.masitec.mscheme.code.Application
-import de.masitec.mscheme.compiler.Compiler
-import de.masitec.mscheme.environment.StaticEnvironment
+import de.masitec.mscheme.compiler.CompilationContext
 import de.masitec.mscheme.exceptions.CompileError
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.Empty
@@ -46,16 +45,19 @@ internal object Quasiquote : CheckedTranslator(Arity.exactly(1)) {
     private class Expansion(val code: Any?, val isConst: Boolean)
 
     override fun checkedTranslate(
-        compilationEnv: StaticEnvironment, arguments: IList
+        context: CompilationContext,
+        arguments: IList
     ): Any? =
-        expand(compilationEnv, arguments.head, 1).code
+        expand(context.expression(), arguments.head, 1).code
 
     private fun expand(
-        compilationEnv: StaticEnvironment, template: Any?, depth: Int
+        context: CompilationContext,
+        template: Any?,
+        depth: Int
     ): Expansion {
         if (ValueTraits.isScmVector(template)) {
             val elements = expand(
-                compilationEnv,
+                context,
                 ValueTraits.toScmVector(template).toList(),
                 depth
             )
@@ -80,29 +82,29 @@ internal object Quasiquote : CheckedTranslator(Arity.exactly(1)) {
                 }
 
                 return Expansion(
-                    Compiler(compilationEnv).getForceable(argumentOf(template)),
+                    context.getForceable(argumentOf(template)),
                     false
                 )
             }
 
-            return combine(template, constant(head), expand(compilationEnv, pair.second, depth - 1))
+            return combine(template, constant(head), expand(context, pair.second, depth - 1))
         }
 
         if (isForm(template, QUASIQUOTE)) {
-            return combine(template, constant(head), expand(compilationEnv, pair.second, depth + 1))
+            return combine(template, constant(head), expand(context, pair.second, depth + 1))
         }
 
         if (depth == 1 && isForm(head, UNQUOTE_SPLICING)) {
-            val spliced = Compiler(compilationEnv).getForceable(argumentOf(head))
-            val rest = expand(compilationEnv, pair.second, depth)
+            val spliced = context.getForceable(argumentOf(head))
+            val rest = expand(context, pair.second, depth)
 
             return call(Builtins.append, spliced, rest.code)
         }
 
         return combine(
             template,
-            expand(compilationEnv, head, depth),
-            expand(compilationEnv, pair.second, depth)
+            expand(context, head, depth),
+            expand(context, pair.second, depth)
         )
     }
 

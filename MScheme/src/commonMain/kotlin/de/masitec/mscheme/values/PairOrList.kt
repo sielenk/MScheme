@@ -20,12 +20,10 @@
  */
 package de.masitec.mscheme.values
 
-import de.masitec.mscheme.compiler.Compiler
-import de.masitec.mscheme.environment.StaticEnvironment
+import de.masitec.mscheme.compiler.CompilationContext
+import de.masitec.mscheme.compiler.Definition
 import de.masitec.mscheme.exceptions.ListExpected
 import de.masitec.mscheme.exceptions.PairExpected
-import de.masitec.mscheme.syntax.ITranslator
-import de.masitec.mscheme.syntax.ProcedureCall
 import de.masitec.mscheme.util.Writer
 import de.masitec.mscheme.util.writeToString
 
@@ -126,12 +124,12 @@ sealed class PairOrList : IPair, IList, ICompileable, IComparable, IOutputable {
                 && ValueTraits.equal(first, other.first)
                 && ValueTraits.equal(second, other.second)
 
-    override fun getForceable(compilationEnv: StaticEnvironment): Any? {
+    override fun getForceable(context: CompilationContext): Any? {
         val list = validate()
 
-        return Compiler(compilationEnv)
+        return context
             .getTranslator(list.head)
-            .translate(compilationEnv, list.tail)
+            .translate(context, list.tail)
     }
 
     override val isValid: Boolean
@@ -230,16 +228,35 @@ sealed class PairOrList : IPair, IList, ICompileable, IComparable, IOutputable {
         }
     }
 
-    override fun getCompiledArray(compilationEnv: StaticEnvironment): Array<Any?> =
-        getCompiledArray(compilationEnv, 0)
+    override fun getCompiledArray(context: CompilationContext): Array<Any?> =
+        getCompiledArray(context, 0)
 
     override fun getCompiledArray(
-        compilationEnv: StaticEnvironment,
+        context: CompilationContext,
         index: Int
     ): Array<Any?> {
-        val compiledHead = Compiler(compilationEnv)
-            .getForceable(head)
-        val result = tail.getCompiledArray(compilationEnv, index + 1)
+        val compiledHead = context.getForceable(head)
+        val result = tail.getCompiledArray(context, index + 1)
+
+        result[index] = compiledHead
+
+        return result
+    }
+
+    override fun getCompiledBody(context: CompilationContext): Array<Any?> =
+        getCompiledBody(context, 0)
+
+    override fun getCompiledBody(
+        context: CompilationContext,
+        index: Int
+    ): Array<Any?> {
+        val compiledHead = context.getForceable(head)
+        val tailContext =
+            if (context.kind == CompilationContext.Kind.BODY && compiledHead !is Definition)
+                context.copy(kind = CompilationContext.Kind.EXPRESSION)
+            else
+                context
+        val result = tail.getCompiledBody(tailContext, index + 1)
 
         result[index] = compiledHead
 

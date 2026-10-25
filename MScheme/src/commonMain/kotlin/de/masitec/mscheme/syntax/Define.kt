@@ -20,20 +20,23 @@
  */
 package de.masitec.mscheme.syntax
 
-import de.masitec.mscheme.compiler.Compiler
-import de.masitec.mscheme.environment.StaticEnvironment
+import de.masitec.mscheme.compiler.CompilationContext
+import de.masitec.mscheme.compiler.Definition
+import de.masitec.mscheme.exceptions.CompileError
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
 import de.masitec.mscheme.values.ListFactory
 import de.masitec.mscheme.values.ValueTraits
 
 internal object Define : CheckedTranslator(Arity.atLeast(2)) {
-    override fun preTranslate(compilationEnv: StaticEnvironment) {
-    }
-
     override fun checkedTranslate(
-        compilationEnv: StaticEnvironment, arguments: IList
+        context: CompilationContext,
+        arguments: IList
     ): Any {
+        if (!context.definitionsAllowed) {
+            throw CompileError(arguments, "definition not allowed here")
+        }
+
         if (ValueTraits.isPair(arguments.head)) {
             //    (define (f x y) (+ x y))
             // -> (define f (lambda (x y) (+ x y)))
@@ -45,17 +48,16 @@ internal object Define : CheckedTranslator(Arity.atLeast(2)) {
             val formals = ValueTraits.toConstPair(arguments.head).second
             val body = arguments.tail
 
-            val ref = compilationEnv.define(symbol)
-            compilationEnv.setStateDefinitionBody(symbol)
-            try {
-                return Set.translate(
+            val ref = context.env.define(symbol)
+
+            return Definition(
+                Set.translate(
                     ref, Lambda.translate(
-                        compilationEnv, ListFactory.prepend(formals, body)
+                        context.definitionValue(),
+                        ListFactory.prepend(formals, body)
                     )
                 )
-            } finally {
-                compilationEnv.setStateOpen(symbol)
-            }
+            )
         } else {
             if (!arguments.tail.tail.isEmpty) {
                 arityError(arguments, Arity.exactly(2))
@@ -64,16 +66,14 @@ internal object Define : CheckedTranslator(Arity.atLeast(2)) {
             val symbol = ValueTraits.toSymbol(arguments.head)
             val value = arguments.tail.head
 
-            val ref = compilationEnv.define(symbol)
-            compilationEnv.setStateDefinitionBody(symbol)
-            try {
-                return Set.translate(
+            val ref = context.env.define(symbol)
+
+            return Definition(
+                Set.translate(
                     ref,
-                    Compiler(compilationEnv).getForceable(value)
+                    context.definitionValue().getForceable(value)
                 )
-            } finally {
-                compilationEnv.setStateOpen(symbol)
-            }
+            )
         }
     }
 }

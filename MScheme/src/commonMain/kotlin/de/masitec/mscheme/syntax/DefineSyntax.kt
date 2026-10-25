@@ -21,8 +21,8 @@
 package de.masitec.mscheme.syntax
 
 import de.masitec.mscheme.code.Application
-import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.environment.Environment
+import de.masitec.mscheme.compiler.CompilationContext
 import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.machine.Machine
 import de.masitec.mscheme.util.Arity
@@ -37,7 +37,7 @@ internal class Macro(
     private val _definitionEnv: StaticEnvironment
 ) : ITranslator {
     override fun translate(
-        @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE") usageEnv: StaticEnvironment,
+        context: CompilationContext,
         arguments: IList
     ): Any? {
         // (apply tranformer def_env use_env args)
@@ -48,14 +48,14 @@ internal class Macro(
                     APPLY,
                     _transformer,
                     _definitionEnv,
-                    usageEnv,
+                    context.env,
                     arguments
                 )
             )
         ) as IPair?
 
-        return Compiler(
-            ValueTraits.toStaticEnvironment(result!!.first)
+        return context.copy(
+            env = ValueTraits.toStaticEnvironment(result!!.first)
         ).getForceable(
             result.second
         )
@@ -72,7 +72,7 @@ internal class Macro(
 
 internal object DefineSyntax : CheckedTranslator(Arity.exactly(2)) {
     override fun checkedTranslate(
-        compilationEnv: StaticEnvironment,
+        context: CompilationContext,
         arguments: IList
     ): Any {
         val symbol = ValueTraits.toSymbol(arguments.head)
@@ -80,10 +80,10 @@ internal object DefineSyntax : CheckedTranslator(Arity.exactly(2)) {
 
         val macro = Macro(
             Macro.MACHINE.evaluate(value),
-            compilationEnv
+            context.env
         )
 
-        compilationEnv.defineSyntax(symbol, macro)
+        context.env.defineSyntax(symbol, macro)
         Macro.MACHINE
             .environment
             .static

@@ -20,8 +20,8 @@
  */
 package de.masitec.mscheme.code
 
-import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.compiler.IForceable
+import de.masitec.mscheme.compiler.force
 import de.masitec.mscheme.environment.Reference
 import de.masitec.mscheme.machine.Registers
 
@@ -31,7 +31,7 @@ class Assignment private constructor(
 ) : IForceable, IReduceable {
     override fun force(): Assignment {
         _binding = _binding.forceRef()
-        _expression = Compiler.force(_expression)
+        _expression = _expression.force()
         return this
     }
 

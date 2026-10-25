@@ -126,9 +126,57 @@ class TestBugs : FunSpec({
         }
     }
 
-    xtest("todo01") {
+    test("todo01") {
         shouldThrow<CompileError> {
             mh.eval("(cons (define a 1) 2)")
         }
+    }
+
+    test("test_define_contexts") {
+        // definitions are only allowed at the top level and
+        // at the start of a body, never inside of an expression
+        shouldThrow<CompileError> {
+            mh.eval("(if #t (define a 1))")
+        }
+        shouldThrow<CompileError> {
+            mh.eval("(cons (begin (define a 1)) 2)")
+        }
+        shouldThrow<CompileError> {
+            mh.eval("(define a (begin (define b 1) b))")
+        }
+
+        // a top level begin may mix definitions and expressions
+        mh.check(
+            "(begin (define a 1) (set! a (+ a 1)) (define b a) b)",
+            "2"
+        )
+
+        // a begin in a body is spliced into it
+        mh.check(
+            "(let () (begin (define a 1) (define b 2)) (+ a b))",
+            "3"
+        )
+        shouldThrow<CompileError> {
+            mh.eval("(let () (begin (define a 1) a) (define b 2) b)")
+        }
+
+        // eval compiles at the top level of the given environment
+        mh.eval("(eval '(define c 3) machine-environment)")
+        mh.check("c", "3")
+    }
+
+    test("test_define_by_macro") {
+        // a macro expanding to a definition counts as one
+        mh.eval(
+            """
+                (define-syntax def1
+                  (lambda (def-env use-env name)
+                    (cons use-env (list 'define name 1))))
+            """.trimIndent()
+        )
+        mh.check(
+            "(let () (def1 x) (def1 y) (+ x y))",
+            "2"
+        )
     }
 })

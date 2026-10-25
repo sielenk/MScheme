@@ -21,8 +21,7 @@
 package de.masitec.mscheme.syntax
 
 import de.masitec.mscheme.code.Selection
-import de.masitec.mscheme.compiler.Compiler
-import de.masitec.mscheme.environment.StaticEnvironment
+import de.masitec.mscheme.compiler.CompilationContext
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
 import de.masitec.mscheme.values.ValueTraits
@@ -31,7 +30,8 @@ import kotlin.Any
 
 internal object If : CheckedTranslator(Arity.inRange(2, 3)) {
     override fun checkedTranslate(
-        compilationEnv: StaticEnvironment, arguments: IList
+        context: CompilationContext,
+        arguments: IList
     ): Any {
         val flag = arguments.head
         val onTrue = arguments.tail.head
@@ -41,12 +41,12 @@ internal object If : CheckedTranslator(Arity.inRange(2, 3)) {
             else
                 arguments.tail.tail.head
 
-        val compiler = Compiler(compilationEnv)
+        val subContext = context.expression()
 
         return Selection.create(
-            compiler.getForceable(flag),
-            compiler.getForceable(onTrue),
-            compiler.getForceable(onFalse)
+            subContext.getForceable(flag),
+            subContext.getForceable(onTrue),
+            subContext.getForceable(onFalse)
         )
     }
 }

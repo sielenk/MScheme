@@ -23,8 +23,7 @@ package de.masitec.mscheme.syntax
 import de.masitec.mscheme.code.CondArrow
 import de.masitec.mscheme.code.Selection
 import de.masitec.mscheme.code.Sequence
-import de.masitec.mscheme.compiler.Compiler
-import de.masitec.mscheme.environment.StaticEnvironment
+import de.masitec.mscheme.compiler.CompilationContext
 import de.masitec.mscheme.exceptions.CompileError
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
@@ -37,18 +36,19 @@ internal object Cond : CheckedTranslator(Arity.atLeast(1)) {
     private val ARROW = Symbol("=>")
 
     override fun checkedTranslate(
-        compilationEnv: StaticEnvironment, arguments: IList
+        context: CompilationContext,
+        arguments: IList
     ): Any? =
-        translateClauses(compilationEnv, arguments)
+        translateClauses(context.expression(), arguments)
 
     private fun translateClauses(
-        compilationEnv: StaticEnvironment, clauses: IList
+        context: CompilationContext,
+        clauses: IList
     ): Any? {
         if (clauses.isEmpty) {
             return ValueTraits.FALSE
         }
 
-        val compiler = Compiler(compilationEnv)
         val clause = ValueTraits.toList(clauses.head)
         val test = clause.head
         val body = clause.tail
@@ -61,13 +61,13 @@ internal object Cond : CheckedTranslator(Arity.atLeast(1)) {
                 throw CompileError(clause, "empty else clause")
             }
 
-            return Sequence.create(body.getCompiledArray(compilationEnv))
+            return Sequence.create(body.getCompiledArray(context))
         }
 
-        val compiledTest = compiler.getForceable(test)
+        val compiledTest = context.getForceable(test)
 
         if (body.isEmpty) {
-            val rest = translateClauses(compilationEnv, clauses.tail)
+            val rest = translateClauses(context, clauses.tail)
 
             return Sequence.createDisj(arrayOf(compiledTest, rest))
         }
@@ -77,14 +77,16 @@ internal object Cond : CheckedTranslator(Arity.atLeast(1)) {
                 throw CompileError(clause, "=> needs exactly one receiver")
             }
 
-            val compiledReceiver = compiler.getForceable(body.tail.head)
-            val rest = translateClauses(compilationEnv, clauses.tail)
+            val compiledReceiver =
+                context.getForceable(body.tail.head)
+            val rest = translateClauses(context, clauses.tail)
 
             return CondArrow.create(compiledTest, compiledReceiver, rest)
         }
 
-        val compiledBody = Sequence.create(body.getCompiledArray(compilationEnv))
-        val rest = translateClauses(compilationEnv, clauses.tail)
+        val compiledBody =
+            Sequence.create(body.getCompiledArray(context))
+        val rest = translateClauses(context, clauses.tail)
 
         return Selection.create(compiledTest, compiledBody, rest)
     }

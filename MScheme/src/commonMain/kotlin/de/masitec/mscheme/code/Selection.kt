@@ -20,8 +20,8 @@
  */
 package de.masitec.mscheme.code
 
-import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.compiler.IForceable
+import de.masitec.mscheme.compiler.force
 import de.masitec.mscheme.machine.Registers
 import de.masitec.mscheme.values.ValueTraits
 
@@ -64,8 +64,8 @@ internal class ForceableSelection(
 ) : IForceable {
     override fun force(): Selection =
         Selection(
-            Compiler.force(_test),
-            Compiler.force(_onTrue),
-            Compiler.force(_onFalse)
+            _test.force(),
+            _onTrue.force(),
+            _onFalse.force()
         )
 }

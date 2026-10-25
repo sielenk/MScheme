@@ -20,7 +20,7 @@
  */
 package de.masitec.mscheme.values
 
-import de.masitec.mscheme.environment.StaticEnvironment
+import de.masitec.mscheme.compiler.CompilationContext
 import de.masitec.mscheme.exceptions.CantCompileException
 import de.masitec.mscheme.exceptions.PairExpected
 import de.masitec.mscheme.util.Writer
@@ -57,14 +57,26 @@ object Empty : IList, IOutputable, ICompileable {
             throw PairExpected(this)
         }
 
-    override fun getForceable(compilationEnv: StaticEnvironment): Any? {
+    override fun getForceable(context: CompilationContext): Any? {
         throw CantCompileException(this)
     }
 
-    override fun getCompiledArray(compilationEnv: StaticEnvironment): Array<Any?> =
+    override fun getCompiledArray(context: CompilationContext): Array<Any?> =
         ARRAY
 
-    override fun getCompiledArray(compilationEnv: StaticEnvironment, index: Int): Array<Any?> =
+    override fun getCompiledArray(
+        context: CompilationContext,
+        index: Int
+    ): Array<Any?> =
+        arrayOfNulls(index)
+
+    override fun getCompiledBody(context: CompilationContext): Array<Any?> =
+        ARRAY
+
+    override fun getCompiledBody(
+        context: CompilationContext,
+        index: Int
+    ): Array<Any?> =
         arrayOfNulls(index)
 
     override fun getArray(): Array<Any?> =

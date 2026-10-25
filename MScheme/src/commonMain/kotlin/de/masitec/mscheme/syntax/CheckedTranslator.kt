@@ -20,7 +20,7 @@
  */
 package de.masitec.mscheme.syntax
 
-import de.masitec.mscheme.environment.StaticEnvironment
+import de.masitec.mscheme.compiler.CompilationContext
 import de.masitec.mscheme.exceptions.SyntaxArityError
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
@@ -33,7 +33,8 @@ internal abstract class CheckedTranslator protected constructor(
     }
 
     override fun translate(
-        compilationEnv: StaticEnvironment, arguments: IList
+        context: CompilationContext,
+        arguments: IList
     ): Any? {
         val len = arguments.length
 
@@ -41,17 +42,12 @@ internal abstract class CheckedTranslator protected constructor(
             arityError(arguments)
         }
 
-        preTranslate(compilationEnv)
-
-        return checkedTranslate(compilationEnv, arguments)
-    }
-
-    protected open fun preTranslate(compilationEnv: StaticEnvironment) {
-        compilationEnv.setStateClosed()
+        return checkedTranslate(context, arguments)
     }
 
     protected abstract fun checkedTranslate(
-        compilationEnv: StaticEnvironment, arguments: IList
+        context: CompilationContext,
+        arguments: IList
     ): Any?
 
     companion object {

@@ -20,7 +20,7 @@
  */
 package de.masitec.mscheme.syntax
 
-import de.masitec.mscheme.environment.StaticEnvironment
+import de.masitec.mscheme.compiler.CompilationContext
 import de.masitec.mscheme.exceptions.CompileError
 import de.masitec.mscheme.values.IList
 
@@ -30,7 +30,8 @@ import de.masitec.mscheme.values.IList
 // where Quasiquote handles them.
 internal object Unquote : ITranslator {
     override fun translate(
-        compilationEnv: StaticEnvironment, arguments: IList
+        context: CompilationContext,
+        arguments: IList
     ): Any? =
         throw CompileError(arguments, "unquote outside of quasiquote")
 }

@@ -32,3 +32,10 @@ import de.masitec.mscheme.code.IReduceable
 interface IForceable {
     fun force(): IReduceable
 }
+
+/**
+ * Forces the value if it is still forceable, otherwise returns it
+ * unchanged. Not to be confused with Scheme's `force` for promises.
+ */
+fun Any?.force(): Any? =
+    if (this is IForceable) this.force() else this

@@ -23,8 +23,7 @@ package de.masitec.mscheme.syntax
 import de.masitec.mscheme.code.Application
 import de.masitec.mscheme.code.CompiledLambda
 import de.masitec.mscheme.code.Sequence
-import de.masitec.mscheme.compiler.Compiler
-import de.masitec.mscheme.environment.StaticEnvironment
+import de.masitec.mscheme.compiler.CompilationContext
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
 import de.masitec.mscheme.values.ValueTraits
@@ -33,7 +32,7 @@ import de.masitec.mscheme.values.ValueTraits
 // *** letrec ***
 internal object Letrec : LetBase(Arity.atLeast(2)) {
     override fun checkedTranslate(
-        compilationEnv: StaticEnvironment,
+        context: CompilationContext,
         arguments: IList
     ): Any {
         // (letrec ((<var> <init>) ...) <body>)
@@ -45,13 +44,15 @@ internal object Letrec : LetBase(Arity.atLeast(2)) {
 
         val numberOfFormals = formals.length
 
-        val bodyCompilationEnv = compilationEnv.createChild(formals)
+        val bodyCompilationEnv = context.env.createChild(formals)
 
-        val compiledBody = body.getCompiledArray(bodyCompilationEnv)
+        val compiledBody = body.getCompiledBody(context.body(bodyCompilationEnv))
 
         val compiledLetrec = arrayOfNulls<Any>(numberOfFormals + compiledBody.size)
 
-        val compiler = Compiler(bodyCompilationEnv)
+        val initContext = CompilationContext(
+            CompilationContext.Kind.EXPRESSION, bodyCompilationEnv
+        )
 
         // prepend the initialisations to the body
         var index = 0
@@ -61,7 +62,7 @@ internal object Letrec : LetBase(Arity.atLeast(2)) {
 
             compiledLetrec[index++] = Set.translate(
                 bodyCompilationEnv.getReferenceFor(formal),
-                compiler.getForceable(init)
+                initContext.getForceable(init)
             )
 
             formals = formals.tail

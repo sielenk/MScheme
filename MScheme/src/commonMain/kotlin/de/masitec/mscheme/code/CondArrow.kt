@@ -20,8 +20,8 @@
  */
 package de.masitec.mscheme.code
 
-import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.compiler.IForceable
+import de.masitec.mscheme.compiler.force
 import de.masitec.mscheme.machine.Registers
 import de.masitec.mscheme.values.ListFactory
 import de.masitec.mscheme.values.ValueTraits
@@ -68,8 +68,8 @@ internal class ForceableCondArrow(
 ) : IForceable {
     override fun force(): CondArrow =
         CondArrow(
-            Compiler.force(_test),
-            Compiler.force(_receiver),
-            Compiler.force(_onFalse)
+            _test.force(),
+            _receiver.force(),
+            _onFalse.force()
         )
 }

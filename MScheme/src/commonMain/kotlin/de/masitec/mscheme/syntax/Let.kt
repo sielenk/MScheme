@@ -21,7 +21,7 @@
 package de.masitec.mscheme.syntax
 
 import de.masitec.mscheme.code.Application
-import de.masitec.mscheme.environment.StaticEnvironment
+import de.masitec.mscheme.compiler.CompilationContext
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
 import de.masitec.mscheme.values.ListFactory
@@ -33,7 +33,7 @@ import de.masitec.mscheme.values.functions.YCombinator
 // *** let ***
 internal object Let : LetBase(Arity.atLeast(2)) {
     override fun checkedTranslate(
-        compilationEnv: StaticEnvironment,
+        context: CompilationContext,
         arguments: IList
     ): Any {
         var arguments = arguments
@@ -67,7 +67,7 @@ internal object Let : LetBase(Arity.atLeast(2)) {
 
         var compiledProc =
             Lambda.translate(
-                compilationEnv,
+                context.expression(),
                 ListFactory.prepend(formals, body)
             )
 
@@ -84,7 +84,10 @@ internal object Let : LetBase(Arity.atLeast(2)) {
             )
         }
 
-        val compiledLet = inits.getCompiledArray(compilationEnv, 1)
+        val compiledLet = inits.getCompiledArray(
+            context.expression(),
+            1
+        )
 
         compiledLet[0] = compiledProc
 

@@ -20,10 +20,10 @@
  */
 package de.masitec.mscheme.code
 
-import de.masitec.mscheme.compiler.Compiler
+import de.masitec.mscheme.compiler.CompilationContext
 import de.masitec.mscheme.compiler.IForceable
+import de.masitec.mscheme.compiler.force
 import de.masitec.mscheme.environment.DynamicEnvironment
-import de.masitec.mscheme.environment.StaticEnvironment
 import de.masitec.mscheme.machine.Registers
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.util.Writer
@@ -59,7 +59,7 @@ class CompiledLambda private constructor(
     }
 
     override fun force(): CompiledLambda {
-        _compiledBody = Compiler.force(_compiledBody)
+        _compiledBody = _compiledBody.force()
         return this
     }
 
@@ -80,11 +80,13 @@ class CompiledLambda private constructor(
         fun create(
             arity: Arity,
             body: IList,
-            env: StaticEnvironment
+            context: CompilationContext
         ): CompiledLambda {
-            val compiledBody = Sequence.create(body.getCompiledArray(env))
+            val compiledBody = Sequence.create(
+                body.getCompiledBody(context)
+            )
 
-            return create(arity, env.size, compiledBody)
+            return create(arity, context.env.size, compiledBody)
         }
     }
 }

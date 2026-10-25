@@ -21,7 +21,9 @@
 package de.masitec.mscheme.syntax
 
 import de.masitec.mscheme.code.Sequence
-import de.masitec.mscheme.environment.StaticEnvironment
+import de.masitec.mscheme.compiler.CompilationContext
+import de.masitec.mscheme.compiler.Definition
+import de.masitec.mscheme.compiler.IForceable
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
 
@@ -30,16 +32,30 @@ internal class Begin private constructor(
 ) : CheckedTranslator(
     Arity.atLeast(if (_tag == SequenceTags.BEGIN) 1 else 0)
 ) {
-    override fun preTranslate(compilationEnv: StaticEnvironment) {
-        if (_tag != SequenceTags.BEGIN) {
-            super.preTranslate(compilationEnv)
-        }
-    }
-
     override fun checkedTranslate(
-        compilationEnv: StaticEnvironment, arguments: IList
-    ): Any? =
-        Sequence.create(_tag, arguments.getCompiledArray(compilationEnv))
+        context: CompilationContext,
+        arguments: IList
+    ): Any? {
+        if (_tag != SequenceTags.BEGIN) {
+            return Sequence.create(
+                _tag,
+                arguments.getCompiledArray(context.expression())
+            )
+        }
+
+        // a begin in a definition context is spliced into
+        // the surrounding body or top level
+        val compiled = arguments.getCompiledBody(context)
+        val result = Sequence.create(_tag, compiled)
+
+        return if (context.definitionsAllowed
+            && result !is Definition
+            && compiled.all { it is Definition }
+        )
+            Definition(result as IForceable)
+        else
+            result
+    }
 
 
     companion object {

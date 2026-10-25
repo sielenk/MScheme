@@ -23,8 +23,7 @@ package de.masitec.mscheme.syntax
 import de.masitec.mscheme.code.Application
 import de.masitec.mscheme.code.CompiledLambda
 import de.masitec.mscheme.code.Sequence
-import de.masitec.mscheme.compiler.Compiler
-import de.masitec.mscheme.environment.StaticEnvironment
+import de.masitec.mscheme.compiler.CompilationContext
 import de.masitec.mscheme.util.Arity
 import de.masitec.mscheme.values.IList
 import de.masitec.mscheme.values.ValueTraits
@@ -32,7 +31,7 @@ import de.masitec.mscheme.values.ValueTraits
 // *** let* ***
 internal object LetStar : LetBase(Arity.atLeast(2)) {
     override fun checkedTranslate(
-        compilationEnv: StaticEnvironment,
+        context: CompilationContext,
         arguments: IList
     ): Any? {
         // (let* ((<var> <init>) ...) <body>)
@@ -47,31 +46,40 @@ internal object LetStar : LetBase(Arity.atLeast(2)) {
             Application.create(
                 arrayOf<Any?>(
                     CompiledLambda.create(
-                        Arity.exactly(0), body, compilationEnv
-                            .createChild()
+                        Arity.exactly(0), body, context.body(
+                            context.env.createChild()
+                        )
                     )
                 )
             )
         } else {
-            LetStarHelper(body).translate(compilationEnv, bindings)
+            LetStarHelper(body).translate(context.expression(), bindings)
         }
     }
 }
 
 internal class LetStarHelper(private val _body: IList) {
-    fun translate(outerEnvironment: StaticEnvironment, bindings: IList): Any? {
+    fun translate(
+        context: CompilationContext,
+        bindings: IList
+    ): Any? {
         if (bindings.isEmpty) {
-            return Sequence.create(_body.getCompiledArray(outerEnvironment))
+            return Sequence.create(
+                _body.getCompiledBody(context.body(context.env))
+            )
         } else {
             val binding = ValueTraits.toList(bindings.head)
 
             val formal = ValueTraits.toSymbol(binding.head)
             val init = binding.tail.head
 
-            val innerEnvironment = outerEnvironment
+            val innerEnvironment = context.env
                 .createChild(formal)
 
-            val innerBody = translate(innerEnvironment, bindings.tail)
+            val innerBody = translate(
+                CompilationContext(CompilationContext.Kind.EXPRESSION, innerEnvironment),
+                bindings.tail
+            )
 
             val lambda: Any = CompiledLambda.create(
                 Arity.exactly(1),
@@ -81,7 +89,7 @@ internal class LetStarHelper(private val _body: IList) {
             return Application.create(
                 arrayOf<Any?>(
                     lambda,
-                    Compiler(outerEnvironment).getForceable(init)
+                    context.getForceable(init)
                 )
             )
         }

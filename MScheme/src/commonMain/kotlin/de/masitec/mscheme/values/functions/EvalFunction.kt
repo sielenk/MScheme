@@ -20,14 +20,14 @@
  */
 package de.masitec.mscheme.values.functions
 
-import de.masitec.mscheme.compiler.Compiler
+import de.masitec.mscheme.compiler.compile
 import de.masitec.mscheme.machine.Registers
 import de.masitec.mscheme.values.ValueTraits
 
 object EvalFunction : BinaryFunction() {
     override fun checkedCall(state: Registers, fst: Any?, snd: Any?): Any? {
         val newEnv = ValueTraits.toEnvironment(snd)
-        val newCode = Compiler(newEnv.static).compile(fst)
+        val newCode = newEnv.static.compile(fst)
 
         state.environment = newEnv.dynamic
 

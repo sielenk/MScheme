@@ -20,7 +20,7 @@
  */
 package de.masitec.mscheme.syntax
 
-import de.masitec.mscheme.environment.StaticEnvironment
+import de.masitec.mscheme.compiler.CompilationContext
 import de.masitec.mscheme.values.IList
 
 /**
@@ -28,5 +28,8 @@ import de.masitec.mscheme.values.IList
  * Scheme - they are not reserved - their bindings are stored in the static environment.
  */
 fun interface ITranslator {
-    fun translate(compilationEnv: StaticEnvironment, arguments: IList): Any?
+    fun translate(
+        context: CompilationContext,
+        arguments: IList
+    ): Any?
 }

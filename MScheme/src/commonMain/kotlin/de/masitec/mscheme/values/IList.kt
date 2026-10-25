@@ -20,7 +20,7 @@
  */
 package de.masitec.mscheme.values
 
-import de.masitec.mscheme.environment.StaticEnvironment
+import de.masitec.mscheme.compiler.CompilationContext
 import de.masitec.mscheme.exceptions.PairExpected
 
 interface IList {
@@ -42,9 +42,23 @@ interface IList {
     @get:Throws(PairExpected::class)
     val tail: IList
 
-    fun getCompiledArray(compilationEnv: StaticEnvironment): Array<Any?>
+    fun getCompiledArray(context: CompilationContext): Array<Any?>
 
-    fun getCompiledArray(compilationEnv: StaticEnvironment, index: Int): Array<Any?>
+    fun getCompiledArray(
+        context: CompilationContext,
+        index: Int
+    ): Array<Any?>
+
+    /**
+     * Like getCompiledArray, but in a body the definitions have
+     * to precede the first expression.
+     */
+    fun getCompiledBody(context: CompilationContext): Array<Any?>
+
+    fun getCompiledBody(
+        context: CompilationContext,
+        index: Int
+    ): Array<Any?>
 
     fun getArray(): Array<Any?>
 

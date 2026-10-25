@@ -49,8 +49,6 @@ class StaticEnvironment internal constructor(
         if (parent == null) 0 else (parent.level + 1)
     var size: Int = 0
         private set
-    private var _state: State =
-        State.OPEN
 
     // *** constructors ******************************************************
 
@@ -81,50 +79,7 @@ class StaticEnvironment internal constructor(
         StaticEnvironment(this, symbol)
 
     // *** instance access ***************************************************
-    fun setStateOpen(v: Any?) {
-        when (_state) {
-            State.OPEN -> throw CompileError(
-                v,
-                "no nested definitions"
-            )
-
-            State.DEF_BODY -> _state = State.OPEN
-            State.CLOSED -> throw CompileError(
-                v,
-                "environment already closed (1)"
-            )
-        }
-    }
-
-    fun setStateDefinitionBody(v: Any?) {
-        when (_state) {
-            State.OPEN -> _state = State.DEF_BODY
-            State.DEF_BODY -> throw CompileError(
-                v,
-                "no nested definitions"
-            )
-
-            State.CLOSED -> throw CompileError(
-                v,
-                "environment already closed (2)"
-            )
-        }
-    }
-
-    fun setStateClosed() {
-        if ((_state == State.OPEN) && (level > 0)) {
-            _state = State.CLOSED
-        }
-    }
-
     fun define(symbol: Symbol): Reference {
-        if (_state != State.OPEN) {
-            throw CompileError(
-                symbol,
-                "environment already closed (3)"
-            )
-        }
-
         try {
             val existingReference = _bindings[symbol] as Reference?
 
@@ -179,11 +134,11 @@ class StaticEnvironment internal constructor(
         return null
     }
 
-    private fun delayedLookup(symbol: Symbol): Any {
+    private fun delayedLookup(symbol: Symbol, restricted: Boolean): Any {
         val result = lookupNoThrow(symbol)
 
         return if ((result == null) || (result is Reference))
-            Reference.create(symbol, this, _state == State.DEF_BODY)
+            Reference.create(symbol, this, restricted)
         else
             result
     }
@@ -194,8 +149,8 @@ class StaticEnvironment internal constructor(
     fun getSyntaxFor(symbol: Symbol): ITranslator? =
         lookup(symbol) as? ITranslator
 
-    fun getDelayedReferenceFor(symbol: Symbol): Reference {
-        val o = delayedLookup(symbol)
+    fun getDelayedReferenceFor(symbol: Symbol, restricted: Boolean): Reference {
+        val o = delayedLookup(symbol, restricted)
 
         if (o is Reference) {
             return o
@@ -232,9 +187,5 @@ class StaticEnvironment internal constructor(
     companion object {
         fun create(): StaticEnvironment =
             StaticEnvironment()
-    }
-
-    enum class State {
-        OPEN, DEF_BODY, CLOSED
     }
 }

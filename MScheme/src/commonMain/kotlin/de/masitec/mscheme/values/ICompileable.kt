@@ -20,7 +20,7 @@
  */
 package de.masitec.mscheme.values
 
-import de.masitec.mscheme.environment.StaticEnvironment
+import de.masitec.mscheme.compiler.CompilationContext
 
 interface ICompileable {
     // compilation functions
@@ -28,5 +28,5 @@ interface ICompileable {
     /**
      * Compiles a value as normal code.
      */
-    fun getForceable(compilationEnv: StaticEnvironment): Any?
+    fun getForceable(context: CompilationContext): Any?
 }

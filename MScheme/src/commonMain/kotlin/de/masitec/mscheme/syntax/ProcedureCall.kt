@@ -21,17 +21,22 @@
 package de.masitec.mscheme.syntax
 
 import de.masitec.mscheme.code.Application
-import de.masitec.mscheme.compiler.Compiler
-import de.masitec.mscheme.environment.StaticEnvironment
+import de.masitec.mscheme.compiler.CompilationContext
 import de.masitec.mscheme.values.IList
 
 class ProcedureCall private constructor(private val _head: Any?) : ITranslator {
-    override fun translate(compilationEnv: StaticEnvironment, arguments: IList): Any {
-        compilationEnv.setStateClosed()
+    override fun translate(
+        context: CompilationContext,
+        arguments: IList
+    ): Any {
+        val subContext = context.expression()
 
-        val compiledList = arguments.getCompiledArray(compilationEnv, 1)
+        val compiledList = arguments.getCompiledArray(
+            subContext,
+            1
+        )
 
-        compiledList[0] = Compiler(compilationEnv).getForceable(_head)
+        compiledList[0] = subContext.getForceable(_head)
 
         return Application.create(compiledList)
     }

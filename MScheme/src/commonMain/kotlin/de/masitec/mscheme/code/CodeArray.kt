@@ -20,7 +20,7 @@
  */
 package de.masitec.mscheme.code
 
-import de.masitec.mscheme.compiler.Compiler
+import de.masitec.mscheme.compiler.force
 
 internal object CodeArray {
     fun printTuple(tuple: Array<Any?>): String =
@@ -28,7 +28,7 @@ internal object CodeArray {
 
     fun force(array: Array<Any?>) {
         for (i in array.indices) {
-            array[i] = Compiler.force(array[i])
+            array[i] = array[i].force()
         }
     }
 }

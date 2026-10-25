@@ -20,8 +20,8 @@
  */
 package de.masitec.mscheme.tests
 
-import de.masitec.mscheme.compiler.Compiler
 import de.masitec.mscheme.environment.Environment
+import de.masitec.mscheme.compiler.compile
 import de.masitec.mscheme.exceptions.*
 import de.masitec.mscheme.machine.Machine
 import de.masitec.mscheme.util.createStringReader
@@ -77,14 +77,14 @@ class TestMachine : FunSpec({
     }
 
     test("testTestValues") {
-        val compiler = Compiler(_environment!!.static)
+        val env = _environment!!.static
 
         shouldThrow<CantCompileException> {
-            compiler.compile(_unval)
+            env.compile(_unval)
         }
 
-        compiler.compile(_val1) shouldNotBe null
-        compiler.compile(_val2) shouldNotBe null
+        env.compile(_val1) shouldNotBe null
+        env.compile(_val2) shouldNotBe null
     }
 
     test("testEnvironment") {
