@@ -20,12 +20,12 @@
  */
 
 plugins {
-    kotlin("multiplatform").version("2.3.10").apply(false)
-    id("com.google.devtools.ksp").version("2.3.6").apply(false)
+    kotlin("multiplatform").version("2.4.21").apply(false)
+    id("com.google.devtools.ksp").version("2.3.12").apply(false)
 }
 
 buildscript {
     dependencies {
-        classpath(kotlin("gradle-plugin", version = "2.3.10"))
+        classpath(kotlin("gradle-plugin", version = "2.4.21"))
     }
 }

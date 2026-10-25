@@ -22,14 +22,14 @@ import org.jetbrains.kotlin.gradle.targets.jvm.tasks.KotlinJvmRun
  */
 
 plugins {
-    kotlin("multiplatform").version("2.3.10")
-    id("com.google.devtools.ksp").version("2.3.6")
+    kotlin("multiplatform").version("2.4.21")
+    id("com.google.devtools.ksp").version("2.3.12")
 }
 
 val generatedDir: Provider<Directory> =
     layout.buildDirectory.dir("generated/ksp/metadata/commonMain/kotlin")
 
-val kotestVersion = "6.1.4"
+val kotestVersion = "6.2.6"
 
 repositories {
     mavenCentral()
@@ -37,7 +37,7 @@ repositories {
 
 kotlin {
     jvm()
-    js(IR) {
+    js {
         browser()
         nodejs()
         binaries.executable()
@@ -138,6 +138,8 @@ createInit.configure {
 tasks.matching {
     it.name in setOf(
         "compileCommonMainKotlinMetadata",
+        "kspKotlinJvm",
+        "kspKotlinJs",
         "compileKotlinJvm",
         "compileKotlinJs"
     )
