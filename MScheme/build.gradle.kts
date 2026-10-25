@@ -123,7 +123,7 @@ val createInit = tasks.register("createInit") {
             '{'
         ) + body + listOf("}")
 
-        mkdir(outputFile.parent)
+        outputFile.parentFile.mkdirs()
 
         outputFile.writeText(
             fileContent.joinToString(separator = "\n", postfix = "\n")
