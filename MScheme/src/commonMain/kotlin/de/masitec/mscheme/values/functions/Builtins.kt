@@ -163,8 +163,8 @@ object Builtins {
     fun pair_3F(argument: Any?): Any =
         ValueTraits.toScmBoolean(ValueTraits.isPair(argument))
 
-    fun cons(fst: Any?, snd: Any?): Any =
-        ListFactory.createPair(fst, snd)
+    val cons: Function =
+        funcAA(ListFactory::createPair)
 
     fun car(argument: Any?): Any? =
         ValueTraits.toConstPair(argument).first
@@ -379,8 +379,10 @@ object Builtins {
     fun vector_2D_3Elist(argument: Any?): Any =
         ValueTraits.toScmVector(argument).toList()
 
-    fun list_2D_3Evector(argument: Any?): Any =
-        ScmVector.create(ValueTraits.toList(argument))
+    val list_2D_3Evector: Function =
+        funcA { argument ->
+            ScmVector.create(ValueTraits.toList(argument))
+        }
 
     // 6.4 Control features
     fun procedure_3F(argument: Any?): Any = // procedure?

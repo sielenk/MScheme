@@ -387,7 +387,7 @@ class TestR5RS : FunSpec({
 
     /** 4.2.5 Delayed evaluation */
     /** 4.2.6 Quasiquotation */
-    xtest("notest4_2_6") {
+    test("test4_2_6") {
         check("`(list ,(+ 1 2) 4)", "(list 3 4)")
         check(
             "(let ((name 'a)) `(list ,name ',name))",
@@ -407,7 +407,45 @@ class TestR5RS : FunSpec({
         )
         check(
             "(let ((name1 'x) (name2 'y)) `(a `(b ,,name1 ,',name2 d) e))",
-            "(a `(b ,x ,'y d) e))"
+            "(a `(b ,x ,'y d) e)"
+        )
+    }
+
+    test("test4_2_6_dotted") {
+        check("(let ((x '(b c))) `(a . ,x))", "(a b c)")
+        check("`(1 ,@'() 2)", "(1 2)")
+        check("`(1 ,@(list 2 3))", "(1 2 3)")
+    }
+
+    test("test4_2_6_errors") {
+        shouldThrow<CompileError> {
+            eval("`,@(list 1)")
+        }
+        shouldThrow<CompileError> {
+            eval("`(a . ,@(list 1))")
+        }
+        shouldThrow<CompileError> {
+            eval(",(+ 1 2)")
+        }
+        shouldThrow<CompileError> {
+            eval(",@(list 1 2)")
+        }
+    }
+
+    test("test4_2_6_constants") {
+        // a template without unquote is a constant, like with quote
+        shouldThrow<ImmutableException> {
+            eval("(set-car! `(a b) 'x)")
+        }
+        // freshly built parts are mutable
+        check(
+            "(let ((x 1) (l #f)) (set! l `(,x b)) (set-car! l 2) l)",
+            "(2 b)"
+        )
+        // redefining cons doesn't affect quasiquote
+        check(
+            "(let ((cons #f) (x 1)) `(,x b))",
+            "(1 b)"
         )
     }
 

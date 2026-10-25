@@ -102,6 +102,18 @@ class Environment private constructor(
                     TranslatorFactory.quoteToken
                 )
                 define(
+                    "quasiquote",
+                    TranslatorFactory.quasiquoteToken
+                )
+                define(
+                    "unquote",
+                    TranslatorFactory.unquoteToken
+                )
+                define(
+                    "unquote-splicing",
+                    TranslatorFactory.unquoteToken
+                )
+                define(
                     "if",
                     TranslatorFactory.ifToken
                 )

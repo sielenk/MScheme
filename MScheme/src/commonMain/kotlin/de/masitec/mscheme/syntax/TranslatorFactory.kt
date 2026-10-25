@@ -59,4 +59,10 @@ object TranslatorFactory {
 
     val quoteToken: ITranslator
         get() = Quote
+
+    val quasiquoteToken: ITranslator
+        get() = Quasiquote
+
+    val unquoteToken: ITranslator
+        get() = Unquote
 }
